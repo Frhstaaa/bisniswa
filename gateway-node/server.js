@@ -658,18 +658,18 @@ async function initWwebjsSession(deviceId) {
     });
 
     client.on('ready', () => {
-        const rawUser = client.info?.wid?.user || '6281298430911';
-        let phone = rawUser.replace(/[^0-9]/g, '');
-        if (!phone.startsWith('+')) phone = '+' + phone;
+        const rawUser = client.info?.wid?.user || '';
+        let phone = rawUser ? rawUser.replace(/[^0-9]/g, '') : null;
+        if (phone && !phone.startsWith('+')) phone = '+' + phone;
 
-        console.log(`[WWebJS Connected] Device ${deviceId} Phone: ${phone}`);
+        console.log(`[WWebJS Connected] Device ${deviceId} Phone: ${phone || 'Unknown'}`);
         sessionData.status = 'connected';
         sessionData.qr = null;
         sessionData.phoneNumber = phone;
 
         notifyLaravelStatus(deviceId, {
             status: 'connected',
-            phone_number: phone,
+            ...(phone ? { phone_number: phone } : {}),
             qr_code: null,
         });
 
@@ -1003,6 +1003,7 @@ app.post('/messages/send', async (req, res) => {
     // If session not in memory but credentials exist on disk, auto-restore
     if (!session || !session.client) {
         const authPath = path.join(SESSIONS_DIR, `baileys_${device_id}`);
+        const wwebPath = path.join(SESSIONS_DIR, 'wwebjs', `session-device_${device_id}`);
         if (fs.existsSync(path.join(authPath, 'creds.json'))) {
             console.log(`[Auto-Restore] Restoring Baileys session for Device ${device_id}...`);
             await initBaileysSession(device_id);
@@ -1012,6 +1013,16 @@ app.post('/messages/send', async (req, res) => {
                 session = activeSessions.get(sessionId);
                 if (session && session.status === 'connected' && session.client) break;
                 await new Promise((r) => setTimeout(r, 250));
+                waits++;
+            }
+        } else if (fs.existsSync(wwebPath)) {
+            console.log(`[Auto-Restore] Restoring WWebJS session for Device ${device_id}...`);
+            await initWwebjsSession(device_id);
+            let waits = 0;
+            while (waits < 30) {
+                session = activeSessions.get(sessionId);
+                if (session && session.status === 'connected' && session.client) break;
+                await new Promise((r) => setTimeout(r, 500));
                 waits++;
             }
         }

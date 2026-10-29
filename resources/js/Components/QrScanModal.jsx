@@ -105,7 +105,7 @@ export default function QrScanModal({
     }
 
     const [name, setName] = useState('Nomor CS WhatsApp');
-    const [engine, setEngine] = useState('baileys');
+    const [engine, setEngine] = useState('wwebjs');
     const [phone, setPhone] = useState('+628');
     const [metaPhoneId, setMetaPhoneId] = useState('');
     const [metaAccessToken, setMetaAccessToken] = useState('');
@@ -280,40 +280,14 @@ export default function QrScanModal({
                             <label className="block font-medium text-slate-700 mb-1.5">Pilih Tipe Koneksi & Server WhatsApp</label>
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                                 <label
-                                    className={`p-3 rounded-xl border cursor-pointer flex flex-col justify-between transition-all ${
-                                        engine === 'baileys'
-                                            ? 'border-emerald-600 bg-emerald-50/70 ring-1 ring-emerald-600'
-                                            : 'border-slate-200 hover:border-slate-300'
-                                    }`}
-                                >
-                                    <div className="flex items-center justify-between mb-1">
-                                        <span className="font-semibold text-slate-900 text-xs">Server 1 (Baileys)</span>
-                                        <input
-                                            type="radio"
-                                            name="engine"
-                                            value="baileys"
-                                            checked={engine === 'baileys'}
-                                            onChange={() => setEngine('baileys')}
-                                            className="text-emerald-600 accent-emerald-600"
-                                        />
-                                    </div>
-                                    <p className="text-[11px] text-slate-500 leading-tight">
-                                        Scan QR Web: Latensi kilat, hemat RAM & respon cepat.
-                                    </p>
-                                    <span className="mt-2 text-[10px] font-semibold text-emerald-800">
-                                        ⚡ Scan QR Cepat
-                                    </span>
-                                </label>
-
-                                <label
-                                    className={`p-3 rounded-xl border cursor-pointer flex flex-col justify-between transition-all ${
+                                    className={`p-3 rounded-xl border cursor-pointer flex flex-col justify-between transition-all relative ${
                                         engine === 'wwebjs'
-                                            ? 'border-emerald-600 bg-emerald-50/70 ring-1 ring-emerald-600'
+                                            ? 'border-emerald-600 bg-emerald-50/70 ring-2 ring-emerald-600 shadow-sm'
                                             : 'border-slate-200 hover:border-slate-300'
                                     }`}
                                 >
                                     <div className="flex items-center justify-between mb-1">
-                                        <span className="font-semibold text-slate-900 text-xs">Server 2 (Chromium)</span>
+                                        <span className="font-semibold text-slate-900 text-xs">WhatsApp Web JS</span>
                                         <input
                                             type="radio"
                                             name="engine"
@@ -324,10 +298,36 @@ export default function QrScanModal({
                                         />
                                     </div>
                                     <p className="text-[11px] text-slate-500 leading-tight">
-                                        Scan QR Web: Headless Chromium stabil & sesi tahan lama.
+                                        Engine Utama: Resmi via Headless Web, anti "menunggu pesan", enkripsi instan & sesi stabil.
                                     </p>
-                                    <span className="mt-2 text-[10px] font-semibold text-slate-700">
-                                        🛡️ Scan QR Stabil
+                                    <span className="mt-2 text-[10px] font-bold text-emerald-800 bg-emerald-100/80 px-1.5 py-0.5 rounded w-fit">
+                                        ⭐ Direkomendasikan
+                                    </span>
+                                </label>
+
+                                <label
+                                    className={`p-3 rounded-xl border cursor-pointer flex flex-col justify-between transition-all ${
+                                        engine === 'baileys'
+                                            ? 'border-emerald-600 bg-emerald-50/70 ring-1 ring-emerald-600'
+                                            : 'border-slate-200 hover:border-slate-300 opacity-80'
+                                    }`}
+                                >
+                                    <div className="flex items-center justify-between mb-1">
+                                        <span className="font-semibold text-slate-900 text-xs">Baileys Socket</span>
+                                        <input
+                                            type="radio"
+                                            name="engine"
+                                            value="baileys"
+                                            checked={engine === 'baileys'}
+                                            onChange={() => setEngine('baileys')}
+                                            className="text-emerald-600 accent-emerald-600"
+                                        />
+                                    </div>
+                                    <p className="text-[11px] text-slate-500 leading-tight">
+                                        Socket langsung: Hemat RAM, namun sensitif terhadap rotasi protokol enkripsi WhatsApp.
+                                    </p>
+                                    <span className="mt-2 text-[10px] font-semibold text-slate-600">
+                                        ⚡ Alternatif Socket
                                     </span>
                                 </label>
 
