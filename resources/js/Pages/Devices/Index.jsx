@@ -15,6 +15,7 @@ import {
     Cpu,
     Search,
     Shield,
+    ShieldCheck,
     CheckCircle2,
     Clock,
     Zap,
