@@ -57,10 +57,10 @@ class SecurityHeadersMiddleware
         // Referrer Privacy Protection
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
 
-        // Restrict sensitive browser hardware APIs
+        // Restrict sensitive browser hardware APIs (modern standard features)
         $response->headers->set(
             'Permissions-Policy',
-            'camera=(), microphone=(), geolocation=(), payment=(), usb=(), vr=(), interest-cohort=()'
+            'camera=(), microphone=(), geolocation=(), payment=(), usb=()'
         );
 
         // Cross-Origin Isolation

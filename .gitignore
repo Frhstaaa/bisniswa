@@ -29,6 +29,7 @@ Thumbs.db
 # Gateway Node & WhatsApp Sessions
 /gateway-node/node_modules
 /gateway-node/sessions
+/gateway-node/lid_map.json
 /.wwebjs_cache
 /.wwebjs_auth
 /.claude
