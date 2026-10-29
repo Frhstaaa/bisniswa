@@ -14,13 +14,22 @@ class AdminStaffController extends Controller
 {
     /**
      * Display a listing of SaaS internal staff & RBAC roles.
+     * Note: Non-superadmin users (like Admin Operasional) CANNOT see the Superadmin account.
      */
     public function index(Request $request): Response
     {
+        $currentUser = $request->user();
+        $isSuperAdmin = $currentUser->isSuperAdmin();
+
         $search = $request->query('search', '');
         $roleFilter = $request->query('role', 'all');
 
         $query = User::whereIn('role', ['superadmin', 'admin', 'marketing', 'support']);
+
+        // Explicit security rule: Subordinate staff (Admin, Marketing, Support) cannot see Superadmin
+        if (! $isSuperAdmin) {
+            $query->where('role', '!=', 'superadmin');
+        }
 
         if (! empty($search)) {
             $query->where(function ($q) use ($search) {
@@ -30,8 +39,13 @@ class AdminStaffController extends Controller
             });
         }
 
-        if ($roleFilter !== 'all' && in_array($roleFilter, ['superadmin', 'admin', 'marketing', 'support'], true)) {
-            $query->where('role', $roleFilter);
+        if ($roleFilter !== 'all') {
+            if ($roleFilter === 'superadmin' && ! $isSuperAdmin) {
+                // Non-superadmin filtering for superadmin gets empty result
+                $query->whereRaw('1 = 0');
+            } elseif (in_array($roleFilter, ['superadmin', 'admin', 'marketing', 'support'], true)) {
+                $query->where('role', $roleFilter);
+            }
         }
 
         $staff = $query->orderByRaw("CASE WHEN role = 'superadmin' THEN 1 WHEN role = 'admin' THEN 2 WHEN role = 'marketing' THEN 3 ELSE 4 END")
@@ -39,40 +53,47 @@ class AdminStaffController extends Controller
             ->get();
 
         $metrics = [
-            'total_staff' => User::whereIn('role', ['superadmin', 'admin', 'marketing', 'support'])->count(),
-            'superadmin_count' => User::where('role', 'superadmin')->count(),
+            'total_staff' => $isSuperAdmin
+                ? User::whereIn('role', ['superadmin', 'admin', 'marketing', 'support'])->count()
+                : User::whereIn('role', ['admin', 'marketing', 'support'])->count(),
+            'superadmin_count' => $isSuperAdmin ? User::where('role', 'superadmin')->count() : 0,
             'admin_count' => User::where('role', 'admin')->count(),
             'marketing_count' => User::where('role', 'marketing')->count(),
             'support_count' => User::where('role', 'support')->count(),
         ];
 
+        // Roles available to be assigned based on who is logged in
+        $availableRoles = [];
+        if ($isSuperAdmin) {
+            $availableRoles[] = [
+                'value' => 'admin',
+                'label' => 'Admin Operasional',
+                'description' => 'Akses kelola klien, langganan, verifikasi pembayaran, paket layanan, dan monitoring gateway.',
+                'color' => 'emerald',
+            ];
+        }
+        $availableRoles[] = [
+            'value' => 'marketing',
+            'label' => 'Marketing & Billing',
+            'description' => 'Akses kelola paket langganan, lihat transaksi pembayaran, dan laporan pendapatan SaaS.',
+            'color' => 'blue',
+        ];
+        $availableRoles[] = [
+            'value' => 'support',
+            'label' => 'Customer Support',
+            'description' => 'Akses bantuan klien, pemecahan masalah perangkat, dan monitoring sesi WhatsApp.',
+            'color' => 'purple',
+        ];
+
         return Inertia::render('Admin/Staff/Index', [
             'staff' => $staff,
             'metrics' => $metrics,
+            'isSuperAdmin' => $isSuperAdmin,
             'filters' => [
                 'search' => $search,
                 'role' => $roleFilter,
             ],
-            'availableRoles' => [
-                [
-                    'value' => 'admin',
-                    'label' => 'Admin Operasional',
-                    'description' => 'Akses kelola klien, langganan, verifikasi pembayaran, paket layanan, dan monitoring gateway.',
-                    'color' => 'emerald',
-                ],
-                [
-                    'value' => 'marketing',
-                    'label' => 'Marketing & Billing',
-                    'description' => 'Akses kelola paket langganan, lihat transaksi pembayaran, dan laporan pendapatan SaaS.',
-                    'color' => 'blue',
-                ],
-                [
-                    'value' => 'support',
-                    'label' => 'Customer Support',
-                    'description' => 'Akses bantuan klien, pemecahan masalah perangkat, dan monitoring sesi WhatsApp.',
-                    'color' => 'purple',
-                ],
-            ],
+            'availableRoles' => $availableRoles,
         ]);
     }
 
@@ -88,16 +109,19 @@ class AdminStaffController extends Controller
             ]);
         }
 
+        $allowedRoles = $request->user()->isSuperAdmin() ? 'admin,marketing,support' : 'marketing,support';
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email',
             'phone' => 'nullable|string|max:30',
             'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|string|in:admin,marketing,support',
+            'role' => 'required|string|in:'.$allowedRoles,
         ], [
-            'role.in' => 'Pilihan role staff hanya boleh: Admin, Marketing, atau Support.',
+            'role.in' => 'Pilihan role staff tidak valid.',
             'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
             'password.min' => 'Kata sandi minimal 8 karakter.',
+            'email.unique' => 'Email ini sudah terdaftar di sistem.',
         ]);
 
         User::create([
@@ -115,45 +139,73 @@ class AdminStaffController extends Controller
 
     /**
      * Update the specified staff member in storage.
-     * Note: Superadmin role CANNOT be changed or assigned.
+     * Allows Superadmin to edit their own email, name, phone, and password.
      */
     public function update(Request $request, int $id): RedirectResponse
     {
+        $currentUser = $request->user();
         $user = User::findOrFail($id);
 
-        if ($user->role === 'superadmin' || $user->id === 1) {
-            // Cannot modify role of root superadmin
-            if ($request->filled('role') && $request->input('role') !== 'superadmin') {
-                return back()->with('error', 'Role Super Administrator utama dilindungi dan tidak dapat diubah.');
+        // Security: Non-superadmin cannot see or edit superadmin!
+        if ($user->isSuperAdmin()) {
+            if (! $currentUser->isSuperAdmin()) {
+                abort(404);
             }
+
+            // Superadmin updating their OWN account:
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
+                'phone' => 'nullable|string|max:30',
+                'password' => 'nullable|string|min:8|confirmed',
+            ], [
+                'email.unique' => 'Email ini sudah digunakan oleh akun lain.',
+                'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
+                'password.min' => 'Kata sandi minimal 8 karakter.',
+            ]);
+
+            $updateData = [
+                'name' => $validated['name'],
+                'email' => strtolower($validated['email']),
+                'phone' => $validated['phone'] ?? null,
+            ];
+
+            if (! empty($validated['password'])) {
+                $updateData['password'] = Hash::make($validated['password']);
+            }
+
+            $user->update($updateData);
+
+            return back()->with('success', 'Email, data akun & kata sandi Super Administrator berhasil diperbarui.');
         }
 
-        if ($request->input('role') === 'superadmin' && $user->role !== 'superadmin') {
+        // Subordinate staff update
+        if ($request->input('role') === 'superadmin') {
             return back()->withErrors([
                 'role' => 'Role Superadmin tidak dapat diberikan ke akun staff.',
             ]);
         }
+
+        $allowedRoles = $currentUser->isSuperAdmin() ? 'admin,marketing,support' : 'marketing,support';
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
             'phone' => 'nullable|string|max:30',
             'password' => 'nullable|string|min:8|confirmed',
-            'role' => $user->isSuperAdmin() ? 'nullable|string' : 'required|string|in:admin,marketing,support',
+            'role' => 'required|string|in:'.$allowedRoles,
         ], [
-            'role.in' => 'Pilihan role staff hanya boleh: Admin, Marketing, atau Support.',
+            'role.in' => 'Pilihan role staff tidak valid.',
             'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
+            'email.unique' => 'Email ini sudah digunakan oleh akun lain.',
         ]);
 
         $updateData = [
             'name' => $validated['name'],
             'email' => strtolower($validated['email']),
             'phone' => $validated['phone'] ?? null,
+            'role' => $validated['role'],
         ];
-
-        if (! $user->isSuperAdmin() && ! empty($validated['role'])) {
-            $updateData['role'] = $validated['role'];
-        }
 
         if (! empty($validated['password'])) {
             $updateData['password'] = Hash::make($validated['password']);
@@ -168,15 +220,20 @@ class AdminStaffController extends Controller
      * Toggle active/inactive status of a staff member.
      * Note: Root Superadmin CANNOT be deactivated.
      */
-    public function toggleStatus(int $id): RedirectResponse
+    public function toggleStatus(Request $request, int $id): RedirectResponse
     {
+        $currentUser = $request->user();
         $user = User::findOrFail($id);
 
-        if ($user->role === 'superadmin' || $user->id === 1) {
+        if ($user->isSuperAdmin()) {
+            if (! $currentUser->isSuperAdmin()) {
+                abort(404);
+            }
+
             return back()->with('error', 'Akun Super Administrator utama dilindungi dan tidak dapat dinonaktifkan.');
         }
 
-        if ($user->id === auth()->id()) {
+        if ($user->id === $currentUser->id) {
             return back()->with('error', 'Anda tidak dapat menonaktifkan akun Anda sendiri.');
         }
 
@@ -192,15 +249,20 @@ class AdminStaffController extends Controller
      * Remove the specified staff user from storage.
      * Note: Root Superadmin CANNOT be deleted.
      */
-    public function destroy(int $id): RedirectResponse
+    public function destroy(Request $request, int $id): RedirectResponse
     {
+        $currentUser = $request->user();
         $user = User::findOrFail($id);
 
-        if ($user->role === 'superadmin' || $user->id === 1) {
+        if ($user->isSuperAdmin()) {
+            if (! $currentUser->isSuperAdmin()) {
+                abort(404);
+            }
+
             return back()->with('error', 'Akun Super Administrator utama dilindungi dan tidak dapat dihapus.');
         }
 
-        if ($user->id === auth()->id()) {
+        if ($user->id === $currentUser->id) {
             return back()->with('error', 'Anda tidak dapat menghapus akun Anda sendiri yang sedang aktif.');
         }
 

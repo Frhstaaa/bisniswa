@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Workspace;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -236,15 +237,74 @@ class AdminPlanAndStaffRbacTest extends TestCase
     // 2. Staff Management & RBAC Tests
     // ==========================================
 
-    public function test_only_superadmin_can_access_staff_management(): void
+    public function test_superadmin_and_admin_can_access_staff_management_while_clients_cannot(): void
     {
         $this->actingAs($this->superAdmin)->get('/admin/staff')->assertStatus(200);
+        $this->actingAs($this->adminStaff)->get('/admin/staff')->assertStatus(200);
 
-        // All non-superadmin users get 403
-        $this->actingAs($this->adminStaff)->get('/admin/staff')->assertStatus(403);
+        // Marketing, support, and regular clients cannot access staff management
         $this->actingAs($this->marketingStaff)->get('/admin/staff')->assertStatus(403);
         $this->actingAs($this->supportStaff)->get('/admin/staff')->assertStatus(403);
         $this->actingAs($this->regularClient)->get('/admin/staff')->assertStatus(403);
+    }
+
+    public function test_subordinate_admin_cannot_see_superadmin_in_rbac_list(): void
+    {
+        $response = $this->actingAs($this->adminStaff)->get('/admin/staff');
+        $response->assertStatus(200);
+
+        $staffList = $response->viewData('page')['props']['staff'];
+        $staffIds = collect($staffList)->pluck('id')->toArray();
+
+        // The superadmin id MUST NOT be in the returned staff list
+        $this->assertNotContains($this->superAdmin->id, $staffIds);
+
+        // Metrics superadmin_count must be 0 for subordinate admin
+        $metrics = $response->viewData('page')['props']['metrics'];
+        $this->assertEquals(0, $metrics['superadmin_count']);
+
+        // isSuperAdmin prop must be false
+        $this->assertFalse($response->viewData('page')['props']['isSuperAdmin']);
+    }
+
+    public function test_subordinate_admin_cannot_update_or_delete_superadmin(): void
+    {
+        // If an admin tries to update superadmin by ID, gets 404
+        $updateResp = $this->actingAs($this->adminStaff)->put("/admin/staff/{$this->superAdmin->id}", [
+            'name' => 'Hacked Superadmin',
+            'email' => 'hacked@example.com',
+            'role' => 'marketing',
+        ]);
+        $updateResp->assertStatus(404);
+
+        // If an admin tries to delete superadmin by ID, gets 404
+        $deleteResp = $this->actingAs($this->adminStaff)->delete("/admin/staff/{$this->superAdmin->id}");
+        $deleteResp->assertStatus(404);
+
+        // If an admin tries to toggle status of superadmin, gets 404
+        $toggleResp = $this->actingAs($this->adminStaff)->post("/admin/staff/{$this->superAdmin->id}/toggle-status");
+        $toggleResp->assertStatus(404);
+    }
+
+    public function test_superadmin_can_change_own_email_and_password(): void
+    {
+        $payload = [
+            'name' => 'Super Administrator Baru',
+            'email' => 'superadmin_baru@kirimwa.pro',
+            'phone' => '+628999888777',
+            'password' => 'supersecret12345',
+            'password_confirmation' => 'supersecret12345',
+        ];
+
+        $response = $this->actingAs($this->superAdmin)->put("/admin/staff/{$this->superAdmin->id}", $payload);
+
+        $response->assertRedirect();
+        $response->assertSessionHas('success');
+
+        $this->assertEquals('superadmin_baru@kirimwa.pro', $this->superAdmin->fresh()->email);
+        $this->assertEquals('Super Administrator Baru', $this->superAdmin->fresh()->name);
+        $this->assertTrue(Hash::check('supersecret12345', $this->superAdmin->fresh()->password));
+        $this->assertEquals('superadmin', $this->superAdmin->fresh()->role);
     }
 
     public function test_superadmin_can_create_staff_with_allowed_roles(): void

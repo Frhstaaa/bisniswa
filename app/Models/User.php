@@ -79,7 +79,7 @@ class User extends Authenticatable
 
     public function canManageStaff(): bool
     {
-        return $this->isSuperAdmin();
+        return in_array($this->role, ['superadmin', 'admin'], true);
     }
 
     public function canManageSettings(): bool

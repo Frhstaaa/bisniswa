@@ -31,7 +31,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../..
 import { Badge } from '../../../Components/ui/badge';
 import { Button } from '../../../Components/ui/button';
 
-export default function AdminStaffIndex({ staff, metrics, filters, availableRoles }) {
+export default function AdminStaffIndex({ staff, metrics, filters, availableRoles, isSuperAdmin }) {
     const [search, setSearch] = useState(filters?.search || '');
     const [roleFilter, setRoleFilter] = useState(filters?.role || 'all');
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -64,7 +64,7 @@ export default function AdminStaffIndex({ staff, metrics, filters, availableRole
             name: '',
             email: '',
             phone: '',
-            role: 'admin',
+            role: availableRoles.length > 0 ? availableRoles[0].value : 'marketing',
             password: '',
             password_confirmation: '',
         });
@@ -201,24 +201,26 @@ export default function AdminStaffIndex({ staff, metrics, filters, availableRole
                     </Button>
                 </div>
 
-                {/* 2. SECURITY NOTICE FOR ROOT SUPERADMIN */}
-                <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-900 flex items-start gap-3 shadow-2xs">
-                    <Crown className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-                    <div className="space-y-0.5 text-xs">
-                        <div className="font-bold text-amber-950 flex items-center gap-1.5">
-                            <span>Proteksi Mutlak Super Administrator (Root)</span>
-                            <Badge variant="outline" className="bg-amber-100/80 text-amber-900 border-amber-300 text-[9px] font-mono">
-                                IMMUTABLE ROOT
-                            </Badge>
+                {/* 2. SECURITY NOTICE FOR ROOT SUPERADMIN (ONLY VISIBLE TO SUPERADMIN) */}
+                {isSuperAdmin && (
+                    <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-900 flex items-start gap-3 shadow-2xs">
+                        <Crown className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                        <div className="space-y-0.5 text-xs">
+                            <div className="font-bold text-amber-950 flex items-center gap-1.5">
+                                <span>Proteksi Mutlak Super Administrator (Root)</span>
+                                <Badge variant="outline" className="bg-amber-100/80 text-amber-900 border-amber-300 text-[9px] font-mono">
+                                    IMMUTABLE ROOT
+                                </Badge>
+                            </div>
+                            <p className="text-amber-800/90 leading-relaxed text-[11px]">
+                                Akun Super Administrator dilindungi secara ketat: <strong>tidak dapat dihapus, tidak dapat diduplikasi sembarang, dan tidak terlihat oleh pengguna di bawahnya (seperti Admin Operasional)</strong>. Anda dapat memperbarui email login dan kata sandi Anda kapan saja melalui tombol "Ganti Email / Sandi" di tabel bawah.
+                            </p>
                         </div>
-                        <p className="text-amber-800/90 leading-relaxed text-[11px]">
-                            Akun Super Administrator dilindungi secara ketat oleh arsitektur keamanan: <strong>tidak dapat dihapus, tidak dapat diduplikasi/ditambah sembarang, dan tidak dapat dinonaktifkan</strong>. RBAC ini dirancang khusus untuk membagikan tugas operasional kepada staf internal (Admin Operasional, Marketing, dan Customer Support).
-                        </p>
                     </div>
-                </div>
+                )}
 
                 {/* 3. KPI STAT CARDS */}
-                <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+                <div className={`grid grid-cols-2 ${isSuperAdmin ? 'lg:grid-cols-5' : 'lg:grid-cols-4'} gap-3 sm:gap-4`}>
                     <Card className="border-slate-200 shadow-2xs">
                         <CardHeader className="pb-2 flex flex-row items-center justify-between">
                             <CardDescription className="text-xs font-semibold text-slate-500">Total Tim Staff</CardDescription>
@@ -230,16 +232,18 @@ export default function AdminStaffIndex({ staff, metrics, filters, availableRole
                         </CardContent>
                     </Card>
 
-                    <Card className="border-amber-200 bg-amber-50/30 shadow-2xs">
-                        <CardHeader className="pb-2 flex flex-row items-center justify-between">
-                            <CardDescription className="text-xs font-semibold text-amber-800">Super Admin</CardDescription>
-                            <Crown className="w-4 h-4 text-amber-600" />
-                        </CardHeader>
-                        <CardContent className="pt-0">
-                            <div className="text-2xl font-black text-amber-800">{metrics.superadmin_count}</div>
-                            <p className="text-[11px] text-amber-700 mt-0.5">Root Terproteksi</p>
-                        </CardContent>
-                    </Card>
+                    {isSuperAdmin && (
+                        <Card className="border-amber-200 bg-amber-50/30 shadow-2xs">
+                            <CardHeader className="pb-2 flex flex-row items-center justify-between">
+                                <CardDescription className="text-xs font-semibold text-amber-800">Super Admin</CardDescription>
+                                <Crown className="w-4 h-4 text-amber-600" />
+                            </CardHeader>
+                            <CardContent className="pt-0">
+                                <div className="text-2xl font-black text-amber-800">{metrics.superadmin_count}</div>
+                                <p className="text-[11px] text-amber-700 mt-0.5">Root Terproteksi</p>
+                            </CardContent>
+                        </Card>
+                    )}
 
                     <Card className="border-emerald-200 bg-emerald-50/20 shadow-2xs">
                         <CardHeader className="pb-2 flex flex-row items-center justify-between">
@@ -293,25 +297,27 @@ export default function AdminStaffIndex({ staff, metrics, filters, availableRole
                             <button
                                 type="button"
                                 onClick={() => handleFilterRole('all')}
-                                className={`px-2.5 py-1 rounded-md transition-all whitespace-nowrap ${
+                                className={`px-2.5 py-1 rounded-md transition-all whitespace-nowrap cursor-pointer ${
                                     roleFilter === 'all' ? 'bg-white text-emerald-800 font-bold shadow-2xs' : 'text-slate-600 hover:text-slate-900'
                                 }`}
                             >
                                 Semua
                             </button>
-                            <button
-                                type="button"
-                                onClick={() => handleFilterRole('superadmin')}
-                                className={`px-2.5 py-1 rounded-md transition-all whitespace-nowrap ${
-                                    roleFilter === 'superadmin' ? 'bg-white text-amber-800 font-bold shadow-2xs' : 'text-slate-600 hover:text-slate-900'
-                                }`}
-                            >
-                                Super Admin
-                            </button>
+                            {isSuperAdmin && (
+                                <button
+                                    type="button"
+                                    onClick={() => handleFilterRole('superadmin')}
+                                    className={`px-2.5 py-1 rounded-md transition-all whitespace-nowrap cursor-pointer ${
+                                        roleFilter === 'superadmin' ? 'bg-white text-amber-800 font-bold shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                                    }`}
+                                >
+                                    Super Admin
+                                </button>
+                            )}
                             <button
                                 type="button"
                                 onClick={() => handleFilterRole('admin')}
-                                className={`px-2.5 py-1 rounded-md transition-all whitespace-nowrap ${
+                                className={`px-2.5 py-1 rounded-md transition-all whitespace-nowrap cursor-pointer ${
                                     roleFilter === 'admin' ? 'bg-white text-emerald-800 font-bold shadow-2xs' : 'text-slate-600 hover:text-slate-900'
                                 }`}
                             >
@@ -320,7 +326,7 @@ export default function AdminStaffIndex({ staff, metrics, filters, availableRole
                             <button
                                 type="button"
                                 onClick={() => handleFilterRole('marketing')}
-                                className={`px-2.5 py-1 rounded-md transition-all whitespace-nowrap ${
+                                className={`px-2.5 py-1 rounded-md transition-all whitespace-nowrap cursor-pointer ${
                                     roleFilter === 'marketing' ? 'bg-white text-blue-800 font-bold shadow-2xs' : 'text-slate-600 hover:text-slate-900'
                                 }`}
                             >
@@ -329,7 +335,7 @@ export default function AdminStaffIndex({ staff, metrics, filters, availableRole
                             <button
                                 type="button"
                                 onClick={() => handleFilterRole('support')}
-                                className={`px-2.5 py-1 rounded-md transition-all whitespace-nowrap ${
+                                className={`px-2.5 py-1 rounded-md transition-all whitespace-nowrap cursor-pointer ${
                                     roleFilter === 'support' ? 'bg-white text-purple-800 font-bold shadow-2xs' : 'text-slate-600 hover:text-slate-900'
                                 }`}
                             >
@@ -454,16 +460,23 @@ export default function AdminStaffIndex({ staff, metrics, filters, availableRole
                                             {/* Actions */}
                                             <td className="py-3.5 px-4 text-right whitespace-nowrap">
                                                 {isRootSuperAdmin ? (
-                                                    <div className="flex items-center justify-end gap-1 text-[11px] text-amber-700 font-semibold">
-                                                        <Lock className="w-3 h-3 text-amber-600" />
-                                                        <span>Dilindungi</span>
+                                                    <div className="flex items-center justify-end gap-1.5">
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => openEditModal(user)}
+                                                            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold bg-amber-100 text-amber-900 hover:bg-amber-200 border border-amber-300 transition-colors cursor-pointer shadow-2xs"
+                                                            title="Ganti Email & Kata Sandi Superadmin"
+                                                        >
+                                                            <Edit2 className="w-3 h-3 text-amber-700" />
+                                                            <span>Ganti Email / Sandi</span>
+                                                        </button>
                                                     </div>
                                                 ) : (
                                                     <div className="flex items-center justify-end gap-1">
                                                         <button
                                                             type="button"
                                                             onClick={() => openEditModal(user)}
-                                                            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-colors"
+                                                            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-colors cursor-pointer"
                                                             title="Edit Staff"
                                                         >
                                                             <Edit2 className="w-3.5 h-3.5" />
@@ -471,7 +484,7 @@ export default function AdminStaffIndex({ staff, metrics, filters, availableRole
                                                         <button
                                                             type="button"
                                                             onClick={() => setDeleteModalStaff(user)}
-                                                            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                                                            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
                                                             title="Hapus Staff"
                                                         >
                                                             <Trash2 className="w-3.5 h-3.5" />
@@ -642,7 +655,7 @@ export default function AdminStaffIndex({ staff, metrics, filters, availableRole
                 )}
             </AnimatePresence>
 
-            {/* ================= MODAL EDIT STAFF ================= */}
+            {/* ================= MODAL EDIT STAFF / SUPERADMIN ================= */}
             <AnimatePresence>
                 {editingStaff && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs">
@@ -652,20 +665,32 @@ export default function AdminStaffIndex({ staff, metrics, filters, availableRole
                             exit={{ opacity: 0, scale: 0.95 }}
                             className="w-full max-w-xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]"
                         >
-                            <div className="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
+                            <div className={`px-6 py-4 text-white flex items-center justify-between ${
+                                editingStaff.role === 'superadmin' ? 'bg-amber-950 border-b border-amber-800/60' : 'bg-slate-900'
+                            }`}>
                                 <div className="flex items-center gap-2.5">
-                                    <Edit2 className="w-4 h-4 text-emerald-400" />
+                                    {editingStaff.role === 'superadmin' ? (
+                                        <Crown className="w-5 h-5 text-amber-400" />
+                                    ) : (
+                                        <Edit2 className="w-4 h-4 text-emerald-400" />
+                                    )}
                                     <div>
-                                        <h3 className="text-sm font-bold">Edit Staff: {editingStaff.name}</h3>
-                                        <p className="text-[11px] text-slate-400">
-                                            Perbarui data profil, peran, atau reset kata sandi
+                                        <h3 className="text-sm font-bold">
+                                            {editingStaff.role === 'superadmin'
+                                                ? 'Edit Kredensial Super Administrator (Root)'
+                                                : `Edit Staff: ${editingStaff.name}`}
+                                        </h3>
+                                        <p className="text-[11px] text-slate-300">
+                                            {editingStaff.role === 'superadmin'
+                                                ? 'Ganti email login utama, nama, atau perbarui kata sandi'
+                                                : 'Perbarui data profil, peran, atau reset kata sandi'}
                                         </p>
                                     </div>
                                 </div>
                                 <button
                                     type="button"
                                     onClick={() => setEditingStaff(null)}
-                                    className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
+                                    className="p-1 rounded-lg hover:bg-white/10 text-slate-300 hover:text-white transition-colors"
                                 >
                                     <X className="w-4 h-4" />
                                 </button>
@@ -685,13 +710,15 @@ export default function AdminStaffIndex({ staff, metrics, filters, availableRole
                                     </div>
 
                                     <div className="space-y-1.5">
-                                        <label className="font-bold text-slate-700">Email Login *</label>
+                                        <label className="font-bold text-slate-700">
+                                            Email Login {editingStaff.role === 'superadmin' && '(Email Superadmin)'} *
+                                        </label>
                                         <input
                                             type="email"
                                             required
                                             value={form.email}
                                             onChange={(e) => setForm({ ...form, email: e.target.value })}
-                                            className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                                            className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-emerald-500"
                                         />
                                     </div>
                                 </div>
@@ -706,46 +733,65 @@ export default function AdminStaffIndex({ staff, metrics, filters, availableRole
                                     />
                                 </div>
 
-                                {/* Role Selection */}
-                                <div className="space-y-2">
-                                    <label className="font-bold text-slate-800 block">
-                                        Peran Operasional (Role RBAC) *
-                                    </label>
-                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                                        {availableRoles.map((r) => {
-                                            const isSelected = form.role === r.value;
-                                            return (
-                                                <div
-                                                    key={r.value}
-                                                    onClick={() => setForm({ ...form, role: r.value })}
-                                                    className={`p-3 rounded-2xl border-2 cursor-pointer transition-all ${
-                                                        isSelected
-                                                            ? 'border-emerald-600 bg-emerald-50/50 shadow-xs'
-                                                            : 'border-slate-200 hover:border-slate-300 bg-white'
-                                                    }`}
-                                                >
-                                                    <div className="flex items-center justify-between mb-1">
-                                                        <span className="font-bold text-slate-900 text-xs">{r.label}</span>
-                                                        <span className={`w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center ${
-                                                            isSelected ? 'border-emerald-600 bg-emerald-600' : 'border-slate-300'
-                                                        }`}>
-                                                            {isSelected && <Check className="w-2.5 h-2.5 text-white" />}
-                                                        </span>
-                                                    </div>
-                                                    <p className="text-[10px] text-slate-500 leading-tight">
-                                                        {r.description}
-                                                    </p>
-                                                </div>
-                                            );
-                                        })}
+                                {/* Role Selection or Locked Superadmin Badge */}
+                                {editingStaff.role === 'superadmin' ? (
+                                    <div className="p-3.5 bg-amber-50 rounded-2xl border border-amber-200 flex items-center justify-between">
+                                        <div className="flex items-center gap-2.5">
+                                            <Crown className="w-4 h-4 text-amber-600 shrink-0" />
+                                            <div>
+                                                <div className="font-bold text-amber-950 text-xs">Peran: Super Administrator (Root)</div>
+                                                <div className="text-[10px] text-amber-800">Peran ini permanen & dilindungi arsitektur sistem</div>
+                                            </div>
+                                        </div>
+                                        <span className="px-2 py-0.5 rounded bg-amber-200/80 text-amber-900 text-[9px] font-mono font-bold">
+                                            IMMUTABLE
+                                        </span>
                                     </div>
-                                </div>
+                                ) : (
+                                    <div className="space-y-2">
+                                        <label className="font-bold text-slate-800 block">
+                                            Peran Operasional (Role RBAC) *
+                                        </label>
+                                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                            {availableRoles.map((r) => {
+                                                const isSelected = form.role === r.value;
+                                                return (
+                                                    <div
+                                                        key={r.value}
+                                                        onClick={() => setForm({ ...form, role: r.value })}
+                                                        className={`p-3 rounded-2xl border-2 cursor-pointer transition-all ${
+                                                            isSelected
+                                                                ? 'border-emerald-600 bg-emerald-50/50 shadow-xs'
+                                                                : 'border-slate-200 hover:border-slate-300 bg-white'
+                                                        }`}
+                                                    >
+                                                        <div className="flex items-center justify-between mb-1">
+                                                            <span className="font-bold text-slate-900 text-xs">{r.label}</span>
+                                                            <span className={`w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center ${
+                                                                isSelected ? 'border-emerald-600 bg-emerald-600' : 'border-slate-300'
+                                                            }`}>
+                                                                {isSelected && <Check className="w-2.5 h-2.5 text-white" />}
+                                                            </span>
+                                                        </div>
+                                                        <p className="text-[10px] text-slate-500 leading-tight">
+                                                            {r.description}
+                                                        </p>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                )}
 
-                                {/* Optional Password Reset */}
+                                {/* Password Reset */}
                                 <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
                                     <div className="flex items-center gap-1.5 font-bold text-slate-800">
                                         <Key className="w-3.5 h-3.5 text-slate-500" />
-                                        <span>Ganti Kata Sandi (Kosongkan jika tidak diubah)</span>
+                                        <span>
+                                            {editingStaff.role === 'superadmin'
+                                                ? 'Ganti Kata Sandi Superadmin (Kosongkan jika tidak ingin diubah)'
+                                                : 'Ganti Kata Sandi (Kosongkan jika tidak diubah)'}
+                                        </span>
                                     </div>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                         <input
@@ -753,7 +799,7 @@ export default function AdminStaffIndex({ staff, metrics, filters, availableRole
                                             minLength={8}
                                             value={form.password}
                                             onChange={(e) => setForm({ ...form, password: e.target.value })}
-                                            placeholder="Kata sandi baru..."
+                                            placeholder="Kata sandi baru (min 8 karakter)..."
                                             className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500"
                                         />
                                         <input
@@ -761,7 +807,7 @@ export default function AdminStaffIndex({ staff, metrics, filters, availableRole
                                             minLength={8}
                                             value={form.password_confirmation}
                                             onChange={(e) => setForm({ ...form, password_confirmation: e.target.value })}
-                                            placeholder="Konfirmasi sandi..."
+                                            placeholder="Konfirmasi sandi baru..."
                                             className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500"
                                         />
                                     </div>
@@ -772,14 +818,14 @@ export default function AdminStaffIndex({ staff, metrics, filters, availableRole
                                         type="button"
                                         variant="outline"
                                         onClick={() => setEditingStaff(null)}
-                                        className="h-9 px-4 text-xs font-semibold"
+                                        className="h-9 px-4 text-xs font-semibold cursor-pointer"
                                     >
                                         Batal
                                     </Button>
                                     <Button
                                         type="submit"
                                         disabled={isSubmitting}
-                                        className="bg-emerald-600 hover:bg-emerald-700 text-white h-9 px-5 text-xs font-semibold gap-1.5"
+                                        className="bg-emerald-600 hover:bg-emerald-700 text-white h-9 px-5 text-xs font-semibold gap-1.5 cursor-pointer"
                                     >
                                         {isSubmitting ? 'Menyimpan...' : 'Simpan Perubahan'}
                                     </Button>

@@ -41,20 +41,23 @@ class ProfileController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$user->id],
             'phone' => ['nullable', 'string', 'max:25'],
-            'workspace_name' => ['required', 'string', 'max:255'],
+            'workspace_name' => [$user->workspace ? 'required' : 'nullable', 'string', 'max:255'],
         ]);
 
         $user->update([
             'name' => $validated['name'],
-            'email' => $validated['email'],
+            'email' => strtolower($validated['email']),
+            'phone' => $validated['phone'] ?? $user->phone,
         ]);
 
-        $workspace->update([
-            'name' => $validated['workspace_name'],
-            'phone' => $validated['phone'] ?? $workspace->phone,
-        ]);
+        if ($user->workspace && ! empty($validated['workspace_name'])) {
+            $workspace->update([
+                'name' => $validated['workspace_name'],
+                'phone' => $validated['phone'] ?? $workspace->phone,
+            ]);
+        }
 
-        return back()->with('success', 'Profil akun dan data workspace berhasil diperbarui.');
+        return back()->with('success', 'Profil akun dan kredensial berhasil diperbarui.');
     }
 
     public function updatePassword(Request $request): RedirectResponse
