@@ -431,7 +431,7 @@ print(response.json())`,
                                             </TableRow>
                                         ) : (
                                             apiKeys.map((key) => {
-                                                const serverName = 'WhatsApp Web JS';
+                                                const serverName = 'UltraSync Engine';
                                                 const isConnected = key.device?.status === 'connected';
 
                                                 return (
@@ -931,7 +931,7 @@ print(response.json())`,
                                                 {devices.map((device) => {
                                                     const isSelected = String(selectedDeviceId) === String(device.id);
                                                     const isConnected = device.status === 'connected';
-                                                    const serverLabel = 'WhatsApp Web JS';
+                                                    const serverLabel = 'UltraSync Engine';
 
                                                     return (
                                                         <label

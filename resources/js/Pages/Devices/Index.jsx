@@ -124,7 +124,6 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
 
     const connectedCount = (devices || []).filter((d) => d.status === 'connected').length;
     const wwebjsCount = (devices || []).filter((d) => d.engine === 'wwebjs').length;
-    const baileysCount = (devices || []).filter((d) => d.engine === 'baileys').length;
 
     return (
         <AppLayout title="Perangkat WhatsApp">
@@ -149,7 +148,7 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                             )}
                         </div>
                         <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                            Tautkan nomor WhatsApp bisnis Anda menggunakan engine resmi <strong className="text-emerald-700">WhatsApp Web JS</strong> (Headless Chromium).
+                            Tautkan nomor WhatsApp bisnis Anda menggunakan engine resmi <strong className="text-emerald-700">BisnisWA UltraSync</strong> (Enterprise Native Web).
                         </p>
                     </div>
 
@@ -239,7 +238,7 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                         <Card className="h-full border-slate-200 shadow-xs hover:shadow-md transition-all">
                             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                                 <CardTitle className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                                    WhatsApp Web JS Engine
+                                    BisnisWA UltraSync Engine
                                 </CardTitle>
                                 <div className="h-7 w-7 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
                                     <Zap className="h-3.5 w-3.5" />
@@ -276,7 +275,7 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                                     100% E2EE
                                 </div>
                                 <p className="text-[11px] text-slate-500 mt-1">
-                                    Resmi Meta WhatsApp Web (Bebas Delay Sinyal)
+                                    Protokol Resmi BisnisWA UltraSync (Bebas Delay)
                                 </p>
                             </CardContent>
                         </Card>
@@ -289,7 +288,7 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                         <div className="flex items-center gap-2">
                             <span className="text-xs font-semibold text-emerald-800 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200 flex items-center gap-1.5">
                                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                                WhatsApp Web JS Engine ({devices?.length || 0} Perangkat)
+                                BisnisWA UltraSync Engine ({devices?.length || 0} Perangkat)
                             </span>
                         </div>
 
@@ -351,7 +350,7 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                                         )}
 
                                         <Badge variant="outline" className="font-mono text-[10px] font-bold uppercase text-emerald-800 bg-emerald-50 border-emerald-200">
-                                            WhatsApp Web JS
+                                            UltraSync Engine
                                         </Badge>
                                     </div>
 

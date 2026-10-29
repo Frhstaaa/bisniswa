@@ -475,7 +475,7 @@ export default function InboxIndex({
                     </div>
                 </div>
 
-                {/* WhatsApp Web Style Main Frame (Strictly bounded height without page-jumping) */}
+                {/* Chat Style Main Frame (Strictly bounded height without page-jumping) */}
                 <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden flex flex-col md:flex-row h-[calc(100vh-12.5rem)] min-h-[580px] max-h-[820px]">
                     {/* ================= LEFT COLUMN: CONVERSATION LIST ================= */}
                     <div
@@ -758,7 +758,7 @@ export default function InboxIndex({
                         ) : currentPhone ? (
                             /* Active WhatsApp Conversation Stream */
                             <>
-                                {/* Fixed WhatsApp Web Chat Header */}
+                                {/* Fixed Live Chat Header */}
                                 <div className="h-[60px] px-4 bg-[#f0f2f5] border-b border-[#e9edef] flex items-center justify-between shrink-0 shadow-2xs z-10">
                                     <div className="flex items-center gap-3 min-w-0">
                                         {/* Mobile Back Button */}

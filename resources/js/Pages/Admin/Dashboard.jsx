@@ -447,12 +447,12 @@ export default function AdminDashboard({ metrics, engineHealth, recentPayments, 
                             <CardContent className="space-y-3 p-5 text-xs">
                                 <div className="p-3.5 rounded-xl border border-emerald-200/80 bg-emerald-50/50 space-y-1.5">
                                     <div className="flex items-center justify-between">
-                                        <span className="font-bold text-slate-900">WhatsApp Web JS Engine (Chromium)</span>
+                                        <span className="font-bold text-slate-900">BisnisWA UltraSync Engine</span>
                                         <span className="font-mono text-[11px] text-emerald-800 font-bold">
                                             {engineHealth.wwebjs?.active_instances ?? 0} instance aktif
                                         </span>
                                     </div>
-                                    <p className="text-[10px] text-slate-500">Official Headless Chromium Web Engine (Zero Delay & Anti-Ban)</p>
+                                    <p className="text-[10px] text-slate-500">Official Enterprise Native Protocol (Zero Delay & Anti-Ban)</p>
                                     <div className="flex items-center justify-between text-[11px] pt-1.5 border-t border-emerald-200/60 text-slate-600">
                                         <span>Estimasi Total RAM:</span>
                                         <span className="font-mono font-bold text-emerald-700">~{engineHealth.wwebjs?.estimated_ram_mb ?? 0} MB</span>

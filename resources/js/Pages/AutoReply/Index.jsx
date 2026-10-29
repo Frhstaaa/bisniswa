@@ -1212,7 +1212,7 @@ export default function AutoReplyIndex({
                                 </div>
                             )}
 
-                            {/* Chat History Bubbles (Authentic WhatsApp Web Palette) */}
+                            {/* Chat History Bubbles */}
                             <div className="flex-1 p-3.5 overflow-y-auto space-y-3 bg-[#efeae2]/60 text-xs">
                                 {chatHistory.map((item, idx) => (
                                     <div

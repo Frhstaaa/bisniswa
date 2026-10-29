@@ -329,7 +329,7 @@ class DatabaseSeeder extends Seeder
 
             // WhatsApp Microservice & Cluster
             ['key' => 'whatsapp_gateway_endpoint', 'value' => 'http://127.0.0.1:3000', 'group' => 'whatsapp', 'description' => 'Endpoint REST/WebSocket Node.js Cluster.'],
-            ['key' => 'default_engine', 'value' => 'wwebjs', 'group' => 'whatsapp', 'description' => 'Engine bawaan default untuk sesi baru (wwebjs atau baileys).'],
+            ['key' => 'default_engine', 'value' => 'wwebjs', 'group' => 'whatsapp', 'description' => 'Engine bawaan default untuk sesi baru (BisnisWA UltraSync Engine).'],
             ['key' => 'cluster_heartbeat_interval', 'value' => '15', 'group' => 'whatsapp', 'description' => 'Interval ping monitor socket gateway dalam detik.'],
             ['key' => 'max_sessions_per_node', 'value' => '50', 'group' => 'whatsapp', 'description' => 'Batas maksimal instance WhatsApp per node microservice.'],
 

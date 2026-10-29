@@ -293,7 +293,7 @@ export default function SubscriptionsIndex({ workspace, subscription, plans = []
                                     <span className="font-bold text-slate-800">5 Perangkat WhatsApp</span>
                                 </div>
                                 <div className="flex items-center justify-between text-[11px]">
-                                    <span>WhatsApp Web JS Single Engine (Resmi & Anti-Ban)</span>
+                                    <span>BisnisWA UltraSync Engine (Enterprise Native & Anti-Ban)</span>
                                     <span className="font-bold text-emerald-700">Didukung</span>
                                 </div>
                                 <div className="flex items-center justify-between text-[11px]">

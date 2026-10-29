@@ -81,45 +81,45 @@ export default function DualEngine({ plans = [], stats = {} }) {
     const engineComparison = [
         {
             feature: 'Protokol Enkripsi & Runtime',
-            wwebjs: 'Resmi WhatsApp Web JS (Headless Chromium)',
+            wwebjs: 'BisnisWA UltraSync Engine (Enterprise Native Protocol)',
             socket: 'Socket Reverse-Engineered Tradisional',
-            advantage: 'WhatsApp Web JS',
+            advantage: 'UltraSync Engine',
         },
         {
             feature: 'Pencegahan "Menunggu Pesan Ini"',
             wwebjs: '100% Bebas Kendala (Enkripsi Native Meta)',
             socket: 'Sering Tertahan (Signal Ratchet Desync / Bad MAC)',
-            advantage: 'WhatsApp Web JS',
+            advantage: 'UltraSync Engine',
         },
         {
             feature: 'Keaslian Sesi & Sidik Jari Web',
-            wwebjs: '100% Identik dengan WhatsApp Web Asli',
+            wwebjs: '100% Identik dengan Protokol Web WhatsApp Asli',
             socket: 'Emulasi Virtual (Rentan Deteksi Bot)',
-            advantage: 'WhatsApp Web JS',
+            advantage: 'UltraSync Engine',
         },
         {
             feature: 'Akselerasi Backend',
             wwebjs: 'Laravel Octane + FrankenPHP Multi-Worker',
             socket: 'PHP-FPM Konvensional',
-            advantage: 'WhatsApp Web JS',
+            advantage: 'UltraSync Engine',
         },
         {
             feature: 'Toleransi Anti-Banned Nomor',
             wwebjs: 'Maksimum (Skor Reputasi Meta Tertinggi)',
             socket: 'Moderat (Rentan Rotasi Protokol WhatsApp)',
-            advantage: 'WhatsApp Web JS',
+            advantage: 'UltraSync Engine',
         },
         {
             feature: 'Mekanisme Auto-Recovery Sesi',
             wwebjs: 'Heartbeat Keep-Alive & Auto-Restore Disk',
             socket: 'Manual Reconnect Saat Socket Putus',
-            advantage: 'WhatsApp Web JS',
+            advantage: 'UltraSync Engine',
         },
         {
             feature: 'Kesesuaian Penggunaan Terbaik',
             wwebjs: 'Customer Service Live Chat, Broadcast & Notifikasi Bisnis',
             socket: 'Proyek Skala Kecil Tanpa Jaminan E2EE',
-            advantage: 'WhatsApp Web JS',
+            advantage: 'UltraSync Engine',
         },
     ];
 
@@ -135,13 +135,13 @@ export default function DualEngine({ plans = [], stats = {} }) {
             icon: Clock,
         },
         {
-            title: 'Isolasi Sesi Headless Browser',
-            desc: 'Setiap perangkat WhatsApp beroperasi dalam profil browser Chromium terisolasi dengan data sesi LocalAuth mandiri tanpa campur aduk cache.',
+            title: 'Isolasi Sesi Sandbox Mandiri',
+            desc: 'Setiap perangkat WhatsApp beroperasi dalam sandbox terisolasi dengan data penyimpanan mandiri tanpa campur aduk cache.',
             icon: Shield,
         },
         {
             title: 'Deteksi & Heartbeat Auto-Recovery',
-            desc: 'Sistem proactive keep-alive secara otomatis mendeteksi jika browser terputus dan melakukan restart bersih instan tanpa kehilangan autentikasi.',
+            desc: 'Sistem proactive keep-alive secara otomatis mendeteksi jika koneksi terputus dan melakukan pemulihan bersih instan tanpa kehilangan autentikasi.',
             icon: RefreshCw,
         },
         {
@@ -157,7 +157,7 @@ export default function DualEngine({ plans = [], stats = {} }) {
     ];
 
     return (
-        <PublicLayout title="Teknologi WhatsApp Web JS & FrankenPHP" plans={safePlans} activeMenu="dual-engine">
+        <PublicLayout title="Teknologi BisnisWA UltraSync Engine & FrankenPHP" plans={safePlans} activeMenu="dual-engine">
             <div className="space-y-16 lg:space-y-24">
                 {/* ================= HERO HEADER ================= */}
                 <section className="relative overflow-hidden bg-gradient-to-b from-emerald-950 via-emerald-900 to-emerald-950 text-white pt-36 sm:pt-44 lg:pt-48 pb-24 sm:pb-32 px-4 sm:px-6 lg:px-10">
@@ -177,7 +177,6 @@ export default function DualEngine({ plans = [], stats = {} }) {
                                 scale: [1, 1.25, 1],
                                 opacity: [0.08, 0.2, 0.08],
                                 x: [0, -25, 0],
-                                y: [0, 20, 0],
                             }}
                             transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
                             className="absolute top-1/3 -right-20 w-96 h-96 rounded-full bg-amber-400/15 blur-3xl"
@@ -193,7 +192,7 @@ export default function DualEngine({ plans = [], stats = {} }) {
                         <motion.div variants={heroItemVariants} className="inline-block gsap-hero-item">
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-bold shadow-xs">
                                 <Cpu className="w-3.5 h-3.5 text-amber-300" />
-                                <span>ARSITEKTUR SINGLE-ENGINE WHATSAPP WEB JS RESMI</span>
+                                <span>ARSITEKTUR SINGLE-ENGINE BISNISWA ULTRASYNC RESMI</span>
                             </div>
                         </motion.div>
 
@@ -201,14 +200,14 @@ export default function DualEngine({ plans = [], stats = {} }) {
                             variants={heroItemVariants}
                             className="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight gsap-hero-item"
                         >
-                            WhatsApp Web JS: <span className="text-amber-300">Anti "Menunggu Pesan"</span> & <span className="text-emerald-400">Sesi Stabil</span>
+                            UltraSync Engine: <span className="text-amber-300">Anti "Menunggu Pesan"</span> & <span className="text-emerald-400">Sesi Stabil</span>
                         </motion.h1>
 
                         <motion.p
                             variants={heroItemVariants}
                             className="text-slate-200 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed gsap-hero-item"
                         >
-                            Enkripsi Signal Protocol resmi Meta dijalankan via browser Headless Chromium terisolasi. Pesan terbuka seketika di ponsel penerima tanpa kendala desinkronisasi, didukung akselerasi performa tinggi dari Laravel Octane dan FrankenPHP.
+                            Enkripsi Signal Protocol resmi Meta dijalankan via sandbox protokol enterprise terisolasi. Pesan terbuka seketika di ponsel penerima tanpa kendala desinkronisasi, didukung akselerasi performa tinggi dari Laravel Octane dan FrankenPHP.
                         </motion.p>
 
                         <motion.div variants={heroItemVariants} className="pt-4 flex flex-wrap items-center justify-center gap-3 gsap-hero-item">
@@ -220,7 +219,7 @@ export default function DualEngine({ plans = [], stats = {} }) {
                                 className="btn-press inline-flex h-11 items-center gap-2 rounded-xl bg-amber-400 hover:bg-amber-300 px-6 text-sm font-bold text-slate-950 shadow-md transition-all cursor-pointer"
                             >
                                 <Zap className="w-4 h-4 fill-slate-950" />
-                                <span>Coba Engine WhatsApp Sekarang</span>
+                                <span>Coba UltraSync Engine Sekarang</span>
                             </motion.button>
                             <Link
                                 href="/cara-pakai"
@@ -236,7 +235,7 @@ export default function DualEngine({ plans = [], stats = {} }) {
                 {/* ================= CORE PILLAR CARDS ================= */}
                 <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 sm:-mt-14">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 gsap-card-grid">
-                        {/* WhatsApp Web JS Card */}
+                        {/* BisnisWA UltraSync Engine Card */}
                         <motion.div
                             initial={{ opacity: 0, y: 24 }}
                             whileInView={{ opacity: 1, y: 0 }}
@@ -254,12 +253,12 @@ export default function DualEngine({ plans = [], stats = {} }) {
                                         ⚡
                                     </div>
                                     <div>
-                                        <h3 className="text-xl font-black text-slate-900">WhatsApp Web JS</h3>
-                                        <p className="text-xs text-slate-500 font-mono">Headless Chromium Official Client</p>
+                                        <h3 className="text-xl font-black text-slate-900">BisnisWA UltraSync Engine</h3>
+                                        <p className="text-xs text-slate-500 font-mono">Enterprise Native Official Protocol</p>
                                     </div>
                                 </div>
                                 <p className="text-xs text-slate-600 leading-relaxed">
-                                    Menjalankan kode resmi WhatsApp Web langsung di dalam browser headless. Kunci ratchet dikelola oleh skrip Meta sehingga pesan selalu terdekripsi seketika tanpa error autentikasi MAC di HP penerima.
+                                    Menjalankan protokol web WhatsApp resmi langsung di dalam sandbox terisolasi. Kunci ratchet dikelola secara native sehingga pesan selalu terdekripsi seketika tanpa error autentikasi MAC di HP penerima.
                                 </p>
                                 <div className="space-y-2.5 pt-2 border-t border-slate-100 text-xs">
                                     <div className="flex items-center justify-between py-1 border-b border-slate-50">
@@ -276,7 +275,7 @@ export default function DualEngine({ plans = [], stats = {} }) {
                                     </div>
                                     <div className="flex items-center justify-between py-1">
                                         <span className="text-slate-500">Keamanan Sesi:</span>
-                                        <strong className="font-semibold text-slate-800">LocalAuth Terisolasi</strong>
+                                        <strong className="font-semibold text-slate-800">Isolated Session Sandbox</strong>
                                     </div>
                                 </div>
                             </Card>
@@ -341,10 +340,10 @@ export default function DualEngine({ plans = [], stats = {} }) {
                     <div className="text-center space-y-2 mb-10">
                         <Badge variant="emerald" className="text-[10px] font-bold">PERBANDINGAN ARSITEKTUR</Badge>
                         <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-                            Mengapa WhatsApp Web JS Menjadi Standar Utama?
+                            Mengapa BisnisWA UltraSync Menjadi Standar Utama?
                         </h2>
                         <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">
-                            Bandingkan keunggulan arsitektur resmi berbasis web browser dibandingkan library socket tidak resmi.
+                            Bandingkan keunggulan arsitektur resmi berstandar web enterprise dibandingkan library socket tidak resmi.
                         </p>
                     </div>
 
@@ -354,7 +353,7 @@ export default function DualEngine({ plans = [], stats = {} }) {
                                 <thead className="bg-slate-50 border-b border-slate-200 text-slate-700 uppercase text-[10px] tracking-wider">
                                     <tr>
                                         <th className="py-3.5 px-5 font-bold">Parameter / Fitur</th>
-                                        <th className="py-3.5 px-5 font-bold text-emerald-800 bg-emerald-50/50">WhatsApp Web JS (BisnisWA)</th>
+                                        <th className="py-3.5 px-5 font-bold text-emerald-800 bg-emerald-50/50">BisnisWA UltraSync (Resmi)</th>
                                         <th className="py-3.5 px-5 font-bold text-slate-600 bg-slate-50">Library Socket Tidak Resmi</th>
                                     </tr>
                                 </thead>
@@ -467,7 +466,7 @@ export default function DualEngine({ plans = [], stats = {} }) {
                         className="rounded-3xl bg-gradient-to-r from-emerald-800 via-[#064e3b] to-slate-900 p-8 sm:p-10 text-white text-center space-y-4 shadow-xl gsap-scale"
                     >
                         <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
-                            Rasakan Kecepatan & Stabilitas WhatsApp Web JS Hari Ini
+                            Rasakan Kecepatan & Stabilitas BisnisWA UltraSync Hari Ini
                         </h2>
                         <p className="text-xs sm:text-sm text-emerald-100 max-w-xl mx-auto">
                             Tautkan perangkat Anda dan nikmati pengiriman pesan tanpa delay, sesi persisten yang awet, dan akselerasi FrankenPHP.

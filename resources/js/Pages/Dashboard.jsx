@@ -123,7 +123,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
         },
         {
             title: 'Pindai QR Nomor WhatsApp',
-            subtitle: 'Tautkan nomor baru ke engine WhatsApp Web JS',
+            subtitle: 'Tautkan nomor baru ke BisnisWA UltraSync Engine',
             onClick: () => setIsQrModalOpen(true),
             icon: QrCode,
         },
@@ -654,7 +654,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                             <div className="flex items-center gap-2">
                                                 <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
                                                 <span className="font-bold text-xs text-slate-900">
-                                                    WhatsApp Web JS Engine
+                                                    BisnisWA UltraSync Engine
                                                 </span>
                                             </div>
                                             <Badge variant="outline" className="border-emerald-300 bg-emerald-50 text-emerald-800 text-[10px] font-bold">
@@ -662,7 +662,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                             </Badge>
                                         </div>
                                         <p className="text-[11px] text-slate-500 leading-relaxed">
-                                            Engine tunggal resmi berbasis Headless Chromium dengan enkripsi instan & bebas kendala "Menunggu pesan ini".
+                                            Engine enterprise berkinerja tinggi dengan enkripsi native instan & bebas kendala "Menunggu pesan ini".
                                         </p>
                                         <div className="grid grid-cols-2 gap-2 text-[11px] pt-1.5 border-t border-emerald-100 text-slate-600">
                                             <div>
@@ -745,21 +745,21 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                     {/* TAB 3: SINGLE ENGINE & OCTANE INFRASTRUCTURE */}
                     <TabsContent value="infrastructure" className="space-y-6">
                         <div className="grid gap-6 md:grid-cols-2">
-                            {/* WhatsApp Web JS Engine Card */}
+                            {/* BisnisWA UltraSync Engine Card */}
                             <Card className="shadow-xs border-emerald-200/80 bg-emerald-50/20">
                                 <CardHeader>
                                     <div className="flex items-center justify-between">
                                         <CardTitle className="text-base font-bold flex items-center gap-2">
                                             <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
-                                            WhatsApp Web JS Engine
+                                            BisnisWA UltraSync Engine
                                         </CardTitle>
                                         <Badge variant="outline" className="border-emerald-300 bg-emerald-50 text-emerald-800 font-bold">OPERASIONAL</Badge>
                                     </div>
-                                    <CardDescription>Engine: Official WhatsApp Web Script via Headless Chromium</CardDescription>
+                                    <CardDescription>Engine: Proprietary Native Web Protocol & Isolated Session</CardDescription>
                                 </CardHeader>
                                 <CardContent className="space-y-4">
                                     <p className="text-xs text-slate-600">
-                                        Engine tunggal berkinerja tinggi dengan enkripsi Signal ratchet native langsung dari Meta. Menjamin pesan terbuka instan tanpa status "Menunggu pesan ini".
+                                        Engine tunggal berkinerja tinggi dengan protokol enkripsi Signal native. Menjamin pesan terbuka instan tanpa status "Menunggu pesan ini".
                                     </p>
                                     <div className="grid grid-cols-2 gap-3 pt-2 text-xs">
                                         <div className="p-3 bg-white rounded-lg border border-emerald-100">
@@ -851,7 +851,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                                         {device.phone_number || '-'}
                                                     </TableCell>
                                                     <TableCell className="text-xs uppercase font-mono text-slate-500">
-                                                        WhatsApp Web JS
+                                                        UltraSync Engine
                                                     </TableCell>
                                                     <TableCell>
                                                         <Badge

@@ -263,7 +263,7 @@ payload, _ := json.Marshal(map[string]string{
     // Response Success Sample
     const successResponseSample = `{
   "status": true,
-  "message": "Pesan berhasil diproses dan dikirim via WhatsApp Web JS Engine",
+  "message": "Pesan berhasil diproses dan dikirim via BisnisWA UltraSync Engine",
   "data": {
     "message_id": 142,
     "device_id": 6,
@@ -464,7 +464,7 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                             </div>
                             <h3 className="font-bold text-sm text-[#0f172a]">Hubungkan WhatsApp</h3>
                             <p className="text-xs text-slate-500 leading-relaxed">
-                                Pindai QR Code di menu <strong>Manajemen Gateway</strong> menggunakan aplikasi WhatsApp resmi di HP Anda (didukung oleh WhatsApp Web JS Engine resmi).
+                                Pindai QR Code di menu <strong>Manajemen Gateway</strong> menggunakan aplikasi WhatsApp resmi di HP Anda (didukung oleh BisnisWA UltraSync Engine resmi).
                             </p>
                         </Card>
 

@@ -203,7 +203,7 @@ export default function ClientShow({ client }) {
                                 <p className="text-slate-400 py-6 text-center">Belum ada perangkat WhatsApp yang ditautkan.</p>
                             ) : (
                                 client.devices.map((device) => {
-                                    const serverLabel = 'WhatsApp Web JS';
+                                    const serverLabel = 'UltraSync Engine';
 
                                     return (
                                         <div key={device.id} className="p-3.5 rounded-xl border border-slate-200/80 bg-slate-50/70 space-y-1.5">

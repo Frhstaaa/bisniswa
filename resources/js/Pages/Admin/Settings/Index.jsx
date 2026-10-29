@@ -267,7 +267,7 @@ export default function SettingsIndex({ settings }) {
                                                     disabled
                                                     className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-slate-700 font-medium"
                                                 >
-                                                    <option value="wwebjs">WhatsApp Web JS Engine (Resmi Headless Chromium - Stabil & Zero Delay)</option>
+                                                    <option value="wwebjs">BisnisWA UltraSync Engine (Enterprise Native - Stabil & Zero Delay)</option>
                                                 </select>
                                             </div>
                                         </div>

@@ -50,7 +50,7 @@ class SuperAdminService
                     'active_instances' => $onlineDevices,
                     'status' => 'operational',
                     'estimated_ram_mb' => $onlineDevices * 120,
-                    'engine_version' => 'whatsapp-web.js (Chromium Headless)',
+                    'engine_version' => 'BisnisWA UltraSync Engine v2.0 (Enterprise Native)',
                 ],
             ],
             'recent_payments' => $this->paymentRepo->getRecentPayments(6),

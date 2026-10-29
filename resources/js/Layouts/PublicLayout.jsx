@@ -85,7 +85,7 @@ export default function PublicLayout({
 
     const navLinks = [
         { label: 'Panduan Integrasi', href: '/cara-pakai', key: 'cara-pakai', match: (u) => u.startsWith('/cara-pakai') },
-        { label: 'Teknologi Engine', href: '/dual-engine', key: 'dual-engine', match: (u) => u.startsWith('/dual-engine') },
+        { label: 'Teknologi UltraSync', href: '/dual-engine', key: 'dual-engine', match: (u) => u.startsWith('/dual-engine') },
         { label: 'Dokumentasi API', href: '/rest-api', key: 'rest-api', match: (u) => u.startsWith('/rest-api') },
         { label: 'Paket Layanan', href: '/harga', key: 'harga', match: (u) => u.startsWith('/harga') || u.startsWith('/paket-harga') },
         { label: 'Pusat Bantuan', href: '/faq', key: 'faq', match: (u) => u.startsWith('/faq') },
@@ -321,7 +321,7 @@ export default function PublicLayout({
                                 <h4 className="font-bold text-[#facc15] uppercase text-[11px] tracking-wider">Navigasi Solusi</h4>
                                 <ul className="space-y-2 text-slate-300">
                                     <li><Link href="/cara-pakai" prefetch className="hover:text-[#facc15] transition-colors">Panduan Integrasi</Link></li>
-                                    <li><Link href="/dual-engine" prefetch className="hover:text-[#facc15] transition-colors">Teknologi WhatsApp Web JS</Link></li>
+                                    <li><Link href="/dual-engine" prefetch className="hover:text-[#facc15] transition-colors">Teknologi UltraSync Engine</Link></li>
                                     <li><Link href="/rest-api" prefetch className="hover:text-[#facc15] transition-colors">Dokumentasi REST API</Link></li>
                                     <li><Link href="/harga" prefetch className="hover:text-[#facc15] transition-colors">Pilihan Paket Layanan</Link></li>
                                     <li><Link href="/faq" prefetch className="hover:text-[#facc15] transition-colors">Pusat Bantuan & FAQ</Link></li>

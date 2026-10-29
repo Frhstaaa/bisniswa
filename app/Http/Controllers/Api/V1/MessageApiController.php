@@ -65,7 +65,7 @@ class MessageApiController extends Controller
         $boundDeviceData = null;
         if ($apiKey->device) {
             $d = $apiKey->device;
-            $serverLabel = 'WhatsApp Web JS Engine';
+            $serverLabel = 'BisnisWA UltraSync Engine';
             $boundDeviceData = [
                 'id' => $d->id,
                 'name' => $d->name,
@@ -196,7 +196,7 @@ class MessageApiController extends Controller
             }
 
             if ($device->status !== 'connected') {
-                $serverLabel = 'WhatsApp Web JS Engine';
+                $serverLabel = 'BisnisWA UltraSync Engine';
 
                 return response()->json([
                     'status' => false,
@@ -283,7 +283,7 @@ class MessageApiController extends Controller
         $usedQuota = max(0, $monthlyQuota - $remainingQuota);
 
         // Single Engine label
-        $serverLabel = 'WhatsApp Web JS Engine';
+        $serverLabel = 'BisnisWA UltraSync Engine';
         $serverCode = 'wwebjs';
 
         return response()->json([

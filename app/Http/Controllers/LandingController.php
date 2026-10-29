@@ -73,7 +73,7 @@ class LandingController extends Controller
     }
 
     /**
-     * Dedicated Page: Dual Engine (Baileys vs Web.js) & Anti-Banned.
+     * Dedicated Page: BisnisWA UltraSync Engine & Anti-Banned.
      */
     public function dualEngine(): Response
     {

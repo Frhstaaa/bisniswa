@@ -52,7 +52,7 @@ export default function GatewaysIndex({ devices, stats }) {
                             </span>
                         </div>
                         <p className="text-xs sm:text-sm text-slate-500 max-w-2xl">
-                            Pantau alokasi dan beban memori WhatsApp Web JS Engine secara realtime di seluruh sesi klien.
+                            Pantau alokasi dan beban memori BisnisWA UltraSync Engine secara realtime di seluruh sesi klien.
                         </p>
                     </div>
 
@@ -92,14 +92,14 @@ export default function GatewaysIndex({ devices, stats }) {
                         </CardContent>
                     </Card>
 
-                    {/* WhatsApp Web JS Engine */}
+                    {/* BisnisWA UltraSync Engine */}
                     <Card className="border-slate-200/90 shadow-xs rounded-xl h-full border-emerald-200/80 bg-emerald-50/20">
                         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-4">
                             <CardTitle className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                                WhatsApp Web JS Engine (Chromium)
+                                BisnisWA UltraSync Engine
                             </CardTitle>
                             <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-100 text-emerald-900 border border-emerald-300">
-                                SINGLE ENGINE
+                                ENTERPRISE
                             </span>
                         </CardHeader>
                         <CardContent className="pt-0 px-4 pb-4 space-y-1">
@@ -107,7 +107,7 @@ export default function GatewaysIndex({ devices, stats }) {
                                 {stats.wwebjs_connected} <span className="text-xs font-normal text-slate-500">instance aktif</span>
                             </div>
                             <p className="text-[11px] text-slate-500">
-                                Estimasi RAM: <strong className="font-mono text-emerald-800">~{stats.wwebjs_ram_mb} MB</strong> • Mode: Headless Chromium Isolasi Penuh
+                                Estimasi RAM: <strong className="font-mono text-emerald-800">~{stats.wwebjs_ram_mb} MB</strong> • Mode: Enterprise Isolated Session
                             </p>
                         </CardContent>
                     </Card>
@@ -149,7 +149,7 @@ export default function GatewaysIndex({ devices, stats }) {
                                     </TableRow>
                                 ) : (
                                     devices.data.map((device) => {
-                                        const serverLabel = 'WhatsApp Web JS';
+                                        const serverLabel = 'UltraSync Engine';
 
                                         return (
                                             <TableRow key={device.id} className="hover:bg-slate-50/80 transition-colors">

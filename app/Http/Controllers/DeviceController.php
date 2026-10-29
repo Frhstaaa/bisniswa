@@ -123,7 +123,7 @@ class DeviceController extends Controller
         }
 
         return redirect()->back()
-            ->with('success', "Perangkat '{$device->name}' berhasil didaftarkan (WhatsApp Web JS Engine).")
+            ->with('success', "Perangkat '{$device->name}' berhasil didaftarkan (BisnisWA UltraSync Engine).")
             ->with('created_device', [
                 'id' => $device->id,
                 'name' => $device->name,

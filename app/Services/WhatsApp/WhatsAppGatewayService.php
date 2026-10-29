@@ -25,7 +25,7 @@ class WhatsAppGatewayService
     }
 
     /**
-     * Request a new WhatsApp session with selected engine (wwebjs or baileys)
+     * Request a new WhatsApp session with BisnisWA UltraSync Engine.
      */
     public function initializeDeviceSession(Device $device): array
     {

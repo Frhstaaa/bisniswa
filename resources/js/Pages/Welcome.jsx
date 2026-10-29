@@ -321,8 +321,8 @@ print(res.json())`,
             a: 'Masa aktif dihitung otomatis sesuai siklus yang dipilih (bulanan/tahunan) dengan toleransi grace period 3 hari setelah jatuh tempo. Administrator dapat menyesuaikan tanggal mulai, tanggal selesai, serta memberikan bonus kuota melalui antarmuka Super Admin dengan audit log lengkap.',
         },
         {
-            q: 'Mengapa BisnisWA menggunakan WhatsApp Web JS sebagai engine utama?',
-            a: 'WhatsApp Web JS menjalankan browser Chromium headless yang mengeksekusi script resmi WhatsApp Web (Meta). Ini menjamin bahwa setiap pesan dienkripsi dengan standar Signal Protocol resmi tanpa resiko ratchet desync (bebas dari error "Menunggu pesan ini"), pesan terkirim instan, dan sesi sangat tahan lama serta aman dari pemblokiran.',
+            q: 'Mengapa BisnisWA menggunakan BisnisWA UltraSync Engine?',
+            a: 'BisnisWA UltraSync Engine menjalankan protokol web enterprise resmi secara terisolasi. Ini menjamin bahwa setiap pesan dienkripsi dengan standar Signal Protocol resmi tanpa resiko ratchet desync (bebas dari error "Menunggu pesan ini"), pesan terkirim instan, dan sesi sangat tahan lama serta aman dari pemblokiran.',
         },
         {
             q: 'Bagaimana sistem melindungi nomor dari resiko Banned WhatsApp?',
@@ -364,14 +364,14 @@ print(res.json())`,
             price_annually: 2890000,
             limits: { max_devices: 5, monthly_message_quota: 50000, api_rate_limit_per_minute: 120 },
             badge: 'Broadcast & Kampus',
-            description: 'Dukungan multi-device, spintax, engine WhatsApp Web JS, dan webhook realtime.',
+            description: 'Dukungan multi-device, spintax, BisnisWA UltraSync Engine, dan webhook realtime.',
         },
     ];
 
     const displayPlans = safePlans.length > 0 ? safePlans.map((p) => ({
         ...p,
         badge: p.slug === 'starter' ? 'UMKM & Bot' : p.slug === 'pro-bisnis' ? 'Paling Diminati' : 'Broadcast & Kampus',
-        description: p.slug === 'starter' ? 'Cocok untuk notifikasi otomatis toko online skala awal.' : p.slug === 'pro-bisnis' ? 'Solusi optimal tim CS & automasi broadcast bisnis bertumbuh.' : 'Dukungan multi-device, spintax, engine WhatsApp Web JS, dan webhook realtime.',
+        description: p.slug === 'starter' ? 'Cocok untuk notifikasi otomatis toko online skala awal.' : p.slug === 'pro-bisnis' ? 'Solusi optimal tim CS & automasi broadcast bisnis bertumbuh.' : 'Dukungan multi-device, spintax, BisnisWA UltraSync Engine, dan webhook realtime.',
         is_popular: p.slug === 'pro-bisnis' || p.is_popular,
     })) : DEFAULT_FALLBACK_PLANS;
 
@@ -620,7 +620,7 @@ print(res.json())`,
                         variants={heroItemVariants}
                         className="text-xs sm:text-base text-slate-200/90 max-w-2xl mx-auto leading-relaxed font-normal px-2 gsap-hero-item"
                     >
-                        Sistem terintegrasi penyedia WhatsApp API resmi, automasi pengiriman pesan broadcast massal berbasis langganan, dan manajemen perangkat WhatsApp Web JS untuk bisnis & kampus.
+                        Sistem terintegrasi penyedia WhatsApp API resmi, automasi pengiriman pesan broadcast massal berbasis langganan, dan manajemen perangkat BisnisWA UltraSync Engine untuk bisnis & kampus.
                     </motion.p>
 
                     {/* Mobile Stacked / Desktop Inline CTA Buttons */}
@@ -771,7 +771,7 @@ print(res.json())`,
                             </div>
                             <h3 className="text-base font-bold text-[#0f172a]">Pindai QR Nomor WhatsApp</h3>
                             <p className="text-xs text-slate-600 leading-relaxed">
-                                Buka WhatsApp di smartphone Anda lalu tautkan perangkat via scan QR Code dengan engine resmi <strong className="text-emerald-700">WhatsApp Web JS</strong> yang stabil dan bebas delay.
+                                Buka WhatsApp di smartphone Anda lalu tautkan perangkat via scan QR Code dengan engine resmi <strong className="text-emerald-700">BisnisWA UltraSync Engine</strong> yang stabil dan bebas delay.
                             </p>
                         </div>
                         <span className="text-[11px] font-semibold text-[#854d0e] pt-2 border-t border-slate-100 block">
@@ -807,7 +807,7 @@ print(res.json())`,
                 </div>
             </section>
 
-            {/* ================= 4. FITUR UTAMA & ENGINE WHATSAPP WEB JS ================= */}
+            {/* ================= 4. FITUR UTAMA & BISNISWA ULTRASYNC ENGINE ================= */}
             <section id="dual-engine" className="py-14 sm:py-20 bg-white border-y border-slate-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 space-y-8 sm:space-y-12">
                     <motion.div
@@ -821,7 +821,7 @@ print(res.json())`,
                             ARSITEKTUR SINGLE ENGINE TANGGUH
                         </span>
                         <h2 className="text-xl sm:text-3xl font-extrabold text-[#0f172a] tracking-tight">
-                            WhatsApp Web JS Engine & Akselerasi FrankenPHP
+                            BisnisWA UltraSync Engine & Akselerasi FrankenPHP
                         </h2>
                         <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto">
                             Bebas masalah "Menunggu pesan ini", enkripsi native Signal Protocol resmi Meta, serta ditenagai runtime supercharged Laravel Octane + FrankenPHP.
@@ -843,12 +843,12 @@ print(res.json())`,
                                     <Zap className="w-5 h-5 sm:w-6 sm:h-6" />
                                 </div>
                                 <div>
-                                    <h3 className="text-sm sm:text-base font-bold text-[#0f172a]">WhatsApp Web JS (Headless Chromium)</h3>
-                                    <p className="text-xs text-slate-500">Official Script Meta & Native End-to-End Encryption</p>
+                                    <h3 className="text-sm sm:text-base font-bold text-[#0f172a]">BisnisWA UltraSync Engine</h3>
+                                    <p className="text-xs text-slate-500">Enterprise Native Protocol & Native End-to-End Encryption</p>
                                 </div>
                             </div>
                             <p className="text-xs text-slate-600 leading-relaxed">
-                                Menjalankan klien web WhatsApp resmi di browser headless terisolasi. Seluruh kunci enkripsi dikelola langsung oleh skrip Meta, memastikan pesan terbaca instan dan sesi bertahan lama anti-ban.
+                                Menjalankan klien web enterprise resmi dalam sandbox terisolasi. Seluruh kunci enkripsi dikelola secara native, memastikan pesan terbaca instan dan sesi bertahan lama anti-ban.
                             </p>
                             <div className="p-3.5 bg-white rounded-xl border border-slate-200 text-xs space-y-1.5 text-slate-700">
                                 <div className="flex items-center gap-2">
@@ -1139,7 +1139,7 @@ print(res.json())`,
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <Check className="w-4 h-4 text-emerald-600 shrink-0" />
-                                                <span>Engine: <strong>WhatsApp Web JS Resmi</strong></span>
+                                                <span>Engine: <strong>BisnisWA UltraSync Resmi</strong></span>
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <Check className="w-4 h-4 text-emerald-600 shrink-0" />
@@ -1289,7 +1289,7 @@ print(res.json())`,
                             <h4 className="font-bold text-[#facc15] uppercase text-[11px] tracking-wider">Navigasi Solusi</h4>
                             <ul className="space-y-2 text-slate-300">
                                 <li><Link href="/cara-pakai" prefetch className="hover:text-[#facc15] transition-colors">Panduan Integrasi</Link></li>
-                                <li><Link href="/dual-engine" prefetch className="hover:text-[#facc15] transition-colors">Teknologi WhatsApp Web JS</Link></li>
+                                <li><Link href="/dual-engine" prefetch className="hover:text-[#facc15] transition-colors">Teknologi UltraSync Engine</Link></li>
                                 <li><Link href="/rest-api" prefetch className="hover:text-[#facc15] transition-colors">Dokumentasi REST API</Link></li>
                                 <li><Link href="/harga" prefetch className="hover:text-[#facc15] transition-colors">Pilihan Paket Layanan</Link></li>
                                 <li><Link href="/faq" prefetch className="hover:text-[#facc15] transition-colors">Pusat Bantuan & FAQ</Link></li>

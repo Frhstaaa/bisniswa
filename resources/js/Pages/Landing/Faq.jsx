@@ -76,8 +76,8 @@ export default function Faq({ plans = [], stats = {} }) {
         },
         {
             category: 'server',
-            q: 'Mengapa BisnisWA menggunakan Single Engine WhatsApp Web JS?',
-            a: 'WhatsApp Web JS menjalankan script resmi WhatsApp Web di dalam browser Headless Chromium terisolasi. Ini menjamin proses enkripsi End-to-End (E2EE) dijalankan langsung oleh Meta sehingga pesan langsung terkirim dan terbuka instan di HP penerima, sepenuhnya bebas dari masalah "Menunggu pesan ini", serta memiliki ketahanan sesi jangka panjang anti-ban.',
+            q: 'Mengapa BisnisWA menggunakan BisnisWA UltraSync Engine?',
+            a: 'BisnisWA UltraSync Engine menjalankan protokol web enterprise resmi secara terisolasi. Ini menjamin proses enkripsi End-to-End (E2EE) berstandar industri sehingga pesan langsung terkirim dan terbuka instan di HP penerima, sepenuhnya bebas dari masalah "Menunggu pesan ini", serta memiliki ketahanan sesi jangka panjang anti-ban.',
         },
         {
             category: 'broadcast',
@@ -187,7 +187,7 @@ export default function Faq({ plans = [], stats = {} }) {
                             variants={heroItemVariants}
                             className="text-slate-200 text-sm sm:text-base max-w-xl mx-auto leading-relaxed gsap-hero-item"
                         >
-                            Temukan panduan cepat seputar operasional gateway, kuota pesan, teknologi engine WhatsApp Web JS, hingga integrasi API.
+                            Temukan panduan cepat seputar operasional gateway, kuota pesan, teknologi BisnisWA UltraSync Engine, hingga integrasi API.
                         </motion.p>
 
                         {/* Search Input Bar */}
