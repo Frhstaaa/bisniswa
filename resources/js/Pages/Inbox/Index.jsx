@@ -645,7 +645,7 @@ export default function InboxIndex({
                                                 >
                                                     {devices.map((d) => (
                                                         <option key={d.id} value={d.id}>
-                                                            {d.name} ({d.engine === 'wwebjs' ? 'Server 2' : 'Server 1'}) {d.phone_number ? `— ${d.phone_number}` : ''} {d.status === 'connected' ? '🟢' : '⚪'}
+                                                            {d.name} {d.phone_number ? `— ${d.phone_number}` : ''} {d.status === 'connected' ? '🟢' : '⚪'}
                                                         </option>
                                                     ))}
                                                 </select>
@@ -803,7 +803,7 @@ export default function InboxIndex({
                                                 <span className="truncate">{currentPhone}</span>
                                                 <span>•</span>
                                                 <span className="text-emerald-700 font-medium font-sans shrink-0">
-                                                    via {selectedDevice?.name || 'Gateway'} ({selectedDevice?.engine === 'wwebjs' ? 'Server 2' : 'Server 1'})
+                                                    via {selectedDevice?.name || 'Gateway'}
                                                 </span>
                                             </p>
                                         </div>
@@ -821,7 +821,7 @@ export default function InboxIndex({
                                                 >
                                                     {devices.map((d) => (
                                                         <option key={d.id} value={d.id}>
-                                                            {d.name} ({d.engine === 'wwebjs' ? 'Server 2' : 'Server 1'}) {d.status === 'connected' ? '🟢' : '⚪'}
+                                                            {d.name} {d.status === 'connected' ? '🟢' : '⚪'}
                                                         </option>
                                                     ))}
                                                 </select>

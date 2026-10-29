@@ -34,9 +34,6 @@ class SuperAdminService
         $messagesToday = Message::whereDate('created_at', today())->count();
         $messagesTotal = Message::count();
 
-        $wwebjsDevices = Device::where('engine', 'wwebjs')->where('status', 'connected')->count();
-        $baileysDevices = Device::where('engine', 'baileys')->where('status', 'connected')->count();
-
         return [
             'metrics' => [
                 'total_workspaces' => $totalWorkspaces,
@@ -50,16 +47,10 @@ class SuperAdminService
             ],
             'engine_health' => [
                 'wwebjs' => [
-                    'active_instances' => $wwebjsDevices,
+                    'active_instances' => $onlineDevices,
                     'status' => 'operational',
-                    'estimated_ram_mb' => $wwebjsDevices * 120,
-                    'engine_version' => 'whatsapp-web.js v1.26.0 (Chromium 124)',
-                ],
-                'baileys' => [
-                    'active_instances' => $baileysDevices,
-                    'status' => 'operational',
-                    'estimated_ram_mb' => $baileysDevices * 30,
-                    'engine_version' => '@whiskeysockets/baileys v6.7.8 (WebSocket)',
+                    'estimated_ram_mb' => $onlineDevices * 120,
+                    'engine_version' => 'whatsapp-web.js (Chromium Headless)',
                 ],
             ],
             'recent_payments' => $this->paymentRepo->getRecentPayments(6),

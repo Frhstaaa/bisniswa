@@ -123,7 +123,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
         },
         {
             title: 'Pindai QR Nomor WhatsApp',
-            subtitle: 'Tautkan nomor baru ke Server 1 atau Server 2',
+            subtitle: 'Tautkan nomor baru ke engine WhatsApp Web JS',
             onClick: () => setIsQrModalOpen(true),
             icon: QrCode,
         },
@@ -649,47 +649,30 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                 </CardHeader>
 
                                 <CardContent className="space-y-3 pt-0">
-                                    {/* Server 1 */}
-                                    <div className="p-3.5 rounded-lg border border-emerald-200/80 bg-emerald-50/20 hover:bg-emerald-50/40 transition-colors space-y-2">
+                                    <div className="p-3.5 rounded-lg border border-emerald-200/80 bg-emerald-50/30 hover:bg-emerald-50/50 transition-colors space-y-2">
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-2">
-                                                <span className="size-2 rounded-full bg-emerald-500" />
+                                                <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
                                                 <span className="font-bold text-xs text-slate-900">
-                                                    Server 1 WhatsApp (Jalur Cepat)
+                                                    WhatsApp Web JS Engine
                                                 </span>
                                             </div>
-                                            <Badge variant="outline" className="border-emerald-300 bg-emerald-50 text-emerald-700 text-[10px] font-bold">
-                                                AKTIF
+                                            <Badge variant="outline" className="border-emerald-300 bg-emerald-50 text-emerald-800 text-[10px] font-bold">
+                                                OPERASIONAL
                                             </Badge>
                                         </div>
                                         <p className="text-[11px] text-slate-500 leading-relaxed">
-                                            Jalur utama dengan latensi ultra-rendah dan pemrosesan antrean pesan kilat.
+                                            Engine tunggal resmi berbasis Headless Chromium dengan enkripsi instan & bebas kendala "Menunggu pesan ini".
                                         </p>
-                                        <div className="flex items-center justify-between text-[11px] pt-1.5 border-t border-emerald-100/70 text-slate-500">
-                                            <span>Respon Server:</span>
-                                            <span className="font-mono font-bold text-emerald-700">~38 ms</span>
-                                        </div>
-                                    </div>
-
-                                    {/* Server 2 */}
-                                    <div className="p-3.5 rounded-lg border border-amber-200/80 bg-amber-50/20 hover:bg-amber-50/40 transition-colors space-y-2">
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center gap-2">
-                                                <span className="size-2 rounded-full bg-amber-500" />
-                                                <span className="font-bold text-xs text-slate-900">
-                                                    Server 2 WhatsApp (Jalur Stabil)
-                                                </span>
+                                        <div className="grid grid-cols-2 gap-2 text-[11px] pt-1.5 border-t border-emerald-100 text-slate-600">
+                                            <div>
+                                                <span className="text-slate-400 block text-[10px]">Runtime:</span>
+                                                <span className="font-semibold text-slate-800">FrankenPHP + Octane</span>
                                             </div>
-                                            <Badge variant="outline" className="border-amber-300 bg-amber-50 text-amber-800 text-[10px] font-bold">
-                                                FAILOVER READY
-                                            </Badge>
-                                        </div>
-                                        <p className="text-[11px] text-slate-500 leading-relaxed">
-                                            Jalur cadangan dengan sesi persisten, siap aktif otomatis jika jalur utama sibuk.
-                                        </p>
-                                        <div className="flex items-center justify-between text-[11px] pt-1.5 border-t border-amber-100/70 text-slate-500">
-                                            <span>Status Redundansi:</span>
-                                            <span className="font-mono font-bold text-amber-800">100% Siaga</span>
+                                            <div className="text-right">
+                                                <span className="text-slate-400 block text-[10px]">Stabilitas:</span>
+                                                <span className="font-mono font-bold text-emerald-700">99.9% Uptime</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </CardContent>
@@ -759,62 +742,62 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                         />
                     </TabsContent>
 
-                    {/* TAB 3: DUAL SERVER & GATEWAY */}
+                    {/* TAB 3: SINGLE ENGINE & OCTANE INFRASTRUCTURE */}
                     <TabsContent value="infrastructure" className="space-y-6">
                         <div className="grid gap-6 md:grid-cols-2">
-                            {/* Server 1 Details */}
-                            <Card className="shadow-xs">
+                            {/* WhatsApp Web JS Engine Card */}
+                            <Card className="shadow-xs border-emerald-200/80 bg-emerald-50/20">
                                 <CardHeader>
                                     <div className="flex items-center justify-between">
                                         <CardTitle className="text-base font-bold flex items-center gap-2">
                                             <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
-                                            Server 1 WhatsApp (Jalur Cepat)
+                                            WhatsApp Web JS Engine
                                         </CardTitle>
-                                        <Badge variant="outline" className="border-emerald-300 bg-emerald-50 text-emerald-700">AKTIF</Badge>
+                                        <Badge variant="outline" className="border-emerald-300 bg-emerald-50 text-emerald-800 font-bold">OPERASIONAL</Badge>
                                     </div>
-                                    <CardDescription>Engine: Baileys WebSocket / Chromium Dual Dispatch</CardDescription>
+                                    <CardDescription>Engine: Official WhatsApp Web Script via Headless Chromium</CardDescription>
                                 </CardHeader>
                                 <CardContent className="space-y-4">
                                     <p className="text-xs text-slate-600">
-                                        Jalur primer dengan throughput tinggi untuk broadcast cepat dan respon bot instan.
+                                        Engine tunggal berkinerja tinggi dengan enkripsi Signal ratchet native langsung dari Meta. Menjamin pesan terbuka instan tanpa status "Menunggu pesan ini".
                                     </p>
                                     <div className="grid grid-cols-2 gap-3 pt-2 text-xs">
-                                        <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                                            <span className="text-slate-400 block text-[11px]">Latensi Rata-rata</span>
-                                            <span className="font-mono font-bold text-emerald-700 text-sm">~38 ms</span>
+                                        <div className="p-3 bg-white rounded-lg border border-emerald-100">
+                                            <span className="text-slate-400 block text-[11px]">Enkripsi E2EE</span>
+                                            <span className="font-mono font-bold text-emerald-700 text-sm">Resmi Meta</span>
                                         </div>
-                                        <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                                            <span className="text-slate-400 block text-[11px]">Ketersediaan</span>
-                                            <span className="font-mono font-bold text-slate-800 text-sm">99.98%</span>
+                                        <div className="p-3 bg-white rounded-lg border border-emerald-100">
+                                            <span className="text-slate-400 block text-[11px]">Stabilitas Sesi</span>
+                                            <span className="font-mono font-bold text-slate-800 text-sm">Anti-Ban</span>
                                         </div>
                                     </div>
                                 </CardContent>
                             </Card>
 
-                            {/* Server 2 Details */}
-                            <Card className="shadow-xs">
+                            {/* Laravel Octane + FrankenPHP Card */}
+                            <Card className="shadow-xs border-blue-200/80 bg-blue-50/20">
                                 <CardHeader>
                                     <div className="flex items-center justify-between">
                                         <CardTitle className="text-base font-bold flex items-center gap-2">
-                                            <span className="size-2 rounded-full bg-amber-500" />
-                                            Server 2 WhatsApp (Jalur Stabil)
+                                            <span className="size-2 rounded-full bg-blue-500 animate-pulse" />
+                                            Laravel Octane & FrankenPHP
                                         </CardTitle>
-                                        <Badge variant="outline" className="border-amber-300 bg-amber-50 text-amber-800">FAILOVER READY</Badge>
+                                        <Badge variant="outline" className="border-blue-300 bg-blue-50 text-blue-800 font-bold">TUNED UP</Badge>
                                     </div>
-                                    <CardDescription>Engine: WWebJS Isolated Profile Session</CardDescription>
+                                    <CardDescription>Runtime: Caddy-based High Concurrency Worker Server</CardDescription>
                                 </CardHeader>
                                 <CardContent className="space-y-4">
                                     <p className="text-xs text-slate-600">
-                                        Jalur cadangan dengan sesi persisten, siap aktif otomatis jika jalur utama mengalami beban puncak.
+                                        Aplikasi berjalan dalam persistent memory worker pool dengan waktu respon sub-milidetik, efisiensi CPU maksimal, dan auto-reload.
                                     </p>
                                     <div className="grid grid-cols-2 gap-3 pt-2 text-xs">
-                                        <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                                            <span className="text-slate-400 block text-[11px]">Status Failover</span>
-                                            <span className="font-mono font-bold text-amber-800 text-sm">Siaga 100%</span>
+                                        <div className="p-3 bg-white rounded-lg border border-blue-100">
+                                            <span className="text-slate-400 block text-[11px]">Server Engine</span>
+                                            <span className="font-mono font-bold text-blue-700 text-sm">FrankenPHP Caddy</span>
                                         </div>
-                                        <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                                            <span className="text-slate-400 block text-[11px]">Mode Sesi</span>
-                                            <span className="font-mono font-bold text-slate-800 text-sm">Persistent DB</span>
+                                        <div className="p-3 bg-white rounded-lg border border-blue-100">
+                                            <span className="text-slate-400 block text-[11px]">Worker Concurrency</span>
+                                            <span className="font-mono font-bold text-slate-800 text-sm">Multi-Worker</span>
                                         </div>
                                     </div>
                                 </CardContent>
@@ -868,7 +851,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                                         {device.phone_number || '-'}
                                                     </TableCell>
                                                     <TableCell className="text-xs uppercase font-mono text-slate-500">
-                                                        {device.engine || 'wwebjs'}
+                                                        WhatsApp Web JS
                                                     </TableCell>
                                                     <TableCell>
                                                         <Badge

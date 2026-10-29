@@ -88,7 +88,7 @@ class DeviceController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|string|max:100',
-            'engine' => 'required|in:wwebjs,baileys,cloud_api',
+            'engine' => 'nullable|string',
             'phone_number' => 'nullable|string|max:30',
             'meta_phone_number_id' => 'nullable|string|max:100',
             'meta_access_token' => 'nullable|string',
@@ -96,14 +96,13 @@ class DeviceController extends Controller
             'meta_verify_token' => 'nullable|string|max:100',
         ]);
 
-        $status = $validated['engine'] === 'cloud_api' && ! empty($validated['meta_access_token'])
-            ? 'connected'
-            : 'initializing';
+        $engine = 'wwebjs';
+        $status = 'initializing';
 
         $device = Device::create([
             'workspace_id' => $workspace->id,
             'name' => $validated['name'],
-            'engine' => $validated['engine'],
+            'engine' => $engine,
             'phone_number' => $validated['phone_number'],
             'meta_phone_number_id' => $validated['meta_phone_number_id'] ?? null,
             'meta_access_token' => $validated['meta_access_token'] ?? null,
@@ -112,7 +111,7 @@ class DeviceController extends Controller
             'status' => $status,
         ]);
 
-        // Request real WhatsApp session from Gateway or activate Cloud API
+        // Request real WhatsApp session from Gateway
         $session = $this->gatewayService->initializeDeviceSession($device);
 
         if (! $request->header('X-Inertia') && ($request->wantsJson() || $request->isJson())) {
@@ -123,18 +122,12 @@ class DeviceController extends Controller
             ]);
         }
 
-        $engineLabel = match ($device->engine) {
-            'cloud_api' => 'Meta WhatsApp Business Cloud API',
-            'baileys' => 'Server 1 WhatsApp (Baileys)',
-            default => 'Server 2 WhatsApp (Chromium)',
-        };
-
         return redirect()->back()
-            ->with('success', "Perangkat '{$device->name}' berhasil didaftarkan ({$engineLabel}).")
+            ->with('success', "Perangkat '{$device->name}' berhasil didaftarkan (WhatsApp Web JS Engine).")
             ->with('created_device', [
                 'id' => $device->id,
                 'name' => $device->name,
-                'engine' => $device->engine,
+                'engine' => 'wwebjs',
                 'status' => $session['status'] ?? 'qr_ready',
                 'qr' => $session['qr'] ?? null,
             ]);
@@ -185,7 +178,7 @@ class DeviceController extends Controller
         $validated = $request->validate([
             'name' => 'nullable|string|max:100',
             'phone_number' => 'nullable|string|max:30',
-            'engine' => 'nullable|in:wwebjs,baileys,cloud_api',
+            'engine' => 'nullable|string',
             'meta_phone_number_id' => 'nullable|string|max:100',
             'meta_access_token' => 'nullable|string',
             'meta_waba_id' => 'nullable|string|max:100',

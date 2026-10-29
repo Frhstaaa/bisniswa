@@ -148,7 +148,7 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                             )}
                         </div>
                         <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                            Tautkan nomor WhatsApp bisnis Anda menggunakan pilihan <strong className="text-emerald-700">Server 1 WhatsApp</strong> atau <strong className="text-emerald-800">Server 2 WhatsApp</strong>.
+                            Tautkan nomor WhatsApp bisnis Anda menggunakan engine resmi <strong className="text-emerald-700">WhatsApp Web JS</strong> (Headless Chromium).
                         </p>
                     </div>
 
@@ -238,7 +238,7 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                         <Card className="h-full border-slate-200 shadow-xs hover:shadow-md transition-all">
                             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                                 <CardTitle className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                                    Server 1 WhatsApp
+                                    WhatsApp Web JS Engine
                                 </CardTitle>
                                 <div className="h-7 w-7 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
                                     <Zap className="h-3.5 w-3.5" />
@@ -246,10 +246,10 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                             </CardHeader>
                             <CardContent className="pt-0">
                                 <div className="text-2xl font-black text-emerald-700 tracking-tight">
-                                    <CountUp to={baileysCount} /> Instance
+                                    <CountUp to={connectedCount} /> Instance
                                 </div>
                                 <p className="text-[11px] text-slate-500 mt-1">
-                                    Jalur Cepat (Respon kilat ~38ms & hemat kuota)
+                                    Engine Tunggal (Zero Delay & Anti-Ban)
                                 </p>
                             </CardContent>
                         </Card>
@@ -264,18 +264,18 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                         <Card className="h-full border-slate-200 shadow-xs hover:shadow-md transition-all">
                             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                                 <CardTitle className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                                    Server 2 WhatsApp
+                                    Keamanan Enkripsi
                                 </CardTitle>
                                 <div className="h-7 w-7 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
-                                    <Cpu className="h-3.5 w-3.5" />
+                                    <ShieldCheck className="h-3.5 w-3.5" />
                                 </div>
                             </CardHeader>
                             <CardContent className="pt-0">
-                                <div className="text-2xl font-black text-slate-900 tracking-tight">
-                                    <CountUp to={wwebjsCount} /> Instance
+                                <div className="text-2xl font-black text-emerald-700 tracking-tight">
+                                    100% E2EE
                                 </div>
                                 <p className="text-[11px] text-slate-500 mt-1">
-                                    Jalur Stabil (Redundansi cadangan & sesi tahan lama)
+                                    Resmi Meta WhatsApp Web (Bebas Delay Sinyal)
                                 </p>
                             </CardContent>
                         </Card>
@@ -285,25 +285,11 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                 {/* 3. TOOLBAR: SEARCH & FILTER TABS */}
                 <Card className="border-slate-200 shadow-xs">
                     <CardContent className="p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-                        <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-lg text-xs font-bold w-full sm:w-auto">
-                            <button
-                                onClick={() => setFilterEngine('all')}
-                                className={`px-3 py-1.5 rounded-md transition-all ${filterEngine === 'all' ? 'bg-white text-emerald-700 shadow-xs' : 'text-slate-600 hover:text-slate-900'}`}
-                            >
-                                Semua Server ({devices?.length || 0})
-                            </button>
-                            <button
-                                onClick={() => setFilterEngine('baileys')}
-                                className={`px-3 py-1.5 rounded-md transition-all ${filterEngine === 'baileys' ? 'bg-white text-emerald-800 shadow-xs' : 'text-slate-600 hover:text-slate-900'}`}
-                            >
-                                Server 1 ({baileysCount})
-                            </button>
-                            <button
-                                onClick={() => setFilterEngine('wwebjs')}
-                                className={`px-3 py-1.5 rounded-md transition-all ${filterEngine === 'wwebjs' ? 'bg-white text-emerald-700 shadow-xs' : 'text-slate-600 hover:text-slate-900'}`}
-                            >
-                                Server 2 ({wwebjsCount})
-                            </button>
+                        <div className="flex items-center gap-2">
+                            <span className="text-xs font-semibold text-emerald-800 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200 flex items-center gap-1.5">
+                                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                                WhatsApp Web JS Engine ({devices?.length || 0} Perangkat)
+                            </span>
                         </div>
 
                         <div className="relative w-full sm:w-72">
@@ -363,8 +349,8 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                                             </div>
                                         )}
 
-                                        <Badge variant="outline" className={`font-mono text-[10px] font-bold uppercase ${dev.engine === 'cloud_api' ? 'text-blue-800 bg-blue-50 border-blue-200' : 'text-slate-700 bg-slate-50'}`}>
-                                            {dev.engine === 'cloud_api' ? 'Meta Cloud API' : dev.engine === 'baileys' ? 'Server 1' : 'Server 2'}
+                                        <Badge variant="outline" className="font-mono text-[10px] font-bold uppercase text-emerald-800 bg-emerald-50 border-emerald-200">
+                                            WhatsApp Web JS
                                         </Badge>
                                     </div>
 

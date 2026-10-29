@@ -105,11 +105,7 @@ export default function QrScanModal({
     }
 
     const [name, setName] = useState('Nomor CS WhatsApp');
-    const [engine, setEngine] = useState('wwebjs');
     const [phone, setPhone] = useState('+628');
-    const [metaPhoneId, setMetaPhoneId] = useState('');
-    const [metaAccessToken, setMetaAccessToken] = useState('');
-    const [metaVerifyToken, setMetaVerifyToken] = useState('bisniswa_meta_token');
     const [step, setStep] = useState('form');
     const [createdDeviceId, setCreatedDeviceId] = useState(null);
     const [qrCodeUrl, setQrCodeUrl] = useState('');
@@ -156,26 +152,12 @@ export default function QrScanModal({
             '/devices',
             {
                 name,
-                engine,
+                engine: 'wwebjs',
                 phone_number: phone,
-                meta_phone_number_id: metaPhoneId,
-                meta_access_token: metaAccessToken,
-                meta_verify_token: metaVerifyToken,
             },
             {
                 preserveScroll: true,
                 onSuccess: (page) => {
-                    if (engine === 'cloud_api') {
-                        setIsConnectingSuccess(true);
-                        setConnectedPhone(phone);
-                        setTimeout(() => {
-                            onClose();
-                            setStep('form');
-                            setIsConnectingSuccess(false);
-                            router.reload({ preserveScroll: true });
-                        }, 1200);
-                        return;
-                    }
                     const cd = page.props?.flash?.created_device;
                     if (cd) {
                         setCreatedDeviceId(cd.id);
@@ -276,126 +258,19 @@ export default function QrScanModal({
                             />
                         </div>
 
-                        <div>
-                            <label className="block font-medium text-slate-700 mb-1.5">Pilih Tipe Koneksi & Server WhatsApp</label>
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                                <label
-                                    className={`p-3 rounded-xl border cursor-pointer flex flex-col justify-between transition-all relative ${
-                                        engine === 'wwebjs'
-                                            ? 'border-emerald-600 bg-emerald-50/70 ring-2 ring-emerald-600 shadow-sm'
-                                            : 'border-slate-200 hover:border-slate-300'
-                                    }`}
-                                >
-                                    <div className="flex items-center justify-between mb-1">
-                                        <span className="font-semibold text-slate-900 text-xs">WhatsApp Web JS</span>
-                                        <input
-                                            type="radio"
-                                            name="engine"
-                                            value="wwebjs"
-                                            checked={engine === 'wwebjs'}
-                                            onChange={() => setEngine('wwebjs')}
-                                            className="text-emerald-600 accent-emerald-600"
-                                        />
-                                    </div>
-                                    <p className="text-[11px] text-slate-500 leading-tight">
-                                        Engine Utama: Resmi via Headless Web, anti "menunggu pesan", enkripsi instan & sesi stabil.
-                                    </p>
-                                    <span className="mt-2 text-[10px] font-bold text-emerald-800 bg-emerald-100/80 px-1.5 py-0.5 rounded w-fit">
-                                        ⭐ Direkomendasikan
-                                    </span>
-                                </label>
-
-                                <label
-                                    className={`p-3 rounded-xl border cursor-pointer flex flex-col justify-between transition-all ${
-                                        engine === 'baileys'
-                                            ? 'border-emerald-600 bg-emerald-50/70 ring-1 ring-emerald-600'
-                                            : 'border-slate-200 hover:border-slate-300 opacity-80'
-                                    }`}
-                                >
-                                    <div className="flex items-center justify-between mb-1">
-                                        <span className="font-semibold text-slate-900 text-xs">Baileys Socket</span>
-                                        <input
-                                            type="radio"
-                                            name="engine"
-                                            value="baileys"
-                                            checked={engine === 'baileys'}
-                                            onChange={() => setEngine('baileys')}
-                                            className="text-emerald-600 accent-emerald-600"
-                                        />
-                                    </div>
-                                    <p className="text-[11px] text-slate-500 leading-tight">
-                                        Socket langsung: Hemat RAM, namun sensitif terhadap rotasi protokol enkripsi WhatsApp.
-                                    </p>
-                                    <span className="mt-2 text-[10px] font-semibold text-slate-600">
-                                        ⚡ Alternatif Socket
-                                    </span>
-                                </label>
-
-                                <label
-                                    className={`p-3 rounded-xl border cursor-pointer flex flex-col justify-between transition-all ${
-                                        engine === 'cloud_api'
-                                            ? 'border-blue-600 bg-blue-50/70 ring-1 ring-blue-600'
-                                            : 'border-slate-200 hover:border-slate-300'
-                                    }`}
-                                >
-                                    <div className="flex items-center justify-between mb-1">
-                                        <span className="font-semibold text-slate-900 text-xs">Meta Cloud API</span>
-                                        <input
-                                            type="radio"
-                                            name="engine"
-                                            value="cloud_api"
-                                            checked={engine === 'cloud_api'}
-                                            onChange={() => setEngine('cloud_api')}
-                                            className="text-blue-600 accent-blue-600"
-                                        />
-                                    </div>
-                                    <p className="text-[11px] text-slate-500 leading-tight">
-                                        Resmi Meta: Mendukung List Menu popup & tombol [ ↩ ], tanpa scan QR.
-                                    </p>
-                                    <span className="mt-2 text-[10px] font-semibold text-blue-700">
-                                        ✨ Resmi Centang Meta
-                                    </span>
-                                </label>
+                        <div className="p-3.5 rounded-xl border border-emerald-200/90 bg-emerald-50/60 flex items-start gap-3">
+                            <div className="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5 shadow-2xs">
+                                WA
                             </div>
-
-                            {/* Additional Meta Cloud API Fields */}
-                            {engine === 'cloud_api' && (
-                                <div className="mt-3 p-3.5 bg-blue-50/50 rounded-xl border border-blue-200/80 space-y-3 animate-fade-in text-left">
-                                    <div className="flex items-center justify-between pb-1 border-b border-blue-100">
-                                        <span className="font-bold text-xs text-blue-900">Kredensial Meta Developer</span>
-                                        <span className="text-[10px] text-blue-600 font-medium">developers.facebook.com</span>
-                                    </div>
-                                    <div>
-                                        <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                                            Phone Number ID Meta
-                                        </label>
-                                        <input
-                                            type="text"
-                                            value={metaPhoneId}
-                                            onChange={(e) => setMetaPhoneId(e.target.value)}
-                                            placeholder="Contoh: 104829104829104"
-                                            className="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-mono focus:border-blue-600 focus:outline-none"
-                                            required={engine === 'cloud_api'}
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                                            Permanent Access Token (System User / User Token)
-                                        </label>
-                                        <input
-                                            type="password"
-                                            value={metaAccessToken}
-                                            onChange={(e) => setMetaAccessToken(e.target.value)}
-                                            placeholder="EAAB..."
-                                            className="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-mono focus:border-blue-600 focus:outline-none"
-                                            required={engine === 'cloud_api'}
-                                        />
-                                    </div>
-                                    <p className="text-[10px] text-blue-700 leading-relaxed">
-                                        💡 <strong>Webhook URL Meta:</strong> Daftarkan URL <code>{window.location.origin}/api/webhook/meta-whatsapp</code> dengan Verify Token <code>bisniswa_meta_token</code> di Meta WhatsApp Configuration.
-                                    </p>
+                            <div className="space-y-0.5 text-left">
+                                <div className="flex items-center gap-1.5 flex-wrap">
+                                    <span className="font-bold text-xs text-slate-900">WhatsApp Web JS Engine</span>
+                                    <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded">Resmi Headless Chromium</span>
                                 </div>
-                            )}
+                                <p className="text-[11px] text-slate-600 leading-tight">
+                                    Enkripsi instan langsung dari script resmi WhatsApp Web. Bebas masalah "Menunggu pesan ini", sesi stabil, dan anti-ban.
+                                </p>
+                            </div>
                         </div>
 
                         <div className="pt-3 border-t border-slate-100 flex justify-end gap-2">
@@ -448,7 +323,7 @@ export default function QrScanModal({
                                         <span className="text-slate-600 font-medium">Gateway Microservice:</span>
                                     </div>
                                     <strong className="font-mono uppercase font-bold text-emerald-800">
-                                        {engine}
+                                        WhatsApp Web JS
                                     </strong>
                                 </div>
 

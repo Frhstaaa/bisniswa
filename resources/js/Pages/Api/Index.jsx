@@ -431,12 +431,7 @@ print(response.json())`,
                                             </TableRow>
                                         ) : (
                                             apiKeys.map((key) => {
-                                                const serverName =
-                                                    key.device?.engine === 'baileys'
-                                                        ? 'Server 1 WhatsApp'
-                                                        : key.device?.engine === 'wwebjs'
-                                                        ? 'Server 2 WhatsApp'
-                                                        : 'Server WhatsApp';
+                                                const serverName = 'WhatsApp Web JS';
                                                 const isConnected = key.device?.status === 'connected';
 
                                                 return (
@@ -936,12 +931,7 @@ print(response.json())`,
                                                 {devices.map((device) => {
                                                     const isSelected = String(selectedDeviceId) === String(device.id);
                                                     const isConnected = device.status === 'connected';
-                                                    const serverLabel =
-                                                        device.engine === 'baileys'
-                                                            ? 'Server 1 WhatsApp'
-                                                            : device.engine === 'wwebjs'
-                                                            ? 'Server 2 WhatsApp'
-                                                            : 'Server WhatsApp';
+                                                    const serverLabel = 'WhatsApp Web JS';
 
                                                     return (
                                                         <label

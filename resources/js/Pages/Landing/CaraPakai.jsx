@@ -96,7 +96,7 @@ export default function CaraPakai({ plans = [], stats = {} }) {
         {
             number: '02',
             title: 'Tautkan Nomor WhatsApp via Scan QR',
-            description: 'Buka menu Perangkat, klik "Tambah Perangkat Baru", pilih server pengiriman (Server 1 untuk kecepatan kilat atau Server 2 untuk stabilitas sesi), lalu scan kode QR di layar menggunakan aplikasi WhatsApp di smartphone Anda.',
+            description: 'Buka menu Perangkat, klik "Tambah Perangkat Baru", lalu scan kode QR di layar menggunakan aplikasi WhatsApp di smartphone Anda via engine resmi WhatsApp Web JS yang stabil dan anti-delay.',
             icon: QrCode,
             badge: 'Koneksi 10 Detik',
             tips: 'Mendukung nomor WhatsApp standar maupun WhatsApp Business.',
@@ -510,7 +510,7 @@ export default function CaraPakai({ plans = [], stats = {} }) {
                                 prefetch
                                 className="inline-flex h-11 items-center gap-2 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 px-5 text-xs font-bold text-white transition-all"
                             >
-                                <span>Pelajari Dual Server &rarr;</span>
+                                <span>Pelajari Engine WhatsApp &rarr;</span>
                             </Link>
                         </div>
                     </motion.div>

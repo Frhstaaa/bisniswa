@@ -184,7 +184,7 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                         >
                                             {devices.map((d) => (
                                                 <option key={d.id} value={d.id}>
-                                                    {d.name} ({d.engine === 'wwebjs' ? 'Server 2 WhatsApp' : 'Server 1 WhatsApp'})
+                                                    {d.name} {d.phone_number ? `(${d.phone_number})` : ''}
                                                 </option>
                                             ))}
                                         </select>

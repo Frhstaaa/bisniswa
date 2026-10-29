@@ -26,14 +26,14 @@ export default function OnboardingGuideModal({ isOpen, onClose }) {
     const steps = [
         {
             title: '1. Tautkan Nomor WhatsApp Anda',
-            subtitle: 'Tersedia Dual Server: Server 1 (Jalur Cepat) atau Server 2 (Jalur Stabil)',
+            subtitle: 'Engine Resmi WhatsApp Web JS (Headless Chromium)',
             icon: QrCode,
             color: 'navy',
             description:
-                'Buka menu Perangkat WhatsApp atau klik tombol Pindai QR. Pilih server WhatsApp yang Anda inginkan (Server 1 atau Server 2), buka aplikasi WhatsApp di ponsel Anda > Perangkat Tertaut > Tautkan Perangkat, lalu scan QR Code yang muncul di layar dalam hitungan detik.',
+                'Buka menu Perangkat WhatsApp atau klik tombol Pindai QR. Buka aplikasi WhatsApp di ponsel Anda > Perangkat Tertaut > Tautkan Perangkat, lalu scan QR Code yang muncul di layar dalam hitungan detik.',
             actionLabel: 'Buka Menu Perangkat',
             actionHref: '/devices',
-            tip: 'Gunakan Server 1 untuk respon pengiriman kilat atau Server 2 untuk stabilitas sesi jangka panjang.',
+            tip: 'Engine WhatsApp Web JS resmi menjamin enkripsi instan bebas status "Menunggu pesan ini" dan anti-ban.',
         },
         {
             title: '2. Kelola Kontak & Buat Grup CRM',

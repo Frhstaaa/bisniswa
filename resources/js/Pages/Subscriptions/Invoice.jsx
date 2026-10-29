@@ -127,7 +127,7 @@ export default function Invoice({ payment, workspace }) {
                                 <td className="py-4 px-4 font-bold text-slate-900">
                                     {payment.plan?.name || 'Paket Enterprise Pro'}
                                     <span className="block text-[11px] font-normal text-slate-500 mt-0.5">
-                                        Dual Server WhatsApp (Server 1 & 2), REST API Bearer Token & Multi-Device
+                                        WhatsApp Web JS Single Engine, REST API Bearer Token & Multi-Device
                                     </span>
                                 </td>
                                 <td className="py-4 px-4 font-medium">30 Hari Kalender</td>

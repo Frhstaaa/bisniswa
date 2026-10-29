@@ -33,3 +33,7 @@ Thumbs.db
 /.wwebjs_auth
 /.claude
 /.grok
+
+**/caddy
+frankenphp
+frankenphp-worker.php

@@ -79,7 +79,7 @@ export default function Welcome({ plans = [] }) {
 
     const navLinks = [
         { label: 'Panduan Integrasi', href: '/cara-pakai', key: 'cara-pakai' },
-        { label: 'Teknologi Gateway', href: '/dual-engine', key: 'dual-engine' },
+        { label: 'Teknologi Engine', href: '/dual-engine', key: 'dual-engine' },
         { label: 'Dokumentasi API', href: '/rest-api', key: 'rest-api' },
         { label: 'Paket Layanan', href: '/harga', key: 'harga' },
         { label: 'Pusat Bantuan', href: '/faq', key: 'faq' },
@@ -321,8 +321,8 @@ print(res.json())`,
             a: 'Masa aktif dihitung otomatis sesuai siklus yang dipilih (bulanan/tahunan) dengan toleransi grace period 3 hari setelah jatuh tempo. Administrator dapat menyesuaikan tanggal mulai, tanggal selesai, serta memberikan bonus kuota melalui antarmuka Super Admin dengan audit log lengkap.',
         },
         {
-            q: 'Apa perbedaan mendasar antara Server 1 dan Server 2 WhatsApp?',
-            a: 'Server 1 WhatsApp dioptimalkan untuk performa kilat dengan latensi ultra-rendah (~38ms) dan pemrosesan antrean pesan instan. Sedangkan Server 2 WhatsApp bertindak sebagai jalur redundansi dengan stabilitas tinggi dan ketahanan sesi jangka panjang. Anda bebas memilih server saat menautkan perangkat atau beralih sewaktu-waktu.',
+            q: 'Mengapa BisnisWA menggunakan WhatsApp Web JS sebagai engine utama?',
+            a: 'WhatsApp Web JS menjalankan browser Chromium headless yang mengeksekusi script resmi WhatsApp Web (Meta). Ini menjamin bahwa setiap pesan dienkripsi dengan standar Signal Protocol resmi tanpa resiko ratchet desync (bebas dari error "Menunggu pesan ini"), pesan terkirim instan, dan sesi sangat tahan lama serta aman dari pemblokiran.',
         },
         {
             q: 'Bagaimana sistem melindungi nomor dari resiko Banned WhatsApp?',
@@ -364,14 +364,14 @@ print(res.json())`,
             price_annually: 2890000,
             limits: { max_devices: 5, monthly_message_quota: 50000, api_rate_limit_per_minute: 120 },
             badge: 'Broadcast & Kampus',
-            description: 'Dukungan multi-device, spintax, dual engine, dan webhook realtime.',
+            description: 'Dukungan multi-device, spintax, engine WhatsApp Web JS, dan webhook realtime.',
         },
     ];
 
     const displayPlans = safePlans.length > 0 ? safePlans.map((p) => ({
         ...p,
         badge: p.slug === 'starter' ? 'UMKM & Bot' : p.slug === 'pro-bisnis' ? 'Paling Diminati' : 'Broadcast & Kampus',
-        description: p.slug === 'starter' ? 'Cocok untuk notifikasi otomatis toko online skala awal.' : p.slug === 'pro-bisnis' ? 'Solusi optimal tim CS & automasi broadcast bisnis bertumbuh.' : 'Dukungan multi-device, spintax, dual engine, dan webhook realtime.',
+        description: p.slug === 'starter' ? 'Cocok untuk notifikasi otomatis toko online skala awal.' : p.slug === 'pro-bisnis' ? 'Solusi optimal tim CS & automasi broadcast bisnis bertumbuh.' : 'Dukungan multi-device, spintax, engine WhatsApp Web JS, dan webhook realtime.',
         is_popular: p.slug === 'pro-bisnis' || p.is_popular,
     })) : DEFAULT_FALLBACK_PLANS;
 
@@ -620,7 +620,7 @@ print(res.json())`,
                         variants={heroItemVariants}
                         className="text-xs sm:text-base text-slate-200/90 max-w-2xl mx-auto leading-relaxed font-normal px-2 gsap-hero-item"
                     >
-                        Sistem terintegrasi penyedia WhatsApp API resmi, automasi pengiriman pesan broadcast massal berbasis langganan, dan manajemen perangkat multi-engine untuk bisnis & kampus.
+                        Sistem terintegrasi penyedia WhatsApp API resmi, automasi pengiriman pesan broadcast massal berbasis langganan, dan manajemen perangkat WhatsApp Web JS untuk bisnis & kampus.
                     </motion.p>
 
                     {/* Mobile Stacked / Desktop Inline CTA Buttons */}
@@ -771,7 +771,7 @@ print(res.json())`,
                             </div>
                             <h3 className="text-base font-bold text-[#0f172a]">Pindai QR Nomor WhatsApp</h3>
                             <p className="text-xs text-slate-600 leading-relaxed">
-                                Buka WhatsApp di smartphone Anda lalu tautkan perangkat via scan QR Code. Pilih <strong className="text-emerald-700">Server 1</strong> (Cepat) atau <strong className="text-[#854d0e]">Server 2</strong> (Stabil).
+                                Buka WhatsApp di smartphone Anda lalu tautkan perangkat via scan QR Code dengan engine resmi <strong className="text-emerald-700">WhatsApp Web JS</strong> yang stabil dan bebas delay.
                             </p>
                         </div>
                         <span className="text-[11px] font-semibold text-[#854d0e] pt-2 border-t border-slate-100 block">
@@ -807,7 +807,7 @@ print(res.json())`,
                 </div>
             </section>
 
-            {/* ================= 4. FITUR UTAMA & DUAL ENGINE ================= */}
+            {/* ================= 4. FITUR UTAMA & ENGINE WHATSAPP WEB JS ================= */}
             <section id="dual-engine" className="py-14 sm:py-20 bg-white border-y border-slate-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 space-y-8 sm:space-y-12">
                     <motion.div
@@ -818,79 +818,79 @@ print(res.json())`,
                         className="text-center space-y-2 gsap-reveal"
                     >
                         <span className="inline-block text-[11px] font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-3.5 py-1 rounded-full border border-emerald-200">
-                            ARSITEKTUR DUAL SERVER
+                            ARSITEKTUR SINGLE ENGINE TANGGUH
                         </span>
                         <h2 className="text-xl sm:text-3xl font-extrabold text-[#0f172a] tracking-tight">
-                            Infrastruktur Tangguh dengan Dual-Server WhatsApp
+                            WhatsApp Web JS Engine & Akselerasi FrankenPHP
                         </h2>
                         <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto">
-                            Bebas khawatir downtime dengan sistem failover multi-server WhatsApp yang saling mendukung tanpa jeda.
+                            Bebas masalah "Menunggu pesan ini", enkripsi native Signal Protocol resmi Meta, serta ditenagai runtime supercharged Laravel Octane + FrankenPHP.
                         </p>
                     </motion.div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 gsap-card-grid">
-                        {/* Dual Server Card 1 */}
+                        {/* Engine Card 1 */}
                         <motion.div
                             initial={{ opacity: 0, x: -20 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true, margin: '-40px' }}
                             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
                             whileHover={{ y: -6, scale: 1.02 }}
-                            className="rounded-2xl border border-slate-200 bg-[#f8fafc] p-5 sm:p-7 shadow-card space-y-4 sm:space-y-5 shadow-card-hover transition-shadow gsap-card gsap-reveal-left"
+                            className="rounded-2xl border border-emerald-200/90 bg-[#f8fafc] p-5 sm:p-7 shadow-card space-y-4 sm:space-y-5 shadow-card-hover transition-shadow gsap-card gsap-reveal-left"
                         >
                             <div className="flex items-center gap-3.5">
                                 <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold shrink-0">
                                     <Zap className="w-5 h-5 sm:w-6 sm:h-6" />
                                 </div>
                                 <div>
-                                    <h3 className="text-sm sm:text-base font-bold text-[#0f172a]">Server 1 WhatsApp (Jalur Cepat / Utama)</h3>
-                                    <p className="text-xs text-slate-500">High Speed & Ultra-Low Latency</p>
+                                    <h3 className="text-sm sm:text-base font-bold text-[#0f172a]">WhatsApp Web JS (Headless Chromium)</h3>
+                                    <p className="text-xs text-slate-500">Official Script Meta & Native End-to-End Encryption</p>
                                 </div>
                             </div>
                             <p className="text-xs text-slate-600 leading-relaxed">
-                                Server pengiriman berkecepatan tinggi dengan latensi ultra rendah (~38ms). Sangat optimal untuk pengiriman pesan OTP, notifikasi instan, dan broadcast volume besar secara efisien.
+                                Menjalankan klien web WhatsApp resmi di browser headless terisolasi. Seluruh kunci enkripsi dikelola langsung oleh skrip Meta, memastikan pesan terbaca instan dan sesi bertahan lama anti-ban.
                             </p>
                             <div className="p-3.5 bg-white rounded-xl border border-slate-200 text-xs space-y-1.5 text-slate-700">
                                 <div className="flex items-center gap-2">
                                     <Check className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
-                                    <span>Latensi Ultra-Rendah (~38ms)</span>
+                                    <span>Bebas Status "Menunggu Pesan Ini"</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Check className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
-                                    <span>Throughput Tinggi & Pengiriman Cepat</span>
+                                    <span>Sesi Awet & Proteksi Anti-Ban Teruji</span>
                                 </div>
                             </div>
                         </motion.div>
 
-                        {/* Dual Server Card 2 */}
+                        {/* Engine Card 2 */}
                         <motion.div
                             initial={{ opacity: 0, x: 20 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true, margin: '-40px' }}
                             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
                             whileHover={{ y: -6, scale: 1.02 }}
-                            className="rounded-2xl border border-slate-200 bg-[#f8fafc] p-5 sm:p-7 shadow-card space-y-4 sm:space-y-5 shadow-card-hover transition-shadow gsap-card gsap-reveal-right"
+                            className="rounded-2xl border border-blue-200/90 bg-[#f8fafc] p-5 sm:p-7 shadow-card space-y-4 sm:space-y-5 shadow-card-hover transition-shadow gsap-card gsap-reveal-right"
                         >
                             <div className="flex items-center gap-3.5">
-                                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-[#fef9c3] text-[#854d0e] flex items-center justify-center font-bold shrink-0">
+                                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold shrink-0">
                                     <Cpu className="w-5 h-5 sm:w-6 sm:h-6" />
                                 </div>
                                 <div>
-                                    <h3 className="text-sm sm:text-base font-bold text-[#0f172a]">Server 2 WhatsApp (Jalur Stabil & Cadangan)</h3>
-                                    <p className="text-xs text-slate-500">High Stability & Dedicated Redundancy</p>
+                                    <h3 className="text-sm sm:text-base font-bold text-[#0f172a]">Laravel Octane & FrankenPHP</h3>
+                                    <p className="text-xs text-slate-500">Supercharged Caddy Worker & Memory Persistence</p>
                                 </div>
                             </div>
                             <p className="text-xs text-slate-600 leading-relaxed">
-                                Server cadangan berstabilitas tinggi dengan arsitektur sesi terisolasi. Memastikan redundansi penuh, ketahanan koneksi, dan stabilitas operasional saat trafik padat.
+                                Didukung server aplikasi modern FrankenPHP dengan arsitektur worker persistent. Memproses ribuan pesan broadcast dan webhook secara paralel tanpa overhead bootstrapping PHP konvensional.
                             </p>
                             <div className="p-3.5 bg-white rounded-xl border border-slate-200 text-xs space-y-1.5 text-slate-700">
                                 <div className="flex items-center gap-2">
-                                    <Check className="w-3.5 h-3.5 text-[#854d0e] shrink-0" />
-                                    <span>Redundansi Penuh & Failover Otomatis</span>
+                                    <Check className="w-3.5 h-3.5 text-blue-700 shrink-0" />
+                                    <span>Latensi Respon Sub-Milidetik</span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <Check className="w-3.5 h-3.5 text-[#854d0e] shrink-0" />
-                                    <span>Sesi Koneksi Teruji & Stabil</span>
+                                    <Check className="w-3.5 h-3.5 text-blue-700 shrink-0" />
+                                    <span>Skalabilitas Tinggi untuk Broadcast Massal</span>
                                 </div>
                             </div>
                         </motion.div>
@@ -1139,7 +1139,7 @@ print(res.json())`,
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <Check className="w-4 h-4 text-emerald-600 shrink-0" />
-                                                <span>Dual Server: <strong>Server 1 & Server 2</strong></span>
+                                                <span>Engine: <strong>WhatsApp Web JS Resmi</strong></span>
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <Check className="w-4 h-4 text-emerald-600 shrink-0" />
@@ -1289,7 +1289,7 @@ print(res.json())`,
                             <h4 className="font-bold text-[#facc15] uppercase text-[11px] tracking-wider">Navigasi Solusi</h4>
                             <ul className="space-y-2 text-slate-300">
                                 <li><Link href="/cara-pakai" prefetch className="hover:text-[#facc15] transition-colors">Panduan Integrasi</Link></li>
-                                <li><Link href="/dual-engine" prefetch className="hover:text-[#facc15] transition-colors">Teknologi Gateway Dual-Server</Link></li>
+                                <li><Link href="/dual-engine" prefetch className="hover:text-[#facc15] transition-colors">Teknologi WhatsApp Web JS</Link></li>
                                 <li><Link href="/rest-api" prefetch className="hover:text-[#facc15] transition-colors">Dokumentasi REST API</Link></li>
                                 <li><Link href="/harga" prefetch className="hover:text-[#facc15] transition-colors">Pilihan Paket Layanan</Link></li>
                                 <li><Link href="/faq" prefetch className="hover:text-[#facc15] transition-colors">Pusat Bantuan & FAQ</Link></li>

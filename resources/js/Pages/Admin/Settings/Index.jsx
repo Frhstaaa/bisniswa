@@ -260,15 +260,14 @@ export default function SettingsIndex({ settings }) {
 
                                             <div>
                                                 <label className="block font-semibold text-slate-700 mb-1.5">
-                                                    Server WhatsApp Bawaan (Default Server)
+                                                    Engine WhatsApp Utama
                                                 </label>
                                                 <select
-                                                    value={form.data.settings.default_engine}
-                                                    onChange={(e) => updateField('default_engine', e.target.value)}
-                                                    className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600 font-medium"
+                                                    value="wwebjs"
+                                                    disabled
+                                                    className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-slate-700 font-medium"
                                                 >
-                                                    <option value="baileys">Server 1 WhatsApp (Jalur Cepat - Ultra Low Memory & Latensi Rendah)</option>
-                                                    <option value="wwebjs">Server 2 WhatsApp (Jalur Stabil - Sesi Terisolasi & Anti-Ban)</option>
+                                                    <option value="wwebjs">WhatsApp Web JS Engine (Resmi Headless Chromium - Stabil & Zero Delay)</option>
                                                 </select>
                                             </div>
                                         </div>

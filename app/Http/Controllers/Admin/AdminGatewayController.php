@@ -19,12 +19,12 @@ class AdminGatewayController extends Controller
             ->paginate(20);
 
         $wwebjsDevices = Device::where('engine', 'wwebjs')->get();
-        $baileysDevices = Device::where('engine', 'baileys')->get();
 
         $clusterStatus = 'OFFLINE';
         $microserviceActive = 0;
+        $gatewayUrl = config('services.whatsapp_node.url', 'http://127.0.0.1:3001');
         try {
-            $nodeRes = Http::timeout(1)->get('http://127.0.0.1:3000/health');
+            $nodeRes = Http::timeout(1)->get("{$gatewayUrl}/health");
             if ($nodeRes->successful()) {
                 $clusterStatus = 'ONLINE';
                 $microserviceActive = $nodeRes->json('active_sessions', 0);
@@ -39,11 +39,8 @@ class AdminGatewayController extends Controller
             'wwebjs_total' => $wwebjsDevices->count(),
             'wwebjs_connected' => $wwebjsDevices->where('status', 'connected')->count(),
             'wwebjs_ram_mb' => $wwebjsDevices->where('status', 'connected')->count() * 120,
-            'baileys_total' => $baileysDevices->count(),
-            'baileys_connected' => $baileysDevices->where('status', 'connected')->count(),
-            'baileys_ram_mb' => $baileysDevices->where('status', 'connected')->count() * 30,
             'cluster_status' => $clusterStatus,
-            'cluster_endpoint' => config('services.whatsapp_node.url', 'http://127.0.0.1:3000'),
+            'cluster_endpoint' => $gatewayUrl,
             'microservice_sessions' => $microserviceActive,
         ];
 

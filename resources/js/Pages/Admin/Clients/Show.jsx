@@ -203,12 +203,7 @@ export default function ClientShow({ client }) {
                                 <p className="text-slate-400 py-6 text-center">Belum ada perangkat WhatsApp yang ditautkan.</p>
                             ) : (
                                 client.devices.map((device) => {
-                                    const serverLabel =
-                                        device.engine === 'baileys'
-                                            ? 'Server 1 WhatsApp'
-                                            : device.engine === 'wwebjs'
-                                            ? 'Server 2 WhatsApp'
-                                            : 'Server WhatsApp';
+                                    const serverLabel = 'WhatsApp Web JS';
 
                                     return (
                                         <div key={device.id} className="p-3.5 rounded-xl border border-slate-200/80 bg-slate-50/70 space-y-1.5">

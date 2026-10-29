@@ -94,7 +94,7 @@ export default function Register({ plans, selectedPlanSlug }) {
                 </Link>
                 <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a]">Pendaftaran Akun Bisnis & Langganan API</h2>
                 <p className="text-xs text-[#64748b] px-4">
-                    Dapatkan akses instan ke REST API Key dan dual-engine WhatsApp setelah pendaftaran
+                    Dapatkan akses instan ke REST API Key dan WhatsApp Web JS Engine setelah pendaftaran
                 </p>
             </div>
 

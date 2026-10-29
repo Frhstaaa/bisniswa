@@ -72,7 +72,7 @@ export default function Pricing({ plans = [], stats = {} }) {
             features: [
                 '1 Perangkat WhatsApp Terhubung',
                 'Kuota 5.000 Pesan per Bulan',
-                'Akses Dual Server WhatsApp (Server 1 & 2)',
+                'Akses Engine WhatsApp Web JS (Anti-Delay & Anti-Ban)',
                 'Live Chat Inbox 2 Arah Real-time',
                 'Broadcast Kontak Dasar',
                 'Otomasi Auto-Reply Cerdas',
@@ -91,7 +91,7 @@ export default function Pricing({ plans = [], stats = {} }) {
             features: [
                 '3 Perangkat WhatsApp Terhubung',
                 'Kuota 15.000 Pesan per Bulan',
-                'Akses Dual Server & Failover Cerdas',
+                'Akses WhatsApp Web JS Sesi Stabil',
                 'Live Chat Inbox Multichat Tim',
                 'Broadcast Massal CSV + Proteksi Spintax',
                 'Otomasi Auto-Reply & Jadwal Broadcast',
@@ -140,7 +140,7 @@ export default function Pricing({ plans = [], stats = {} }) {
         const list = [
             `${maxDev} Perangkat WhatsApp Terhubung`,
             `Kuota ${Number(quota).toLocaleString('id-ID')} Pesan per Bulan`,
-            'Akses Penuh Dual Server (Server 1 & 2)',
+            'Akses WhatsApp Web JS Engine Resmi',
             'Live Chat Inbox 2 Arah Real-time',
         ];
 
@@ -218,7 +218,7 @@ export default function Pricing({ plans = [], stats = {} }) {
     const featureMatrix = [
         { name: 'Maksimum Perangkat WhatsApp', starter: '1 Device', pro: '3 Devices', enterprise: '5 Devices' },
         { name: 'Kuota Pesan per Bulan', starter: '5.000 Pesan', pro: '15.000 Pesan', enterprise: '50.000 Pesan' },
-        { name: 'Akses Dual Server WhatsApp (Server 1 & 2)', starter: true, pro: true, enterprise: true },
+        { name: 'Engine Resmi WhatsApp Web JS', starter: true, pro: true, enterprise: true },
         { name: 'Live Chat Inbox WhatsApp Web', starter: true, pro: true, enterprise: true },
         { name: 'Broadcast CSV & Proteksi Anti-Ban', starter: 'Dasar', pro: 'Lengkap + Spintax', enterprise: 'Lengkap + Rotasi' },
         { name: 'Auto-Reply & AI Bot Pintar', starter: true, pro: true, enterprise: true },

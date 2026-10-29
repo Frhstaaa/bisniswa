@@ -65,16 +65,12 @@ class MessageApiController extends Controller
         $boundDeviceData = null;
         if ($apiKey->device) {
             $d = $apiKey->device;
-            $serverLabel = match ($d->engine) {
-                'baileys' => 'Server 1 WhatsApp',
-                'wwebjs' => 'Server 2 WhatsApp',
-                default => 'Server WhatsApp',
-            };
+            $serverLabel = 'WhatsApp Web JS Engine';
             $boundDeviceData = [
                 'id' => $d->id,
                 'name' => $d->name,
                 'phone_number' => $d->phone_number,
-                'server' => $d->engine === 'baileys' ? 'server_1' : 'server_2',
+                'server' => 'wwebjs',
                 'server_label' => $serverLabel,
                 'status' => $d->status,
                 'is_connected' => $d->status === 'connected',
@@ -200,11 +196,7 @@ class MessageApiController extends Controller
             }
 
             if ($device->status !== 'connected') {
-                $serverLabel = match ($device->engine) {
-                    'baileys' => 'Server 1 WhatsApp',
-                    'wwebjs' => 'Server 2 WhatsApp',
-                    default => 'Server WhatsApp',
-                };
+                $serverLabel = 'WhatsApp Web JS Engine';
 
                 return response()->json([
                     'status' => false,
@@ -214,7 +206,7 @@ class MessageApiController extends Controller
                         'device_id' => $device->id,
                         'device_name' => $device->name,
                         'phone_number' => $device->phone_number,
-                        'server' => $device->engine === 'baileys' ? 'server_1' : 'server_2',
+                        'server' => 'wwebjs',
                         'status' => $device->status,
                     ],
                 ], 422);
@@ -290,17 +282,9 @@ class MessageApiController extends Controller
         $remainingQuota = (int) $subscription->remaining_message_quota;
         $usedQuota = max(0, $monthlyQuota - $remainingQuota);
 
-        // Mask engine name to neutral server label as required
-        $serverLabel = match ($device->engine) {
-            'baileys' => 'Server 1 WhatsApp',
-            'wwebjs' => 'Server 2 WhatsApp',
-            default => 'Server WhatsApp',
-        };
-        $serverCode = match ($device->engine) {
-            'baileys' => 'server_1',
-            'wwebjs' => 'server_2',
-            default => 'server_default',
-        };
+        // Single Engine label
+        $serverLabel = 'WhatsApp Web JS Engine';
+        $serverCode = 'wwebjs';
 
         return response()->json([
             'status' => true,
@@ -308,7 +292,7 @@ class MessageApiController extends Controller
             'data' => [
                 'message_id' => $message->id,
                 'device_id' => $device->id,
-                'engine' => $device->engine,
+                'engine' => 'wwebjs',
                 'server' => $serverCode,
                 'recipient' => $message->receiver_number,
                 'status' => $message->status,
