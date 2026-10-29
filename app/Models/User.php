@@ -14,6 +14,15 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     /**
+     * Default model attributes.
+     *
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'is_active' => true,
+    ];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
@@ -26,6 +35,7 @@ class User extends Authenticatable
         'role',
         'phone',
         'avatar_url',
+        'is_active',
     ];
 
     /**
@@ -48,6 +58,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
         ];
     }
 
@@ -59,5 +70,45 @@ class User extends Authenticatable
     public function isSuperAdmin(): bool
     {
         return $this->role === 'superadmin';
+    }
+
+    public function isSaaSStaff(): bool
+    {
+        return in_array($this->role, ['superadmin', 'admin', 'marketing', 'support'], true);
+    }
+
+    public function canManageStaff(): bool
+    {
+        return $this->isSuperAdmin();
+    }
+
+    public function canManageSettings(): bool
+    {
+        return $this->isSuperAdmin();
+    }
+
+    public function canManagePlans(): bool
+    {
+        return in_array($this->role, ['superadmin', 'admin', 'marketing'], true);
+    }
+
+    public function canManagePayments(): bool
+    {
+        return in_array($this->role, ['superadmin', 'admin', 'marketing'], true);
+    }
+
+    public function canManageGateways(): bool
+    {
+        return in_array($this->role, ['superadmin', 'admin', 'support'], true);
+    }
+
+    public function canManageClients(): bool
+    {
+        return in_array($this->role, ['superadmin', 'admin', 'support'], true);
+    }
+
+    public function canManageSubscriptions(): bool
+    {
+        return in_array($this->role, ['superadmin', 'admin'], true);
     }
 }

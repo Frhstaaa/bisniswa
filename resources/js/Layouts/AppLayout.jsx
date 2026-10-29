@@ -26,6 +26,8 @@ import {
     Menu,
     X,
     Lightbulb,
+    Package,
+    ShieldCheck,
 } from 'lucide-react';
 import Toast from '../Components/ui/toast';
 import OnboardingGuideModal from '../Components/OnboardingGuideModal';
@@ -40,7 +42,18 @@ export default function AppLayout({ children, title }) {
     const auth = props.auth || {};
     const user = auth.user || {};
     const isSuperAdmin = user.role === 'superadmin';
+    const isSaaSStaff = Boolean(user.is_saas_staff || ['superadmin', 'admin', 'marketing', 'support'].includes(user.role));
     const isAdminRoute = url.startsWith('/admin');
+
+    const perms = user.permissions || {
+        can_manage_staff: isSuperAdmin,
+        can_manage_settings: isSuperAdmin,
+        can_manage_plans: isSuperAdmin || ['admin', 'marketing'].includes(user.role),
+        can_manage_payments: isSuperAdmin || ['admin', 'marketing'].includes(user.role),
+        can_manage_gateways: isSuperAdmin || ['admin', 'support'].includes(user.role),
+        can_manage_clients: isSuperAdmin || ['admin', 'support'].includes(user.role),
+        can_manage_subscriptions: isSuperAdmin || ['admin'].includes(user.role),
+    };
 
     const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
     const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
@@ -96,30 +109,42 @@ export default function AppLayout({ children, title }) {
         },
     ];
 
-    // Categorized Super Admin Navigation (shadcnuikit e-commerce style)
-    const adminNavGroups = [
+    // Categorized Super Admin & SaaS Staff Navigation
+    const rawAdminNavGroups = [
         {
             title: 'SISTEM UTAMA',
             items: [
-                { label: 'Ikhtisar Eksekutif', href: '/admin/dashboard', icon: LayoutDashboard, active: url === '/admin/dashboard' || url === '/admin', badge: 'SaaS' },
+                { label: 'Ikhtisar Eksekutif', href: '/admin/dashboard', icon: LayoutDashboard, active: url === '/admin/dashboard' || url === '/admin', badge: 'SaaS', show: true },
             ],
         },
         {
             title: 'MANAJEMEN SAAS',
             items: [
-                { label: 'Klien & Workspace', href: '/admin/clients', icon: Users, active: url.startsWith('/admin/clients') },
-                { label: 'Langganan & Durasi', href: '/admin/subscriptions', icon: Calendar, active: url.startsWith('/admin/subscriptions') },
-                { label: 'Pembayaran & Invoice', href: '/admin/payments', icon: Receipt, active: url.startsWith('/admin/payments'), badge: 'Verifikasi' },
+                { label: 'Klien & Workspace', href: '/admin/clients', icon: Users, active: url.startsWith('/admin/clients'), show: perms.can_manage_clients },
+                { label: 'Langganan & Durasi', href: '/admin/subscriptions', icon: Calendar, active: url.startsWith('/admin/subscriptions'), show: perms.can_manage_subscriptions || isSuperAdmin },
+                { label: 'Pembayaran & Invoice', href: '/admin/payments', icon: Receipt, active: url.startsWith('/admin/payments'), badge: 'Verifikasi', show: perms.can_manage_payments },
+                { label: 'Kelola Paket (Plans)', href: '/admin/plans', icon: Package, active: url.startsWith('/admin/plans'), badge: 'Katalog', show: perms.can_manage_plans },
+            ],
+        },
+        {
+            title: 'TIM & AKSES SAAS',
+            items: [
+                { label: 'Tim & Akses RBAC', href: '/admin/staff', icon: ShieldCheck, active: url.startsWith('/admin/staff'), badge: 'Staff', show: perms.can_manage_staff },
             ],
         },
         {
             title: 'INFRASTRUKTUR GATEWAY',
             items: [
-                { label: 'Node Microservices', href: '/admin/gateways', icon: Cpu, active: url.startsWith('/admin/gateways'), badge: 'Online' },
-                { label: 'Pengaturan Produksi', href: '/admin/settings', icon: Settings, active: url.startsWith('/admin/settings') },
+                { label: 'Node Microservices', href: '/admin/gateways', icon: Cpu, active: url.startsWith('/admin/gateways'), badge: 'Online', show: perms.can_manage_gateways },
+                { label: 'Pengaturan Produksi', href: '/admin/settings', icon: Settings, active: url.startsWith('/admin/settings'), show: perms.can_manage_settings },
             ],
         },
     ];
+
+    const adminNavGroups = rawAdminNavGroups.map((group) => ({
+        ...group,
+        items: group.items.filter((item) => item.show !== false),
+    })).filter((group) => group.items.length > 0);
 
     const currentNavGroups = isAdminRoute ? adminNavGroups : clientNavGroups;
 
@@ -129,6 +154,8 @@ export default function AppLayout({ children, title }) {
             if (url.includes('/clients')) return { category: 'Super Admin', page: 'Klien & Workspace' };
             if (url.includes('/subscriptions')) return { category: 'Super Admin', page: 'Langganan & Durasi Fleksibel' };
             if (url.includes('/payments')) return { category: 'Super Admin', page: 'Pembayaran & Invoice' };
+            if (url.includes('/plans')) return { category: 'Super Admin', page: 'Kelola Paket Layanan (Plans)' };
+            if (url.includes('/staff')) return { category: 'Super Admin', page: 'Manajemen Tim & RBAC' };
             if (url.includes('/gateways')) return { category: 'Super Admin', page: 'Monitoring WhatsApp Gateways' };
             if (url.includes('/settings')) return { category: 'Super Admin', page: 'Pengaturan Produksi' };
             return { category: 'Super Admin', page: 'Ikhtisar Eksekutif SaaS' };
@@ -168,7 +195,7 @@ export default function AppLayout({ children, title }) {
                                 </span>
                             </div>
                             <div className="text-[10px] font-medium text-emerald-200/70 truncate max-w-[130px]" title={user.workspace_name || user.name}>
-                                {isAdminRoute ? 'Superadmin Platform' : (user.workspace_name || user.name || 'Tenant Workspace')}
+                                {isAdminRoute ? (isSuperAdmin ? 'Superadmin Platform' : `Panel Staff (${(user.role || 'Staff').toUpperCase()})`) : (user.workspace_name || user.name || 'Tenant Workspace')}
                             </div>
                         </div>
                     </Link>
@@ -320,7 +347,7 @@ export default function AppLayout({ children, title }) {
                         </div>
 
                         {/* Elegant Mode Switcher Segmented Control */}
-                        {isSuperAdmin && (
+                        {isSaaSStaff && (
                             <div className="flex items-center p-0.5 rounded-lg bg-slate-100 border border-slate-200 text-xs font-semibold">
                                 <Link
                                     href="/dashboard"
@@ -340,7 +367,7 @@ export default function AppLayout({ children, title }) {
                                             : 'text-slate-500 hover:text-slate-900'
                                     }`}
                                 >
-                                    Super Admin
+                                    {isSuperAdmin ? 'Super Admin' : 'Panel SaaS'}
                                 </Link>
                             </div>
                         )}

@@ -4,7 +4,9 @@ use App\Http\Controllers\Admin\AdminClientController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminGatewayController;
 use App\Http\Controllers\Admin\AdminPaymentController;
+use App\Http\Controllers\Admin\AdminPlanController;
 use App\Http\Controllers\Admin\AdminSettingController;
+use App\Http\Controllers\Admin\AdminStaffController;
 use App\Http\Controllers\Admin\AdminSubscriptionController;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\AuthController;
@@ -124,27 +126,55 @@ Route::middleware(['auth', 'superadmin'])->prefix('admin')->name('admin.')->grou
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
     // Clients / Tenants Management
-    Route::get('/clients', [AdminClientController::class, 'index'])->name('clients.index');
-    Route::get('/clients/{id}', [AdminClientController::class, 'show'])->name('clients.show');
-    Route::post('/clients/{id}/toggle-status', [AdminClientController::class, 'toggleStatus'])->name('clients.toggle-status');
+    Route::middleware('superadmin:manage_clients')->group(function () {
+        Route::get('/clients', [AdminClientController::class, 'index'])->name('clients.index');
+        Route::get('/clients/{id}', [AdminClientController::class, 'show'])->name('clients.show');
+        Route::post('/clients/{id}/toggle-status', [AdminClientController::class, 'toggleStatus'])->name('clients.toggle-status');
+    });
 
     // Centralized Subscription & Duration Controls
-    Route::get('/subscriptions', [AdminSubscriptionController::class, 'index'])->name('subscriptions.index');
-    Route::post('/subscriptions/adjust-duration', [AdminSubscriptionController::class, 'adjustDuration'])->name('subscriptions.adjust-duration');
-    Route::post('/subscriptions/set-custom-dates', [AdminSubscriptionController::class, 'setCustomDates'])->name('subscriptions.set-custom-dates');
-    Route::post('/subscriptions/topup-quota', [AdminSubscriptionController::class, 'topupQuota'])->name('subscriptions.topup-quota');
-    Route::post('/subscriptions/toggle-pause', [AdminSubscriptionController::class, 'togglePause'])->name('subscriptions.toggle-pause');
+    Route::middleware('superadmin:manage_subscriptions')->group(function () {
+        Route::get('/subscriptions', [AdminSubscriptionController::class, 'index'])->name('subscriptions.index');
+        Route::post('/subscriptions/adjust-duration', [AdminSubscriptionController::class, 'adjustDuration'])->name('subscriptions.adjust-duration');
+        Route::post('/subscriptions/set-custom-dates', [AdminSubscriptionController::class, 'setCustomDates'])->name('subscriptions.set-custom-dates');
+        Route::post('/subscriptions/topup-quota', [AdminSubscriptionController::class, 'topupQuota'])->name('subscriptions.topup-quota');
+        Route::post('/subscriptions/toggle-pause', [AdminSubscriptionController::class, 'togglePause'])->name('subscriptions.toggle-pause');
+    });
 
     // Invoices & Payments
-    Route::get('/payments', [AdminPaymentController::class, 'index'])->name('payments.index');
-    Route::post('/payments', [AdminPaymentController::class, 'store'])->name('payments.store');
-    Route::post('/payments/{id}/approve', [AdminPaymentController::class, 'approve'])->name('payments.approve');
+    Route::middleware('superadmin:manage_payments')->group(function () {
+        Route::get('/payments', [AdminPaymentController::class, 'index'])->name('payments.index');
+        Route::post('/payments', [AdminPaymentController::class, 'store'])->name('payments.store');
+        Route::post('/payments/{id}/approve', [AdminPaymentController::class, 'approve'])->name('payments.approve');
+    });
 
     // WhatsApp Gateways & Microservices Monitor
-    Route::get('/gateways', [AdminGatewayController::class, 'index'])->name('gateways.index');
-    Route::post('/gateways/restart', [AdminGatewayController::class, 'restartEngine'])->name('gateways.restart');
+    Route::middleware('superadmin:manage_gateways')->group(function () {
+        Route::get('/gateways', [AdminGatewayController::class, 'index'])->name('gateways.index');
+        Route::post('/gateways/restart', [AdminGatewayController::class, 'restartEngine'])->name('gateways.restart');
+    });
 
-    // Production Readiness Settings
-    Route::get('/settings', [AdminSettingController::class, 'index'])->name('settings.index');
-    Route::post('/settings', [AdminSettingController::class, 'update'])->name('settings.update');
+    // Subscription Packages / Plans Management (Superadmin, Admin, Marketing)
+    Route::middleware('superadmin:manage_plans')->group(function () {
+        Route::get('/plans', [AdminPlanController::class, 'index'])->name('plans.index');
+        Route::post('/plans', [AdminPlanController::class, 'store'])->name('plans.store');
+        Route::put('/plans/{id}', [AdminPlanController::class, 'update'])->name('plans.update');
+        Route::post('/plans/{id}/toggle-status', [AdminPlanController::class, 'toggleStatus'])->name('plans.toggle-status');
+        Route::delete('/plans/{id}', [AdminPlanController::class, 'destroy'])->name('plans.destroy');
+    });
+
+    // SaaS Internal Team & RBAC Management (Superadmin Only)
+    Route::middleware('superadmin:manage_staff')->group(function () {
+        Route::get('/staff', [AdminStaffController::class, 'index'])->name('staff.index');
+        Route::post('/staff', [AdminStaffController::class, 'store'])->name('staff.store');
+        Route::put('/staff/{id}', [AdminStaffController::class, 'update'])->name('staff.update');
+        Route::post('/staff/{id}/toggle-status', [AdminStaffController::class, 'toggleStatus'])->name('staff.toggle-status');
+        Route::delete('/staff/{id}', [AdminStaffController::class, 'destroy'])->name('staff.destroy');
+    });
+
+    // Production Readiness Settings (Superadmin Only)
+    Route::middleware('superadmin:manage_settings')->group(function () {
+        Route::get('/settings', [AdminSettingController::class, 'index'])->name('settings.index');
+        Route::post('/settings', [AdminSettingController::class, 'update'])->name('settings.update');
+    });
 });
