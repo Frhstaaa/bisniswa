@@ -69,24 +69,22 @@ export default function ForgotPassword() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-            className="min-h-screen bg-[#f8fafc] flex flex-col justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8 font-sans antialiased selection:bg-emerald-100 selection:text-emerald-900"
+            className="min-h-screen bg-white bg-grid-pattern flex flex-col justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8 font-sans antialiased selection:bg-emerald-100 selection:text-emerald-900"
         >
             <Head title="Lupa Kata Sandi — MARDIRA WA" />
 
             <div className="w-full max-w-md mx-auto text-center space-y-3">
                 <Link href="/" className="inline-flex items-center gap-3 group">
-                    <div className="h-11 w-11 sm:h-12 sm:w-12 rounded-xl bg-white border border-slate-200 shadow-xs flex items-center justify-center p-1 transition-transform group-hover:scale-105">
-                        <img
-                            src="/images/logo-mardira.jpg"
-                            alt="Politeknik Mardira Indonesia"
-                            className="h-full w-full object-contain"
-                        />
-                    </div>
+                    <img
+                        src="/images/logo.png"
+                        alt="Politeknik Mardira Indonesia"
+                        className="h-11 sm:h-12 w-auto object-contain shrink-0 transition-transform group-hover:scale-105"
+                    />
                     <div className="text-left">
-                        <span className="text-xl font-extrabold tracking-tight text-slate-900">
-                            MARDIRA<span className="text-amber-500">WA</span>
+                        <span className="text-xl font-black tracking-tight text-slate-900">
+                            MARDIRA<span className="text-[#1e50ff]">WA</span>
                         </span>
-                        <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">
+                        <p className="text-[10px] font-bold text-[#64748b] tracking-wider uppercase">
                             Politeknik Mardira Indonesia
                         </p>
                     </div>
@@ -114,7 +112,7 @@ export default function ForgotPassword() {
 
                     {flash.status && (
                         <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-900 flex items-start gap-2.5 animate-fade-in">
-                            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                            <CheckCircle2 className="w-4 h-4 text-[#1e50ff] shrink-0 mt-0.5" />
                             <div>
                                 <p className="font-semibold text-emerald-950">Email Instruksi Dikirim</p>
                                 <p className="text-[11px] text-emerald-800 mt-0.5">{flash.status}</p>
@@ -124,7 +122,7 @@ export default function ForgotPassword() {
 
                     {flash.wa_sent && (
                         <div className="p-3.5 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-xs text-emerald-950 flex items-start gap-2.5 animate-fade-in">
-                            <MessageSquare className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                            <MessageSquare className="w-4 h-4 text-[#1e50ff] shrink-0 mt-0.5" />
                             <div>
                                 <p className="font-semibold text-emerald-950">Notifikasi WhatsApp Terkirim!</p>
                                 <p className="text-[11px] text-emerald-800 mt-0.5">
@@ -187,8 +185,8 @@ export default function ForgotPassword() {
                                     <span className="text-[10px] text-slate-400 font-mono animate-pulse">Memverifikasi...</span>
                                 )}
                                 {emailCheck.status === 'valid' && (
-                                    <span className="text-[10px] text-emerald-700 font-semibold inline-flex items-center gap-0.5">
-                                        <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                                    <span className="text-[10px] text-[#1e50ff] font-semibold inline-flex items-center gap-0.5">
+                                        <CheckCircle2 className="w-3 h-3 text-[#1e50ff]" />
                                         <span>{emailCheck.message}</span>
                                     </span>
                                 )}
@@ -208,10 +206,10 @@ export default function ForgotPassword() {
                                     placeholder="nama@perusahaan.com / kampus.ac.id"
                                     className={`w-full pl-9 pr-3.5 py-2.5 rounded-xl border text-xs transition-colors shadow-2xs ${
                                         emailCheck.status === 'valid'
-                                            ? 'border-emerald-500 bg-emerald-50/20 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600'
+                                            ? 'border-emerald-500 bg-emerald-50/20 focus:border-[#1e50ff] focus:ring-1 focus:ring-[#1e50ff] focus:ring-1 focus:ring-emerald-600'
                                             : emailCheck.status === 'invalid'
                                             ? 'border-red-400 bg-red-50/20 focus:border-red-500 focus:ring-1 focus:ring-red-500'
-                                            : 'border-slate-200 focus:border-emerald-600 focus:outline-none'
+                                            : 'border-slate-200 focus:border-[#1e50ff] focus:ring-1 focus:ring-[#1e50ff] focus:outline-none'
                                     }`}
                                     required
                                 />
@@ -224,7 +222,7 @@ export default function ForgotPassword() {
                         <Button
                             type="submit"
                             disabled={processing}
-                            className="w-full h-10 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-xs transition-all"
+                            className="w-full h-10 rounded-xl bg-[#1e50ff] hover:bg-[#153ec7] uppercase tracking-wider font-extrabold shadow-[0_8px_20px_-4px_rgba(30,80,255,0.4)] rounded-full text-white font-semibold text-xs shadow-xs transition-all"
                         >
                             <span>{processing ? 'Mengirim Instruksi...' : 'Kirim Tautan Reset Kata Sandi'}</span>
                             <ArrowRight className="w-4 h-4 ml-1.5" />
@@ -242,7 +240,7 @@ export default function ForgotPassword() {
 
                         <Link
                             href="/register"
-                            className="font-semibold text-emerald-700 hover:underline"
+                            className="font-semibold text-[#1e50ff] hover:underline"
                         >
                             Daftar Akun Baru
                         </Link>
@@ -250,7 +248,7 @@ export default function ForgotPassword() {
                 </div>
 
                 <div className="mt-4 text-center text-[11px] text-slate-400 flex items-center justify-center gap-1.5">
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                    <ShieldCheck className="w-3.5 h-3.5 text-[#1e50ff]" />
                     <span>Layanan Otentikasi Terenkripsi MARDIRA WA</span>
                 </div>
             </div>

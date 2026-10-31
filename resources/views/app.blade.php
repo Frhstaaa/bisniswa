@@ -7,22 +7,23 @@
     <title inertia>{{ config('app.name', 'MARDIRA WA') }}</title>
 
     <!-- Favicon & Browser URL Icons -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('favicon.png') }}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=3">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('favicon-32x32.png') }}?v=3">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}?v=3">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('images/logo.png') }}?v=3">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}?v=3">
 
     <!-- Open Graph & Social Link Preview Logo -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="{{ config('app.name', 'MARDIRA WA') }}">
-    <meta property="og:image" content="{{ asset('images/logo-mardira.jpg') }}">
+    <meta property="og:image" content="{{ asset('images/logo.png') }}">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="{{ asset('images/logo-mardira.jpg') }}">
+    <meta name="twitter:image" content="{{ asset('images/logo.png') }}">
 
-    <!-- Modern Tech SaaS Typography (Plus Jakarta Sans & Inter) -->
+    <!-- Modern Editorial & Tech SaaS Typography (Plus Jakarta Sans, Playfair Display, Instrument Serif, JetBrains Mono) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,400;1,600;1,700;1,900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
     @viteReactRefresh
     @vite(['resources/js/app.jsx', 'resources/css/app.css'])

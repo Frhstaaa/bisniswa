@@ -74,32 +74,30 @@ export default function Register({ plans, selectedPlanSlug }) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-            className="min-h-screen bg-[#f8fafc] flex flex-col justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8 font-sans antialiased"
+            className="min-h-screen bg-white bg-grid-pattern flex flex-col justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8 font-sans antialiased"
         >
             <Head title="Daftar Akun & Langganan — Mardira WA Gateway" />
 
             <div className="w-full max-w-xl mx-auto text-center space-y-3">
                 <Link href="/" className="inline-flex items-center gap-3 group">
-                    <div className="h-11 w-11 sm:h-12 sm:w-12 rounded-xl bg-white border border-[#e2e8f0] shadow-xs flex items-center justify-center p-1 transition-transform group-hover:scale-105">
-                        <img
-                            src="/images/logo-mardira.jpg"
-                            alt="Politeknik Mardira Indonesia"
-                            className="h-full w-full object-contain"
-                        />
-                    </div>
+                    <img
+                        src="/images/logo.png"
+                        alt="Politeknik Mardira Indonesia"
+                        className="h-11 sm:h-12 w-auto object-contain shrink-0 transition-transform group-hover:scale-105"
+                    />
                     <div className="text-left">
-                        <span className="text-xl font-black tracking-tight text-emerald-700">MARDIRA<span className="text-amber-500">WA</span></span>
+                        <span className="text-xl font-black tracking-tight text-slate-900">MARDIRA<span className="text-[#1e50ff]">WA</span></span>
                         <p className="text-[10px] font-bold text-[#64748b] tracking-wider uppercase">Politeknik Mardira Indonesia</p>
                     </div>
                 </Link>
-                <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a]">Pendaftaran Akun Bisnis & Langganan API</h2>
+                <h2 className="text-xl sm:text-3xl font-black text-slate-900 tracking-tight">Pendaftaran Akun & <span className="font-editorial-italic font-normal">Langganan Gateway</span></h2>
                 <p className="text-xs text-[#64748b] px-4">
                     Dapatkan akses instan ke REST API Key dan BisnisWA UltraSync Engine setelah pendaftaran
                 </p>
             </div>
 
             <div className="mt-6 sm:mt-8 w-full max-w-xl mx-auto">
-                <div className="bg-white border border-[#e2e8f0] py-6 px-5 sm:py-8 sm:px-8 shadow-card rounded-2xl space-y-6">
+                <div className="bg-white border border-[#e2e8f0] py-6 px-4 sm:py-8 sm:px-8 shadow-card rounded-2xl space-y-6">
                     <form onSubmit={handleSubmit} className="space-y-4 text-xs">
                         {/* Plan Selector Radios */}
                         <div>
@@ -111,19 +109,19 @@ export default function Register({ plans, selectedPlanSlug }) {
                                         onClick={() => setData('plan_id', plan.id)}
                                         className={`p-3.5 rounded-xl border cursor-pointer transition-all flex flex-col justify-between ${
                                             data.plan_id === plan.id
-                                                ? 'border-emerald-600 bg-emerald-50 ring-2 ring-emerald-600'
+                                                ? 'border-[#1e50ff] bg-blue-50/50 ring-2 ring-[#1e50ff]'
                                                 : 'border-[#e2e8f0] hover:border-slate-300'
                                         }`}
                                     >
                                         <div className="flex items-center justify-between">
                                             <span className="font-bold text-[#0f172a] text-xs">{plan.name}</span>
                                             {data.plan_id === plan.id && (
-                                                <span className="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center">
+                                                <span className="w-4 h-4 rounded-full bg-[#1e50ff] text-white flex items-center justify-center">
                                                     <Check className="w-2.5 h-2.5" />
                                                 </span>
                                             )}
                                         </div>
-                                        <p className="text-xs text-emerald-700 font-black mt-1">
+                                        <p className="text-xs text-[#1e50ff] font-black mt-1">
                                             Rp {parseInt(plan.price_monthly).toLocaleString('id-ID')} /bln
                                         </p>
                                         <p className="text-[10px] text-[#64748b] mt-0.5">
@@ -145,7 +143,7 @@ export default function Register({ plans, selectedPlanSlug }) {
                                         value={data.workspace_name}
                                         onChange={(e) => setData('workspace_name', e.target.value)}
                                         placeholder="PT Digital Niaga"
-                                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-[#e2e8f0] text-xs focus:border-emerald-600 focus:outline-none transition-colors"
+                                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-[#e2e8f0] text-xs focus:border-[#1e50ff] focus:ring-1 focus:ring-[#1e50ff] focus:outline-none transition-colors"
                                         required
                                     />
                                 </div>
@@ -161,7 +159,7 @@ export default function Register({ plans, selectedPlanSlug }) {
                                         value={data.name}
                                         onChange={(e) => setData('name', e.target.value)}
                                         placeholder="Budi Santoso"
-                                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-[#e2e8f0] text-xs focus:border-emerald-600 focus:outline-none transition-colors"
+                                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-[#e2e8f0] text-xs focus:border-[#1e50ff] focus:ring-1 focus:ring-[#1e50ff] focus:outline-none transition-colors"
                                         required
                                     />
                                 </div>
@@ -178,8 +176,8 @@ export default function Register({ plans, selectedPlanSlug }) {
                                         <span className="text-[10px] text-slate-400 font-mono animate-pulse">Memverifikasi...</span>
                                     )}
                                     {emailCheck.status === 'valid' && (
-                                        <span className="text-[10px] text-emerald-700 font-semibold inline-flex items-center gap-0.5">
-                                            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                                        <span className="text-[10px] text-[#1e50ff] font-semibold inline-flex items-center gap-0.5">
+                                            <CheckCircle2 className="w-3 h-3 text-[#1e50ff]" />
                                             <span>{emailCheck.message}</span>
                                         </span>
                                     )}
@@ -199,10 +197,10 @@ export default function Register({ plans, selectedPlanSlug }) {
                                         placeholder="budi@digitalniaga.id"
                                         className={`w-full pl-9 pr-3.5 py-2.5 rounded-xl border text-xs transition-colors shadow-2xs ${
                                             emailCheck.status === 'valid'
-                                                ? 'border-emerald-500 bg-emerald-50/20 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600'
+                                                ? 'border-emerald-500 bg-emerald-50/20 focus:border-[#1e50ff] focus:ring-1 focus:ring-[#1e50ff] focus:ring-1 focus:ring-emerald-600'
                                                 : emailCheck.status === 'invalid'
                                                 ? 'border-red-400 bg-red-50/20 focus:border-red-500 focus:ring-1 focus:ring-red-500'
-                                                : 'border-[#e2e8f0] focus:border-emerald-600 focus:outline-none'
+                                                : 'border-[#e2e8f0] focus:border-[#1e50ff] focus:ring-1 focus:ring-[#1e50ff] focus:outline-none'
                                         }`}
                                         required
                                     />
@@ -219,7 +217,7 @@ export default function Register({ plans, selectedPlanSlug }) {
                                         value={data.phone}
                                         onChange={(e) => setData('phone', e.target.value)}
                                         placeholder="+6281234567890"
-                                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-[#e2e8f0] text-xs font-mono focus:border-emerald-600 focus:outline-none transition-colors"
+                                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-[#e2e8f0] text-xs font-mono focus:border-[#1e50ff] focus:ring-1 focus:ring-[#1e50ff] focus:outline-none transition-colors"
                                         required
                                     />
                                 </div>
@@ -238,7 +236,7 @@ export default function Register({ plans, selectedPlanSlug }) {
                                         value={data.password}
                                         onChange={(e) => setData('password', e.target.value)}
                                         placeholder="••••••••"
-                                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-[#e2e8f0] text-xs focus:border-emerald-600 focus:outline-none transition-colors"
+                                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-[#e2e8f0] text-xs focus:border-[#1e50ff] focus:ring-1 focus:ring-[#1e50ff] focus:outline-none transition-colors"
                                         required
                                     />
                                 </div>
@@ -254,7 +252,7 @@ export default function Register({ plans, selectedPlanSlug }) {
                                         value={data.password_confirmation}
                                         onChange={(e) => setData('password_confirmation', e.target.value)}
                                         placeholder="••••••••"
-                                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-[#e2e8f0] text-xs focus:border-emerald-600 focus:outline-none transition-colors"
+                                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-[#e2e8f0] text-xs focus:border-[#1e50ff] focus:ring-1 focus:ring-[#1e50ff] focus:outline-none transition-colors"
                                         required
                                     />
                                 </div>
@@ -263,16 +261,16 @@ export default function Register({ plans, selectedPlanSlug }) {
 
                         {/* API Access Guarantee Notice */}
                         <div className="p-3 bg-[#fef9c3] rounded-xl border border-[#fde047] text-xs text-[#854d0e] flex items-start gap-2.5">
-                            <ShieldCheck className="w-4 h-4 shrink-0 mt-0.5 text-emerald-700" />
+                            <ShieldCheck className="w-4 h-4 shrink-0 mt-0.5 text-[#1e50ff]" />
                             <p className="text-[11px] leading-relaxed text-[#334155]">
-                                Setelah mendaftar, token <strong className="text-emerald-700">REST API Key</strong> dan kuota pengiriman pesan akan otomatis di-generate sehingga aplikasi Anda dapat langsung dihubungkan.
+                                Setelah mendaftar, token <strong className="text-[#1e50ff]">REST API Key</strong> dan kuota pengiriman pesan akan otomatis di-generate sehingga aplikasi Anda dapat langsung dihubungkan.
                             </p>
                         </div>
 
                         <button
                             type="submit"
                             disabled={processing}
-                            className="btn-press w-full py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md transition-all flex items-center justify-center gap-1.5 disabled:opacity-50"
+                            className="btn-press w-full py-3.5 rounded-xl bg-[#1e50ff] hover:bg-emerald-700 text-white text-xs font-bold shadow-md transition-all flex items-center justify-center gap-1.5 disabled:opacity-50"
                         >
                             <span>{processing ? 'Memproses Akun & API...' : 'Daftar & Dapatkan API Key Sekarang →'}</span>
                         </button>
@@ -280,7 +278,7 @@ export default function Register({ plans, selectedPlanSlug }) {
 
                     <div className="pt-4 border-t border-[#e2e8f0] text-center text-xs text-[#64748b]">
                         Sudah memiliki akun?{' '}
-                        <Link href="/login" className="font-bold text-emerald-700 hover:underline">
+                        <Link href="/login" className="font-bold text-[#1e50ff] hover:underline">
                             Masuk ke Workspace
                         </Link>
                     </div>

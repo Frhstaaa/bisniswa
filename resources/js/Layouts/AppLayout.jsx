@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import {
     LayoutDashboard,
@@ -174,27 +174,33 @@ export default function AppLayout({ children, title }) {
 
     const breadcrumb = getBreadcrumb();
 
+    useEffect(() => {
+        if (!window.location.hash) {
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+            if (document.documentElement) document.documentElement.scrollTop = 0;
+            if (document.body) document.body.scrollTop = 0;
+        }
+    }, [url]);
+
     return (
-        <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex font-sans antialiased selection:bg-emerald-200 selection:text-emerald-900">
-            {/* ================= 1. REFINED LUXURY GREEN LEFT SIDEBAR (Professional Branded Console) ================= */}
-            <aside className="hidden lg:flex w-64 flex-col fixed inset-y-0 left-0 z-50 bg-[#062c21] text-white border-r border-[#083b2d] shadow-xl transition-all">
+        <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex font-sans antialiased selection:bg-blue-100 selection:text-[#1e50ff]">
+            {/* ================= 1. REFINED LUXURY DARK NAVY SIDEBAR ================= */}
+            <aside className="hidden lg:flex w-64 flex-col fixed inset-y-0 left-0 z-50 bg-[#08112c] text-white border-r border-blue-950/80 shadow-xl transition-all">
                 {/* Brand Header */}
-                <div className="h-16 px-5 flex items-center justify-between border-b border-[#083b2d] bg-[#042018]">
+                <div className="h-16 px-5 flex items-center justify-between border-b border-blue-950/80 bg-[#050b1e]">
                     <Link href={isAdminRoute ? '/admin/dashboard' : '/dashboard'} className="flex items-center gap-3 group">
-                        <div className="h-9 w-9 rounded-xl overflow-hidden bg-white border border-emerald-700/50 shadow-xs flex items-center justify-center p-0.5 transition-transform duration-200 group-hover:scale-105">
-                            <img
-                                src="/images/logo-mardira.jpg"
-                                alt="Politeknik Mardira Indonesia"
-                                className="h-full w-full object-contain"
-                            />
-                        </div>
+                        <img
+                            src="/images/logo.png"
+                            alt="Politeknik Mardira Indonesia"
+                            className="h-9 w-auto object-contain shrink-0 transition-transform duration-200 group-hover:scale-105"
+                        />
                         <div className="overflow-hidden">
                             <div className="flex items-center gap-1">
                                 <span className="font-extrabold text-sm tracking-tight text-white">
-                                    MARDIRA<span className="text-emerald-400">WA</span>
+                                    MARDIRA<span className="text-[#1e50ff]">WA</span>
                                 </span>
                             </div>
-                            <div className="text-[10px] font-medium text-emerald-200/70 truncate max-w-[130px]" title={user.workspace_name || user.name}>
+                            <div className="text-[10px] font-medium text-blue-200/70 truncate max-w-[130px]" title={user.workspace_name || user.name}>
                                 {isAdminRoute ? (isSuperAdmin ? 'Superadmin Platform' : `Panel Staff (${(user.role || 'Staff').toUpperCase()})`) : (user.workspace_name || user.name || 'Tenant Workspace')}
                             </div>
                         </div>
@@ -211,7 +217,7 @@ export default function AppLayout({ children, title }) {
                 <div className="flex-1 overflow-y-auto no-scrollbar px-3 py-3 space-y-4">
                     {currentNavGroups.map((group, idx) => (
                         <div key={idx} className="space-y-1">
-                            <div className="px-3 text-[10px] font-bold uppercase tracking-wider text-emerald-300/60">
+                            <div className="px-3 text-[10px] font-bold uppercase tracking-wider text-blue-300/60">
                                 {group.title}
                             </div>
                             <nav className="space-y-0.5">
@@ -223,19 +229,19 @@ export default function AppLayout({ children, title }) {
                                             href={item.href}
                                             className={`group w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all ${
                                                 item.active
-                                                    ? 'bg-emerald-600 text-white font-semibold shadow-xs border border-emerald-500/40'
-                                                    : 'text-emerald-100/80 hover:bg-white/10 hover:text-white font-medium'
+                                                    ? 'bg-[#1e50ff] text-white font-semibold shadow-xs border border-blue-400/40'
+                                                    : 'text-slate-300 hover:bg-white/10 hover:text-white font-medium'
                                             }`}
                                         >
                                             <div className="flex items-center gap-2.5">
-                                                <Icon className={`w-4 h-4 transition-colors ${item.active ? 'text-white' : 'text-emerald-300/70 group-hover:text-emerald-100'}`} />
+                                                <Icon className={`w-4 h-4 transition-colors ${item.active ? 'text-white' : 'text-blue-300/70 group-hover:text-blue-100'}`} />
                                                 <span className="truncate">{item.label}</span>
                                             </div>
                                             {item.badge && (
                                                 <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded-md ${
                                                     item.active
-                                                        ? 'bg-emerald-700/90 text-white border border-emerald-400/40 font-semibold'
-                                                        : 'bg-[#042018]/80 text-emerald-300 border border-emerald-800/60'
+                                                        ? 'bg-white/20 text-white border border-white/30 font-semibold'
+                                                        : 'bg-[#050b1e] text-blue-300 border border-blue-900/60'
                                                 }`}>
                                                     {item.badge}
                                                 </span>
@@ -249,31 +255,31 @@ export default function AppLayout({ children, title }) {
                 </div>
 
                 {/* Bottom User Profile Section */}
-                <div className="p-3 border-t border-[#083b2d] bg-[#042018] space-y-2">
+                <div className="p-3 border-t border-blue-950/80 bg-[#050b1e] space-y-2">
                     <button
                         type="button"
                         onClick={() => setIsGuideModalOpen(true)}
-                        className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-emerald-950/60 border border-emerald-800/60 text-emerald-100 hover:text-white hover:bg-emerald-900/60 text-xs font-semibold transition-all shadow-xs cursor-pointer"
+                        className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-blue-950/60 border border-blue-800/60 text-blue-200 hover:text-white hover:bg-blue-900/60 text-xs font-semibold transition-all shadow-xs cursor-pointer"
                     >
                         <div className="flex items-center gap-2">
-                            <Lightbulb className="w-4 h-4 text-emerald-400" />
+                            <Lightbulb className="w-4 h-4 text-amber-400" />
                             <span>Panduan Fitur</span>
                         </div>
-                        <span className="bg-emerald-900/80 text-emerald-300 border border-emerald-700/50 text-[9px] py-0.5 px-2 font-mono font-medium rounded-md">
+                        <span className="bg-blue-900/80 text-blue-300 border border-blue-700/50 text-[9px] py-0.5 px-2 font-mono font-medium rounded-md">
                             PANDUAN
                         </span>
                     </button>
 
-                    <div className="flex items-center justify-between p-2 rounded-xl bg-[#062c21]/70 border border-emerald-800/60">
+                    <div className="flex items-center justify-between p-2 rounded-xl bg-[#08112c] border border-blue-950/80">
                         <Link href="/profile" className="flex items-center gap-2.5 overflow-hidden hover:opacity-90 transition-opacity flex-1 min-w-0">
-                            <div className="h-8 w-8 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
+                            <div className="h-8 w-8 rounded-lg bg-[#1e50ff]/20 text-[#60a5fa] border border-[#1e50ff]/30 flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
                                 {user.name ? user.name.slice(0, 2).toUpperCase() : 'WA'}
                             </div>
                             <div className="overflow-hidden text-left">
-                                <div className="text-xs font-semibold text-emerald-50 truncate">
+                                <div className="text-xs font-semibold text-white truncate">
                                     {user.name || 'Tamu'}
                                 </div>
-                                <div className="text-[10px] text-emerald-300/70 truncate">
+                                <div className="text-[10px] text-blue-300/70 truncate">
                                     {user.email || 'Belum Masuk'}
                                 </div>
                             </div>
@@ -284,7 +290,7 @@ export default function AppLayout({ children, title }) {
                                 href="/logout"
                                 method="post"
                                 as="button"
-                                className="h-7 w-7 rounded-lg flex items-center justify-center text-emerald-400/80 hover:text-rose-300 hover:bg-rose-500/20 transition-colors ml-1 cursor-pointer"
+                                className="h-7 w-7 rounded-lg flex items-center justify-center text-blue-300/80 hover:text-rose-300 hover:bg-rose-500/20 transition-colors ml-1 cursor-pointer"
                                 title="Keluar"
                             >
                                 <LogOut className="w-3.5 h-3.5" />
@@ -292,7 +298,7 @@ export default function AppLayout({ children, title }) {
                         ) : (
                             <Link
                                 href="/login"
-                                className="h-7 px-2.5 rounded-lg flex items-center justify-center text-xs font-semibold text-emerald-300 hover:bg-white/10 transition-colors ml-1"
+                                className="h-7 px-2.5 rounded-lg flex items-center justify-center text-xs font-semibold text-blue-300 hover:bg-white/10 transition-colors ml-1"
                             >
                                 Login
                             </Link>
@@ -303,22 +309,33 @@ export default function AppLayout({ children, title }) {
 
             {/* ================= 2. MAIN CONTENT AREA & TOPBAR ================= */}
             <div className="flex-1 flex flex-col lg:pl-64 min-w-0">
-                {/* TOP HEADER BAR (shadcnuikit style) */}
-                <header className="sticky top-0 z-40 h-14 bg-white/80 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
-                    {/* Left: Mobile Menu Button & Breadcrumbs */}
-                    <div className="flex items-center gap-3 min-w-0">
+                {/* TOP HEADER BAR */}
+                <header className="sticky top-0 z-40 h-14 sm:h-16 bg-white/85 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3">
+                    {/* Left: Mobile Brand & Menu Button */}
+                    <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
                         <button
                             type="button"
                             onClick={() => setIsMobileDrawerOpen(true)}
-                            className="lg:hidden h-8 w-8 rounded-md border border-slate-200 bg-white flex items-center justify-center text-slate-600 hover:text-slate-900 shadow-2xs"
+                            className="lg:hidden h-9 w-9 rounded-xl border border-slate-200 bg-white flex items-center justify-center text-slate-700 hover:text-[#1e50ff] hover:border-[#1e50ff] shadow-2xs active:scale-95 transition-all shrink-0 cursor-pointer"
                             aria-label="Buka Menu Navigasi"
                         >
                             <Menu className="w-4 h-4" />
                         </button>
 
-                        <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
-                            <span className="text-slate-400 hidden sm:inline">{breadcrumb.category}</span>
-                            <ChevronRight className="w-3.5 h-3.5 text-slate-300 shrink-0 hidden sm:inline" />
+                        <Link href="/" className="lg:hidden flex items-center gap-2 shrink-0">
+                            <img
+                                src="/images/logo.png"
+                                alt="Politeknik Mardira Indonesia"
+                                className="h-7 w-auto object-contain shrink-0"
+                            />
+                            <span className="font-black text-xs tracking-tight text-slate-900 block leading-none">
+                                MARDIRA<span className="text-[#1e50ff]">WA</span>
+                            </span>
+                        </Link>
+
+                        <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-500 font-medium truncate">
+                            <span className="text-slate-400">{breadcrumb.category}</span>
+                            <ChevronRight className="w-3.5 h-3.5 text-slate-300 shrink-0" />
                             <span className="text-slate-900 font-semibold truncate">{breadcrumb.page}</span>
                         </div>
                     </div>
@@ -331,7 +348,7 @@ export default function AppLayout({ children, title }) {
                             placeholder="Cari fitur, kontak... (Ctrl+K)"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full h-8 pl-8 pr-10 text-xs rounded-md border border-slate-200 bg-slate-50/60 placeholder:text-slate-400 focus:bg-white focus:border-emerald-600 focus:outline-none transition-all shadow-2xs"
+                            className="w-full h-8 pl-8 pr-10 text-xs rounded-lg border border-slate-200 bg-slate-50/60 placeholder:text-slate-400 focus:bg-white focus:border-[#1e50ff] focus:outline-none transition-all shadow-2xs"
                         />
                         <kbd className="pointer-events-none absolute right-2 top-1.5 hidden h-5 select-none items-center gap-0.5 rounded border border-slate-200 bg-white px-1.5 font-mono text-[10px] font-medium text-slate-400 sm:flex">
                             ⌘K
@@ -339,21 +356,21 @@ export default function AppLayout({ children, title }) {
                     </div>
 
                     {/* Right: Mode Switcher & Status */}
-                    <div className="flex items-center gap-2.5">
+                    <div className="flex items-center gap-2 sm:gap-2.5">
                         {/* SLA Indicator */}
-                        <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-emerald-200/80 bg-emerald-50/60 text-[11px] font-medium text-emerald-700">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                        <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-blue-200/80 bg-blue-50/60 text-[11px] font-medium text-[#1e50ff]">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#1e50ff] animate-pulse" />
                             <span>Uptime <strong>99.9%</strong></span>
                         </div>
 
-                        {/* Elegant Mode Switcher Segmented Control */}
+                        {/* Mode Switcher Segmented Control */}
                         {isSaaSStaff && (
                             <div className="flex items-center p-0.5 rounded-lg bg-slate-100 border border-slate-200 text-xs font-semibold">
                                 <Link
                                     href="/dashboard"
-                                    className={`px-2.5 py-1 rounded-md transition-all ${
+                                    className={`px-2 sm:px-2.5 py-1 rounded-md transition-all text-xs ${
                                         !isAdminRoute
-                                            ? 'bg-white text-emerald-800 shadow-2xs'
+                                            ? 'bg-white text-[#1e50ff] font-bold shadow-2xs'
                                             : 'text-slate-500 hover:text-slate-900'
                                     }`}
                                 >
@@ -361,9 +378,9 @@ export default function AppLayout({ children, title }) {
                                 </Link>
                                 <Link
                                     href="/admin/dashboard"
-                                    className={`px-2.5 py-1 rounded-md transition-all ${
+                                    className={`px-2 sm:px-2.5 py-1 rounded-md transition-all text-xs ${
                                         isAdminRoute
-                                            ? 'bg-emerald-600 text-white shadow-2xs'
+                                            ? 'bg-[#1e50ff] text-white font-bold shadow-2xs'
                                             : 'text-slate-500 hover:text-slate-900'
                                     }`}
                                 >
@@ -375,15 +392,15 @@ export default function AppLayout({ children, title }) {
                         {/* Top Context Action Button */}
                         {isAdminRoute ? (
                             <Link href="/admin/payments">
-                                <Button variant="outline" size="sm" className="h-8 text-xs font-medium border-slate-200 text-emerald-700 hover:border-emerald-600">
-                                    <Receipt className="w-3.5 h-3.5 mr-1 text-emerald-600" />
+                                <Button variant="outline" size="sm" className="h-8 text-xs font-semibold border-slate-200 text-[#1e50ff] hover:border-[#1e50ff] hover:bg-blue-50/50 rounded-lg">
+                                    <Receipt className="w-3.5 h-3.5 mr-1 text-[#1e50ff]" />
                                     <span className="hidden sm:inline">Verifikasi Tagihan</span>
                                     <span className="sm:hidden">Invoice</span>
                                 </Button>
                             </Link>
                         ) : (
                             <Link href="/broadcast">
-                                <Button variant="default" size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white h-8 text-xs font-medium shadow-xs">
+                                <Button variant="default" size="sm" className="bg-[#1e50ff] hover:bg-[#153ec7] text-white h-8 text-xs font-bold shadow-md shadow-blue-500/20 rounded-lg">
                                     <Send className="w-3.5 h-3.5 mr-1.5 text-white" />
                                     <span className="hidden sm:inline">Broadcast Baru</span>
                                     <span className="sm:hidden">Broadcast</span>
@@ -434,20 +451,20 @@ export default function AppLayout({ children, title }) {
                     />
 
                     {/* Drawer Panel */}
-                    <div className="relative flex-1 flex flex-col max-w-xs w-full bg-[#062c21] text-white border-r border-[#083b2d] z-10 shadow-2xl">
+                    <div className="relative flex-1 flex flex-col max-w-xs w-full bg-[#08112c] text-white border-r border-blue-950/80 z-10 shadow-2xl">
                         {/* Drawer Header */}
-                        <div className="h-16 px-5 flex items-center justify-between border-b border-[#083b2d] bg-[#042018]">
+                        <div className="h-16 px-5 flex items-center justify-between border-b border-blue-950/80 bg-[#050b1e]">
                             <div className="flex items-center gap-2.5">
                                 <img
-                                    src="/images/logo-mardira.jpg"
-                                    alt="Logo"
-                                    className="h-8 w-8 object-contain rounded-lg border border-emerald-700/50 p-0.5 bg-white"
+                                    src="/images/logo.png"
+                                    alt="Politeknik Mardira Indonesia"
+                                    className="h-8 w-auto object-contain shrink-0"
                                 />
                                 <div>
                                     <span className="font-extrabold text-sm tracking-tight text-white">
-                                        MARDIRA<span className="text-emerald-400">WA</span>
+                                        MARDIRA<span className="text-[#1e50ff]">WA</span>
                                     </span>
-                                    <p className="text-[10px] text-emerald-200/70">
+                                    <p className="text-[10px] text-blue-200/70">
                                         {isAdminRoute ? 'Super Admin' : 'Tenant Workspace'}
                                     </p>
                                 </div>
@@ -455,7 +472,7 @@ export default function AppLayout({ children, title }) {
                             <button
                                 type="button"
                                 onClick={() => setIsMobileDrawerOpen(false)}
-                                className="h-8 w-8 rounded-lg flex items-center justify-center text-emerald-300 hover:text-white hover:bg-white/10 cursor-pointer"
+                                className="h-8 w-8 rounded-lg flex items-center justify-center text-blue-300 hover:text-white hover:bg-white/10 cursor-pointer"
                             >
                                 <X className="w-4 h-4" />
                             </button>
@@ -465,7 +482,7 @@ export default function AppLayout({ children, title }) {
                         <div className="flex-1 overflow-y-auto px-3 py-4 space-y-4">
                             {currentNavGroups.map((group, idx) => (
                                 <div key={idx} className="space-y-1">
-                                    <div className="px-3 text-[10px] font-bold uppercase tracking-wider text-emerald-300/60">
+                                    <div className="px-3 text-[10px] font-bold uppercase tracking-wider text-blue-300/60">
                                         {group.title}
                                     </div>
                                     <nav className="space-y-0.5">
@@ -476,21 +493,21 @@ export default function AppLayout({ children, title }) {
                                                     key={item.href}
                                                     href={item.href}
                                                     onClick={() => setIsMobileDrawerOpen(false)}
-                                                    className={`group w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all ${
+                                                    className={`group w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs transition-all ${
                                                         item.active
-                                                            ? 'bg-emerald-600 text-white font-semibold shadow-xs border border-emerald-500/40'
-                                                            : 'text-emerald-100/80 hover:bg-white/10 hover:text-white font-medium'
+                                                            ? 'bg-[#1e50ff] text-white font-semibold shadow-xs border border-blue-400/40'
+                                                            : 'text-slate-300 hover:bg-white/10 hover:text-white font-medium'
                                                     }`}
                                                 >
                                                     <div className="flex items-center gap-2.5">
-                                                        <Icon className={`w-4 h-4 ${item.active ? 'text-white' : 'text-emerald-300/70'}`} />
+                                                        <Icon className={`w-4 h-4 ${item.active ? 'text-white' : 'text-blue-300/70'}`} />
                                                         <span>{item.label}</span>
                                                     </div>
                                                     {item.badge && (
                                                         <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded-md ${
                                                             item.active
-                                                                ? 'bg-emerald-700/90 text-white border border-emerald-400/40 font-semibold'
-                                                                : 'bg-[#042018]/80 text-emerald-300 border border-emerald-800/60'
+                                                                ? 'bg-white/20 text-white border border-white/30 font-semibold'
+                                                                : 'bg-[#050b1e] text-blue-300 border border-blue-900/60'
                                                         }`}>
                                                             {item.badge}
                                                         </span>
@@ -509,32 +526,32 @@ export default function AppLayout({ children, title }) {
                                     setIsMobileDrawerOpen(false);
                                     setIsGuideModalOpen(true);
                                 }}
-                                className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-emerald-950/60 border border-emerald-800/60 text-emerald-100 hover:text-white hover:bg-emerald-900/60 text-xs font-semibold shadow-xs cursor-pointer transition-all"
+                                className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-blue-950/60 border border-blue-800/60 text-blue-200 hover:text-white hover:bg-blue-900/60 text-xs font-semibold shadow-xs cursor-pointer transition-all"
                             >
                                 <div className="flex items-center gap-2">
-                                    <Lightbulb className="w-4 h-4 text-emerald-400" />
+                                    <Lightbulb className="w-4 h-4 text-amber-400" />
                                     <span>Buka Panduan Fitur</span>
                                 </div>
-                                <span className="bg-emerald-900/80 text-emerald-300 border border-emerald-700/50 text-[9px] py-0.5 px-2 font-mono rounded-md">GUIDE</span>
+                                <span className="bg-blue-900/80 text-blue-300 border border-blue-700/50 text-[9px] py-0.5 px-2 font-mono rounded-md">GUIDE</span>
                             </button>
                         </div>
 
                         {/* Drawer Bottom Profile */}
-                        <div className="p-3 border-t border-[#083b2d] bg-[#042018]">
+                        <div className="p-3 border-t border-blue-950/80 bg-[#050b1e]">
                             <div className="flex items-center justify-between">
                                 <Link
                                     href="/profile"
                                     onClick={() => setIsMobileDrawerOpen(false)}
                                     className="flex items-center gap-2 min-w-0"
                                 >
-                                    <div className="h-7 w-7 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center justify-center font-bold text-xs shrink-0">
+                                    <div className="h-7 w-7 rounded-lg bg-[#1e50ff]/20 text-[#60a5fa] border border-[#1e50ff]/30 flex items-center justify-center font-bold text-xs shrink-0">
                                         {user.name ? user.name.slice(0, 2).toUpperCase() : 'WA'}
                                     </div>
                                     <div className="overflow-hidden">
-                                        <div className="truncate text-xs font-semibold text-emerald-50">
+                                        <div className="truncate text-xs font-semibold text-white">
                                             {user.name || 'Tamu'}
                                         </div>
-                                        <div className="truncate text-[10px] text-emerald-300/70">
+                                        <div className="truncate text-[10px] text-blue-300/70">
                                             {user.workspace_name || user.email || 'Belum Masuk'}
                                         </div>
                                     </div>
@@ -545,14 +562,14 @@ export default function AppLayout({ children, title }) {
                                         href="/logout"
                                         method="post"
                                         as="button"
-                                        className="text-xs text-emerald-400 font-semibold hover:text-rose-400"
+                                        className="text-xs text-rose-400 font-semibold hover:text-rose-300"
                                     >
                                         Keluar
                                     </Link>
                                 ) : (
                                     <Link
                                         href="/login"
-                                        className="text-xs text-emerald-300 font-semibold hover:underline"
+                                        className="text-xs text-blue-300 font-semibold hover:underline"
                                     >
                                         Login
                                     </Link>
@@ -564,16 +581,16 @@ export default function AppLayout({ children, title }) {
             )}
 
             {/* CURATED MOBILE FLOATING DOCK */}
-            <nav className="lg:hidden fixed bottom-3 inset-x-3 bg-white/95 backdrop-blur-md border border-slate-200/90 px-2 py-1.5 rounded-2xl flex items-center justify-around z-30 shadow-xl">
+            <nav className="lg:hidden fixed bottom-2.5 inset-x-3 bg-white/95 backdrop-blur-md border border-slate-200/90 px-2 py-1.5 rounded-2xl flex items-center justify-around z-30 shadow-xl shadow-slate-900/10">
                 {(isAdminRoute ? adminMobileDockItems : clientMobileDockItems).map((item) => {
                     const Icon = item.icon;
                     return (
                         <Link
                             key={item.href}
                             href={item.href}
-                            className={`flex flex-col items-center gap-1 text-[10px] transition-all py-1 px-2.5 rounded-xl ${
+                            className={`flex flex-col items-center gap-1 text-[10px] transition-all py-1.5 px-3 rounded-xl min-h-[44px] justify-center ${
                                 item.active
-                                    ? 'font-bold text-white bg-emerald-600 shadow-xs'
+                                    ? 'font-bold text-white bg-[#1e50ff] shadow-md shadow-blue-500/25'
                                     : 'font-medium text-slate-500 hover:text-slate-900'
                             }`}
                         >

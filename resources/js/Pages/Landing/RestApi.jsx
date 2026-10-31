@@ -362,75 +362,53 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
         <PublicLayout title="Dokumentasi REST API & Panduan Bridging" plans={safePlans} activeMenu="rest-api">
             <div className="space-y-16 lg:space-y-24">
                 {/* ================= HERO HEADER ================= */}
-                <section className="relative overflow-hidden bg-gradient-to-b from-emerald-950 via-emerald-900 to-emerald-950 text-white pt-36 sm:pt-44 lg:pt-48 pb-24 sm:pb-32 px-4 sm:px-6 lg:px-10">
-                    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                        <motion.div
-                            animate={{
-                                scale: [1, 1.2, 1],
-                                opacity: [0.12, 0.25, 0.12],
-                                x: [0, 20, 0],
-                                y: [0, -15, 0],
-                            }}
-                            transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-                            className="absolute -top-32 left-1/4 w-96 h-96 rounded-full bg-emerald-500/25 blur-3xl"
-                        />
-                        <motion.div
-                            animate={{
-                                scale: [1, 1.25, 1],
-                                opacity: [0.08, 0.2, 0.08],
-                                x: [0, -25, 0],
-                                y: [0, 20, 0],
-                            }}
-                            transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-                            className="absolute top-1/3 -right-20 w-96 h-96 rounded-full bg-amber-400/15 blur-3xl"
-                        />
-                    </div>
-
+                <section className="relative overflow-hidden bg-white bg-grid-pattern text-slate-900 pt-32 sm:pt-40 pb-20 sm:pb-28 px-4 sm:px-6 lg:px-10 border-b border-slate-100">
                     <motion.div
                         variants={heroContainerVariants}
                         initial="hidden"
                         animate="visible"
-                        className="relative max-w-5xl mx-auto text-center space-y-4"
+                        className="relative max-w-5xl mx-auto text-center space-y-5"
                     >
                         <motion.div variants={heroItemVariants} className="inline-block gsap-hero-item">
-                            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-bold shadow-xs">
-                                <Code2 className="w-3.5 h-3.5 text-amber-300" />
-                                <span>DEVELOPER BRIDGING GUIDE & REST API v1.0</span>
+                            <div className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full border-[1.5px] border-[#1e50ff] bg-white text-[#1e50ff] text-[10px] sm:text-xs font-bold sm:font-black uppercase tracking-normal sm:tracking-widest shadow-xs">
+                                <Code2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#1e50ff] shrink-0" />
+                                <span className="hidden sm:inline">DEVELOPER BRIDGING GUIDE & REST API v1.0</span>
+                                <span className="sm:hidden">REST API & WEBHOOK v1.0</span>
                             </div>
                         </motion.div>
 
                         <motion.h1
                             variants={heroItemVariants}
-                            className="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight gsap-hero-item"
+                            className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight gsap-hero-item"
                         >
-                            Dokumentasi REST API & <span className="text-amber-300">Panduan Bridging Sistem</span>
+                            <span className="font-editorial-italic font-normal tracking-normal text-slate-900">Dokumentasi Lengkap</span> REST API & <span className="text-[#1e50ff]">Webhook Real-time</span>
                         </motion.h1>
 
                         <motion.p
                             variants={heroItemVariants}
-                            className="text-slate-200 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed gsap-hero-item"
+                            className="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed gsap-hero-item"
                         >
-                            Panduan integrasi resmi untuk menghubungkan aplikasi Anda (SIAKAD, ERP, CRM, POS, E-Commerce) ke WhatsApp Gateway MARDIRA WA melalui HTTP JSON Bearer Token dengan mudah dan cepat.
+                            Panduan integrasi resmi untuk menghubungkan aplikasi Anda (SIAKAD, ERP, CRM, POS, E-Commerce) ke WhatsApp Gateway MARDIRA WA melalui HTTP JSON Bearer Token dengan mudah, aman, dan cepat.
                         </motion.p>
 
                         <motion.div variants={heroItemVariants} className="pt-4 flex flex-wrap items-center justify-center gap-3 gsap-hero-item">
                             <motion.button
-                                whileHover={{ scale: 1.03, y: -2 }}
+                                whileHover={{ scale: 1.03 }}
                                 whileTap={{ scale: 0.98 }}
                                 type="button"
                                 onClick={() => openRegisterModal()}
-                                className="btn-press inline-flex h-11 items-center gap-2 rounded-xl bg-amber-400 hover:bg-amber-300 px-6 text-sm font-bold text-slate-950 shadow-md transition-all cursor-pointer"
+                                className="btn-royal-pill inline-flex h-11 items-center gap-2 rounded-full bg-[#1e50ff] hover:bg-[#153ec7] px-8 text-xs font-extrabold uppercase tracking-wider text-white shadow-[0_12px_28px_-4px_rgba(30,80,255,0.45)] transition-all cursor-pointer"
                             >
-                                <Zap className="w-4 h-4 fill-slate-950" />
-                                <span>Dapatkan API Key Gratis</span>
+                                <Zap className="w-4 h-4 fill-white" />
+                                <span>Dapatkan API Key Sekarang</span>
                             </motion.button>
-                            <a
-                                href="/api-access/download-postman"
-                                className="inline-flex h-11 items-center gap-2 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 px-5 text-sm font-bold text-white backdrop-blur-xs transition-all"
+                            <Link
+                                href="/cara-pakai"
+                                prefetch
+                                className="inline-flex h-11 items-center gap-2 rounded-full border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50 px-6 text-xs font-bold text-slate-800 shadow-2xs transition-all"
                             >
-                                <Download className="w-4 h-4 text-emerald-300" />
-                                <span>Download Postman Collection</span>
-                            </a>
+                                <span>Panduan Integrasi Cepat &rarr;</span>
+                            </Link>
                         </motion.div>
                     </motion.div>
                 </section>
@@ -438,7 +416,7 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                 {/* ================= 4-STEP BRIDGING PIPELINE ================= */}
                 <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center space-y-2 mb-10 gsap-reveal">
-                        <Badge variant="emerald" className="text-[10px] font-bold">ALUR INTEGRASI CEPAT</Badge>
+                        <span className="px-3 py-1 rounded-full text-[10px] uppercase font-extrabold tracking-wider bg-blue-50 text-[#1e50ff] border border-blue-200" className="text-[10px] font-bold">ALUR INTEGRASI CEPAT</span>
                         <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                             4 Langkah Mudah Bridging ke WhatsApp Gateway
                         </h2>
@@ -454,7 +432,7 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                             </div>
                             <h3 className="font-bold text-sm text-[#0f172a]">Generate API Key</h3>
                             <p className="text-xs text-slate-500 leading-relaxed">
-                                Buka menu <strong>Kredensial API & Webhook</strong> di dashboard, buat kunci rahasia bertipe Bearer Token (<code className="font-mono text-emerald-700 bg-emerald-50 px-1 py-0.5 rounded text-[11px]">bk_live_...</code>).
+                                Buka menu <strong>Kredensial API & Webhook</strong> di dashboard, buat kunci rahasia bertipe Bearer Token (<code className="font-mono text-[#1e50ff] bg-blue-50 px-1 py-0.5 rounded text-[11px]">bk_live_...</code>).
                             </p>
                         </Card>
 
@@ -474,7 +452,7 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                             </div>
                             <h3 className="font-bold text-sm text-[#0f172a]">Kirim HTTP Request</h3>
                             <p className="text-xs text-slate-500 leading-relaxed">
-                                Panggil endpoint <code className="font-mono text-emerald-700 bg-emerald-50 px-1 py-0.5 rounded text-[11px]">POST /api/v1/messages/send</code> dengan payload JSON dari aplikasi backend Anda.
+                                Panggil endpoint <code className="font-mono text-[#1e50ff] bg-blue-50 px-1 py-0.5 rounded text-[11px]">POST /api/v1/messages/send</code> dengan payload JSON dari aplikasi backend Anda.
                             </p>
                         </Card>
 
@@ -493,7 +471,7 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                 {/* ================= CORE API SPECIFICATION & CODE TABS ================= */}
                 <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
                     <div className="text-center space-y-2 gsap-reveal">
-                        <Badge variant="emerald" className="text-[10px] font-bold">ENDPOINT RESMI</Badge>
+                        <span className="px-3 py-1 rounded-full text-[10px] uppercase font-extrabold tracking-wider bg-blue-50 text-[#1e50ff] border border-blue-200" className="text-[10px] font-bold">ENDPOINT RESMI</span>
                         <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                             Spesifikasi Teknis Endpoint WhatsApp
                         </h2>
@@ -535,17 +513,17 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                         {/* Endpoint Title Bar */}
                         <div className="p-4 sm:p-6 bg-slate-900 text-white flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800">
                             <div className="flex items-center gap-3">
-                                <span className="px-2.5 py-1 rounded-lg bg-emerald-500 text-slate-950 font-black text-xs">
+                                <span className="px-2.5 py-1 rounded-lg bg-blue-500 text-slate-950 font-black text-xs">
                                     POST
                                 </span>
-                                <span className="font-mono text-xs sm:text-sm font-bold text-emerald-300">
+                                <span className="font-mono text-xs sm:text-sm font-bold text-blue-300">
                                     {activeEndpointType === 'text' ? '/api/v1/messages/send' : '/api/v1/messages/send-media'}
                                 </span>
                             </div>
 
                             <div className="flex items-center gap-2 text-xs text-slate-400">
                                 <span className="flex items-center gap-1.5">
-                                    <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                                    <ShieldCheck className="w-4 h-4 text-blue-400" />
                                     <span>Bearer Token Auth</span>
                                 </span>
                                 <span>•</span>
@@ -559,7 +537,7 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                         {/* Request Parameters Breakdown Table */}
                         <div className="p-6 border-b border-slate-100 space-y-3">
                             <h3 className="font-bold text-sm text-[#0f172a] flex items-center gap-2">
-                                <Layers className="w-4 h-4 text-emerald-700" />
+                                <Layers className="w-4 h-4 text-[#1e50ff]" />
                                 <span>Parameter Request (JSON Body)</span>
                             </h3>
 
@@ -575,21 +553,21 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                                     </thead>
                                     <tbody className="divide-y divide-slate-100">
                                         <tr>
-                                            <td className="py-2.5 px-4 font-mono font-bold text-emerald-700">phone</td>
+                                            <td className="py-2.5 px-4 font-mono font-bold text-[#1e50ff]">phone</td>
                                             <td className="py-2.5 px-4 font-mono text-slate-600">string</td>
-                                            <td className="py-2.5 px-4"><Badge variant="outline" className="text-red-700 bg-red-50 border-red-200 text-[10px]">Wajib</Badge></td>
+                                            <td className="py-2.5 px-4"><span variant="outline" className="text-red-700 bg-red-50 border-red-200 text-[10px]">Wajib</span></td>
                                             <td className="py-2.5 px-4 text-slate-600">
                                                 Nomor tujuan WhatsApp. Format otomatis dinormalisasi: diawali <code className="bg-slate-100 px-1 py-0.5 rounded">08xxx</code>, <code className="bg-slate-100 px-1 py-0.5 rounded">628xxx</code>, atau <code className="bg-slate-100 px-1 py-0.5 rounded">+628xxx</code>.
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td className="py-2.5 px-4 font-mono font-bold text-emerald-700">message</td>
+                                            <td className="py-2.5 px-4 font-mono font-bold text-[#1e50ff]">message</td>
                                             <td className="py-2.5 px-4 font-mono text-slate-600">string</td>
                                             <td className="py-2.5 px-4">
                                                 {activeEndpointType === 'text' ? (
-                                                    <Badge variant="outline" className="text-red-700 bg-red-50 border-red-200 text-[10px]">Wajib</Badge>
+                                                    <span variant="outline" className="text-red-700 bg-red-50 border-red-200 text-[10px]">Wajib</span>
                                                 ) : (
-                                                    <Badge variant="outline" className="text-slate-600 bg-slate-50 border-slate-200 text-[10px]">Opsional (Caption)</Badge>
+                                                    <span variant="outline" className="text-slate-600 bg-slate-50 border-slate-200 text-[10px]">Opsional (Caption)</span>
                                                 )}
                                             </td>
                                             <td className="py-2.5 px-4 text-slate-600">
@@ -598,9 +576,9 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                                         </tr>
                                         {activeEndpointType === 'media' && (
                                             <tr>
-                                                <td className="py-2.5 px-4 font-mono font-bold text-emerald-700">media_url</td>
+                                                <td className="py-2.5 px-4 font-mono font-bold text-[#1e50ff]">media_url</td>
                                                 <td className="py-2.5 px-4 font-mono text-slate-600">string (URL)</td>
-                                                <td className="py-2.5 px-4"><Badge variant="outline" className="text-red-700 bg-red-50 border-red-200 text-[10px]">Wajib</Badge></td>
+                                                <td className="py-2.5 px-4"><span variant="outline" className="text-red-700 bg-red-50 border-red-200 text-[10px]">Wajib</span></td>
                                                 <td className="py-2.5 px-4 text-slate-600">
                                                     URL publik dokumen atau gambar (PDF, JPG, PNG). Sistem gateway akan mengunduh dan mengirimkannya sebagai lampiran WhatsApp asli.
                                                 </td>
@@ -609,7 +587,7 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                                         <tr>
                                             <td className="py-2.5 px-4 font-mono font-bold text-slate-700">device_id</td>
                                             <td className="py-2.5 px-4 font-mono text-slate-600">integer</td>
-                                            <td className="py-2.5 px-4"><Badge variant="outline" className="text-slate-600 bg-slate-50 border-slate-200 text-[10px]">Opsional</Badge></td>
+                                            <td className="py-2.5 px-4"><span variant="outline" className="text-slate-600 bg-slate-50 border-slate-200 text-[10px]">Opsional</span></td>
                                             <td className="py-2.5 px-4 text-slate-600">
                                                 ID perangkat WhatsApp pengirim tertentu. Jika diabaikan, sistem otomatis memilih perangkat aktif pertama di workspace Anda.
                                             </td>
@@ -623,7 +601,7 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                         <div className="p-6 space-y-4">
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                 <h3 className="font-bold text-sm text-[#0f172a] flex items-center gap-2">
-                                    <Terminal className="w-4 h-4 text-emerald-700" />
+                                    <Terminal className="w-4 h-4 text-[#1e50ff]" />
                                     <span>Contoh Kode Bridging Klien</span>
                                 </h3>
 
@@ -672,7 +650,7 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                             <div className="space-y-2 pt-2">
                                 <div className="flex items-center justify-between text-xs font-semibold text-slate-700">
                                     <div className="flex items-center gap-2">
-                                        <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                                        <CheckCircle2 className="w-4 h-4 text-[#1e50ff]" />
                                         <span>Contoh Response Sukses (HTTP 200 OK)</span>
                                     </div>
                                     <CopyButton
@@ -683,7 +661,7 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                                         className="text-[11px] font-medium"
                                     />
                                 </div>
-                                <div className="rounded-2xl bg-slate-900 p-4 font-mono text-xs text-emerald-300 overflow-x-auto border border-slate-800">
+                                <div className="rounded-2xl bg-slate-900 p-4 font-mono text-xs text-blue-300 overflow-x-auto border border-slate-800">
                                     <pre><code>{successResponseSample}</code></pre>
                                 </div>
                             </div>
@@ -696,7 +674,7 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                     <Card className="p-6 rounded-3xl border border-slate-200/90 bg-white shadow-card space-y-4">
                         <div className="space-y-1">
                             <h3 className="font-black text-lg text-[#0f172a] flex items-center gap-2">
-                                <Globe className="w-5 h-5 text-emerald-700" />
+                                <Globe className="w-5 h-5 text-[#1e50ff]" />
                                 <span>Tabel Kode Respon & Penanganan Error</span>
                             </h3>
                             <p className="text-xs text-slate-500">
@@ -715,7 +693,7 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                                 </thead>
                                 <tbody className="divide-y divide-slate-100">
                                     <tr>
-                                        <td className="py-3 px-4 font-mono font-bold text-emerald-700">200 OK</td>
+                                        <td className="py-3 px-4 font-mono font-bold text-[#1e50ff]">200 OK</td>
                                         <td className="py-3 px-4 font-semibold text-slate-900">Pesan berhasil dikirim</td>
                                         <td className="py-3 px-4 text-slate-600">Pesan telah diterima gateway dan diteruskan ke nomor tujuan.</td>
                                     </tr>
@@ -732,7 +710,7 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                                     <tr>
                                         <td className="py-3 px-4 font-mono font-bold text-red-700">422 Unprocessable</td>
                                         <td className="py-3 px-4 font-semibold text-slate-900">Perangkat offline atau format salah</td>
-                                        <td className="py-3 px-4 text-slate-600">Pastikan nomor HP tujuan terisi dan ada minimal 1 perangkat WhatsApp dengan status <span className="text-emerald-700 font-bold">Connected</span>.</td>
+                                        <td className="py-3 px-4 text-slate-600">Pastikan nomor HP tujuan terisi dan ada minimal 1 perangkat WhatsApp dengan status <span className="text-[#1e50ff] font-bold">Connected</span>.</td>
                                     </tr>
                                     <tr>
                                         <td className="py-3 px-4 font-mono font-bold text-red-700">500 Server Error</td>
@@ -754,7 +732,7 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                         transition={{ duration: 0.22 }}
                         className="text-center space-y-2 gsap-reveal"
                     >
-                        <Badge variant="emerald" className="text-[10px] font-bold">REAL-TIME EVENTS</Badge>
+                        <span className="px-3 py-1 rounded-full text-[10px] uppercase font-extrabold tracking-wider bg-blue-50 text-[#1e50ff] border border-blue-200" className="text-[10px] font-bold">REAL-TIME EVENTS</span>
                         <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                             Spesifikasi Webhook Masuk (Dua Arah)
                         </h2>
@@ -812,9 +790,9 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                                         <pre className="text-slate-300 leading-relaxed">
                                             <code>
                                                 {"{\n"}
-                                                {"  "}<span className="text-sky-300">"event"</span>: <span className="text-emerald-300">"message.inbound"</span>,{"\n"}
-                                                {"  "}<span className="text-sky-300">"sender"</span>: <span className="text-emerald-300">"+628386012467"</span>,{"\n"}
-                                                {"  "}<span className="text-sky-300">"message"</span>: <span className="text-emerald-300">"Halo, ini konfirmasi..."</span>,{"\n"}
+                                                {"  "}<span className="text-sky-300">"event"</span>: <span className="text-blue-300">"message.inbound"</span>,{"\n"}
+                                                {"  "}<span className="text-sky-300">"sender"</span>: <span className="text-blue-300">"+628386012467"</span>,{"\n"}
+                                                {"  "}<span className="text-sky-300">"message"</span>: <span className="text-blue-300">"Halo, ini konfirmasi..."</span>,{"\n"}
                                                 {"  "}<span className="text-sky-300">"timestamp"</span>: <span className="text-amber-300">"2026-10-27T14:20:00Z"</span>{"\n"}
                                                 {"}"}
                                             </code>
@@ -837,7 +815,7 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                                 <div className="space-y-3">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
-                                            <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100 group-hover:scale-105 transition-transform shadow-2xs">
+                                            <div className="w-9 h-9 rounded-xl bg-blue-50 text-[#1e50ff] flex items-center justify-center border border-emerald-100 group-hover:scale-105 transition-transform shadow-2xs">
                                                 <CheckCheck className="w-4 h-4" />
                                             </div>
                                             <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-slate-100 text-slate-700 border border-slate-200/70">
@@ -853,7 +831,7 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                                         />
                                     </div>
                                     <div>
-                                        <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider block">Laporan Status Terkirim</span>
+                                        <span className="text-[10px] font-bold text-[#1e50ff] uppercase tracking-wider block">Laporan Status Terkirim</span>
                                         <h3 className="text-sm font-mono font-bold text-slate-900 mt-0.5">
                                             message.delivered
                                         </h3>
@@ -866,15 +844,15 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                                 <div className="space-y-1.5 pt-2 border-t border-slate-100">
                                     <div className="flex items-center justify-between text-[10px] font-mono text-slate-400">
                                         <span>PAYLOAD JSON</span>
-                                        <span className="text-emerald-600 font-sans font-semibold">Delivery Hook</span>
+                                        <span className="text-[#1e50ff] font-sans font-semibold">Delivery Hook</span>
                                     </div>
                                     <div className="rounded-xl bg-slate-950 p-3.5 font-mono text-[11px] overflow-x-auto border border-slate-800 shadow-inner">
                                         <pre className="text-slate-300 leading-relaxed">
                                             <code>
                                                 {"{\n"}
-                                                {"  "}<span className="text-sky-300">"event"</span>: <span className="text-emerald-300">"message.delivered"</span>,{"\n"}
+                                                {"  "}<span className="text-sky-300">"event"</span>: <span className="text-blue-300">"message.delivered"</span>,{"\n"}
                                                 {"  "}<span className="text-sky-300">"message_id"</span>: <span className="text-amber-300">142</span>,{"\n"}
-                                                {"  "}<span className="text-sky-300">"status"</span>: <span className="text-emerald-300">"delivered"</span>,{"\n"}
+                                                {"  "}<span className="text-sky-300">"status"</span>: <span className="text-blue-300">"delivered"</span>,{"\n"}
                                                 {"  "}<span className="text-sky-300">"timestamp"</span>: <span className="text-amber-300">"2026-10-27T14:20:00Z"</span>{"\n"}
                                                 {"}"}
                                             </code>
@@ -932,7 +910,7 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                                         <pre className="text-slate-300 leading-relaxed">
                                             <code>
                                                 {"{\n"}
-                                                {"  "}<span className="text-sky-300">"event"</span>: <span className="text-emerald-300">"device.disconnected"</span>,{"\n"}
+                                                {"  "}<span className="text-sky-300">"event"</span>: <span className="text-blue-300">"device.disconnected"</span>,{"\n"}
                                                 {"  "}<span className="text-sky-300">"device_id"</span>: <span className="text-amber-300">6</span>,{"\n"}
                                                 {"  "}<span className="text-sky-300">"reason"</span>: <span className="text-rose-300">"Connection timeout"</span>,{"\n"}
                                                 {"  "}<span className="text-sky-300">"status"</span>: <span className="text-rose-300">"offline"</span>{"\n"}
@@ -950,7 +928,7 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
                             <div>
                                 <h3 className="font-bold text-base text-[#0f172a] flex items-center gap-2">
-                                    <Terminal className="w-4 h-4 text-emerald-700" />
+                                    <Terminal className="w-4 h-4 text-[#1e50ff]" />
                                     <span>Contoh Kode Webhook Receiver di Server Anda</span>
                                 </h3>
                                 <p className="text-xs text-slate-500 mt-0.5">
@@ -987,7 +965,7 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                         {/* Code Container */}
                         <div className="relative rounded-2xl bg-slate-950 p-4 sm:p-5 font-mono text-xs text-slate-200 shadow-inner overflow-x-auto border border-slate-800">
                             <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-800/80 text-[11px] text-slate-400">
-                                <span className="font-mono text-emerald-400">
+                                <span className="font-mono text-blue-400">
                                     {activeWebhookLang === 'php' ? 'app/Http/Controllers/WhatsAppWebhookController.php' : 'server.js'}
                                 </span>
                                 <CopyButton
@@ -1004,9 +982,9 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
 
                 {/* ================= BEST PRACTICES FOR BRIDGING ================= */}
                 <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <Card className="p-6 sm:p-8 rounded-3xl border border-emerald-200/80 bg-gradient-to-br from-emerald-50/50 via-white to-white shadow-xs space-y-6">
+                    <Card className="p-6 sm:p-8 rounded-3xl border border-blue-200/80 bg-gradient-to-br from-emerald-50/50 via-white to-white shadow-xs space-y-6">
                         <div className="space-y-1">
-                            <Badge variant="emerald" className="text-[10px] font-bold">REKOMENDASI PRODUKSI</Badge>
+                            <span className="px-3 py-1 rounded-full text-[10px] uppercase font-extrabold tracking-wider bg-blue-50 text-[#1e50ff] border border-blue-200" className="text-[10px] font-bold">REKOMENDASI PRODUKSI</span>
                             <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
                                 Best Practices untuk Stabilitas Bridging WhatsApp
                             </h3>
@@ -1018,7 +996,7 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                             <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs space-y-2.5">
                                 <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs shadow-2xs">
-                                    <Zap className="w-4 h-4 text-emerald-700" />
+                                    <Zap className="w-4 h-4 text-[#1e50ff]" />
                                 </div>
                                 <h4 className="font-bold text-xs text-slate-900">Gunakan Background Queue</h4>
                                 <p className="text-[11px] text-slate-600 leading-relaxed">
@@ -1056,31 +1034,34 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true, margin: '-20px' }}
                         transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                        className="rounded-3xl bg-gradient-to-r from-emerald-800 via-[#064e3b] to-slate-900 p-8 sm:p-10 text-white text-center space-y-4 shadow-xl gsap-scale"
+                        className="rounded-3xl bg-gradient-to-r from-[#08112c] via-[#0d2260] to-[#1e50ff] p-8 sm:p-12 text-white text-center space-y-4 shadow-xl gsap-scale"
                     >
-                        <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
-                            Siap Memulai Integrasi WhatsApp Gateway Anda?
+                        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-blue-300/40 bg-white/10 text-blue-200 text-xs font-black uppercase tracking-widest">
+                            INTEGRASI DEVELOPER INSTAN
+                        </div>
+                        <h2 className="text-3xl sm:text-4xl font-black tracking-tight">
+                            Mulai Kirim Pesan Pertama via <span className="font-editorial-italic font-normal">REST API</span>
                         </h2>
-                        <p className="text-xs sm:text-sm text-emerald-100 max-w-xl mx-auto">
-                            Daftarkan akun gratis untuk memperoleh token API produksi, unduh koleksi Postman, dan mulai mengirim pesan dalam hitungan menit.
+                        <p className="text-xs sm:text-sm text-blue-100 max-w-xl mx-auto leading-relaxed">
+                            Buat akun gratis sekarang, dapatkan API Bearer Token instan, dan hubungkan sistem backend Anda dalam hitungan menit.
                         </p>
-                        <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+                        <div className="pt-3 flex flex-wrap items-center justify-center gap-3">
                             <motion.button
-                                whileHover={{ scale: 1.03, y: -2 }}
+                                whileHover={{ scale: 1.03 }}
                                 whileTap={{ scale: 0.98 }}
                                 type="button"
                                 onClick={() => openRegisterModal()}
-                                className="btn-press inline-flex h-11 items-center gap-2 rounded-xl bg-amber-400 hover:bg-amber-300 px-6 text-xs font-bold text-slate-950 shadow-md transition-all cursor-pointer"
+                                className="btn-press inline-flex h-11 items-center gap-2 rounded-full bg-white hover:bg-slate-100 px-8 text-xs font-extrabold uppercase tracking-wider text-[#1e50ff] shadow-lg transition-all cursor-pointer"
                             >
-                                <Zap className="w-3.5 h-3.5 fill-slate-950" />
-                                <span>Daftar Akun Baru Sekarang</span>
+                                <Zap className="w-3.5 h-3.5 fill-[#1e50ff]" />
+                                <span>Buat Akun & Dapatkan API Key</span>
                             </motion.button>
                             <Link
-                                href="/harga"
+                                href="/faq"
                                 prefetch
-                                className="inline-flex h-11 items-center gap-2 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 px-5 text-xs font-bold text-white transition-all"
+                                className="inline-flex h-11 items-center gap-2 rounded-full border border-white/30 bg-white/10 hover:bg-white/20 px-6 text-xs font-bold text-white transition-all"
                             >
-                                <span>Lihat Pilihan Paket Layanan &rarr;</span>
+                                <span>Pusat Bantuan & Webhook &rarr;</span>
                             </Link>
                         </div>
                     </motion.div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import AuthModal from '../Components/AuthModal';
@@ -77,12 +77,20 @@ export default function Welcome({ plans = [] }) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isRandomizingSpintax, setIsRandomizingSpintax] = useState(false);
 
+    useEffect(() => {
+        if (!window.location.hash) {
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+            if (document.documentElement) document.documentElement.scrollTop = 0;
+            if (document.body) document.body.scrollTop = 0;
+        }
+    }, [url]);
+
     const navLinks = [
-        { label: 'Panduan Integrasi', href: '/cara-pakai', key: 'cara-pakai' },
-        { label: 'Teknologi Engine', href: '/dual-engine', key: 'dual-engine' },
-        { label: 'Dokumentasi API', href: '/rest-api', key: 'rest-api' },
-        { label: 'Paket Layanan', href: '/harga', key: 'harga' },
-        { label: 'Pusat Bantuan', href: '/faq', key: 'faq' },
+        { label: 'Panduan', href: '/cara-pakai', key: 'cara-pakai' },
+        { label: 'Teknologi', href: '/dual-engine', key: 'dual-engine' },
+        { label: 'API', href: '/rest-api', key: 'rest-api' },
+        { label: 'Harga', href: '/harga', key: 'harga' },
+        { label: 'FAQ', href: '/faq', key: 'faq' },
     ];
 
     // Auth Pop-up Modal State
@@ -381,44 +389,40 @@ print(res.json())`,
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-            className="min-h-screen bg-[#f8fafc] text-[#0f172a] font-sans antialiased selection:bg-emerald-200 selection:text-emerald-900"
+            className="min-h-screen bg-white text-[#0f172a] font-sans antialiased selection:bg-blue-100 selection:text-[#1e50ff]"
         >
             <Head title="MARDIRA WA — Portal Enterprise WhatsApp Gateway & Broadcast API" />
 
             {/* ================= 1. TOP NAVBAR (Responsive Mobile & Desktop) ================= */}
-            <header className="fixed inset-x-0 top-0 z-50 transition-all duration-300 bg-[#064e3b]/95 backdrop-blur-md border-b border-emerald-500/20">
-                <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-10 py-3 sm:py-3.5">
-                    {/* Brand Logo */}
-                    <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group">
-                        <motion.div
+            <header className="fixed inset-x-0 top-0 z-50 transition-all duration-300 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-2xs">
+                <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 py-3 flex-nowrap gap-4">
+                    {/* Brand Logo (Naked / Telanjang) */}
+                    <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0">
+                        <motion.img
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl overflow-hidden bg-white p-1 shadow-sm border border-white/20 transition-transform duration-200 shrink-0 flex items-center justify-center"
-                        >
-                            <img
-                                src="/images/logo-mardira.jpg"
-                                alt="Politeknik Mardira Indonesia"
-                                className="h-full w-full object-contain"
-                            />
-                        </motion.div>
-                        <div>
-                            <span className="text-sm sm:text-base font-black tracking-tight text-white block leading-none">
-                                MARDIRA<span className="text-amber-400">WA</span>
+                            src="/images/logo.png"
+                            alt="Politeknik Mardira Indonesia"
+                            className="h-9 sm:h-10 w-auto object-contain shrink-0"
+                        />
+                        <div className="shrink-0">
+                            <span className="text-sm sm:text-base font-black tracking-tight text-slate-900 block leading-none whitespace-nowrap">
+                                MARDIRA<span className="text-[#1e50ff]">WA</span>
                             </span>
-                            <span className="text-[9px] sm:text-[10px] font-bold text-emerald-400 uppercase tracking-wider block mt-0.5">
+                            <span className="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wider block mt-0.5 whitespace-nowrap">
                                 POLITEKNIK MARDIRA INDONESIA
                             </span>
                         </div>
                     </Link>
 
-                    {/* Menu Navigasi Tengah (Desktop Only) */}
-                    <div className="hidden items-center gap-1 md:flex">
+                    {/* Menu Navigasi Tengah (Desktop Only, Never Wraps) */}
+                    <div className="hidden md:flex items-center gap-1 lg:gap-1.5 shrink-0">
                         {navLinks.map((item) => (
                             <Link
                                 key={item.href}
                                 href={item.href}
                                 prefetch
-                                className="rounded-lg px-3.5 py-1.5 text-xs font-semibold text-slate-200 hover:text-white hover:bg-white/10 transition-all"
+                                className="rounded-full px-3 sm:px-3.5 py-1.5 text-xs font-semibold text-slate-600 hover:text-[#1e50ff] hover:bg-slate-100/70 whitespace-nowrap transition-all"
                             >
                                 {item.label}
                             </Link>
@@ -426,49 +430,49 @@ print(res.json())`,
                     </div>
 
                     {/* Tombol Akses Kanan (Desktop) */}
-                    <div className="hidden sm:flex items-center gap-2.5">
+                    <div className="hidden md:flex items-center gap-2 shrink-0">
                         {user ? (
                             <Link
                                 href="/dashboard"
                                 prefetch
-                                className="btn-press inline-flex h-9 sm:h-10 items-center gap-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 px-4 text-xs font-bold text-slate-950 shadow-md transition-all cursor-pointer"
+                                className="btn-press inline-flex h-9 items-center gap-1.5 rounded-full bg-[#1e50ff] hover:bg-[#153ec7] px-4 text-xs font-extrabold uppercase tracking-wider text-white shadow-md shadow-blue-500/25 transition-all cursor-pointer whitespace-nowrap shrink-0"
                             >
                                 <LayoutDashboard className="w-3.5 h-3.5" />
-                                <span>Buka Dashboard</span>
+                                <span>Dashboard</span>
                             </Link>
                         ) : (
                             <>
                                 <motion.button
                                     type="button"
-                                    whileHover={{ scale: 1.03, y: -1 }}
-                                    whileTap={{ scale: 0.97 }}
-                                    onClick={() => openRegisterModal()}
-                                    className="btn-press inline-flex h-9 sm:h-10 items-center gap-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 px-4 text-xs font-bold text-slate-950 shadow-md transition-all cursor-pointer"
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    onClick={() => openLoginModal()}
+                                    className="btn-press inline-flex h-9 items-center gap-1.5 rounded-full border border-slate-300 hover:border-[#1e50ff] bg-white hover:bg-blue-50/50 px-3.5 text-xs font-bold text-slate-800 hover:text-[#1e50ff] transition-all cursor-pointer whitespace-nowrap shrink-0"
                                 >
-                                    <Zap className="w-3.5 h-3.5 fill-slate-950 text-slate-950" />
-                                    <span>Mulai Sekarang</span>
+                                    <LogIn className="w-3.5 h-3.5 text-[#1e50ff]" />
+                                    <span>Masuk</span>
                                 </motion.button>
                                 <motion.button
                                     type="button"
-                                    whileHover={{ scale: 1.03, y: -1 }}
-                                    whileTap={{ scale: 0.97 }}
-                                    onClick={() => openLoginModal()}
-                                    className="btn-press inline-flex h-9 sm:h-10 items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 px-4 text-xs font-bold text-white backdrop-blur-xs transition-all cursor-pointer"
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    onClick={() => openRegisterModal()}
+                                    className="btn-press inline-flex h-9 items-center gap-1.5 rounded-full bg-[#1e50ff] hover:bg-[#153ec7] px-4 text-xs font-extrabold uppercase tracking-wider text-white shadow-md shadow-blue-500/25 transition-all cursor-pointer whitespace-nowrap shrink-0"
                                 >
-                                    <LogIn className="w-3.5 h-3.5 text-emerald-400" />
-                                    <span>Masuk Workspace</span>
+                                    <Zap className="w-3.5 h-3.5 fill-white text-white" />
+                                    <span>Mulai</span>
                                 </motion.button>
                             </>
                         )}
                     </div>
 
                     {/* Mobile Quick Action & Hamburger Toggle */}
-                    <div className="flex sm:hidden items-center gap-2">
+                    <div className="flex md:hidden items-center gap-2 shrink-0">
                         {user ? (
                             <Link
                                 href="/dashboard"
                                 prefetch
-                                className="btn-press inline-flex h-8 items-center gap-1 rounded-lg bg-amber-400 hover:bg-amber-300 px-2.5 text-[11px] font-bold text-slate-950 shadow-xs"
+                                className="btn-press inline-flex h-8 items-center gap-1 rounded-full bg-[#1e50ff] hover:bg-[#153ec7] px-3 text-[11px] font-bold text-white shadow-xs whitespace-nowrap"
                             >
                                 <LayoutDashboard className="w-3 h-3" />
                                 <span>Dashboard</span>
@@ -477,18 +481,18 @@ print(res.json())`,
                             <button
                                 type="button"
                                 onClick={() => openLoginModal()}
-                                className="btn-press inline-flex h-8 items-center gap-1 rounded-lg border border-white/20 bg-white/10 hover:bg-white/20 px-2.5 text-[11px] font-bold text-white backdrop-blur-xs transition-all"
+                                className="btn-press inline-flex h-8 items-center gap-1 rounded-full border border-slate-300 bg-white hover:bg-slate-50 px-3 text-[11px] font-bold text-slate-800 transition-all whitespace-nowrap"
                             >
-                                <LogIn className="w-3 h-3 text-emerald-400" />
+                                <LogIn className="w-3 h-3 text-[#1e50ff]" />
                                 <span>Masuk</span>
                             </button>
                         )}
                         <button
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                             aria-label="Toggle navigation menu"
-                            className="btn-press h-8 w-8 inline-flex items-center justify-center rounded-lg border border-white/20 bg-white/10 text-white hover:bg-white/20 transition-all"
+                            className="btn-press h-8 w-8 inline-flex items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 transition-all"
                         >
-                            {isMobileMenuOpen ? <X className="w-4 h-4 text-amber-300" /> : <Menu className="w-4 h-4 text-white" />}
+                            {isMobileMenuOpen ? <X className="w-4 h-4 text-[#1e50ff]" /> : <Menu className="w-4 h-4 text-slate-800" />}
                         </button>
                     </div>
                 </nav>
@@ -501,7 +505,7 @@ print(res.json())`,
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
                             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                            className="overflow-hidden md:hidden border-t border-emerald-500/20 bg-[#064e3b]/98 backdrop-blur-xl px-4 py-5 space-y-4"
+                            className="overflow-hidden md:hidden border-t border-slate-200 bg-white/98 backdrop-blur-xl px-4 py-5 space-y-4"
                         >
                             <div className="space-y-1">
                                 {navLinks.map((item) => (
@@ -510,7 +514,7 @@ print(res.json())`,
                                         href={item.href}
                                         prefetch
                                         onClick={() => setIsMobileMenuOpen(false)}
-                                        className="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold text-slate-200 hover:text-white hover:bg-white/10 transition-colors"
+                                        className="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:text-[#1e50ff] hover:bg-blue-50/60 transition-colors"
                                     >
                                         <span>{item.label}</span>
                                         <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
@@ -519,28 +523,28 @@ print(res.json())`,
                             </div>
 
                             {user ? (
-                                <div className="pt-3 border-t border-white/10">
+                                <div className="pt-3 border-t border-slate-100">
                                     <Link
                                         href="/dashboard"
                                         prefetch
                                         onClick={() => setIsMobileMenuOpen(false)}
-                                        className="btn-press flex w-full h-10 items-center justify-center gap-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-bold shadow-xs cursor-pointer"
+                                        className="btn-press flex w-full h-10 items-center justify-center gap-2 rounded-full bg-[#1e50ff] hover:bg-[#153ec7] text-white text-xs font-extrabold uppercase tracking-wider shadow-xs cursor-pointer"
                                     >
                                         <LayoutDashboard className="w-3.5 h-3.5" />
                                         <span>Buka Dashboard Workspace</span>
                                     </Link>
                                 </div>
                             ) : (
-                                <div className="pt-3 border-t border-white/10 space-y-2">
+                                <div className="pt-3 border-t border-slate-100 space-y-2">
                                     <button
                                         type="button"
                                         onClick={() => {
                                             setIsMobileMenuOpen(false);
                                             openRegisterModal();
                                         }}
-                                        className="btn-press flex w-full h-10 items-center justify-center gap-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-bold shadow-xs cursor-pointer"
+                                        className="btn-press flex w-full h-10 items-center justify-center gap-2 rounded-full bg-[#1e50ff] hover:bg-[#153ec7] text-white text-xs font-extrabold uppercase tracking-wider shadow-xs cursor-pointer"
                                     >
-                                        <Zap className="w-3.5 h-3.5 fill-slate-950" />
+                                        <Zap className="w-3.5 h-3.5 fill-white" />
                                         <span>Daftar Sekarang (Mulai Berlangganan)</span>
                                     </button>
                                     <button
@@ -549,9 +553,9 @@ print(res.json())`,
                                             setIsMobileMenuOpen(false);
                                             openLoginModal();
                                         }}
-                                        className="btn-press flex w-full h-10 items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 text-white text-xs font-bold cursor-pointer"
+                                        className="btn-press flex w-full h-10 items-center justify-center gap-2 rounded-full border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold uppercase tracking-wider cursor-pointer"
                                     >
-                                        <LogIn className="w-3.5 h-3.5 text-emerald-400" />
+                                        <LogIn className="w-3.5 h-3.5 text-[#1e50ff]" />
                                         <span>Masuk ke Workspace</span>
                                     </button>
                                 </div>
@@ -568,142 +572,145 @@ print(res.json())`,
             </header>
 
             {/* ================= 2. HERO SECTION ================= */}
-            <section className="relative overflow-hidden bg-gradient-to-b from-emerald-950 via-emerald-900 to-emerald-950 pt-36 sm:pt-44 lg:pt-48 pb-20 sm:pb-28 text-white text-center">
-                {/* Ambient Floating Glow Orbs */}
-                <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                    <motion.div
-                        animate={{
-                            scale: [1, 1.2, 1],
-                            opacity: [0.12, 0.25, 0.12],
-                            x: [0, 20, 0],
-                            y: [0, -15, 0],
-                        }}
-                        transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-                        className="absolute -top-32 left-1/4 w-96 h-96 rounded-full bg-emerald-500/25 blur-3xl"
-                    />
-                    <motion.div
-                        animate={{
-                            scale: [1, 1.25, 1],
-                            opacity: [0.08, 0.2, 0.08],
-                            x: [0, -25, 0],
-                            y: [0, 20, 0],
-                        }}
-                        transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-                        className="absolute top-1/3 -right-20 w-96 h-96 rounded-full bg-amber-400/15 blur-3xl"
-                    />
-                </div>
-
+            <section className="relative overflow-hidden bg-white bg-grid-pattern pt-32 sm:pt-40 lg:pt-44 pb-0 text-slate-900 text-center">
                 <motion.div
                     variants={heroContainerVariants}
                     initial="hidden"
                     animate="visible"
                     className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 space-y-4 sm:space-y-6"
                 >
-                    {/* Top Pill Badge */}
+                    {/* Top Pill Badge (Reference Style: Outlined Royal Blue Pill) */}
                     <motion.div variants={heroItemVariants} className="inline-block gsap-hero-item">
-                        <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1 sm:px-4 sm:py-1.5 text-[11px] sm:text-xs font-medium text-slate-200 backdrop-blur-md shadow-xs">
-                            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-                            <span>Politeknik Mardira Indonesia</span>
+                        <div className="inline-flex items-center gap-1.5 rounded-full border-[1.5px] border-[#1e50ff] bg-white px-3 sm:px-5 py-1 sm:py-1.5 text-[10px] sm:text-xs font-bold sm:font-extrabold text-[#1e50ff] tracking-normal sm:tracking-widest uppercase shadow-xs">
+                            <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#1e50ff] shrink-0" />
+                            <span className="hidden sm:inline">STRATEGI & OTOMASI WHATSAPP RESMI</span>
+                            <span className="sm:hidden">OTOMASI WHATSAPP RESMI</span>
                         </div>
                     </motion.div>
 
-                    {/* Main Title: Responsive Leading & Proportions */}
+                    {/* Main Title: Exact Reference Typography Mix (Italic Serif Flourish + Bold Sans-Serif + Royal Blue Accent) */}
                     <motion.h1
                         variants={heroItemVariants}
-                        className="text-2xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight sm:leading-[1.18] max-w-4xl mx-auto px-2 gsap-hero-item"
+                        className="text-3xl sm:text-5xl lg:text-7xl font-sans tracking-tight leading-[1.08] max-w-4xl mx-auto px-2 gsap-hero-item"
                     >
-                        Portal Enterprise <span className="text-amber-300">WhatsApp Gateway & Broadcast API</span>
+                        <span className="block font-editorial-italic text-4xl sm:text-6xl lg:text-8xl font-normal text-slate-900 pb-1 sm:pb-2">
+                            Maksimalkan
+                        </span>
+                        <span className="font-black text-slate-900">
+                            Pertumbuhan <span className="text-[#1e50ff]">Bisnis</span>
+                        </span>
                     </motion.h1>
 
-                    {/* Subtitle */}
+                    {/* Subtitle: Clean & Readable Grotesque Sans (Reference Style) */}
                     <motion.p
                         variants={heroItemVariants}
-                        className="text-xs sm:text-base text-slate-200/90 max-w-2xl mx-auto leading-relaxed font-normal px-2 gsap-hero-item"
+                        className="text-xs sm:text-base lg:text-lg text-slate-600 max-w-xl mx-auto leading-relaxed font-normal px-2 gsap-hero-item"
                     >
-                        Sistem terintegrasi penyedia WhatsApp API resmi, automasi pengiriman pesan broadcast massal berbasis langganan, dan manajemen perangkat BisnisWA UltraSync Engine untuk bisnis & kampus.
+                        Strategi otomasi pesan dan pemasaran digital berbasis WhatsApp untuk menjangkau, melayani, dan meningkatkan konversi pelanggan secara efisien.
                     </motion.p>
 
-                    {/* Mobile Stacked / Desktop Inline CTA Buttons */}
+                    {/* Action Buttons: Solid Royal Blue Pill (Reference "JOIN NOW") */}
                     <motion.div
                         variants={heroItemVariants}
-                        className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 pt-2 sm:pt-4 max-w-md sm:max-w-none mx-auto gsap-hero-item"
+                        className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2 sm:pt-4 max-w-md sm:max-w-none mx-auto gsap-hero-item"
                     >
                         <motion.button
                             type="button"
                             whileHover={{ scale: 1.03, y: -2 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={() => openRegisterModal()}
-                            className="btn-press inline-flex h-11 sm:h-12 items-center justify-center gap-2 rounded-xl bg-white hover:bg-emerald-50 text-emerald-800 px-6 sm:px-7 text-xs sm:text-sm font-extrabold shadow-xl transition-all cursor-pointer"
+                            className="btn-press inline-flex h-11 sm:h-13 items-center justify-center gap-2 rounded-full bg-[#1e50ff] hover:bg-[#153ec7] text-white px-8 sm:px-11 text-xs sm:text-sm font-extrabold uppercase tracking-widest shadow-[0_12px_28px_-4px_rgba(30,80,255,0.45)] transition-all cursor-pointer"
                         >
-                            <span>Mulai Berlangganan Sekarang</span>
-                            <ArrowRight className="w-4 h-4 text-emerald-700" />
+                            <span>MULAI SEKARANG</span>
+                            <ArrowRight className="w-4 h-4 text-white" />
                         </motion.button>
                         <motion.button
                             type="button"
                             whileHover={{ scale: 1.03, y: -2 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={() => openLoginModal()}
-                            className="btn-press inline-flex h-11 sm:h-12 items-center justify-center gap-2 rounded-xl border border-white/25 bg-white/10 hover:bg-white/20 text-white px-6 sm:px-7 text-xs sm:text-sm font-bold backdrop-blur-md transition-all cursor-pointer"
+                            className="btn-press inline-flex h-11 sm:h-13 items-center justify-center gap-2 rounded-full border-2 border-slate-300 hover:border-[#1e50ff] bg-white text-slate-800 hover:text-[#1e50ff] px-7 sm:px-9 text-xs sm:text-sm font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs"
                         >
-                            <span>Masuk ke Workspace</span>
-                            <ArrowRight className="w-4 h-4 text-amber-300" />
+                            <span>Masuk Workspace</span>
                         </motion.button>
                     </motion.div>
-
-                    {/* 3 Stat Cards (Compact 3-Column on Mobile, Spacious on Desktop) */}
-                    <motion.div
-                        variants={heroItemVariants}
-                        className="grid grid-cols-3 gap-2 sm:gap-5 pt-8 sm:pt-12 max-w-4xl mx-auto gsap-card-grid"
-                    >
-                        <motion.div
-                            whileHover={{ y: -6, scale: 1.03, borderColor: 'rgba(255, 255, 255, 0.45)' }}
-                            transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-                            className="rounded-xl sm:rounded-2xl p-3 sm:p-6 text-center space-y-0.5 sm:space-y-1 bg-white/10 border border-white/15 backdrop-blur-md transition-colors cursor-default gsap-card"
-                        >
-                            <div className="text-xl sm:text-4xl font-black text-white tracking-tight font-mono tabular-nums">
-                                99.9%
-                            </div>
-                            <p className="text-[11px] sm:text-sm font-semibold text-slate-200">
-                                SLA Uptime
-                            </p>
-                            <p className="hidden sm:block text-[11px] text-slate-300/80">
-                                Ketersediaan gateway aktif 24/7 non-stop
-                            </p>
-                        </motion.div>
-
-                        <motion.div
-                            whileHover={{ y: -6, scale: 1.03, borderColor: 'rgba(255, 255, 255, 0.45)' }}
-                            transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-                            className="rounded-xl sm:rounded-2xl p-3 sm:p-6 text-center space-y-0.5 sm:space-y-1 bg-white/10 border border-white/15 backdrop-blur-md transition-colors cursor-default gsap-card"
-                        >
-                            <div className="text-xl sm:text-4xl font-black text-amber-300 tracking-tight font-mono tabular-nums">
-                                38 ms
-                            </div>
-                            <p className="text-[11px] sm:text-sm font-semibold text-slate-200">
-                                Socket Latency
-                            </p>
-                            <p className="hidden sm:block text-[11px] text-slate-300/80">
-                                Pengiriman instan berlatensi ultra-rendah
-                            </p>
-                        </motion.div>
-
-                        <motion.div
-                            whileHover={{ y: -6, scale: 1.03, borderColor: 'rgba(255, 255, 255, 0.45)' }}
-                            transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-                            className="rounded-xl sm:rounded-2xl p-3 sm:p-6 text-center space-y-0.5 sm:space-y-1 bg-white/10 border border-white/15 backdrop-blur-md transition-colors cursor-default gsap-card"
-                        >
-                            <div className="text-xl sm:text-4xl font-black text-white tracking-tight font-mono tabular-nums">
-                                15 Jt+
-                            </div>
-                            <p className="text-[11px] sm:text-sm font-semibold text-slate-200">
-                                Pesan / Bulan
-                            </p>
-                            <p className="hidden sm:block text-[11px] text-slate-300/80">
-                                Kapasitas throughput broadcast massal
-                            </p>
-                        </motion.div>
-                    </motion.div>
                 </motion.div>
+
+                {/* Bottom Architectural Royal Blue Dome (Matching Reference Semicircular Dome & Pill Contact Bar) */}
+                <div className="mt-10 sm:mt-18 mx-auto max-w-5xl px-3 sm:px-6">
+                    <div className="relative overflow-hidden rounded-t-[40px] sm:rounded-t-[120px] bg-[#1e50ff] pt-8 sm:pt-14 pb-8 sm:pb-14 px-3 sm:px-10 text-white shadow-2xl">
+                        {/* Background Decorative Circular Arc */}
+                        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[640px] h-[640px] rounded-full border border-white/15 pointer-events-none" />
+
+                        {/* 3 Metric Glass Cards Inside Dome */}
+                        <motion.div
+                            variants={heroItemVariants}
+                            className="relative z-10 grid grid-cols-3 gap-2 sm:gap-6 max-w-3xl mx-auto gsap-card-grid"
+                        >
+                            <motion.div
+                                whileHover={{ y: -4, scale: 1.02 }}
+                                className="rounded-xl sm:rounded-2xl p-2.5 sm:p-5 text-center bg-white/10 border border-white/20 backdrop-blur-md transition-all gsap-card"
+                            >
+                                <div className="text-base sm:text-3xl lg:text-4xl font-black text-white tracking-tight font-mono tabular-nums">
+                                    99.9%
+                                </div>
+                                <p className="text-[10px] sm:text-xs lg:text-sm font-bold text-blue-100 leading-tight mt-0.5">
+                                    SLA Uptime
+                                </p>
+                                <p className="hidden sm:block text-[10px] text-blue-200/80 mt-0.5">
+                                    Engine aktif 24/7 non-stop
+                                </p>
+                            </motion.div>
+
+                            <motion.div
+                                whileHover={{ y: -4, scale: 1.02 }}
+                                className="rounded-xl sm:rounded-2xl p-2.5 sm:p-5 text-center bg-white/10 border border-white/20 backdrop-blur-md transition-all gsap-card"
+                            >
+                                <div className="text-base sm:text-3xl lg:text-4xl font-black text-[#facc15] tracking-tight font-mono tabular-nums">
+                                    38 ms
+                                </div>
+                                <p className="text-[10px] sm:text-xs lg:text-sm font-bold text-blue-100 leading-tight mt-0.5">
+                                    Kecepatan Respon
+                                </p>
+                                <p className="hidden sm:block text-[10px] text-blue-200/80 mt-0.5">
+                                    Kecepatan transmisi kilat
+                                </p>
+                            </motion.div>
+
+                            <motion.div
+                                whileHover={{ y: -4, scale: 1.02 }}
+                                className="rounded-xl sm:rounded-2xl p-2.5 sm:p-5 text-center bg-white/10 border border-white/20 backdrop-blur-md transition-all gsap-card"
+                            >
+                                <div className="text-base sm:text-3xl lg:text-4xl font-black text-white tracking-tight font-mono tabular-nums">
+                                    15 Jt+
+                                </div>
+                                <p className="text-[10px] sm:text-xs lg:text-sm font-bold text-blue-100 leading-tight mt-0.5">
+                                    Kapasitas Pesan / Bln
+                                </p>
+                                <p className="hidden sm:block text-[10px] text-blue-200/80 mt-0.5">
+                                    Kapasitas broadcast massal
+                                </p>
+                            </motion.div>
+                        </motion.div>
+
+                        {/* Floating Pill Contact Bar (Exact Match to Reference Bottom Banner) */}
+                        <div className="relative z-10 mt-6 sm:mt-10 max-w-2xl mx-auto rounded-2xl sm:rounded-full bg-[#dbeafe] border border-blue-200/90 py-2.5 sm:py-3.5 px-4 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-6 text-slate-950 shadow-md">
+                            <span className="text-[10px] sm:text-xs font-black tracking-widest uppercase text-slate-700">
+                                HUBUNGI KAMI:
+                            </span>
+                            <div className="flex items-center gap-2 font-black text-xs sm:text-sm text-slate-900">
+                                <span className="w-5 h-5 rounded-full bg-[#1e50ff] text-white flex items-center justify-center shrink-0">
+                                    <Phone className="w-3 h-3 fill-white" />
+                                </span>
+                                <span>+62 812-9843-0911</span>
+                            </div>
+                            <div className="flex items-center gap-2 font-bold text-xs sm:text-sm text-slate-800">
+                                <Mail className="w-4 h-4 text-[#1e50ff]" />
+                                <span>helpdesk@mardira.ac.id</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
 
             {/* ================= 3. CARA INTEGRASI (3 Langkah Mudah) ================= */}
@@ -1247,24 +1254,22 @@ print(res.json())`,
             </section>
 
             {/* ================= 8. FOOTER ================= */}
-            <footer className="bg-[#051c14] text-white pt-14 pb-10 border-t border-emerald-900/60 text-xs">
+            <footer className="bg-[#08112c] text-white pt-14 pb-10 border-t border-blue-950/80 text-xs">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-10">
                         {/* Col 1 & 2: Branding & Enterprise Overview */}
                         <div className="space-y-4 lg:col-span-2">
                             <div className="flex items-center gap-3">
-                                <div className="h-9 w-9 rounded-xl overflow-hidden bg-white p-1 shadow-sm border border-emerald-500/30 shrink-0">
-                                    <img
-                                        src="/images/logo-mardira.jpg"
-                                        alt="Politeknik Mardira Indonesia"
-                                        className="h-full w-full object-contain"
-                                    />
-                                </div>
+                                <img
+                                    src="/images/logo.png"
+                                    alt="Politeknik Mardira Indonesia"
+                                    className="h-10 w-auto object-contain shrink-0"
+                                />
                                 <div>
                                     <span className="font-black text-lg tracking-tight text-white block">
-                                        MARDIRA<span className="text-[#facc15]">WA</span>
+                                        MARDIRA<span className="text-[#1e50ff]">WA</span>
                                     </span>
-                                    <span className="text-[10px] text-emerald-300/80 font-bold uppercase tracking-wider block">
+                                    <span className="text-[10px] text-blue-300/80 font-bold uppercase tracking-wider block">
                                         Politeknik Mardira Indonesia
                                     </span>
                                 </div>
@@ -1273,12 +1278,12 @@ print(res.json())`,
                                 Platform Resmi WhatsApp Gateway & Messaging Engine Terpadu Politeknik Mardira Indonesia. Menghubungkan otomasi layanan akademik, notifikasi transaksi kampus, serta integrasi digital enterprise dengan reliabilitas tinggi.
                             </p>
                             <div className="flex flex-wrap items-center gap-2 pt-1 text-[11px]">
-                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-950/80 text-emerald-300 border border-emerald-800/60 font-medium">
-                                    <Shield className="w-3.5 h-3.5 text-emerald-400" />
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-950/80 text-blue-300 border border-blue-800/60 font-medium">
+                                    <Shield className="w-3.5 h-3.5 text-[#1e50ff]" />
                                     <span>Enkripsi TLS 256-Bit</span>
                                 </span>
-                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-950/80 text-emerald-300 border border-emerald-800/60 font-medium">
-                                    <Server className="w-3.5 h-3.5 text-emerald-400" />
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-950/80 text-blue-300 border border-blue-800/60 font-medium">
+                                    <Server className="w-3.5 h-3.5 text-[#1e50ff]" />
                                     <span>Dual-Engine 99.98% SLA</span>
                                 </span>
                             </div>
@@ -1286,25 +1291,25 @@ print(res.json())`,
 
                         {/* Col 3: Navigasi Solusi */}
                         <div className="space-y-3">
-                            <h4 className="font-bold text-[#facc15] uppercase text-[11px] tracking-wider">Navigasi Solusi</h4>
+                            <h4 className="font-bold text-white uppercase text-[11px] tracking-wider">Navigasi Solusi</h4>
                             <ul className="space-y-2 text-slate-300">
-                                <li><Link href="/cara-pakai" prefetch className="hover:text-[#facc15] transition-colors">Panduan Integrasi</Link></li>
-                                <li><Link href="/dual-engine" prefetch className="hover:text-[#facc15] transition-colors">Teknologi UltraSync Engine</Link></li>
-                                <li><Link href="/rest-api" prefetch className="hover:text-[#facc15] transition-colors">Dokumentasi REST API</Link></li>
-                                <li><Link href="/harga" prefetch className="hover:text-[#facc15] transition-colors">Pilihan Paket Layanan</Link></li>
-                                <li><Link href="/faq" prefetch className="hover:text-[#facc15] transition-colors">Pusat Bantuan & FAQ</Link></li>
+                                <li><Link href="/cara-pakai" prefetch className="hover:text-[#1e50ff] transition-colors">Panduan Integrasi</Link></li>
+                                <li><Link href="/dual-engine" prefetch className="hover:text-[#1e50ff] transition-colors">Teknologi UltraSync Engine</Link></li>
+                                <li><Link href="/rest-api" prefetch className="hover:text-[#1e50ff] transition-colors">Dokumentasi REST API</Link></li>
+                                <li><Link href="/harga" prefetch className="hover:text-[#1e50ff] transition-colors">Pilihan Paket Layanan</Link></li>
+                                <li><Link href="/faq" prefetch className="hover:text-[#1e50ff] transition-colors">Pusat Bantuan & FAQ</Link></li>
                             </ul>
                         </div>
 
                         {/* Col 4: Portal & Layanan */}
                         <div className="space-y-3">
-                            <h4 className="font-bold text-[#facc15] uppercase text-[11px] tracking-wider">Portal Layanan</h4>
+                            <h4 className="font-bold text-white uppercase text-[11px] tracking-wider">Portal Layanan</h4>
                             <ul className="space-y-2 text-slate-300">
                                 <li>
                                     <button
                                         type="button"
                                         onClick={openLoginModal}
-                                        className="hover:text-[#facc15] transition-colors text-left cursor-pointer"
+                                        className="hover:text-[#1e50ff] transition-colors text-left cursor-pointer"
                                     >
                                         Masuk ke Workspace
                                     </button>
@@ -1313,23 +1318,23 @@ print(res.json())`,
                                     <button
                                         type="button"
                                         onClick={() => openRegisterModal()}
-                                        className="hover:text-[#facc15] transition-colors text-left cursor-pointer"
+                                        className="hover:text-[#1e50ff] transition-colors text-left cursor-pointer"
                                     >
                                         Pendaftaran Akun Baru
                                     </button>
                                 </li>
                                 <li>
-                                    <Link href="/forgot-password" className="hover:text-[#facc15] transition-colors">
+                                    <Link href="/forgot-password" className="hover:text-[#1e50ff] transition-colors">
                                         Lupa Kata Sandi
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link href="/dashboard" className="hover:text-[#facc15] transition-colors">
+                                    <Link href="/dashboard" className="hover:text-[#1e50ff] transition-colors">
                                         Dashboard Pengguna
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link href="/api-access" className="hover:text-[#facc15] transition-colors">
+                                    <Link href="/api-access" className="hover:text-[#1e50ff] transition-colors">
                                         Kredensial API & Webhook
                                     </Link>
                                 </li>
@@ -1338,26 +1343,26 @@ print(res.json())`,
 
                         {/* Col 5: Kampus & Bantuan */}
                         <div className="space-y-3">
-                            <h4 className="font-bold text-[#facc15] uppercase text-[11px] tracking-wider">Kampus & Bantuan</h4>
+                            <h4 className="font-bold text-white uppercase text-[11px] tracking-wider">Kampus & Bantuan</h4>
                             <div className="space-y-2.5 text-slate-300 text-xs">
                                 <div className="flex items-start gap-2">
-                                    <MapPin className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                                    <MapPin className="w-4 h-4 text-[#1e50ff] shrink-0 mt-0.5" />
                                     <span className="leading-snug">
                                         Panyingkiran, Kec. Panyingkiran, Kabupaten Majalengka, Jawa Barat 45459
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <Mail className="w-4 h-4 text-emerald-400 shrink-0" />
-                                    <a href="mailto:info@mardira.ac.id" className="hover:text-[#facc15] transition-colors">
+                                    <Mail className="w-4 h-4 text-[#1e50ff] shrink-0" />
+                                    <a href="mailto:info@mardira.ac.id" className="hover:text-[#1e50ff] transition-colors">
                                         info@mardira.ac.id
                                     </a>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
+                                    <Phone className="w-4 h-4 text-[#1e50ff] shrink-0" />
                                     <span>Hotline: +62 838-6012-467</span>
                                 </div>
-                                <div className="flex items-center gap-2 text-[11px] text-emerald-300/80 pt-1">
-                                    <Clock className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                                <div className="flex items-center gap-2 text-[11px] text-blue-300/80 pt-1">
+                                    <Clock className="w-3.5 h-3.5 text-[#1e50ff] shrink-0" />
                                     <span>Senin – Jumat: 08.00 – 16.00 WIB</span>
                                 </div>
                             </div>
@@ -1365,12 +1370,12 @@ print(res.json())`,
                     </div>
 
                     {/* Bottom Sub-Footer Bar */}
-                    <div className="mt-10 pt-6 border-t border-emerald-900/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-slate-400 text-[11px]">
+                    <div className="mt-10 pt-6 border-t border-blue-950/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-slate-400 text-[11px]">
                         <p>© 2026 Politeknik Mardira Indonesia. Seluruh hak cipta dilindungi undang-undang.</p>
                         <div className="flex items-center gap-4 text-slate-400">
                             <span>Platform Produksi Mandiri PMI</span>
                             <span>•</span>
-                            <span className="text-emerald-400 font-medium">Sistem Gateway Aktif</span>
+                            <span className="text-[#1e50ff] font-medium">Sistem Gateway Aktif</span>
                         </div>
                     </div>
                 </div>

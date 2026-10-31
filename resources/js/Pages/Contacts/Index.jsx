@@ -277,7 +277,7 @@ export default function ContactsIndex({ groups, contacts, filters, stats }) {
                 {/* Header Page */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <h1 className="text-xl sm:text-2xl font-black tracking-tight text-[#0f172a]">
+                        <h1 className="text-lg sm:text-2xl font-black tracking-tight text-[#0f172a]">
                             Buku Kontak & Segmentasi Audiens
                         </h1>
                         <p className="text-xs text-slate-500 mt-0.5">
@@ -478,8 +478,8 @@ export default function ContactsIndex({ groups, contacts, filters, stats }) {
 
                 {/* Contacts Data Table */}
                 <Card className="border-slate-200/80 bg-white shadow-xs overflow-hidden">
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left text-xs">
+                    <div className="overflow-x-auto touch-pan-x no-scrollbar">
+                        <table className="w-full text-left text-xs min-w-[620px]">
                             <thead className="bg-slate-50/80 text-slate-500 uppercase tracking-wider font-semibold border-b border-slate-200/80">
                                 <tr>
                                     <th className="py-3 px-4">Nama Lengkap</th>

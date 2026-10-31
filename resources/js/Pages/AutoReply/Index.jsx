@@ -320,17 +320,18 @@ export default function AutoReplyIndex({
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-2 border-b border-slate-200/80">
                     <div>
                         <div className="flex items-center gap-2.5 flex-wrap">
-                            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 flex items-center gap-2">
-                                <Bot className="w-6 h-6 text-emerald-600 shrink-0" />
+                            <h1 className="text-lg sm:text-2xl font-black tracking-tight text-slate-900 flex items-center gap-2">
+                                <Bot className="w-5 h-5 sm:w-6 sm:h-6 text-[#1e50ff] shrink-0" />
                                 <span>Auto-Reply & Asisten AI Cerdas</span>
                             </h1>
-                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold border transition-colors ${
+                            <span className={`inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-full text-[9.5px] sm:text-[11px] font-bold border transition-colors ${
                                 isMasterOn
                                     ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
                                     : 'bg-amber-50 text-amber-800 border-amber-200'
                             }`}>
                                 <span className={`w-1.5 h-1.5 rounded-full ${isMasterOn ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
-                                {isMasterOn ? 'Smart Responder 24/7 (Aktif)' : 'Mode Nonaktif (Manual)'}
+                                <span className="hidden sm:inline">{isMasterOn ? 'Smart Responder 24/7 (Aktif)' : 'Mode Nonaktif (Manual)'}</span>
+                                <span className="sm:hidden">{isMasterOn ? 'Aktif' : 'Nonaktif'}</span>
                             </span>
                         </div>
                         <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl">

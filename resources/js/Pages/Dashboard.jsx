@@ -152,18 +152,18 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
             <Head title="Ikhtisar Gateway & Broadcast — MARDIRA WA" />
 
             <div className="space-y-6">
-                {/* 1. TOP SHADCN DASHBOARD HEADER */}
+                {/* 1. TOP DASHBOARD HEADER */}
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between pb-6 border-b border-slate-200/80">
-                    <div className="space-y-1">
-                        <div className="flex flex-wrap items-center gap-2">
-                            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
-                                {workspace?.name || 'Workspace Operasional'}
+                    <div className="space-y-1.5">
+                        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                            <h1 className="text-xl sm:text-3xl font-black tracking-tight text-slate-900">
+                                {workspace?.name || 'Workspace'} <span className="font-editorial-italic font-normal text-slate-800">Operasional</span>
                             </h1>
-                            <Badge variant="outline" className="border-emerald-300 bg-emerald-50 text-emerald-800 font-semibold gap-1.5 shadow-2xs">
-                                <Sparkles className="size-3 text-emerald-600" />
+                            <Badge variant="outline" className="border-blue-200 bg-blue-50 text-[#1e50ff] font-bold text-[9.5px] sm:text-[11px] px-2 py-0.5 gap-1 shadow-2xs">
+                                <Sparkles className="size-2.5 sm:size-3 text-[#1e50ff]" />
                                 {stats?.plan_name || 'Starter Lite'}
                             </Badge>
-                            <Badge variant="secondary" className="gap-1.5 font-medium text-slate-600">
+                            <Badge variant="secondary" className="gap-1 font-medium text-slate-600 text-[9.5px] sm:text-[11px] px-2 py-0.5">
                                 <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
                                 Dual Server Aktif
                             </Badge>
@@ -176,23 +176,23 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                     {/* Integrated Action Cluster */}
                     <div className="flex flex-wrap items-center gap-2">
                         {/* Live Sync Pill with Direct Refresh */}
-                        <div className="inline-flex items-center rounded-lg border border-slate-200 bg-white px-2.5 py-1 shadow-2xs text-xs text-slate-600 gap-2">
+                        <div className="inline-flex items-center rounded-xl border border-slate-200 bg-white px-3 py-1.5 shadow-2xs text-xs text-slate-600 gap-2">
                             <span className="relative flex size-2">
-                                <span className="animate-ping absolute inline-flex size-full rounded-full bg-emerald-400 opacity-75" />
-                                <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
+                                <span className="animate-ping absolute inline-flex size-full rounded-full bg-blue-400 opacity-75" />
+                                <span className="relative inline-flex size-2 rounded-full bg-[#1e50ff]" />
                             </span>
                             <span className="text-slate-400 font-normal hidden sm:inline">Sync:</span>
-                            <span className="font-mono font-medium text-slate-800 tabular-nums">
+                            <span className="font-mono font-bold text-slate-800 tabular-nums">
                                 {lastUpdated.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                             </span>
                             <button
                                 type="button"
                                 onClick={refreshDashboard}
                                 disabled={isRefreshing}
-                                className="p-1 rounded hover:bg-slate-100 text-slate-500 hover:text-emerald-700 transition-colors disabled:opacity-50 cursor-pointer"
+                                className="p-1 rounded hover:bg-slate-100 text-slate-500 hover:text-[#1e50ff] transition-colors disabled:opacity-50 cursor-pointer"
                                 title="Segarkan data realtime sekarang"
                             >
-                                <RefreshCw className={cn('size-3.5 text-emerald-600', isRefreshing && 'animate-spin')} />
+                                <RefreshCw className={cn('size-3.5 text-[#1e50ff]', isRefreshing && 'animate-spin')} />
                             </button>
                         </div>
 
@@ -201,7 +201,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                             variant="outline"
                             size="sm"
                             onClick={() => setIsGuideModalOpen(true)}
-                            className="cursor-pointer gap-1.5 text-xs text-slate-700"
+                            className="cursor-pointer gap-1.5 text-xs text-slate-700 hover:text-[#1e50ff] hover:border-[#1e50ff] rounded-xl h-9 font-semibold"
                         >
                             <Lightbulb className="size-3.5 text-amber-500" />
                             <span>Panduan</span>
@@ -213,7 +213,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                 variant="outline"
                                 size="sm"
                                 onClick={() => setIsDurationModalOpen(true)}
-                                className="cursor-pointer gap-1.5 text-xs text-slate-700"
+                                className="cursor-pointer gap-1.5 text-xs text-slate-700 hover:text-[#1e50ff] hover:border-[#1e50ff] rounded-xl h-9 font-semibold"
                             >
                                 <Calendar className="size-3.5 text-slate-500" />
                                 <span>Kelola Durasi</span>
@@ -225,7 +225,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                             <Link href="/subscriptions">
                                 <Button
                                     size="sm"
-                                    className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5 shadow-xs cursor-pointer text-xs"
+                                    className="bg-[#1e50ff] hover:bg-[#153ec7] text-white gap-1.5 shadow-md shadow-blue-500/25 cursor-pointer text-xs font-bold rounded-xl h-9 px-4 active:scale-95 transition-all"
                                 >
                                     <Sparkles className="size-3.5" />
                                     <span>Upgrade Slot ({devices?.length || 0}/{maxAllowedDevices})</span>
@@ -235,7 +235,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                             <Button
                                 size="sm"
                                 onClick={() => setIsQrModalOpen(true)}
-                                className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5 shadow-xs cursor-pointer text-xs"
+                                className="bg-[#1e50ff] hover:bg-[#153ec7] text-white gap-1.5 shadow-md shadow-blue-500/25 cursor-pointer text-xs font-bold rounded-xl h-9 px-4 active:scale-95 transition-all"
                             >
                                 <Plus className="size-4" />
                                 <span>Tautkan Perangkat WA</span>
@@ -244,46 +244,48 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                     </div>
                 </div>
 
-                {/* 2. SHADCN TABS NAVIGATION */}
+                {/* 2. TABS NAVIGATION (Mobile Scrollable) */}
                 <Tabs defaultValue="overview" className="space-y-6">
-                    <div className="flex items-center justify-between overflow-x-auto pb-1">
-                        <TabsList className="bg-slate-100/90 border border-slate-200/80 p-1">
-                            <TabsTrigger value="overview">Ikhtisar Utama</TabsTrigger>
-                            <TabsTrigger value="analytics">Throughput & Grafik</TabsTrigger>
-                            <TabsTrigger value="infrastructure">Dual Server & Gateway</TabsTrigger>
-                            <TabsTrigger value="logs">Log Riwayat Pesan</TabsTrigger>
+                    <div className="overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 pb-1">
+                        <TabsList className="bg-slate-100/90 border border-slate-200/80 p-1 rounded-xl inline-flex min-w-full sm:min-w-0">
+                            <TabsTrigger value="overview" className="rounded-lg px-3.5 py-1.5 text-xs font-bold whitespace-nowrap data-[state=active]:bg-[#1e50ff] data-[state=active]:text-white data-[state=active]:shadow-xs">Ikhtisar Utama</TabsTrigger>
+                            <TabsTrigger value="analytics" className="rounded-lg px-3.5 py-1.5 text-xs font-bold whitespace-nowrap data-[state=active]:bg-[#1e50ff] data-[state=active]:text-white data-[state=active]:shadow-xs">Throughput & Grafik</TabsTrigger>
+                            <TabsTrigger value="infrastructure" className="rounded-lg px-3.5 py-1.5 text-xs font-bold whitespace-nowrap data-[state=active]:bg-[#1e50ff] data-[state=active]:text-white data-[state=active]:shadow-xs">Dual Server & Gateway</TabsTrigger>
+                            <TabsTrigger value="logs" className="rounded-lg px-3.5 py-1.5 text-xs font-bold whitespace-nowrap data-[state=active]:bg-[#1e50ff] data-[state=active]:text-white data-[state=active]:shadow-xs">Log Riwayat Pesan</TabsTrigger>
                         </TabsList>
                     </div>
 
                     {/* TAB 1: IKHTISAR UTAMA (THE CLASSIC SHADCN DASHBOARD LAYOUT) */}
                     <TabsContent value="overview" className="space-y-6">
-                        {/* 4 HARMONIOUS METRIC CARDS (Standardized shadcn Card Structure) */}
-                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                        {/* 4 HARMONIOUS METRIC CARDS */}
+                        <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
                             {/* Metric 1: Pesan Hari Ini */}
-                            <Card className="shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between">
-                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                    <CardTitle className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                            <Card className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-5 shadow-xs hover:border-blue-300 transition-all flex flex-col justify-between">
+                                <CardHeader className="p-0 flex flex-row items-center justify-between space-y-0 pb-3">
+                                    <CardTitle className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                                         Pesan Hari Ini
                                     </CardTitle>
-                                    <Send className="size-4 text-slate-400" />
+                                    <div className="size-8 rounded-lg bg-blue-50 text-[#1e50ff] flex items-center justify-center">
+                                        <Send className="size-4" />
+                                    </div>
                                 </CardHeader>
-                                <CardContent className="space-y-2">
+                                <CardContent className="p-0 space-y-2.5">
                                     <div className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 font-mono tabular-nums">
                                         <CountUp to={stats?.sent_today || 0} />
                                     </div>
                                     <div className="flex items-center justify-between text-xs text-slate-500">
-                                        <span>Sukses: <strong className="text-emerald-700 font-mono">{stats?.delivery_rate || '100%'}</strong></span>
-                                        <Badge variant="outline" className="border-emerald-200 bg-emerald-50 text-emerald-700 text-[10px] py-0 px-1.5 font-bold">
+                                        <span>Sukses: <strong className="text-[#1e50ff] font-mono">{stats?.delivery_rate || '100%'}</strong></span>
+                                        <Badge variant="outline" className="border-blue-200 bg-blue-50 text-[#1e50ff] text-[10px] py-0 px-1.5 font-bold">
                                             +18.4%
                                         </Badge>
                                     </div>
                                     <Progress
                                         value={parseFloat(stats?.delivery_rate || '100')}
                                         className="h-1.5 bg-slate-100"
-                                        indicatorClassName="bg-emerald-500"
+                                        indicatorClassName="bg-[#1e50ff]"
                                     />
                                 </CardContent>
-                                <CardFooter className="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+                                <CardFooter className="p-0 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400 mt-3">
                                     <span>Jam Sibuk:</span>
                                     <span className="font-mono font-medium text-slate-700 truncate max-w-[140px]">
                                         {stats?.busiest_hour || '10:00 – 15:00 WIB'}
@@ -292,14 +294,16 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                             </Card>
 
                             {/* Metric 2: Slot Nomor Terhubung */}
-                            <Card className="shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between">
-                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                    <CardTitle className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                            <Card className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-5 shadow-xs hover:border-blue-300 transition-all flex flex-col justify-between">
+                                <CardHeader className="p-0 flex flex-row items-center justify-between space-y-0 pb-3">
+                                    <CardTitle className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                                         Slot Nomor WA
                                     </CardTitle>
-                                    <Smartphone className="size-4 text-slate-400" />
+                                    <div className="size-8 rounded-lg bg-blue-50 text-[#1e50ff] flex items-center justify-center">
+                                        <Smartphone className="size-4" />
+                                    </div>
                                 </CardHeader>
-                                <CardContent className="space-y-2">
+                                <CardContent className="p-0 space-y-2.5">
                                     <div className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 font-mono tabular-nums">
                                         <CountUp to={stats?.connected_devices || 0} />{' '}
                                         <span className="text-sm font-normal text-slate-400">
@@ -315,10 +319,10 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                     <Progress
                                         value={devicePercent}
                                         className="h-1.5 bg-slate-100"
-                                        indicatorClassName="bg-slate-700"
+                                        indicatorClassName="bg-[#1e50ff]"
                                     />
                                 </CardContent>
-                                <CardFooter className="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+                                <CardFooter className="p-0 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400 mt-3">
                                     <span>Status Gateway:</span>
                                     <span className="font-semibold text-emerald-700 inline-flex items-center gap-1">
                                         <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -328,30 +332,32 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                             </Card>
 
                             {/* Metric 3: Sisa Kuota Pesan */}
-                            <Card className="shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between">
-                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                    <CardTitle className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                            <Card className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-5 shadow-xs hover:border-blue-300 transition-all flex flex-col justify-between">
+                                <CardHeader className="p-0 flex flex-row items-center justify-between space-y-0 pb-3">
+                                    <CardTitle className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                                         Sisa Kuota Pesan
                                     </CardTitle>
-                                    <Zap className="size-4 text-slate-400" />
+                                    <div className="size-8 rounded-lg bg-blue-50 text-[#1e50ff] flex items-center justify-center">
+                                        <Zap className="size-4" />
+                                    </div>
                                 </CardHeader>
-                                <CardContent className="space-y-2">
+                                <CardContent className="p-0 space-y-2.5">
                                     <div className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 font-mono tabular-nums">
                                         <CountUp to={stats?.remaining_quota || 0} />
                                     </div>
                                     <div className="flex items-center justify-between text-xs text-slate-500">
-                                        <span>Tersedia: <strong className="text-emerald-700 font-mono">{quotaPercent}%</strong></span>
-                                        <Badge variant="outline" className="border-emerald-200 bg-emerald-50 text-emerald-700 text-[10px] py-0 px-1.5 font-bold">
+                                        <span>Tersedia: <strong className="text-[#1e50ff] font-mono">{quotaPercent}%</strong></span>
+                                        <Badge variant="outline" className="border-blue-200 bg-blue-50 text-[#1e50ff] text-[10px] py-0 px-1.5 font-bold">
                                             {(stats?.monthly_quota || 5000).toLocaleString('id-ID')} /bln
                                         </Badge>
                                     </div>
                                     <Progress
                                         value={quotaPercent}
                                         className="h-1.5 bg-slate-100"
-                                        indicatorClassName="bg-emerald-500"
+                                        indicatorClassName="bg-[#1e50ff]"
                                     />
                                 </CardContent>
-                                <CardFooter className="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+                                <CardFooter className="p-0 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400 mt-3">
                                     <span>Terpakai Siklus Ini:</span>
                                     <span className="font-mono font-medium text-slate-700">
                                         {quotaUsed.toLocaleString('id-ID')} pesan
@@ -360,14 +366,16 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                             </Card>
 
                             {/* Metric 4: Sisa Masa Aktif */}
-                            <Card className="shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between">
-                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                    <CardTitle className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                            <Card className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-5 shadow-xs hover:border-blue-300 transition-all flex flex-col justify-between">
+                                <CardHeader className="p-0 flex flex-row items-center justify-between space-y-0 pb-3">
+                                    <CardTitle className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                                         Sisa Masa Aktif
                                     </CardTitle>
-                                    <Clock className="size-4 text-slate-400" />
+                                    <div className="size-8 rounded-lg bg-blue-50 text-[#1e50ff] flex items-center justify-center">
+                                        <Clock className="size-4" />
+                                    </div>
                                 </CardHeader>
-                                <CardContent className="space-y-2">
+                                <CardContent className="p-0 space-y-2.5">
                                     <div className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 font-mono tabular-nums">
                                         {stats?.days_remaining || 0}{' '}
                                         <span className="text-sm font-normal text-slate-400">Hari</span>
@@ -378,7 +386,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                             variant={(stats?.days_remaining || 0) > 5 ? 'outline' : 'destructive'}
                                             className={cn(
                                                 'text-[10px] py-0 px-1.5 font-bold',
-                                                (stats?.days_remaining || 0) > 5 && 'border-emerald-200 bg-emerald-50 text-emerald-700'
+                                                (stats?.days_remaining || 0) > 5 && 'border-blue-200 bg-blue-50 text-[#1e50ff]'
                                             )}
                                         >
                                             {(stats?.days_remaining || 0) > 0 ? 'AKTIF' : 'EXPIRED'}
@@ -387,10 +395,10 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                     <Progress
                                         value={cyclePercent}
                                         className="h-1.5 bg-slate-100"
-                                        indicatorClassName={(stats?.days_remaining || 0) > 5 ? 'bg-emerald-500' : 'bg-amber-500'}
+                                        indicatorClassName={(stats?.days_remaining || 0) > 5 ? 'bg-[#1e50ff]' : 'bg-amber-500'}
                                     />
                                 </CardContent>
-                                <CardFooter className="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+                                <CardFooter className="p-0 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400 mt-3">
                                     <span>Grace Period:</span>
                                     <span className="font-medium text-slate-700">3 Hari Toleransi</span>
                                 </CardFooter>
@@ -410,12 +418,12 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                 />
                             </div>
 
-                            {/* Col-span-3: Recent Messages (Styled in classic shadcn Recent Sales layout) */}
-                            <Card className="col-span-full lg:col-span-3 flex flex-col justify-between shadow-xs">
-                                <CardHeader className="flex flex-row items-center justify-between pb-3">
+                            {/* Col-span-3: Recent Messages */}
+                            <Card className="col-span-full lg:col-span-3 rounded-2xl border border-slate-200/80 bg-white p-5 flex flex-col justify-between shadow-xs">
+                                <CardHeader className="p-0 flex flex-row items-center justify-between pb-3">
                                     <div className="space-y-1">
                                         <CardTitle className="text-base font-bold text-slate-900">
-                                            Aktivitas Terkini
+                                            Aktivitas <span className="font-editorial-italic font-normal text-slate-800">Terkini</span>
                                         </CardTitle>
                                         <CardDescription className="text-xs text-slate-500">
                                             5 interaksi pesan WhatsApp terakhir yang diproses
@@ -425,13 +433,13 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                         <Button
                                             variant="ghost"
                                             size="sm"
-                                            className="h-8 text-xs text-emerald-700 hover:text-emerald-800 hover:bg-emerald-50 font-semibold cursor-pointer"
+                                            className="h-8 text-xs text-[#1e50ff] hover:text-[#153ec7] hover:bg-blue-50 font-bold cursor-pointer rounded-lg"
                                         >
                                             Inbox
                                         </Button>
                                     </Link>
                                 </CardHeader>
-                                <CardContent className="space-y-4 pt-1 flex-1">
+                                <CardContent className="p-0 space-y-4 pt-1 flex-1">
                                     {recentMessages.length === 0 ? (
                                         <div className="flex flex-col items-center justify-center py-10 text-center text-slate-400 space-y-2">
                                             <MessageSquare className="size-8 text-slate-300" />
@@ -444,8 +452,8 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                         recentMessages.slice(0, 5).map((msg) => (
                                             <div key={msg.id} className="flex items-center justify-between gap-3 text-xs">
                                                 <div className="flex items-center gap-3 min-w-0">
-                                                    <Avatar className="size-9 bg-emerald-50 border border-emerald-100 shrink-0">
-                                                        <AvatarFallback className="bg-emerald-50 text-emerald-700 font-bold text-xs">
+                                                    <Avatar className="size-9 bg-blue-50 border border-blue-100 shrink-0">
+                                                        <AvatarFallback className="bg-blue-50 text-[#1e50ff] font-bold text-xs">
                                                             {msg.receiver_number ? msg.receiver_number.slice(-2) : 'WA'}
                                                         </AvatarFallback>
                                                     </Avatar>
@@ -464,7 +472,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                                             READ
                                                         </Badge>
                                                     ) : msg.status === 'delivered' ? (
-                                                        <Badge variant="outline" className="border-blue-200 bg-blue-50 text-blue-700 text-[10px] py-0 px-1.5 font-bold">
+                                                        <Badge variant="outline" className="border-blue-200 bg-blue-50 text-[#1e50ff] text-[10px] py-0 px-1.5 font-bold">
                                                             DELIVERED
                                                         </Badge>
                                                     ) : msg.status === 'failed' ? (
@@ -484,22 +492,22 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                         ))
                                     )}
                                 </CardContent>
-                                <CardFooter className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                                <CardFooter className="p-0 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 mt-3">
                                     <span className="text-[11px]">Total Hari Ini:</span>
-                                    <span className="font-mono font-bold text-emerald-700">{stats?.sent_today || 0} pesan</span>
+                                    <span className="font-mono font-bold text-[#1e50ff]">{stats?.sent_today || 0} pesan</span>
                                 </CardFooter>
                             </Card>
                         </div>
 
                         {/* FULL DATA TABLE: Recent Messages & Delivery Activity */}
-                        <Card className="shadow-xs overflow-hidden">
+                        <Card className="rounded-2xl border border-slate-200/80 bg-white shadow-xs overflow-hidden">
                             <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
                                 <div>
                                     <div className="flex items-center gap-2">
                                         <CardTitle className="text-base font-bold text-slate-900 tracking-tight">
-                                            Log Riwayat Pengiriman Pesan
+                                            Log Riwayat <span className="font-editorial-italic font-normal text-slate-800">Pengiriman Pesan</span>
                                         </CardTitle>
-                                        <Badge variant="outline" className="border-emerald-200/80 bg-emerald-50 text-emerald-800 text-[10px] font-bold py-0 px-2">
+                                        <Badge variant="outline" className="border-blue-200 bg-blue-50 text-[#1e50ff] text-[10px] font-bold py-0 px-2">
                                             REALTIME
                                         </Badge>
                                     </div>
@@ -511,7 +519,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                     <Button
                                         variant="outline"
                                         size="sm"
-                                        className="text-xs text-slate-700 font-semibold h-8 gap-1.5 cursor-pointer"
+                                        className="text-xs text-slate-700 hover:text-[#1e50ff] hover:border-[#1e50ff] font-semibold h-8 gap-1.5 cursor-pointer rounded-lg"
                                     >
                                         <span>Lihat Riwayat Broadcast</span>
                                         <ArrowRight className="size-3.5" />
@@ -519,8 +527,8 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                 </Link>
                             </CardHeader>
 
-                            <CardContent className="p-0 overflow-x-auto">
-                                <Table>
+                            <CardContent className="p-0 overflow-x-auto touch-pan-x no-scrollbar">
+                                <Table className="min-w-[620px] sm:min-w-0">
                                     <TableHeader>
                                         <TableRow className="bg-slate-50/80 border-slate-200/70 hover:bg-slate-50/80">
                                             <TableHead className="w-[190px] text-xs font-semibold text-slate-600 pl-6">
@@ -555,7 +563,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                                             Pesan yang dikirim melalui REST API, broadcast massal, atau inbox akan muncul secara realtime di sini.
                                                         </p>
                                                         <Link href="/broadcast" className="pt-2">
-                                                            <Button size="sm" variant="outline" className="h-8 text-xs font-medium rounded-lg border-emerald-200 text-emerald-700 hover:bg-emerald-50">
+                                                            <Button size="sm" variant="outline" className="h-8 text-xs font-semibold rounded-xl border-blue-200 text-[#1e50ff] hover:bg-blue-50">
                                                                 Mulai Broadcast Baru
                                                             </Button>
                                                         </Link>
@@ -567,7 +575,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                                 <TableRow key={msg.id} className="hover:bg-slate-50/70 border-slate-100 transition-colors">
                                                     <TableCell className="py-3 pl-6">
                                                         <div className="flex items-center gap-2.5">
-                                                            <div className="size-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center text-xs font-semibold shrink-0 border border-emerald-100">
+                                                            <div className="size-8 rounded-lg bg-blue-50 text-[#1e50ff] flex items-center justify-center text-xs font-semibold shrink-0 border border-blue-100">
                                                                 <Send className="size-3.5" />
                                                             </div>
                                                             <div className="min-w-0">
@@ -624,32 +632,32 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                             </CardContent>
                         </Card>
 
-                        {/* LOWER 2-COLUMN GRID (Dual Server WA Status + Aksi Cepat Workspace) */}
-                        <div className="grid gap-6 md:grid-cols-2">
+                        {/* LOWER 2-COLUMN GRID */}
+                        <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
                             {/* WIDGET 1: Dual Server Architecture Status */}
-                            <Card className="shadow-xs space-y-4">
-                                <CardHeader className="flex flex-row items-center justify-between pb-3 border-b border-slate-100 space-y-0">
+                            <Card className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs space-y-4">
+                                <CardHeader className="p-0 flex flex-row items-center justify-between pb-3 border-b border-slate-100 space-y-0">
                                     <div className="flex items-center gap-2.5">
-                                        <div className="size-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center border border-emerald-100 shadow-2xs">
-                                            <Server className="size-4 text-emerald-600" />
+                                        <div className="size-8 rounded-lg bg-blue-50 text-[#1e50ff] flex items-center justify-center border border-blue-100 shadow-2xs">
+                                            <Server className="size-4 text-[#1e50ff]" />
                                         </div>
                                         <div>
                                             <CardTitle className="text-sm font-bold text-slate-900 tracking-tight">
-                                                Status Dual Server WA
+                                                Status Dual Server <span className="font-editorial-italic font-normal text-slate-800">WA</span>
                                             </CardTitle>
                                             <CardDescription className="text-[11px] text-slate-400">
                                                 Redundansi otomatis tanpa downtime
                                             </CardDescription>
                                         </div>
                                     </div>
-                                    <Badge variant="outline" className="border-emerald-200 bg-emerald-50 text-emerald-800 text-[10px] font-bold gap-1.5">
+                                    <Badge variant="outline" className="border-blue-200 bg-blue-50 text-[#1e50ff] text-[10px] font-bold gap-1.5">
                                         <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
                                         NORMAL
                                     </Badge>
                                 </CardHeader>
 
-                                <CardContent className="space-y-3 pt-0">
-                                    <div className="p-3.5 rounded-lg border border-emerald-200/80 bg-emerald-50/30 hover:bg-emerald-50/50 transition-colors space-y-2">
+                                <CardContent className="p-0 space-y-3 pt-0">
+                                    <div className="p-3.5 rounded-xl border border-blue-200/80 bg-blue-50/20 hover:bg-blue-50/40 transition-colors space-y-2">
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-2">
                                                 <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -657,21 +665,21 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                                     BisnisWA UltraSync Engine
                                                 </span>
                                             </div>
-                                            <Badge variant="outline" className="border-emerald-300 bg-emerald-50 text-emerald-800 text-[10px] font-bold">
+                                            <Badge variant="outline" className="border-blue-300 bg-blue-50 text-[#1e50ff] text-[10px] font-bold">
                                                 OPERASIONAL
                                             </Badge>
                                         </div>
                                         <p className="text-[11px] text-slate-500 leading-relaxed">
                                             Engine enterprise berkinerja tinggi dengan enkripsi native instan & bebas kendala "Menunggu pesan ini".
                                         </p>
-                                        <div className="grid grid-cols-2 gap-2 text-[11px] pt-1.5 border-t border-emerald-100 text-slate-600">
+                                        <div className="grid grid-cols-2 gap-2 text-[11px] pt-1.5 border-t border-blue-100 text-slate-600">
                                             <div>
                                                 <span className="text-slate-400 block text-[10px]">Runtime:</span>
                                                 <span className="font-semibold text-slate-800">FrankenPHP + Octane</span>
                                             </div>
                                             <div className="text-right">
                                                 <span className="text-slate-400 block text-[10px]">Stabilitas:</span>
-                                                <span className="font-mono font-bold text-emerald-700">99.9% Uptime</span>
+                                                <span className="font-mono font-bold text-[#1e50ff]">99.9% Uptime</span>
                                             </div>
                                         </div>
                                     </div>
@@ -679,14 +687,14 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                             </Card>
 
                             {/* WIDGET 2: Quick Action Launchpad */}
-                            <Card className="shadow-xs flex flex-col justify-between">
-                                <CardHeader className="flex flex-row items-center gap-2.5 pb-3 border-b border-slate-100 space-y-0">
-                                    <div className="size-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center border border-emerald-100 shadow-2xs">
-                                        <Zap className="size-4 text-emerald-600" />
+                            <Card className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs flex flex-col justify-between">
+                                <CardHeader className="p-0 flex flex-row items-center gap-2.5 pb-3 border-b border-slate-100 space-y-0">
+                                    <div className="size-8 rounded-lg bg-blue-50 text-[#1e50ff] flex items-center justify-center border border-blue-100 shadow-2xs">
+                                        <Zap className="size-4 text-[#1e50ff]" />
                                     </div>
                                     <div>
                                         <CardTitle className="text-sm font-bold text-slate-900 tracking-tight">
-                                            Aksi Cepat Workspace
+                                            Aksi Cepat <span className="font-editorial-italic font-normal text-slate-800">Workspace</span>
                                         </CardTitle>
                                         <CardDescription className="text-[11px] text-slate-400">
                                             Pintasan langsung ke modul operasional gateway
@@ -694,17 +702,17 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                     </div>
                                 </CardHeader>
 
-                                <CardContent className="space-y-2 pt-1 flex-1">
+                                <CardContent className="p-0 space-y-2 pt-2 flex-1">
                                     {quickActions.map((action, idx) => {
                                         const ActionIcon = action.icon;
                                         const content = (
-                                            <div className="group flex items-center justify-between p-2 rounded-lg border border-slate-100 bg-slate-50/50 hover:bg-emerald-50/30 hover:border-emerald-200 transition-all cursor-pointer">
+                                            <div className="group flex items-center justify-between p-2.5 sm:p-2 rounded-xl sm:rounded-lg border border-slate-100 bg-slate-50/60 hover:bg-blue-50/50 hover:border-blue-200 transition-all cursor-pointer min-h-[48px] active:scale-[0.98]">
                                                 <div className="flex items-center gap-2.5 min-w-0">
-                                                    <div className="size-8 rounded-md bg-white text-slate-600 group-hover:bg-emerald-50 group-hover:text-emerald-700 border border-slate-200/60 flex items-center justify-center shrink-0 transition-colors shadow-2xs">
+                                                    <div className="size-8 rounded-lg bg-white text-slate-600 group-hover:bg-[#1e50ff] group-hover:text-white border border-slate-200/60 flex items-center justify-center shrink-0 transition-colors shadow-2xs">
                                                         <ActionIcon className="size-4" />
                                                     </div>
                                                     <div className="min-w-0">
-                                                        <div className="text-xs font-bold text-slate-800 truncate group-hover:text-emerald-700 transition-colors">
+                                                        <div className="text-xs font-bold text-slate-800 truncate group-hover:text-[#1e50ff] transition-colors">
                                                             {action.title}
                                                         </div>
                                                         <div className="text-[11px] text-slate-400 truncate">
@@ -712,7 +720,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <ChevronRight className="size-3.5 text-slate-300 group-hover:text-emerald-600 group-hover:translate-x-0.5 transition-all shrink-0 ml-2" />
+                                                <ChevronRight className="size-3.5 text-slate-300 group-hover:text-[#1e50ff] group-hover:translate-x-0.5 transition-all shrink-0 ml-2" />
                                             </div>
                                         );
 
@@ -746,27 +754,26 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                     <TabsContent value="infrastructure" className="space-y-6">
                         <div className="grid gap-6 md:grid-cols-2">
                             {/* BisnisWA UltraSync Engine Card */}
-                            <Card className="shadow-xs border-emerald-200/80 bg-emerald-50/20">
-                                <CardHeader>
-                                    <div className="flex items-center justify-between">
-                                        <CardTitle className="text-base font-bold flex items-center gap-2">
-                                            <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
-                                            BisnisWA UltraSync Engine
+                            <Card className="rounded-2xl border border-slate-200/80 bg-white shadow-xs p-5 space-y-4">
+                                <CardHeader className="p-0 flex flex-row items-center justify-between pb-3 border-b border-slate-100 space-y-0">
+                                    <div className="flex items-center gap-2">
+                                        <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+                                        <CardTitle className="text-base font-bold text-slate-900 tracking-tight">
+                                            BisnisWA <span className="font-editorial-italic font-normal text-slate-800">UltraSync Engine</span>
                                         </CardTitle>
-                                        <Badge variant="outline" className="border-emerald-300 bg-emerald-50 text-emerald-800 font-bold">OPERASIONAL</Badge>
                                     </div>
-                                    <CardDescription>Engine: Proprietary Native Web Protocol & Isolated Session</CardDescription>
+                                    <Badge variant="outline" className="border-blue-200 bg-blue-50 text-[#1e50ff] font-bold text-[10px]">OPERASIONAL</Badge>
                                 </CardHeader>
-                                <CardContent className="space-y-4">
-                                    <p className="text-xs text-slate-600">
+                                <CardContent className="p-0 space-y-4 pt-1">
+                                    <p className="text-xs text-slate-600 leading-relaxed">
                                         Engine tunggal berkinerja tinggi dengan protokol enkripsi Signal native. Menjamin pesan terbuka instan tanpa status "Menunggu pesan ini".
                                     </p>
-                                    <div className="grid grid-cols-2 gap-3 pt-2 text-xs">
-                                        <div className="p-3 bg-white rounded-lg border border-emerald-100">
+                                    <div className="grid grid-cols-2 gap-3 pt-1 text-xs">
+                                        <div className="p-3 bg-slate-50/70 rounded-xl border border-slate-100">
                                             <span className="text-slate-400 block text-[11px]">Enkripsi E2EE</span>
-                                            <span className="font-mono font-bold text-emerald-700 text-sm">Resmi Meta</span>
+                                            <span className="font-mono font-bold text-[#1e50ff] text-sm">Resmi Meta</span>
                                         </div>
-                                        <div className="p-3 bg-white rounded-lg border border-emerald-100">
+                                        <div className="p-3 bg-slate-50/70 rounded-xl border border-slate-100">
                                             <span className="text-slate-400 block text-[11px]">Stabilitas Sesi</span>
                                             <span className="font-mono font-bold text-slate-800 text-sm">Anti-Ban</span>
                                         </div>
@@ -775,27 +782,26 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                             </Card>
 
                             {/* Laravel Octane + FrankenPHP Card */}
-                            <Card className="shadow-xs border-blue-200/80 bg-blue-50/20">
-                                <CardHeader>
-                                    <div className="flex items-center justify-between">
-                                        <CardTitle className="text-base font-bold flex items-center gap-2">
-                                            <span className="size-2 rounded-full bg-blue-500 animate-pulse" />
-                                            Laravel Octane & FrankenPHP
+                            <Card className="rounded-2xl border border-slate-200/80 bg-white shadow-xs p-5 space-y-4">
+                                <CardHeader className="p-0 flex flex-row items-center justify-between pb-3 border-b border-slate-100 space-y-0">
+                                    <div className="flex items-center gap-2">
+                                        <span className="size-2 rounded-full bg-[#1e50ff] animate-pulse" />
+                                        <CardTitle className="text-base font-bold text-slate-900 tracking-tight">
+                                            Laravel Octane & <span className="font-editorial-italic font-normal text-slate-800">FrankenPHP</span>
                                         </CardTitle>
-                                        <Badge variant="outline" className="border-blue-300 bg-blue-50 text-blue-800 font-bold">TUNED UP</Badge>
                                     </div>
-                                    <CardDescription>Runtime: Caddy-based High Concurrency Worker Server</CardDescription>
+                                    <Badge variant="outline" className="border-blue-200 bg-blue-50 text-[#1e50ff] font-bold text-[10px]">TUNED UP</Badge>
                                 </CardHeader>
-                                <CardContent className="space-y-4">
-                                    <p className="text-xs text-slate-600">
+                                <CardContent className="p-0 space-y-4 pt-1">
+                                    <p className="text-xs text-slate-600 leading-relaxed">
                                         Aplikasi berjalan dalam persistent memory worker pool dengan waktu respon sub-milidetik, efisiensi CPU maksimal, dan auto-reload.
                                     </p>
-                                    <div className="grid grid-cols-2 gap-3 pt-2 text-xs">
-                                        <div className="p-3 bg-white rounded-lg border border-blue-100">
+                                    <div className="grid grid-cols-2 gap-3 pt-1 text-xs">
+                                        <div className="p-3 bg-slate-50/70 rounded-xl border border-slate-100">
                                             <span className="text-slate-400 block text-[11px]">Server Engine</span>
-                                            <span className="font-mono font-bold text-blue-700 text-sm">FrankenPHP Caddy</span>
+                                            <span className="font-mono font-bold text-[#1e50ff] text-sm">FrankenPHP Caddy</span>
                                         </div>
-                                        <div className="p-3 bg-white rounded-lg border border-blue-100">
+                                        <div className="p-3 bg-slate-50/70 rounded-xl border border-slate-100">
                                             <span className="text-slate-400 block text-[11px]">Worker Concurrency</span>
                                             <span className="font-mono font-bold text-slate-800 text-sm">Multi-Worker</span>
                                         </div>
@@ -805,10 +811,12 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                         </div>
 
                         {/* Connected Devices Card */}
-                        <Card className="shadow-xs">
-                            <CardHeader className="flex flex-row items-center justify-between pb-3">
+                        <Card className="rounded-2xl border border-slate-200/80 bg-white shadow-xs overflow-hidden">
+                            <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
                                 <div>
-                                    <CardTitle className="text-base font-bold">Daftar Perangkat Terhubung</CardTitle>
+                                    <CardTitle className="text-base font-bold text-slate-900">
+                                        Daftar Perangkat <span className="font-editorial-italic font-normal text-slate-800">Terhubung</span>
+                                    </CardTitle>
                                     <CardDescription className="text-xs text-slate-500">
                                         {devices?.length || 0} dari {maxAllowedDevices} slot perangkat aktif digunakan
                                     </CardDescription>
@@ -817,21 +825,21 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                     size="sm"
                                     onClick={() => setIsQrModalOpen(true)}
                                     disabled={isDeviceLimitReached}
-                                    className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5 text-xs shadow-xs"
+                                    className="bg-[#1e50ff] hover:bg-[#153ec7] text-white gap-1.5 text-xs font-bold rounded-xl h-9 px-4 shadow-md shadow-blue-500/25 cursor-pointer disabled:opacity-50"
                                 >
                                     <Plus className="size-3.5" />
                                     <span>Tautkan Perangkat Baru</span>
                                 </Button>
                             </CardHeader>
-                            <CardContent className="p-0 overflow-x-auto">
-                                <Table>
+                            <CardContent className="p-0 overflow-x-auto touch-pan-x no-scrollbar">
+                                <Table className="min-w-[560px] sm:min-w-0">
                                     <TableHeader>
-                                        <TableRow className="bg-slate-50/80">
-                                            <TableHead className="pl-6 text-xs">Nama Perangkat</TableHead>
-                                            <TableHead className="text-xs">Nomor WhatsApp</TableHead>
-                                            <TableHead className="text-xs">Engine</TableHead>
-                                            <TableHead className="text-xs">Status</TableHead>
-                                            <TableHead className="text-right pr-6 text-xs">Aksi</TableHead>
+                                        <TableRow className="bg-slate-50/80 border-slate-200/70">
+                                            <TableHead className="pl-6 text-xs font-semibold text-slate-600">Nama Perangkat</TableHead>
+                                            <TableHead className="text-xs font-semibold text-slate-600">Nomor WhatsApp</TableHead>
+                                            <TableHead className="text-xs font-semibold text-slate-600">Engine</TableHead>
+                                            <TableHead className="text-xs font-semibold text-slate-600">Status</TableHead>
+                                            <TableHead className="text-right pr-6 text-xs font-semibold text-slate-600">Aksi</TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
@@ -843,8 +851,8 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                             </TableRow>
                                         ) : (
                                             devices.map((device) => (
-                                                <TableRow key={device.id}>
-                                                    <TableCell className="pl-6 font-semibold text-slate-900 text-xs">
+                                                <TableRow key={device.id} className="hover:bg-slate-50/70 border-slate-100 transition-colors">
+                                                    <TableCell className="pl-6 font-bold text-slate-900 text-xs">
                                                         {device.name}
                                                     </TableCell>
                                                     <TableCell className="font-mono text-xs text-slate-700">
@@ -858,7 +866,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                                             variant={device.status === 'connected' ? 'outline' : 'secondary'}
                                                             className={cn(
                                                                 'text-[10px] font-bold',
-                                                                device.status === 'connected' && 'border-emerald-300 bg-emerald-50 text-emerald-700'
+                                                                device.status === 'connected' && 'border-blue-200 bg-blue-50 text-[#1e50ff]'
                                                             )}
                                                         >
                                                             {device.status}
@@ -866,7 +874,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                                     </TableCell>
                                                     <TableCell className="text-right pr-6">
                                                         <Link href="/devices">
-                                                            <Button variant="ghost" size="sm" className="h-7 text-xs text-emerald-700">
+                                                            <Button variant="ghost" size="sm" className="h-7 text-xs font-bold text-[#1e50ff] hover:text-[#153ec7] hover:bg-blue-50 rounded-lg">
                                                                 Kelola
                                                             </Button>
                                                         </Link>
@@ -882,14 +890,14 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
 
                     {/* TAB 4: LOG RIWAYAT PESAN */}
                     <TabsContent value="logs" className="space-y-6">
-                        <Card className="shadow-xs overflow-hidden">
+                        <Card className="rounded-2xl border border-slate-200/80 bg-white shadow-xs overflow-hidden">
                             <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
                                 <div>
                                     <div className="flex items-center gap-2">
                                         <CardTitle className="text-base font-bold text-slate-900 tracking-tight">
-                                            Log Pengiriman Pesan Terkini
+                                            Log Pengiriman <span className="font-editorial-italic font-normal text-slate-800">Pesan Terkini</span>
                                         </CardTitle>
-                                        <Badge variant="outline" className="border-emerald-200/80 bg-emerald-50 text-emerald-800 text-[10px] font-bold py-0 px-2">
+                                        <Badge variant="outline" className="border-blue-200 bg-blue-50 text-[#1e50ff] text-[10px] font-bold py-0 px-2">
                                             REALTIME
                                         </Badge>
                                     </div>
@@ -901,7 +909,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                     <Button
                                         variant="outline"
                                         size="sm"
-                                        className="text-xs text-slate-700 font-semibold h-8 gap-1.5 cursor-pointer"
+                                        className="text-xs text-slate-700 hover:text-[#1e50ff] hover:border-[#1e50ff] font-semibold h-8 gap-1.5 cursor-pointer rounded-lg"
                                     >
                                         <span>Buka Modul Broadcast</span>
                                         <ArrowRight className="size-3.5" />
@@ -909,8 +917,8 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                 </Link>
                             </CardHeader>
 
-                            <CardContent className="p-0 overflow-x-auto">
-                                <Table>
+                            <CardContent className="p-0 overflow-x-auto touch-pan-x no-scrollbar">
+                                <Table className="min-w-[620px] sm:min-w-0">
                                     <TableHeader>
                                         <TableRow className="bg-slate-50/80 border-slate-200/70 hover:bg-slate-50/80">
                                             <TableHead className="w-[190px] text-xs font-semibold text-slate-600 pl-6">
@@ -952,7 +960,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                                 <TableRow key={msg.id} className="hover:bg-slate-50/70 border-slate-100 transition-colors">
                                                     <TableCell className="py-3 pl-6">
                                                         <div className="flex items-center gap-2.5">
-                                                            <div className="size-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center text-xs font-semibold shrink-0 border border-emerald-100">
+                                                            <div className="size-8 rounded-lg bg-blue-50 text-[#1e50ff] flex items-center justify-center text-xs font-semibold shrink-0 border border-blue-100">
                                                                 <Send className="size-3.5" />
                                                             </div>
                                                             <div className="min-w-0">

@@ -229,12 +229,12 @@ print(response.json())`,
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-200/80">
                     <div className="space-y-1">
                         <div className="flex items-center gap-2.5 flex-wrap">
-                            <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
-                                <Code2 className="w-6 h-6 text-emerald-600 shrink-0" />
+                            <h1 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+                                <Code2 className="w-5 h-5 sm:w-6 sm:h-6 text-[#1e50ff] shrink-0" />
                                 <span>Integrasi REST API & Webhooks</span>
                             </h1>
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            <span className="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-full text-[9.5px] sm:text-[11px] font-mono font-semibold bg-blue-50 text-[#1e50ff] border border-blue-200">
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#1e50ff] animate-pulse" />
                                 SHA-256 BEARER
                             </span>
                         </div>

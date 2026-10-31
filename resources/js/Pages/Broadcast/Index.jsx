@@ -101,11 +101,11 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                 {/* 1. TOP HEADER */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <div className="flex items-center gap-2">
-                            <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                        <div className="flex flex-wrap items-center gap-2">
+                            <h1 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight">
                                 Broadcast Massal & Anti-Ban Engine
                             </h1>
-                            <Badge variant="outline" className="text-[10px] font-semibold border-emerald-200 bg-emerald-50 text-emerald-800">
+                            <Badge variant="outline" className="text-[9.5px] sm:text-[10px] px-2 py-0.5 font-semibold border-blue-200 bg-blue-50 text-[#1e50ff]">
                                 Anti-Ban Multi-Gateway
                             </Badge>
                         </div>
@@ -114,15 +114,15 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                         </p>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-2">
-                        <div className="px-3 py-1.5 rounded-md border border-slate-200 bg-white text-xs font-medium text-slate-700 shadow-2xs flex items-center gap-1.5">
-                            <Shield className="w-3.5 h-3.5 text-emerald-600" />
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                        <div className="px-2 sm:px-3 py-1 sm:py-1.5 rounded-md border border-slate-200 bg-white text-[10.5px] sm:text-xs font-medium text-slate-700 shadow-2xs flex items-center gap-1.5">
+                            <Shield className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#1e50ff]" />
                             <span>Anti-Ban Throttle Aktif</span>
                         </div>
                         {subscription && (
-                            <div className="px-3 py-1.5 rounded-md border border-emerald-200 bg-emerald-50 text-xs font-semibold text-emerald-800 shadow-2xs flex items-center gap-1.5">
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
-                                <span>Sisa Kuota: <strong className="font-mono text-emerald-950"><CountUp to={subscription.remaining_message_quota} /></strong> Pesan</span>
+                            <div className="px-2 sm:px-3 py-1 sm:py-1.5 rounded-md border border-blue-200 bg-blue-50 text-[10.5px] sm:text-xs font-semibold text-blue-900 shadow-2xs flex items-center gap-1.5">
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#1e50ff]" />
+                                <span>Sisa Kuota: <strong className="font-mono text-blue-950"><CountUp to={subscription.remaining_message_quota} /></strong> Pesan</span>
                             </div>
                         )}
                     </div>
@@ -422,8 +422,8 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                         </div>
                     </CardHeader>
 
-                    <div className="overflow-x-auto">
-                        <Table>
+                    <div className="overflow-x-auto touch-pan-x no-scrollbar">
+                        <Table className="min-w-[640px]">
                             <TableHeader>
                                 <TableRow>
                                     <TableHead className="text-xs">Nama Kampanye</TableHead>

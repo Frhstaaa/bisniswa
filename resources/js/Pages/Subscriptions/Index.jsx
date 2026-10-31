@@ -122,11 +122,11 @@ export default function SubscriptionsIndex({ workspace, subscription, plans = []
                 {/* 1. TOP HEADER */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <div className="flex items-center gap-2">
-                            <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                        <div className="flex flex-wrap items-center gap-2">
+                            <h1 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight">
                                 Paket Langganan & Saldo Kuota
                             </h1>
-                            <Badge variant="outline" className="text-[10px] font-mono font-semibold border-emerald-200 bg-emerald-50 text-emerald-800">
+                            <Badge variant="outline" className="text-[9.5px] sm:text-[10px] px-2 py-0.5 font-mono font-semibold border-blue-200 bg-blue-50 text-[#1e50ff]">
                                 GRACE PERIOD 3 HARI
                             </Badge>
                         </div>
@@ -138,7 +138,7 @@ export default function SubscriptionsIndex({ workspace, subscription, plans = []
                     <div className="flex flex-wrap items-center gap-2">
                         <Button
                             onClick={() => setIsCheckoutModalOpen(true)}
-                            className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-2xs h-8 rounded-md"
+                            className="bg-[#1e50ff] hover:bg-[#153ec7] text-white text-xs font-semibold shadow-xs h-9 rounded-lg cursor-pointer"
                         >
                             <QrCode className="w-3.5 h-3.5 mr-1 text-white" />
                             <span>Perpanjang / Upgrade Paket</span>

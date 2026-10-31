@@ -133,32 +133,32 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                 {/* 1. TOP HEADER */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <div className="flex items-center gap-2">
-                            <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                        <div className="flex flex-wrap items-center gap-2">
+                            <h1 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight">
                                 Manajemen Perangkat WhatsApp
                             </h1>
                             {isLimitReached ? (
-                                <Badge variant="amber" className="text-[10px] font-bold">
+                                <Badge variant="amber" className="text-[9.5px] sm:text-[10px] px-2 py-0.5 font-bold">
                                     KUOTA PENUH ({devices?.length || 0}/{maxAllowed})
                                 </Badge>
                             ) : (
-                                <Badge variant="emerald" className="text-[10px] font-bold">
+                                <Badge variant="emerald" className="text-[9.5px] sm:text-[10px] px-2 py-0.5 font-bold">
                                     {devices?.length || 0} / {maxAllowed} PERANGKAT
                                 </Badge>
                             )}
                         </div>
                         <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                            Tautkan nomor WhatsApp bisnis Anda menggunakan engine resmi <strong className="text-emerald-700">BisnisWA UltraSync</strong> (Enterprise Native Web).
+                            Tautkan nomor WhatsApp bisnis Anda menggunakan engine resmi <strong className="text-[#1e50ff]">BisnisWA UltraSync</strong> (Enterprise Native Web).
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-2.5">
+                    <div className="flex flex-wrap items-center gap-2.5">
                         {isLimitReached ? (
                             <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => setIsQrModalOpen(true)}
-                                className="border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-900 text-xs font-semibold h-8 rounded-lg shadow-2xs gap-1.5 transition-colors"
+                                className="border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-900 text-xs font-semibold h-9 rounded-lg shadow-2xs gap-1.5 transition-colors cursor-pointer"
                             >
                                 <Sparkles className="w-3.5 h-3.5 text-amber-600" />
                                 <span>Batas Tercapai ({devices?.length || 0}/{maxAllowed}) — Upgrade</span>
@@ -168,7 +168,7 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                                 variant="default"
                                 size="sm"
                                 onClick={() => setIsQrModalOpen(true)}
-                                className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-2xs h-8 rounded-lg"
+                                className="bg-[#1e50ff] hover:bg-[#153ec7] text-white text-xs font-semibold shadow-xs h-9 rounded-lg cursor-pointer"
                             >
                                 <Plus className="w-3.5 h-3.5 mr-1 text-white" />
                                 <span>Pindai QR Perangkat Baru</span>

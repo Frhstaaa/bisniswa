@@ -75,11 +75,11 @@ export default function AdminDashboard({ metrics, engineHealth, recentPayments, 
                     <div className="space-y-1">
                         <div className="flex items-center gap-2.5 flex-wrap">
                             <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
-                                <LayoutDashboard className="w-6 h-6 text-emerald-600 shrink-0" />
-                                <span>Ikhtisar Eksekutif Multi-Tenant SaaS</span>
+                                <LayoutDashboard className="size-6 text-[#1e50ff] shrink-0" />
+                                <span>Ikhtisar Eksekutif <span className="font-editorial-italic font-normal text-slate-800">Multi-Tenant SaaS</span></span>
                             </h1>
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            <span className="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-full text-[9.5px] sm:text-[11px] font-mono font-semibold bg-blue-50 text-[#1e50ff] border border-blue-200">
+                                <span className="size-1.5 rounded-full bg-[#1e50ff] animate-pulse" />
                                 ROOT SAAS ADMIN
                             </span>
                         </div>
@@ -93,9 +93,9 @@ export default function AdminDashboard({ metrics, engineHealth, recentPayments, 
                             <Button
                                 variant="default"
                                 size="sm"
-                                className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs hover:shadow-sm h-9 px-4 rounded-lg cursor-pointer transition-all flex items-center gap-1.5"
+                                className="bg-[#1e50ff] hover:bg-[#153ec7] text-white text-xs font-semibold shadow-xs hover:shadow-sm h-9 px-4 rounded-xl cursor-pointer transition-all flex items-center gap-1.5"
                             >
-                                <Receipt className="w-3.5 h-3.5" />
+                                <Receipt className="size-3.5" />
                                 <span>Verifikasi Invoice ({metrics.pending_payments_count})</span>
                             </Button>
                         </Link>
@@ -103,9 +103,9 @@ export default function AdminDashboard({ metrics, engineHealth, recentPayments, 
                             <Button
                                 variant="outline"
                                 size="sm"
-                                className="h-9 px-3.5 rounded-lg border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-2xs transition-all flex items-center gap-1.5"
+                                className="h-9 px-3.5 rounded-xl border-slate-200 bg-white hover:bg-slate-50 text-slate-700 hover:text-[#1e50ff] hover:border-[#1e50ff] text-xs font-semibold shadow-2xs transition-all flex items-center gap-1.5"
                             >
-                                <Settings className="w-3.5 h-3.5 text-slate-500" />
+                                <Settings className="size-3.5 text-slate-500" />
                                 <span>Setting Produksi</span>
                             </Button>
                         </Link>
@@ -121,27 +121,27 @@ export default function AdminDashboard({ metrics, engineHealth, recentPayments, 
                         transition={{ duration: 0.18, delay: 0.02 }}
                         whileHover={{ y: -3, transition: { duration: 0.12 } }}
                     >
-                        <Card className="h-full border-slate-200/90 shadow-xs hover:shadow-md hover:border-slate-300 transition-all rounded-xl">
+                        <Card className="h-full border-slate-200/90 shadow-xs hover:shadow-md hover:border-blue-300 transition-all rounded-2xl">
                             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-4">
                                 <CardTitle className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
                                     Total Pendapatan Lunas
                                 </CardTitle>
-                                <div className="h-7 w-7 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200/60 flex items-center justify-center shrink-0">
-                                    <CreditCard className="h-3.5 w-3.5" />
+                                <div className="size-7 rounded-lg bg-blue-50 text-[#1e50ff] border border-blue-200/60 flex items-center justify-center shrink-0">
+                                    <CreditCard className="size-3.5" />
                                 </div>
                             </CardHeader>
                             <CardContent className="space-y-2 pt-0 px-4 pb-4">
-                                <div className="text-2xl font-black text-slate-900 tracking-tight">
+                                <div className="text-2xl font-black text-slate-900 tracking-tight font-mono">
                                     {formatRupiah(metrics.total_revenue)}
                                 </div>
                                 <div className="flex items-center justify-between text-xs">
-                                    <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                                        <TrendingUp className="w-3 h-3 text-emerald-600" />
+                                    <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#1e50ff] bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+                                        <TrendingUp className="size-3 text-[#1e50ff]" />
                                         <span>+24.8%</span>
                                     </span>
                                     <span className="text-[11px] text-slate-500 font-medium">Bulan Ini</span>
                                 </div>
-                                <Progress value={85} indicatorClassName="bg-emerald-600" className="h-1.5 mt-2" />
+                                <Progress value={85} indicatorClassName="bg-[#1e50ff]" className="h-1.5 mt-2" />
                             </CardContent>
                         </Card>
                     </motion.div>
@@ -153,26 +153,26 @@ export default function AdminDashboard({ metrics, engineHealth, recentPayments, 
                         transition={{ duration: 0.18, delay: 0.06 }}
                         whileHover={{ y: -3, transition: { duration: 0.12 } }}
                     >
-                        <Card className="h-full border-slate-200/90 shadow-xs hover:shadow-md hover:border-slate-300 transition-all rounded-xl">
+                        <Card className="h-full border-slate-200/90 shadow-xs hover:shadow-md hover:border-blue-300 transition-all rounded-2xl">
                             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-4">
                                 <CardTitle className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
                                     Klien Workspace Aktif
                                 </CardTitle>
-                                <div className="h-7 w-7 rounded-lg bg-sky-50 text-sky-700 border border-sky-200/60 flex items-center justify-center shrink-0">
-                                    <Building2 className="h-3.5 w-3.5" />
+                                <div className="size-7 rounded-lg bg-blue-50 text-[#1e50ff] border border-blue-200/60 flex items-center justify-center shrink-0">
+                                    <Building2 className="size-3.5" />
                                 </div>
                             </CardHeader>
                             <CardContent className="space-y-2 pt-0 px-4 pb-4">
-                                <div className="text-2xl font-black text-slate-900 tracking-tight">
-                                    {metrics.active_workspaces} <span className="text-sm font-normal text-slate-500">/ {metrics.total_workspaces} Total</span>
+                                <div className="text-2xl font-black text-slate-900 tracking-tight font-mono">
+                                    {metrics.active_workspaces} <span className="text-sm font-normal text-slate-500 font-sans">/ {metrics.total_workspaces} Total</span>
                                 </div>
                                 <div className="flex items-center justify-between text-xs">
-                                    <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                                    <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#1e50ff] bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
                                         <span>100% Aktif</span>
                                     </span>
                                     <span className="text-[11px] text-slate-500 font-medium">0 suspended</span>
                                 </div>
-                                <Progress value={(metrics.active_workspaces / (metrics.total_workspaces || 1)) * 100} indicatorClassName="bg-emerald-600" className="h-1.5 mt-2" />
+                                <Progress value={(metrics.active_workspaces / (metrics.total_workspaces || 1)) * 100} indicatorClassName="bg-[#1e50ff]" className="h-1.5 mt-2" />
                             </CardContent>
                         </Card>
                     </motion.div>
@@ -184,26 +184,26 @@ export default function AdminDashboard({ metrics, engineHealth, recentPayments, 
                         transition={{ duration: 0.18, delay: 0.1 }}
                         whileHover={{ y: -3, transition: { duration: 0.12 } }}
                     >
-                        <Card className="h-full border-slate-200/90 shadow-xs hover:shadow-md hover:border-slate-300 transition-all rounded-xl">
+                        <Card className="h-full border-slate-200/90 shadow-xs hover:shadow-md hover:border-blue-300 transition-all rounded-2xl">
                             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-4">
                                 <CardTitle className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
                                     WhatsApp Nodes Online
                                 </CardTitle>
-                                <div className="h-7 w-7 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200/60 flex items-center justify-center shrink-0">
-                                    <Smartphone className="h-3.5 w-3.5" />
+                                <div className="size-7 rounded-lg bg-blue-50 text-[#1e50ff] border border-blue-200/60 flex items-center justify-center shrink-0">
+                                    <Smartphone className="size-3.5" />
                                 </div>
                             </CardHeader>
                             <CardContent className="space-y-2 pt-0 px-4 pb-4">
-                                <div className="text-2xl font-black text-slate-900 tracking-tight">
-                                    {metrics.online_devices} <span className="text-sm font-normal text-slate-500">/ {metrics.total_devices} Unit</span>
+                                <div className="text-2xl font-black text-slate-900 tracking-tight font-mono">
+                                    {metrics.online_devices} <span className="text-sm font-normal text-slate-500 font-sans">/ {metrics.total_devices} Unit</span>
                                 </div>
                                 <div className="flex items-center justify-between text-xs">
-                                    <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                                    <span className="text-[11px] font-semibold text-[#1e50ff] bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
                                         Dual-Server Ready
                                     </span>
                                     <span className="text-[11px] text-slate-500 font-medium">Cluster Healthy</span>
                                 </div>
-                                <Progress value={(metrics.online_devices / (metrics.total_devices || 1)) * 100} indicatorClassName="bg-emerald-600" className="h-1.5 mt-2" />
+                                <Progress value={(metrics.online_devices / (metrics.total_devices || 1)) * 100} indicatorClassName="bg-[#1e50ff]" className="h-1.5 mt-2" />
                             </CardContent>
                         </Card>
                     </motion.div>
@@ -215,28 +215,28 @@ export default function AdminDashboard({ metrics, engineHealth, recentPayments, 
                         transition={{ duration: 0.18, delay: 0.14 }}
                         whileHover={{ y: -3, transition: { duration: 0.12 } }}
                     >
-                        <Card className="h-full border-slate-200/90 shadow-xs hover:shadow-md hover:border-slate-300 transition-all rounded-xl">
+                        <Card className="h-full border-slate-200/90 shadow-xs hover:shadow-md hover:border-blue-300 transition-all rounded-2xl">
                             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-4">
                                 <CardTitle className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
                                     Pesan Terkirim Hari Ini
                                 </CardTitle>
-                                <div className="h-7 w-7 rounded-lg bg-purple-50 text-purple-700 border border-purple-200/60 flex items-center justify-center shrink-0">
-                                    <Send className="h-3.5 w-3.5" />
+                                <div className="size-7 rounded-lg bg-blue-50 text-[#1e50ff] border border-blue-200/60 flex items-center justify-center shrink-0">
+                                    <Send className="size-3.5" />
                                 </div>
                             </CardHeader>
                             <CardContent className="space-y-2 pt-0 px-4 pb-4">
-                                <div className="text-2xl font-black text-slate-900 tracking-tight">
-                                    {metrics.messages_today} <span className="text-sm font-normal text-slate-500">Pesan</span>
+                                <div className="text-2xl font-black text-slate-900 tracking-tight font-mono">
+                                    {metrics.messages_today} <span className="text-sm font-normal text-slate-500 font-sans">Pesan</span>
                                 </div>
                                 <div className="flex items-center justify-between text-xs">
                                     <span className="text-[11px] text-slate-500">
-                                        Total Kumulatif: <strong>{metrics.messages_total}</strong>
+                                        Total Kumulatif: <strong className="font-mono">{metrics.messages_total}</strong>
                                     </span>
-                                    <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                                    <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-bold bg-blue-50 text-[#1e50ff] border border-blue-200">
                                         LIVE
                                     </span>
                                 </div>
-                                <Progress value={95} indicatorClassName="bg-emerald-600" className="h-1.5 mt-2" />
+                                <Progress value={95} indicatorClassName="bg-[#1e50ff]" className="h-1.5 mt-2" />
                             </CardContent>
                         </Card>
                     </motion.div>
@@ -247,11 +247,11 @@ export default function AdminDashboard({ metrics, engineHealth, recentPayments, 
                     {/* LEFT COLUMN: REVENUE CHART & RECENT ORDERS TABLE (8 cols) */}
                     <div className="lg:col-span-8 space-y-6">
                         {/* CHART: Revenue & Traffic Performance */}
-                        <Card className="border-slate-200/90 shadow-xs overflow-hidden rounded-xl">
+                        <Card className="border-slate-200/90 shadow-xs overflow-hidden rounded-2xl">
                             <CardHeader className="flex flex-row items-center justify-between pb-3 pt-4 px-5 border-b border-slate-100 bg-slate-50/50">
                                 <div>
                                     <CardTitle className="text-sm font-bold text-slate-900">
-                                        Performa Penerimaan Pembayaran SaaS (7 Hari Terakhir)
+                                        Performa Penerimaan <span className="font-editorial-italic font-normal text-slate-800">Pembayaran SaaS</span> (7 Hari Terakhir)
                                     </CardTitle>
                                     <CardDescription className="text-xs text-slate-500 mt-0.5">
                                         Estimasi omzet harian langganan Starter Lite & Enterprise Pro
@@ -261,14 +261,14 @@ export default function AdminDashboard({ metrics, engineHealth, recentPayments, 
                                     <button
                                         type="button"
                                         onClick={() => setTimeframe('weekly')}
-                                        className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${timeframe === 'weekly' ? 'bg-white text-emerald-700 shadow-xs font-bold' : 'text-slate-500 hover:text-slate-900'}`}
+                                        className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${timeframe === 'weekly' ? 'bg-white text-[#1e50ff] shadow-xs font-bold' : 'text-slate-500 hover:text-slate-900'}`}
                                     >
                                         Mingguan
                                     </button>
                                     <button
                                         type="button"
                                         onClick={() => setTimeframe('monthly')}
-                                        className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${timeframe === 'monthly' ? 'bg-white text-emerald-700 shadow-xs font-bold' : 'text-slate-500 hover:text-slate-900'}`}
+                                        className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${timeframe === 'monthly' ? 'bg-white text-[#1e50ff] shadow-xs font-bold' : 'text-slate-500 hover:text-slate-900'}`}
                                     >
                                         Bulanan
                                     </button>
@@ -290,16 +290,16 @@ export default function AdminDashboard({ metrics, engineHealth, recentPayments, 
                                                     style={{ height: item.height }}
                                                     className={`w-full rounded-t-lg transition-all duration-500 ${
                                                         item.peak
-                                                            ? 'bg-gradient-to-t from-emerald-700 to-emerald-500 shadow-xs'
+                                                            ? 'bg-gradient-to-t from-blue-700 to-[#1e50ff] shadow-xs'
                                                             : item.current
-                                                            ? 'bg-gradient-to-t from-emerald-400 to-emerald-600'
-                                                            : 'bg-emerald-200 group-hover:bg-emerald-300'
+                                                            ? 'bg-gradient-to-t from-blue-400 to-[#1e50ff]'
+                                                            : 'bg-blue-200 group-hover:bg-blue-300'
                                                     }`}
                                                 />
                                             </div>
 
                                             {/* Label */}
-                                            <span className={`text-[11px] font-bold ${item.current ? 'text-emerald-700' : 'text-slate-500'}`}>
+                                            <span className={`text-[11px] font-bold ${item.current ? 'text-[#1e50ff]' : 'text-slate-500'}`}>
                                                 {item.day}
                                             </span>
                                         </div>
@@ -310,41 +310,41 @@ export default function AdminDashboard({ metrics, engineHealth, recentPayments, 
                                 <div className="flex flex-wrap items-center justify-between text-xs text-slate-500 pt-1">
                                     <div className="flex items-center gap-4">
                                         <div className="flex items-center gap-1.5">
-                                            <span className="w-3 h-3 rounded bg-emerald-600" />
+                                            <span className="size-3 rounded bg-[#1e50ff]" />
                                             <span>Paket Enterprise Pro</span>
                                         </div>
                                         <div className="flex items-center gap-1.5">
-                                            <span className="w-3 h-3 rounded bg-emerald-300" />
+                                            <span className="size-3 rounded bg-blue-300" />
                                             <span>Paket Starter Lite</span>
                                         </div>
                                     </div>
                                     <div className="font-semibold text-slate-700">
-                                        Total Penerimaan: <strong className="text-slate-900">{formatRupiah(metrics.total_revenue)}</strong>
+                                        Total Penerimaan: <strong className="text-slate-900 font-mono">{formatRupiah(metrics.total_revenue)}</strong>
                                     </div>
                                 </div>
                             </CardContent>
                         </Card>
 
                         {/* RECENT ORDERS / PAYMENTS DATA TABLE */}
-                        <Card className="border-slate-200/90 shadow-xs overflow-hidden rounded-xl">
+                        <Card className="border-slate-200/90 shadow-xs overflow-hidden rounded-2xl">
                             <CardHeader className="flex flex-row items-center justify-between pb-3 pt-4 px-5 border-b border-slate-100 bg-slate-50/50">
                                 <div>
                                     <CardTitle className="text-sm font-bold text-slate-900">
-                                        Transaksi & Tagihan Invoice Masuk
+                                        Transaksi & Tagihan <span className="font-editorial-italic font-normal text-slate-800">Invoice Masuk</span>
                                     </CardTitle>
                                     <CardDescription className="text-xs text-slate-500 mt-0.5">
                                         Daftar invoice langganan yang perlu diverifikasi atau telah lunas
                                     </CardDescription>
                                 </div>
                                 <Link href="/admin/payments">
-                                    <Button variant="ghost" size="sm" className="text-xs text-emerald-700 hover:text-emerald-800 font-semibold cursor-pointer">
+                                    <Button variant="ghost" size="sm" className="text-xs text-[#1e50ff] hover:text-[#153ec7] hover:bg-blue-50 font-bold cursor-pointer rounded-lg">
                                         <span>Kelola Seluruh Tagihan</span>
-                                        <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                                        <ArrowRight className="size-3.5 ml-1" />
                                     </Button>
                                 </Link>
                             </CardHeader>
-                            <div className="overflow-x-auto">
-                                <Table className="w-full">
+                            <div className="overflow-x-auto touch-pan-x no-scrollbar">
+                                <Table className="w-full min-w-[560px]">
                                     <TableHeader className="bg-slate-50/80">
                                         <TableRow className="border-b border-slate-200/80">
                                             <TableHead className="text-xs font-bold text-slate-700 min-w-[140px]">Invoice & Tanggal</TableHead>
@@ -382,19 +382,19 @@ export default function AdminDashboard({ metrics, engineHealth, recentPayments, 
                                                         </div>
                                                     </TableCell>
 
-                                                    <TableCell className="py-3 font-bold text-xs text-slate-900 whitespace-nowrap">
+                                                    <TableCell className="py-3 font-bold text-xs text-slate-900 whitespace-nowrap font-mono">
                                                         {formatRupiah(p.amount)}
                                                     </TableCell>
 
                                                     <TableCell className="py-3 whitespace-nowrap">
                                                         {p.status === 'paid' ? (
-                                                            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-emerald-200 bg-emerald-50 text-emerald-800 text-[10px] font-bold">
-                                                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
+                                                            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-blue-200 bg-blue-50 text-[#1e50ff] text-[10px] font-bold">
+                                                                <span className="size-1.5 rounded-full bg-[#1e50ff]" />
                                                                 LUNAS
                                                             </span>
                                                         ) : (
                                                             <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-amber-200 bg-amber-50 text-amber-800 text-[10px] font-bold">
-                                                                <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                                                                <span className="size-1.5 rounded-full bg-amber-500" />
                                                                 PENDING
                                                             </span>
                                                         )}
@@ -405,13 +405,13 @@ export default function AdminDashboard({ metrics, engineHealth, recentPayments, 
                                                             <Button
                                                                 size="sm"
                                                                 onClick={() => handleQuickApprove(p.id, p.invoice_number)}
-                                                                className="h-7 text-xs px-2.5 font-semibold bg-emerald-600 hover:bg-emerald-700 text-white rounded-md shadow-2xs cursor-pointer"
+                                                                className="h-7 text-xs px-2.5 font-bold bg-[#1e50ff] hover:bg-[#153ec7] text-white rounded-lg shadow-2xs cursor-pointer"
                                                             >
                                                                 Verifikasi
                                                             </Button>
                                                         ) : (
                                                             <Link href="/admin/payments">
-                                                                <Button variant="outline" size="sm" className="h-7 text-xs px-2.5 rounded-md border-slate-200 hover:bg-slate-50 cursor-pointer">
+                                                                <Button variant="outline" size="sm" className="h-7 text-xs px-2.5 rounded-lg border-slate-200 hover:bg-slate-50 cursor-pointer font-semibold">
                                                                     Detail
                                                                 </Button>
                                                             </Link>
@@ -429,14 +429,14 @@ export default function AdminDashboard({ metrics, engineHealth, recentPayments, 
                     {/* RIGHT COLUMN: ENGINE HEALTH & CLIENTS (4 cols) */}
                     <div className="lg:col-span-4 space-y-6">
                         {/* WIDGET 1: Dual-Server WhatsApp Microservices */}
-                        <Card className="border-slate-200/90 shadow-xs overflow-hidden rounded-xl">
+                        <Card className="border-slate-200/90 shadow-xs overflow-hidden rounded-2xl">
                             <CardHeader className="pb-3 pt-4 px-5 border-b border-slate-100 bg-slate-50/50">
                                 <div className="flex items-center justify-between">
                                     <CardTitle className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                                        <Server className="w-4 h-4 text-emerald-600" />
+                                        <Server className="size-4 text-[#1e50ff]" />
                                         <span>Status Server WhatsApp Cluster</span>
                                     </CardTitle>
-                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-[#1e50ff] border border-blue-200">
                                         ONLINE
                                     </span>
                                 </div>
@@ -445,35 +445,35 @@ export default function AdminDashboard({ metrics, engineHealth, recentPayments, 
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-3 p-5 text-xs">
-                                <div className="p-3.5 rounded-xl border border-emerald-200/80 bg-emerald-50/50 space-y-1.5">
+                                <div className="p-3.5 rounded-xl border border-blue-200/80 bg-blue-50/30 space-y-1.5">
                                     <div className="flex items-center justify-between">
                                         <span className="font-bold text-slate-900">BisnisWA UltraSync Engine</span>
-                                        <span className="font-mono text-[11px] text-emerald-800 font-bold">
+                                        <span className="font-mono text-[11px] text-[#1e50ff] font-bold">
                                             {engineHealth.wwebjs?.active_instances ?? 0} instance aktif
                                         </span>
                                     </div>
                                     <p className="text-[10px] text-slate-500">Official Enterprise Native Protocol (Zero Delay & Anti-Ban)</p>
-                                    <div className="flex items-center justify-between text-[11px] pt-1.5 border-t border-emerald-200/60 text-slate-600">
+                                    <div className="flex items-center justify-between text-[11px] pt-1.5 border-t border-blue-100 text-slate-600">
                                         <span>Estimasi Total RAM:</span>
-                                        <span className="font-mono font-bold text-emerald-700">~{engineHealth.wwebjs?.estimated_ram_mb ?? 0} MB</span>
+                                        <span className="font-mono font-bold text-[#1e50ff]">~{engineHealth.wwebjs?.estimated_ram_mb ?? 0} MB</span>
                                     </div>
                                 </div>
                             </CardContent>
                         </Card>
 
                         {/* WIDGET 2: Recent Clients Signup List */}
-                        <Card className="border-slate-200/90 shadow-xs overflow-hidden rounded-xl">
+                        <Card className="border-slate-200/90 shadow-xs overflow-hidden rounded-2xl">
                             <CardHeader className="pb-3 pt-4 px-5 border-b border-slate-100 bg-slate-50/50 flex flex-row items-center justify-between">
                                 <div>
                                     <CardTitle className="text-sm font-bold text-slate-900">
-                                        Klien Baru Terdaftar
+                                        Klien Baru <span className="font-editorial-italic font-normal text-slate-800">Terdaftar</span>
                                     </CardTitle>
                                     <CardDescription className="text-xs text-slate-500 mt-0.5">
                                         Workspace tenant terbaru
                                     </CardDescription>
                                 </div>
                                 <Link href="/admin/clients">
-                                    <Button variant="ghost" size="sm" className="text-xs text-emerald-700 hover:text-emerald-800 font-semibold cursor-pointer">
+                                    <Button variant="ghost" size="sm" className="text-xs text-[#1e50ff] hover:text-[#153ec7] hover:bg-blue-50 font-bold cursor-pointer rounded-lg">
                                         <span>Lihat Semua</span>
                                     </Button>
                                 </Link>
@@ -482,7 +482,7 @@ export default function AdminDashboard({ metrics, engineHealth, recentPayments, 
                                 {recentClients.map((client) => (
                                     <div key={client.id} className="flex items-center justify-between p-3 rounded-xl border border-slate-200/80 bg-white hover:bg-slate-50 transition-colors">
                                         <div className="flex items-center gap-2.5 overflow-hidden">
-                                            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200/60 flex items-center justify-center font-bold text-xs shrink-0">
+                                            <div className="size-8 rounded-lg bg-blue-50 text-[#1e50ff] border border-blue-200/60 flex items-center justify-center font-bold text-xs shrink-0">
                                                 {client.name.slice(0, 2).toUpperCase()}
                                             </div>
                                             <div className="overflow-hidden">
@@ -496,7 +496,7 @@ export default function AdminDashboard({ metrics, engineHealth, recentPayments, 
                                         </div>
 
                                         <Link href={`/admin/clients/${client.id}`}>
-                                            <Button variant="outline" size="sm" className="h-7 text-xs px-2.5 rounded-md border-slate-200 hover:bg-slate-50 cursor-pointer">
+                                            <Button variant="outline" size="sm" className="h-7 text-xs px-2.5 rounded-lg border-slate-200 hover:bg-slate-50 cursor-pointer font-semibold">
                                                 Detail
                                             </Button>
                                         </Link>

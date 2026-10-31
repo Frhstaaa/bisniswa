@@ -160,73 +160,52 @@ export default function DualEngine({ plans = [], stats = {} }) {
         <PublicLayout title="Teknologi BisnisWA UltraSync Engine & FrankenPHP" plans={safePlans} activeMenu="dual-engine">
             <div className="space-y-16 lg:space-y-24">
                 {/* ================= HERO HEADER ================= */}
-                <section className="relative overflow-hidden bg-gradient-to-b from-emerald-950 via-emerald-900 to-emerald-950 text-white pt-36 sm:pt-44 lg:pt-48 pb-24 sm:pb-32 px-4 sm:px-6 lg:px-10">
-                    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                        <motion.div
-                            animate={{
-                                scale: [1, 1.2, 1],
-                                opacity: [0.12, 0.25, 0.12],
-                                x: [0, 20, 0],
-                                y: [0, -15, 0],
-                            }}
-                            transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-                            className="absolute -top-32 left-1/4 w-96 h-96 rounded-full bg-emerald-500/25 blur-3xl"
-                        />
-                        <motion.div
-                            animate={{
-                                scale: [1, 1.25, 1],
-                                opacity: [0.08, 0.2, 0.08],
-                                x: [0, -25, 0],
-                            }}
-                            transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-                            className="absolute top-1/3 -right-20 w-96 h-96 rounded-full bg-amber-400/15 blur-3xl"
-                        />
-                    </div>
-
+                <section className="relative overflow-hidden bg-white bg-grid-pattern text-slate-900 pt-32 sm:pt-40 pb-20 sm:pb-28 px-4 sm:px-6 lg:px-10 border-b border-slate-100">
                     <motion.div
                         variants={heroContainerVariants}
                         initial="hidden"
                         animate="visible"
-                        className="relative max-w-5xl mx-auto text-center space-y-4"
+                        className="relative max-w-5xl mx-auto text-center space-y-5"
                     >
                         <motion.div variants={heroItemVariants} className="inline-block gsap-hero-item">
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-bold shadow-xs">
-                                <Cpu className="w-3.5 h-3.5 text-amber-300" />
-                                <span>ARSITEKTUR SINGLE-ENGINE BISNISWA ULTRASYNC RESMI</span>
+                            <div className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full border-[1.5px] border-[#1e50ff] bg-white text-[#1e50ff] text-[10px] sm:text-xs font-bold sm:font-black uppercase tracking-normal sm:tracking-widest shadow-xs">
+                                <Cpu className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#1e50ff] shrink-0" />
+                                <span className="hidden sm:inline">ARSITEKTUR SINGLE-ENGINE BISNISWA ULTRASYNC RESMI</span>
+                                <span className="sm:hidden">ENGINE BISNISWA ULTRASYNC</span>
                             </div>
                         </motion.div>
 
                         <motion.h1
                             variants={heroItemVariants}
-                            className="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight gsap-hero-item"
+                            className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight gsap-hero-item"
                         >
-                            UltraSync Engine: <span className="text-amber-300">Anti "Menunggu Pesan"</span> & <span className="text-emerald-400">Sesi Stabil</span>
+                            <span className="font-editorial-italic font-normal tracking-normal text-slate-900">Arsitektur Tangguh</span> UltraSync Engine & <span className="text-[#1e50ff]">FrankenPHP</span>
                         </motion.h1>
 
                         <motion.p
                             variants={heroItemVariants}
-                            className="text-slate-200 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed gsap-hero-item"
+                            className="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed gsap-hero-item"
                         >
                             Enkripsi Signal Protocol resmi Meta dijalankan via sandbox protokol enterprise terisolasi. Pesan terbuka seketika di ponsel penerima tanpa kendala desinkronisasi, didukung akselerasi performa tinggi dari Laravel Octane dan FrankenPHP.
                         </motion.p>
 
                         <motion.div variants={heroItemVariants} className="pt-4 flex flex-wrap items-center justify-center gap-3 gsap-hero-item">
                             <motion.button
-                                whileHover={{ scale: 1.03, y: -2 }}
+                                whileHover={{ scale: 1.03 }}
                                 whileTap={{ scale: 0.98 }}
                                 type="button"
                                 onClick={() => openRegisterModal()}
-                                className="btn-press inline-flex h-11 items-center gap-2 rounded-xl bg-amber-400 hover:bg-amber-300 px-6 text-sm font-bold text-slate-950 shadow-md transition-all cursor-pointer"
+                                className="btn-royal-pill inline-flex h-11 items-center gap-2 rounded-full bg-[#1e50ff] hover:bg-[#153ec7] px-8 text-xs font-extrabold uppercase tracking-wider text-white shadow-[0_12px_28px_-4px_rgba(30,80,255,0.45)] transition-all cursor-pointer"
                             >
-                                <Zap className="w-4 h-4 fill-slate-950" />
+                                <Zap className="w-4 h-4 fill-white" />
                                 <span>Coba UltraSync Engine Sekarang</span>
                             </motion.button>
                             <Link
                                 href="/cara-pakai"
                                 prefetch
-                                className="inline-flex h-11 items-center gap-2 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 px-5 text-sm font-bold text-white backdrop-blur-xs transition-all"
+                                className="inline-flex h-11 items-center gap-2 rounded-full border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50 px-6 text-xs font-bold text-slate-800 shadow-2xs transition-all"
                             >
-                                <span>Lihat Panduan Integrasi &rarr;</span>
+                                <span>Panduan Integrasi Cepat &rarr;</span>
                             </Link>
                         </motion.div>
                     </motion.div>
@@ -245,7 +224,7 @@ export default function DualEngine({ plans = [], stats = {} }) {
                             className="gsap-card gsap-reveal-left"
                         >
                             <Card className="h-full p-7 rounded-3xl border-2 border-emerald-500/40 bg-white shadow-xl space-y-5 relative overflow-hidden transition-all duration-300 hover:shadow-2xl hover:border-emerald-500">
-                                <div className="absolute top-0 right-0 px-4 py-1.5 bg-emerald-600 text-white rounded-bl-2xl text-[10px] font-black uppercase tracking-wider">
+                                <div className="absolute top-0 right-0 px-4 py-1.5 bg-[#1e50ff] text-white rounded-bl-2xl text-[10px] font-black uppercase tracking-wider">
                                     NATIVE E2EE & ANTI-BAN
                                 </div>
                                 <div className="flex items-center gap-3">
@@ -263,11 +242,11 @@ export default function DualEngine({ plans = [], stats = {} }) {
                                 <div className="space-y-2.5 pt-2 border-t border-slate-100 text-xs">
                                     <div className="flex items-center justify-between py-1 border-b border-slate-50">
                                         <span className="text-slate-500">Enkripsi E2EE:</span>
-                                        <strong className="font-semibold text-emerald-700">Resmi Meta WhatsApp</strong>
+                                        <strong className="font-semibold text-[#1e50ff]">Resmi Meta WhatsApp</strong>
                                     </div>
                                     <div className="flex items-center justify-between py-1 border-b border-slate-50">
                                         <span className="text-slate-500">Isu Menunggu Pesan:</span>
-                                        <strong className="font-bold text-emerald-700">0% (Bebas Delay Sinyal)</strong>
+                                        <strong className="font-bold text-[#1e50ff]">0% (Bebas Delay Sinyal)</strong>
                                     </div>
                                     <div className="flex items-center justify-between py-1 border-b border-slate-50">
                                         <span className="text-slate-500">Live Chat 2 Arah:</span>
@@ -338,7 +317,7 @@ export default function DualEngine({ plans = [], stats = {} }) {
                     className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 gsap-reveal"
                 >
                     <div className="text-center space-y-2 mb-10">
-                        <Badge variant="emerald" className="text-[10px] font-bold">PERBANDINGAN ARSITEKTUR</Badge>
+                        <span className="px-3 py-1 rounded-full text-[10px] uppercase font-extrabold tracking-wider bg-blue-50 text-[#1e50ff] border border-blue-200" className="text-[10px] font-bold">PERBANDINGAN ARSITEKTUR</span>
                         <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                             Mengapa BisnisWA UltraSync Menjadi Standar Utama?
                         </h2>
@@ -353,7 +332,7 @@ export default function DualEngine({ plans = [], stats = {} }) {
                                 <thead className="bg-slate-50 border-b border-slate-200 text-slate-700 uppercase text-[10px] tracking-wider">
                                     <tr>
                                         <th className="py-3.5 px-5 font-bold">Parameter / Fitur</th>
-                                        <th className="py-3.5 px-5 font-bold text-emerald-800 bg-emerald-50/50">BisnisWA UltraSync (Resmi)</th>
+                                        <th className="py-3.5 px-5 font-bold text-emerald-800 bg-blue-50/50">BisnisWA UltraSync (Resmi)</th>
                                         <th className="py-3.5 px-5 font-bold text-slate-600 bg-slate-50">Library Socket Tidak Resmi</th>
                                     </tr>
                                 </thead>
@@ -363,7 +342,7 @@ export default function DualEngine({ plans = [], stats = {} }) {
                                             <td className="py-3.5 px-5 font-bold text-slate-900">
                                                 {row.feature}
                                             </td>
-                                            <td className="py-3.5 px-5 text-emerald-900 bg-emerald-50/20 font-semibold">
+                                            <td className="py-3.5 px-5 text-emerald-900 bg-blue-50/20 font-semibold">
                                                 ✓ {row.wwebjs}
                                             </td>
                                             <td className="py-3.5 px-5 text-slate-500 bg-slate-50/30">
@@ -398,7 +377,7 @@ export default function DualEngine({ plans = [], stats = {} }) {
                             </div>
                             <Button
                                 onClick={randomizeSpintax}
-                                className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold gap-2 rounded-xl h-10 px-4 shrink-0 shadow-md cursor-pointer"
+                                className="bg-emerald-600 hover:bg-blue-500 text-white text-xs font-bold gap-2 rounded-xl h-10 px-4 shrink-0 shadow-md cursor-pointer"
                             >
                                 <RefreshCw className="w-4 h-4 text-emerald-200" />
                                 <span>Acak Variasi Pesan</span>
@@ -418,7 +397,7 @@ export default function DualEngine({ plans = [], stats = {} }) {
                 {/* ================= 6 PILARS ANTI-BAN ================= */}
                 <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
                     <div className="text-center space-y-2">
-                        <Badge variant="emerald" className="text-[10px] font-bold">PROTEKSI ANTI-BAN</Badge>
+                        <span className="px-3 py-1 rounded-full text-[10px] uppercase font-extrabold tracking-wider bg-blue-50 text-[#1e50ff] border border-blue-200" className="text-[10px] font-bold">PROTEKSI ANTI-BAN</span>
                         <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                             6 Pilar Perlindungan Nomor Bisnis Anda
                         </h2>
@@ -440,8 +419,8 @@ export default function DualEngine({ plans = [], stats = {} }) {
                                     whileHover={{ y: -4 }}
                                 >
                                     <Card className="h-full p-5 rounded-2xl border border-slate-200/90 bg-white shadow-xs hover:shadow-md transition-all space-y-3">
-                                        <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
-                                            <IconComponent className="w-5 h-5 text-emerald-600" />
+                                        <div className="w-9 h-9 rounded-xl bg-blue-50 text-[#1e50ff] flex items-center justify-center">
+                                            <IconComponent className="w-5 h-5 text-[#1e50ff]" />
                                         </div>
                                         <h3 className="text-sm font-bold text-slate-900 leading-snug">
                                             {item.title}
@@ -463,31 +442,34 @@ export default function DualEngine({ plans = [], stats = {} }) {
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true, margin: '-20px' }}
                         transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                        className="rounded-3xl bg-gradient-to-r from-emerald-800 via-[#064e3b] to-slate-900 p-8 sm:p-10 text-white text-center space-y-4 shadow-xl gsap-scale"
+                        className="rounded-3xl bg-gradient-to-r from-[#08112c] via-[#0d2260] to-[#1e50ff] p-8 sm:p-12 text-white text-center space-y-4 shadow-xl gsap-scale"
                     >
-                        <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
-                            Rasakan Kecepatan & Stabilitas BisnisWA UltraSync Hari Ini
+                        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-blue-300/40 bg-white/10 text-blue-200 text-xs font-black uppercase tracking-widest">
+                            INFRASTRUKTUR HIGH-PERFORMANCE
+                        </div>
+                        <h2 className="text-3xl sm:text-4xl font-black tracking-tight">
+                            Akselerasi Pengiriman Pesan dengan <span className="font-editorial-italic font-normal">UltraSync Engine</span>
                         </h2>
-                        <p className="text-xs sm:text-sm text-emerald-100 max-w-xl mx-auto">
-                            Tautkan perangkat Anda dan nikmati pengiriman pesan tanpa delay, sesi persisten yang awet, dan akselerasi FrankenPHP.
+                        <p className="text-xs sm:text-sm text-blue-100 max-w-xl mx-auto leading-relaxed">
+                            Mulai kirim jutaan pesan tanpa khawatir sesi putus, bad MAC, atau terblokir. Daftarkan akun Anda sekarang.
                         </p>
-                        <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+                        <div className="pt-3 flex flex-wrap items-center justify-center gap-3">
                             <motion.button
-                                whileHover={{ scale: 1.03, y: -2 }}
+                                whileHover={{ scale: 1.03 }}
                                 whileTap={{ scale: 0.98 }}
                                 type="button"
                                 onClick={() => openRegisterModal()}
-                                className="btn-press inline-flex h-11 items-center gap-2 rounded-xl bg-amber-400 hover:bg-amber-300 px-6 text-xs font-bold text-slate-950 shadow-md transition-all cursor-pointer"
+                                className="btn-press inline-flex h-11 items-center gap-2 rounded-full bg-white hover:bg-slate-100 px-8 text-xs font-extrabold uppercase tracking-wider text-[#1e50ff] shadow-lg transition-all cursor-pointer"
                             >
-                                <Zap className="w-3.5 h-3.5 fill-slate-950" />
-                                <span>Daftar Akun Baru Sekarang</span>
+                                <Zap className="w-3.5 h-3.5 fill-[#1e50ff]" />
+                                <span>Mulai Uji Coba Gratis</span>
                             </motion.button>
                             <Link
-                                href="/rest-api"
+                                href="/harga"
                                 prefetch
-                                className="inline-flex h-11 items-center gap-2 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 px-5 text-xs font-bold text-white transition-all"
+                                className="inline-flex h-11 items-center gap-2 rounded-full border border-white/30 bg-white/10 hover:bg-white/20 px-6 text-xs font-bold text-white transition-all"
                             >
-                                <span>Lihat Dokumentasi API &rarr;</span>
+                                <span>Tinjau Paket Langganan &rarr;</span>
                             </Link>
                         </div>
                     </motion.div>

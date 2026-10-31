@@ -45,13 +45,11 @@ export default function Invoice({ payment, workspace }) {
                 {/* Official Letterhead (Kop Kampus) */}
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-emerald-600 pb-6">
                     <div className="flex items-center gap-3.5">
-                        <div className="h-16 w-16 rounded-xl bg-white border border-slate-200 p-1 flex items-center justify-center shrink-0">
-                            <img
-                                src="/images/logo-mardira.jpg"
-                                alt="Politeknik Mardira Indonesia"
-                                className="h-full w-full object-contain"
-                            />
-                        </div>
+                        <img
+                            src="/images/logo.png"
+                            alt="Politeknik Mardira Indonesia"
+                            className="h-16 w-auto object-contain shrink-0"
+                        />
                         <div>
                             <h2 className="text-lg font-black text-emerald-700 tracking-tight uppercase">
                                 POLITEKNIK MARDIRA INDONESIA

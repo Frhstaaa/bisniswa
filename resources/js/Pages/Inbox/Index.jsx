@@ -415,12 +415,12 @@ export default function InboxIndex({
                 {/* Modern Top Action Bar */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1">
                     <div>
-                        <div className="flex items-center gap-2">
-                            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900">
+                        <div className="flex flex-wrap items-center gap-2">
+                            <h1 className="text-lg sm:text-2xl font-black tracking-tight text-slate-900">
                                 Kotak Masuk WhatsApp
                             </h1>
-                            <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-[#1e50ff] border border-blue-200">
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#1e50ff] animate-pulse" />
                                 <span>LIVE CHAT REALTIME</span>
                             </span>
                         </div>
@@ -429,7 +429,7 @@ export default function InboxIndex({
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-2 shrink-0">
+                    <div className="flex flex-wrap items-center gap-2 shrink-0">
                         {subscription && (
                             <Link
                                 href="/subscriptions"

@@ -22,24 +22,22 @@ export default function ResetPassword({ token, email }) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-            className="min-h-screen bg-[#f8fafc] flex flex-col justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8 font-sans antialiased selection:bg-emerald-100 selection:text-emerald-900"
+            className="min-h-screen bg-white bg-grid-pattern flex flex-col justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8 font-sans antialiased selection:bg-emerald-100 selection:text-emerald-900"
         >
             <Head title="Buat Kata Sandi Baru — MARDIRA WA" />
 
             <div className="w-full max-w-md mx-auto text-center space-y-3">
                 <Link href="/" className="inline-flex items-center gap-3 group">
-                    <div className="h-11 w-11 sm:h-12 sm:w-12 rounded-xl bg-white border border-slate-200 shadow-xs flex items-center justify-center p-1 transition-transform group-hover:scale-105">
-                        <img
-                            src="/images/logo-mardira.jpg"
-                            alt="Politeknik Mardira Indonesia"
-                            className="h-full w-full object-contain"
-                        />
-                    </div>
+                    <img
+                        src="/images/logo.png"
+                        alt="Politeknik Mardira Indonesia"
+                        className="h-11 sm:h-12 w-auto object-contain shrink-0 transition-transform group-hover:scale-105"
+                    />
                     <div className="text-left">
-                        <span className="text-xl font-extrabold tracking-tight text-slate-900">
-                            MARDIRA<span className="text-amber-500">WA</span>
+                        <span className="text-xl font-black tracking-tight text-slate-900">
+                            MARDIRA<span className="text-[#1e50ff]">WA</span>
                         </span>
-                        <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">
+                        <p className="text-[10px] font-bold text-[#64748b] tracking-wider uppercase">
                             Politeknik Mardira Indonesia
                         </p>
                     </div>
@@ -84,7 +82,7 @@ export default function ResetPassword({ token, email }) {
                                     value={data.email}
                                     onChange={(e) => setData('email', e.target.value)}
                                     placeholder="nama@mardira.ac.id"
-                                    className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:border-emerald-600 focus:outline-none transition-colors shadow-2xs"
+                                    className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:border-[#1e50ff] focus:ring-1 focus:ring-[#1e50ff] focus:outline-none transition-colors shadow-2xs"
                                     required
                                 />
                             </div>
@@ -104,7 +102,7 @@ export default function ResetPassword({ token, email }) {
                                     value={data.password}
                                     onChange={(e) => setData('password', e.target.value)}
                                     placeholder="Minimal 6 karakter"
-                                    className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:border-emerald-600 focus:outline-none transition-colors shadow-2xs"
+                                    className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:border-[#1e50ff] focus:ring-1 focus:ring-[#1e50ff] focus:outline-none transition-colors shadow-2xs"
                                     required
                                 />
                             </div>
@@ -124,7 +122,7 @@ export default function ResetPassword({ token, email }) {
                                     value={data.password_confirmation}
                                     onChange={(e) => setData('password_confirmation', e.target.value)}
                                     placeholder="Ulangi kata sandi baru"
-                                    className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:border-emerald-600 focus:outline-none transition-colors shadow-2xs"
+                                    className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:border-[#1e50ff] focus:ring-1 focus:ring-[#1e50ff] focus:outline-none transition-colors shadow-2xs"
                                     required
                                 />
                             </div>
@@ -133,7 +131,7 @@ export default function ResetPassword({ token, email }) {
                         <Button
                             type="submit"
                             disabled={processing}
-                            className="w-full h-10 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-xs transition-all"
+                            className="w-full h-10 rounded-xl bg-[#1e50ff] hover:bg-[#153ec7] uppercase tracking-wider font-extrabold shadow-[0_8px_20px_-4px_rgba(30,80,255,0.4)] rounded-full text-white font-semibold text-xs shadow-xs transition-all"
                         >
                             <span>{processing ? 'Menyimpan Sandi...' : 'Perbarui Kata Sandi Akun'}</span>
                             <ArrowRight className="w-4 h-4 ml-1.5" />
@@ -142,14 +140,14 @@ export default function ResetPassword({ token, email }) {
 
                     <div className="pt-4 border-t border-slate-100 text-center text-xs text-slate-500">
                         Ingat kata sandi lama Anda?{' '}
-                        <Link href="/login" className="font-semibold text-emerald-700 hover:underline">
+                        <Link href="/login" className="font-semibold text-[#1e50ff] hover:underline">
                             Masuk ke Akun
                         </Link>
                     </div>
                 </div>
 
                 <div className="mt-4 text-center text-[11px] text-slate-400 flex items-center justify-center gap-1.5">
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                    <ShieldCheck className="w-3.5 h-3.5 text-[#1e50ff]" />
                     <span>Layanan Otentikasi Terenkripsi MARDIRA WA</span>
                 </div>
             </div>

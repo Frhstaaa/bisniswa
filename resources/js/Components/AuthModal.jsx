@@ -207,13 +207,13 @@ export default function AuthModal({
                 <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/70 shrink-0">
                     <div className="flex items-center gap-2.5">
                         <img
-                            src="/images/logo-mardira.jpg"
+                            src="/images/logo.png"
                             alt="Politeknik Mardira Indonesia"
-                            className="h-7 w-7 rounded-lg border border-slate-200 object-contain p-0.5"
+                            className="h-8 w-auto object-contain shrink-0"
                         />
                         <div>
                             <span className="font-extrabold text-xs tracking-tight text-slate-900">
-                                MARDIRA<span className="text-amber-500">WA</span>
+                                MARDIRA<span className="text-[#1e50ff]">WA</span>
                             </span>
                             <span className="text-[10px] text-slate-500 font-medium block leading-none">
                                 Politeknik Mardira Indonesia
@@ -282,7 +282,7 @@ export default function AuthModal({
                                             value={loginForm.data.email}
                                             onChange={(e) => loginForm.setData('email', e.target.value)}
                                             placeholder="nama@mardira.ac.id / bisnis.com"
-                                            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600 shadow-2xs"
+                                            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:border-[#1e50ff] focus:outline-none focus:ring-1 focus:ring-emerald-600 shadow-2xs"
                                             required
                                         />
                                     </div>
@@ -297,7 +297,7 @@ export default function AuthModal({
                                         <button
                                             type="button"
                                             onClick={() => setMode('forgot')}
-                                            className="text-[11px] font-semibold text-emerald-700 hover:underline"
+                                            className="text-[11px] font-semibold text-[#1e50ff] hover:underline"
                                         >
                                             Lupa password?
                                         </button>
@@ -309,7 +309,7 @@ export default function AuthModal({
                                             value={loginForm.data.password}
                                             onChange={(e) => loginForm.setData('password', e.target.value)}
                                             placeholder="••••••••"
-                                            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600 shadow-2xs"
+                                            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:border-[#1e50ff] focus:outline-none focus:ring-1 focus:ring-emerald-600 shadow-2xs"
                                             required
                                         />
                                     </div>
@@ -324,7 +324,7 @@ export default function AuthModal({
                                             type="checkbox"
                                             checked={loginForm.data.remember}
                                             onChange={(e) => loginForm.setData('remember', e.target.checked)}
-                                            className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                                            className="rounded border-slate-300 text-[#1e50ff] focus:ring-emerald-500"
                                         />
                                         <span>Ingat sesi masuk</span>
                                     </label>
@@ -333,7 +333,7 @@ export default function AuthModal({
                                 <Button
                                     type="submit"
                                     disabled={loginForm.processing}
-                                    className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs h-9 rounded-lg shadow-xs"
+                                    className="w-full bg-[#1e50ff] hover:bg-[#153ec7] shadow-[0_8px_20px_-4px_rgba(30,80,255,0.4)] text-white font-semibold text-xs h-9 rounded-lg shadow-xs"
                                 >
                                     <span>{loginForm.processing ? 'Memverifikasi...' : 'Masuk ke Dashboard'}</span>
                                     <ArrowRight className="w-3.5 h-3.5 ml-1" />
@@ -345,7 +345,7 @@ export default function AuthModal({
                                 <button
                                     type="button"
                                     onClick={() => setMode('register')}
-                                    className="font-bold text-emerald-700 hover:underline"
+                                    className="font-bold text-[#1e50ff] hover:underline"
                                 >
                                     Daftar & Berlangganan Sekarang
                                 </button>
@@ -382,7 +382,7 @@ export default function AuthModal({
                                                 onClick={() => registerForm.setData('plan_id', p.id)}
                                                 className={`p-3 rounded-xl border cursor-pointer transition-all flex flex-col justify-between ${
                                                     isSelected
-                                                        ? 'border-emerald-600 bg-emerald-50/80 ring-1 ring-emerald-600 shadow-2xs'
+                                                        ? 'border-[#1e50ff] bg-blue-50/80 ring-1 ring-emerald-600 shadow-2xs'
                                                         : 'border-slate-200 hover:border-slate-300 bg-white'
                                                 }`}
                                             >
@@ -394,7 +394,7 @@ export default function AuthModal({
                                                         </span>
                                                     )}
                                                 </div>
-                                                <div className="text-emerald-700 font-extrabold text-sm font-mono tabular-nums mt-1">
+                                                <div className="text-[#1e50ff] font-extrabold text-sm font-mono tabular-nums mt-1">
                                                     Rp {monthlyPrice.toLocaleString('id-ID')}
                                                     <span className="text-[10px] font-normal text-slate-500"> /bln</span>
                                                 </div>
@@ -419,7 +419,7 @@ export default function AuthModal({
                                                 value={registerForm.data.name}
                                                 onChange={(e) => registerForm.setData('name', e.target.value)}
                                                 placeholder="Budi Santoso"
-                                                className="w-full pl-8 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:border-emerald-600 focus:outline-none shadow-2xs"
+                                                className="w-full pl-8 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:border-[#1e50ff] focus:outline-none shadow-2xs"
                                                 required
                                             />
                                         </div>
@@ -435,8 +435,8 @@ export default function AuthModal({
                                                 <span className="text-[10px] text-slate-400 font-mono animate-pulse">Memverifikasi...</span>
                                             )}
                                             {emailCheck.status === 'valid' && (
-                                                <span className="text-[10px] text-emerald-700 font-semibold inline-flex items-center gap-0.5">
-                                                    <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                                                <span className="text-[10px] text-[#1e50ff] font-semibold inline-flex items-center gap-0.5">
+                                                    <CheckCircle2 className="w-3 h-3 text-[#1e50ff]" />
                                                     <span>{emailCheck.message}</span>
                                                 </span>
                                             )}
@@ -456,10 +456,10 @@ export default function AuthModal({
                                                 placeholder="budi@kampus.ac.id"
                                                 className={`w-full pl-8 pr-3 py-2 text-xs rounded-lg border transition-colors shadow-2xs ${
                                                     emailCheck.status === 'valid'
-                                                        ? 'border-emerald-500 bg-emerald-50/20 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600'
+                                                        ? 'border-emerald-500 bg-blue-50/20 focus:border-[#1e50ff] focus:ring-1 focus:ring-emerald-600'
                                                         : emailCheck.status === 'invalid'
                                                         ? 'border-red-400 bg-red-50/20 focus:border-red-500 focus:ring-1 focus:ring-red-500'
-                                                        : 'border-slate-200 focus:border-emerald-600 focus:outline-none'
+                                                        : 'border-slate-200 focus:border-[#1e50ff] focus:outline-none'
                                                 }`}
                                                 required
                                             />
@@ -480,7 +480,7 @@ export default function AuthModal({
                                                 value={registerForm.data.workspace_name}
                                                 onChange={(e) => registerForm.setData('workspace_name', e.target.value)}
                                                 placeholder="Prodi TI Mardira"
-                                                className="w-full pl-8 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:border-emerald-600 focus:outline-none shadow-2xs"
+                                                className="w-full pl-8 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:border-[#1e50ff] focus:outline-none shadow-2xs"
                                                 required
                                             />
                                         </div>
@@ -498,7 +498,7 @@ export default function AuthModal({
                                                 value={registerForm.data.phone}
                                                 onChange={(e) => registerForm.setData('phone', e.target.value)}
                                                 placeholder="+6281234567890"
-                                                className="w-full pl-8 pr-3 py-2 text-xs font-mono rounded-lg border border-slate-200 focus:border-emerald-600 focus:outline-none shadow-2xs"
+                                                className="w-full pl-8 pr-3 py-2 text-xs font-mono rounded-lg border border-slate-200 focus:border-[#1e50ff] focus:outline-none shadow-2xs"
                                                 required
                                             />
                                         </div>
@@ -518,7 +518,7 @@ export default function AuthModal({
                                                 value={registerForm.data.password}
                                                 onChange={(e) => registerForm.setData('password', e.target.value)}
                                                 placeholder="Min. 6 karakter"
-                                                className="w-full pl-8 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:border-emerald-600 focus:outline-none shadow-2xs"
+                                                className="w-full pl-8 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:border-[#1e50ff] focus:outline-none shadow-2xs"
                                                 required
                                             />
                                         </div>
@@ -536,7 +536,7 @@ export default function AuthModal({
                                                 value={registerForm.data.password_confirmation}
                                                 onChange={(e) => registerForm.setData('password_confirmation', e.target.value)}
                                                 placeholder="Ulangi sandi"
-                                                className="w-full pl-8 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:border-emerald-600 focus:outline-none shadow-2xs"
+                                                className="w-full pl-8 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:border-[#1e50ff] focus:outline-none shadow-2xs"
                                                 required
                                             />
                                         </div>
@@ -547,7 +547,7 @@ export default function AuthModal({
                                     <Button
                                         type="submit"
                                         disabled={registerForm.processing}
-                                        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs h-9 rounded-lg shadow-xs"
+                                        className="w-full bg-[#1e50ff] hover:bg-[#153ec7] shadow-[0_8px_20px_-4px_rgba(30,80,255,0.4)] text-white font-semibold text-xs h-9 rounded-lg shadow-xs"
                                     >
                                         <span>
                                             {registerForm.processing
@@ -564,7 +564,7 @@ export default function AuthModal({
                                 <button
                                     type="button"
                                     onClick={() => setMode('login')}
-                                    className="font-bold text-emerald-700 hover:underline"
+                                    className="font-bold text-[#1e50ff] hover:underline"
                                 >
                                     Masuk ke Workspace
                                 </button>
@@ -615,7 +615,7 @@ export default function AuthModal({
                                             value={forgotForm.data.email}
                                             onChange={(e) => forgotForm.setData('email', e.target.value)}
                                             placeholder="nama@mardira.ac.id"
-                                            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:border-emerald-600 focus:outline-none shadow-2xs"
+                                            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:border-[#1e50ff] focus:outline-none shadow-2xs"
                                             required
                                         />
                                     </div>
@@ -627,7 +627,7 @@ export default function AuthModal({
                                 <Button
                                     type="submit"
                                     disabled={forgotForm.processing}
-                                    className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs h-9 rounded-lg shadow-xs"
+                                    className="w-full bg-[#1e50ff] hover:bg-[#153ec7] shadow-[0_8px_20px_-4px_rgba(30,80,255,0.4)] text-white font-semibold text-xs h-9 rounded-lg shadow-xs"
                                 >
                                     <span>{forgotForm.processing ? 'Mengirim...' : 'Kirim Tautan Reset Password'}</span>
                                     <Mail className="w-3.5 h-3.5 ml-1" />
@@ -645,8 +645,8 @@ export default function AuthModal({
                     {/* ================= MODE: FORGOT SUCCESS ================= */}
                     {mode === 'forgot_success' && (
                         <div className="space-y-4 text-center py-3">
-                            <div className="w-12 h-12 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 mx-auto flex items-center justify-center">
-                                <Mail className="w-6 h-6 text-emerald-600" />
+                            <div className="w-12 h-12 rounded-full bg-blue-50 border border-emerald-200 text-[#1e50ff] mx-auto flex items-center justify-center">
+                                <Mail className="w-6 h-6 text-[#1e50ff]" />
                             </div>
 
                             <div className="space-y-1.5">
@@ -661,9 +661,9 @@ export default function AuthModal({
 
                             {/* WhatsApp Notification Alert if sent */}
                             {flash.wa_sent && (
-                                <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-[11px] text-emerald-950 text-left space-y-1 animate-fade-in">
+                                <div className="p-3 bg-blue-500/10 border border-emerald-500/30 rounded-xl text-[11px] text-emerald-950 text-left space-y-1 animate-fade-in">
                                     <div className="font-bold flex items-center gap-1.5 text-emerald-900">
-                                        <MessageSquare className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                                        <MessageSquare className="w-3.5 h-3.5 text-[#1e50ff] shrink-0" />
                                         <span>Notifikasi WhatsApp Terkirim!</span>
                                     </div>
                                     <p className="text-emerald-800">
@@ -672,9 +672,9 @@ export default function AuthModal({
                                 </div>
                             )}
 
-                            <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-[11px] text-emerald-900 text-left space-y-1">
+                            <div className="p-3 bg-blue-50 border border-emerald-200 rounded-xl text-[11px] text-emerald-900 text-left space-y-1">
                                 <div className="font-bold flex items-center gap-1.5">
-                                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                                    <CheckCircle2 className="w-3.5 h-3.5 text-[#1e50ff] shrink-0" />
                                     <span>Langkah Berikutnya:</span>
                                 </div>
                                 <p className="text-emerald-800">
@@ -696,7 +696,7 @@ export default function AuthModal({
                                     <div className="flex flex-col sm:flex-row gap-2 pt-0.5">
                                         <a
                                             href={directPreviewUrl || flash.preview_url}
-                                            className="inline-flex items-center justify-center gap-1.5 flex-1 py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-colors shadow-xs"
+                                            className="inline-flex items-center justify-center gap-1.5 flex-1 py-2 px-3 rounded-lg bg-emerald-600 hover:bg-blue-500 text-white font-bold text-xs transition-colors shadow-xs"
                                         >
                                             <span>Buka Tautan Reset Password Sekarang →</span>
                                         </a>
@@ -728,7 +728,7 @@ export default function AuthModal({
                             <Button
                                 type="button"
                                 onClick={() => setMode('login')}
-                                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs h-9 rounded-lg"
+                                className="w-full bg-[#1e50ff] hover:bg-[#153ec7] shadow-[0_8px_20px_-4px_rgba(30,80,255,0.4)] text-white font-semibold text-xs h-9 rounded-lg"
                             >
                                 Kembali ke Halaman Masuk
                             </Button>
@@ -739,7 +739,7 @@ export default function AuthModal({
                 {/* Modal Footer Trust Bar */}
                 <div className="px-5 py-2.5 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-400 shrink-0">
                     <span className="flex items-center gap-1">
-                        <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                        <ShieldCheck className="w-3 h-3 text-[#1e50ff]" />
                         <span>Enkripsi TLS 256-Bit</span>
                     </span>
                     <span>Politeknik Mardira Indonesia</span>

@@ -251,72 +251,49 @@ export default function Pricing({ plans = [], stats = {} }) {
         <PublicLayout title="Paket & Harga Langganan" plans={safePlans} activeMenu="harga">
             <div className="space-y-16 lg:space-y-24">
                 {/* ================= HERO HEADER ================= */}
-                <section className="relative overflow-hidden bg-gradient-to-b from-emerald-950 via-emerald-900 to-emerald-950 text-white pt-36 sm:pt-44 lg:pt-48 pb-24 sm:pb-32 px-4 sm:px-6 lg:px-10">
-                    {/* Ambient Floating Glow Orbs */}
-                    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                        <motion.div
-                            animate={{
-                                scale: [1, 1.2, 1],
-                                opacity: [0.12, 0.25, 0.12],
-                                x: [0, 20, 0],
-                                y: [0, -15, 0],
-                            }}
-                            transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-                            className="absolute -top-32 left-1/4 w-96 h-96 rounded-full bg-emerald-500/25 blur-3xl"
-                        />
-                        <motion.div
-                            animate={{
-                                scale: [1, 1.25, 1],
-                                opacity: [0.08, 0.2, 0.08],
-                                x: [0, -25, 0],
-                                y: [0, 20, 0],
-                            }}
-                            transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-                            className="absolute top-1/3 -right-20 w-96 h-96 rounded-full bg-amber-400/15 blur-3xl"
-                        />
-                    </div>
-
+                <section className="relative overflow-hidden bg-white bg-grid-pattern text-slate-900 pt-32 sm:pt-40 pb-20 sm:pb-28 px-4 sm:px-6 lg:px-10 border-b border-slate-100">
                     <motion.div
                         variants={heroContainerVariants}
                         initial="hidden"
                         animate="visible"
-                        className="relative max-w-5xl mx-auto text-center space-y-4"
+                        className="relative max-w-5xl mx-auto text-center space-y-5"
                     >
                         <motion.div variants={heroItemVariants} className="inline-block gsap-hero-item">
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-bold">
-                                <CreditCard className="w-3.5 h-3.5 text-amber-300" />
-                                <span>HARGA TRANSPARAN TANPA BIAYA TERSEMBUNYI</span>
+                            <div className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full border-[1.5px] border-[#1e50ff] bg-white text-[#1e50ff] text-[10px] sm:text-xs font-bold sm:font-black uppercase tracking-normal sm:tracking-widest shadow-xs">
+                                <CreditCard className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#1e50ff] shrink-0" />
+                                <span className="hidden sm:inline">PAKET & INVESTASI LAYANAN RESMI</span>
+                                <span className="sm:hidden">PAKET & INVESTASI RESMI</span>
                             </div>
                         </motion.div>
 
                         <motion.h1
                             variants={heroItemVariants}
-                            className="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight gsap-hero-item"
+                            className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight gsap-hero-item"
                         >
-                            Investasi Tepat untuk <span className="text-amber-300">Komunikasi WhatsApp</span> Anda
+                            <span className="font-editorial-italic font-normal tracking-normal text-slate-900">Pilihan Paket</span> Investasi Terbaik untuk <span className="text-[#1e50ff]">Bisnis Anda</span>
                         </motion.h1>
 
                         <motion.p
                             variants={heroItemVariants}
-                            className="text-slate-200 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed gsap-hero-item"
+                            className="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed gsap-hero-item"
                         >
-                            Pilih paket yang sesuai dengan skala bisnis atau institusi Anda. Dapatkan kuota pesan melimpah, arsitektur dual server WhatsApp, serta integrasi API instan.
+                            Pilih paket yang dirancang khusus untuk mengakselerasi skala operasional bisnis Anda. Nikmati kuota pesan melimpah, arsitektur single-engine UltraSync yang stabil, serta integrasi API instan tanpa biaya tersembunyi.
                         </motion.p>
 
                         {/* Billing Cycle Switch with Fluid layoutId Pill */}
                         <motion.div variants={heroItemVariants} className="pt-6 flex items-center justify-center gsap-hero-item">
-                            <div className="inline-flex items-center p-1 rounded-full bg-emerald-950/80 border border-emerald-400/40 backdrop-blur-md shadow-lg">
+                            <div className="inline-flex items-center p-1 rounded-full bg-slate-100 border border-slate-200/90 shadow-xs">
                                 <button
                                     type="button"
                                     onClick={() => setBillingCycle('monthly')}
-                                    className={`relative px-4 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer ${
-                                        billingCycle === 'monthly' ? 'text-emerald-950' : 'text-emerald-200 hover:text-white'
+                                    className={`relative px-5 py-2 rounded-full text-xs font-bold transition-colors cursor-pointer ${
+                                        billingCycle === 'monthly' ? 'text-white' : 'text-slate-600 hover:text-slate-900'
                                     }`}
                                 >
                                     {billingCycle === 'monthly' && (
                                         <motion.div
                                             layoutId="activeCyclePill"
-                                            className="absolute inset-0 bg-white rounded-full shadow-md"
+                                            className="absolute inset-0 bg-[#1e50ff] rounded-full shadow-md"
                                             transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                                         />
                                     )}
@@ -325,19 +302,19 @@ export default function Pricing({ plans = [], stats = {} }) {
                                 <button
                                     type="button"
                                     onClick={() => setBillingCycle('yearly')}
-                                    className={`relative px-4 py-1.5 rounded-full text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer ${
-                                        billingCycle === 'yearly' ? 'text-slate-950' : 'text-emerald-200 hover:text-white'
+                                    className={`relative px-5 py-2 rounded-full text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer ${
+                                        billingCycle === 'yearly' ? 'text-white' : 'text-slate-600 hover:text-slate-900'
                                     }`}
                                 >
                                     {billingCycle === 'yearly' && (
                                         <motion.div
                                             layoutId="activeCyclePill"
-                                            className="absolute inset-0 bg-gradient-to-r from-amber-300 to-amber-400 rounded-full shadow-md"
+                                            className="absolute inset-0 bg-[#1e50ff] rounded-full shadow-md"
                                             transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                                         />
                                     )}
                                     <span className="relative z-10">Tahunan</span>
-                                    <span className="relative z-10 px-1.5 py-0.5 rounded-full text-[9px] font-black bg-emerald-950 text-amber-300 shadow-xs">
+                                    <span className="relative z-10 px-2 py-0.5 rounded-full text-[9px] font-black bg-amber-400 text-slate-950 shadow-xs">
                                         HEMAT 20%
                                     </span>
                                 </button>
@@ -347,7 +324,7 @@ export default function Pricing({ plans = [], stats = {} }) {
                 </section>
 
                 {/* ================= PRICING CARDS ================= */}
-                <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-14 sm:-mt-20">
+                <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 sm:-mt-14">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch gsap-card-grid">
                         {displayPlans.map((plan, idx) => {
                             const isYearly = billingCycle === 'yearly';
@@ -363,24 +340,24 @@ export default function Pricing({ plans = [], stats = {} }) {
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true, margin: '-30px' }}
                                     transition={{ duration: 0.25, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                                    whileHover={{ y: -8, scale: 1.02 }}
+                                    whileHover={{ y: -6 }}
                                     className={`flex flex-col gsap-card ${isRecommended ? 'gsap-scale' : ''}`}
                                 >
                                     <Card
                                         className={`card-interactive rounded-3xl p-7 flex flex-col justify-between relative bg-white h-full transition-all duration-300 ${
                                             isRecommended
-                                                ? 'border-2 border-emerald-500 shadow-xl shadow-emerald-900/10 md:-translate-y-2'
+                                                ? 'border-2 border-[#1e50ff] shadow-xl shadow-blue-500/10 md:-translate-y-2'
                                                 : isMatchedBySlider
-                                                ? 'border-2 border-amber-400 shadow-lg shadow-amber-400/10'
-                                                : 'border border-slate-200/90 shadow-card hover:border-emerald-300'
+                                                ? 'border-2 border-[#1e50ff]/60 shadow-lg shadow-blue-500/10'
+                                                : 'border border-slate-200/90 shadow-card hover:border-blue-300'
                                         }`}
                                     >
                                         {isRecommended ? (
-                                            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-emerald-600 text-white font-black text-[10px] uppercase tracking-wider shadow-md animate-shimmer whitespace-nowrap">
+                                            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-[#1e50ff] text-white font-extrabold text-[10px] uppercase tracking-wider shadow-md whitespace-nowrap">
                                                 PALING DIMINATI & DIREKOMENDASIKAN
                                             </div>
                                         ) : isMatchedBySlider ? (
-                                            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-amber-400 text-slate-950 font-black text-[10px] uppercase tracking-wider shadow-md whitespace-nowrap">
+                                            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-blue-100 text-[#1e50ff] border border-blue-300 font-extrabold text-[10px] uppercase tracking-wider shadow-sm whitespace-nowrap">
                                                 SESUAI ESTIMASI KUOTA ANDA
                                             </div>
                                         ) : null}
@@ -389,7 +366,7 @@ export default function Pricing({ plans = [], stats = {} }) {
                                             <div className="space-y-1">
                                                 <h3 className="text-xl font-black text-slate-900">{plan.name}</h3>
                                                 <p className="text-xs text-slate-500">
-                                                    Solusi ideal untuk {plan.name === 'Starter Lite' ? 'bisnis pemula & uji coba' : plan.name === 'Pro Bisnis' ? 'bisnis bertumbuh & CS tim' : 'institusi kampus & enterprise'}.
+                                                    Solusi ideal untuk {plan.name === 'Starter Lite' ? 'bisnis pemula & pengujian langsung' : plan.name === 'Pro Bisnis' ? 'bisnis bertumbuh & tim Customer Service' : 'skala korporasi, institusi kampus & multi-agen'}.
                                                 </p>
                                             </div>
 
@@ -402,7 +379,7 @@ export default function Pricing({ plans = [], stats = {} }) {
                                                     <span className="text-xs text-slate-500">/ bulan</span>
                                                 </div>
                                                 {isYearly && (
-                                                    <p className="text-[11px] text-emerald-600 font-semibold mt-1 animate-scale-pop">
+                                                    <p className="text-[11px] text-[#1e50ff] font-semibold mt-1 animate-scale-pop">
                                                         Ditagihkan tahunan Rp {(finalPrice * 12).toLocaleString('id-ID')}
                                                     </p>
                                                 )}
@@ -410,13 +387,13 @@ export default function Pricing({ plans = [], stats = {} }) {
 
                                             {/* Key Metrics Badges */}
                                             <div className="grid grid-cols-2 gap-2 pt-2 text-xs">
-                                                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 transition-all hover:bg-emerald-50/50 hover:border-emerald-200">
-                                                    <span className="text-[10px] text-slate-400 uppercase font-bold block">Perangkat</span>
-                                                    <strong className="text-slate-800 text-xs font-bold">{plan.max_devices} Device</strong>
+                                                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 transition-all hover:bg-blue-50/50 hover:border-blue-200">
+                                                    <span className="text-[10px] text-slate-400 uppercase font-bold block">Koneksi Perangkat</span>
+                                                    <strong className="text-slate-800 text-xs font-bold">{plan.max_devices} Perangkat Aktif</strong>
                                                 </div>
-                                                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 transition-all hover:bg-emerald-50/50 hover:border-emerald-200">
+                                                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 transition-all hover:bg-blue-50/50 hover:border-blue-200">
                                                     <span className="text-[10px] text-slate-400 uppercase font-bold block">Kuota Pesan</span>
-                                                    <strong className="text-slate-800 text-xs font-bold">{(plan.monthly_message_quota || 5000).toLocaleString('id-ID')} / bln</strong>
+                                                    <strong className="text-slate-800 text-xs font-bold">{(plan.monthly_message_quota || 5000).toLocaleString('id-ID')} / bulan</strong>
                                                 </div>
                                             </div>
 
@@ -424,7 +401,7 @@ export default function Pricing({ plans = [], stats = {} }) {
                                             <div className="space-y-2.5 pt-2 border-t border-slate-100 text-xs text-slate-700">
                                                 {Array.isArray(plan.features) ? plan.features.map((feat, fIdx) => (
                                                     <div key={fIdx} className="flex items-start gap-2.5 group">
-                                                        <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-110 transition-transform duration-150">
+                                                        <div className="w-4 h-4 rounded-full bg-blue-50 text-[#1e50ff] flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-110 transition-transform duration-150">
                                                             <Check className="w-2.5 h-2.5 stroke-[3]" />
                                                         </div>
                                                         <span className="leading-snug">{feat}</span>
@@ -439,14 +416,14 @@ export default function Pricing({ plans = [], stats = {} }) {
                                                 whileTap={{ scale: 0.98 }}
                                                 type="button"
                                                 onClick={() => handleSelectPlan(plan.id)}
-                                                className={`w-full h-11 rounded-xl text-xs font-bold shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer btn-press group ${
+                                                className={`w-full h-11 rounded-full text-xs font-extrabold uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer btn-press group ${
                                                     isRecommended
-                                                        ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-600/30 hover:shadow-lg'
+                                                        ? 'bg-[#1e50ff] hover:bg-[#153ec7] text-white shadow-[0_8px_20px_-4px_rgba(30,80,255,0.4)]'
                                                         : 'bg-slate-900 hover:bg-slate-800 text-white hover:shadow-md'
                                                 }`}
                                             >
                                                 <Zap className="w-3.5 h-3.5 group-hover:scale-110 transition-transform duration-150" />
-                                                <span>{user ? `Pilih & Aktifkan ${plan.name}` : `Pilih Paket ${plan.name}`}</span>
+                                                <span>{user ? `Pilih & Aktifkan ${plan.name}` : `Mulai dengan ${plan.name}`}</span>
                                             </motion.button>
                                         </div>
                                     </Card>
@@ -466,12 +443,12 @@ export default function Pricing({ plans = [], stats = {} }) {
                 >
                     <Card className="p-7 sm:p-10 rounded-3xl border border-slate-200 bg-white shadow-xl space-y-6">
                         <div className="flex items-center gap-3">
-                            <div className="w-11 h-11 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold">
-                                <Calculator className="w-5 h-5 text-amber-700" />
+                            <div className="w-11 h-11 rounded-2xl bg-blue-50 text-[#1e50ff] flex items-center justify-center font-bold">
+                                <Calculator className="w-5 h-5" />
                             </div>
                             <div>
                                 <h3 className="text-xl font-black text-slate-900">Kalkulator Estimasi Kebutuhan Kuota</h3>
-                                <p className="text-xs text-slate-500">Geser slider atau pilih preset untuk melihat rekomendasi paket yang paling efisien untuk Anda.</p>
+                                <p className="text-xs text-slate-500">Geser slider atau pilih preset untuk melihat rekomendasi paket yang paling efisien untuk kebutuhan komunikasi Anda.</p>
                             </div>
                         </div>
 
@@ -480,7 +457,7 @@ export default function Pricing({ plans = [], stats = {} }) {
                                 <label className="text-xs font-bold text-slate-700">
                                     Target Pengiriman Pesan Bulanan:
                                 </label>
-                                <span className="font-mono text-xl font-black text-emerald-700 bg-emerald-50 px-3.5 py-1 rounded-xl border border-emerald-200 shadow-2xs animate-scale-pop" key={sliderQuota}>
+                                <span className="font-mono text-xl font-black text-[#1e50ff] bg-blue-50 px-3.5 py-1 rounded-xl border border-blue-200 shadow-2xs animate-scale-pop" key={sliderQuota}>
                                     {sliderQuota.toLocaleString('id-ID')} Pesan
                                 </span>
                             </div>
@@ -494,7 +471,7 @@ export default function Pricing({ plans = [], stats = {} }) {
                                 onChange={(e) => setSliderQuota(parseInt(e.target.value))}
                                 className="smooth-range w-full h-3 rounded-full cursor-pointer transition-all"
                                 style={{
-                                    background: `linear-gradient(to right, #059669 0%, #10b981 ${Math.min(100, Math.max(0, ((sliderQuota - 1000) / (50000 - 1000)) * 100))}%, #e2e8f0 ${Math.min(100, Math.max(0, ((sliderQuota - 1000) / (50000 - 1000)) * 100))}%, #e2e8f0 100%)`
+                                    background: `linear-gradient(to right, #1e50ff 0%, #3b82f6 ${Math.min(100, Math.max(0, ((sliderQuota - 1000) / (50000 - 1000)) * 100))}%, #e2e8f0 ${Math.min(100, Math.max(0, ((sliderQuota - 1000) / (50000 - 1000)) * 100))}%, #e2e8f0 100%)`
                                 }}
                             />
 
@@ -515,9 +492,9 @@ export default function Pricing({ plans = [], stats = {} }) {
                                         whileTap={{ scale: 0.95 }}
                                         type="button"
                                         onClick={() => setSliderQuota(val)}
-                                        className={`btn-press px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                                        className={`btn-press px-3 py-1 rounded-full text-[11px] font-bold transition-all cursor-pointer ${
                                             sliderQuota === val
-                                                ? 'bg-emerald-600 text-white shadow-xs'
+                                                ? 'bg-[#1e50ff] text-white shadow-xs'
                                                 : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
                                         }`}
                                     >
@@ -532,7 +509,7 @@ export default function Pricing({ plans = [], stats = {} }) {
                                 <span className="text-[10px] uppercase font-bold text-slate-400">Paket Rekomendasi Sistem:</span>
                                 <h4 className="text-base font-black text-slate-900 flex items-center gap-2 animate-scale-pop" key={recommendedPlanName}>
                                     <span>{recommendedPlanName}</span>
-                                    <Badge variant="emerald" className="text-[10px] font-bold">Cocok Sesuai Kuota</Badge>
+                                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 text-[#1e50ff] border border-blue-200">Cocok Sesuai Kuota</span>
                                 </h4>
                                 {(() => {
                                     const matched = displayPlans.find((p) => p.name === recommendedPlanName) || displayPlans[0];
@@ -540,7 +517,7 @@ export default function Pricing({ plans = [], stats = {} }) {
                                     const perMsg = (price / Math.max(1, sliderQuota)).toFixed(1);
                                     return (
                                         <p className="text-[11px] text-slate-500 font-medium">
-                                            Estimasi biaya: <strong className="text-emerald-700 font-mono">Rp {perMsg}</strong> / pesan
+                                            Estimasi biaya operasional: <strong className="text-[#1e50ff] font-mono">Rp {perMsg}</strong> / pesan
                                         </p>
                                     );
                                 })()}
@@ -553,9 +530,9 @@ export default function Pricing({ plans = [], stats = {} }) {
                                         whileTap={{ scale: 0.97 }}
                                         type="button"
                                         onClick={() => handleSelectPlan(matchedPlan?.id)}
-                                        className="btn-press inline-flex h-9 items-center gap-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 px-4 text-xs font-bold text-white shadow-xs cursor-pointer group"
+                                        className="btn-press inline-flex h-10 items-center gap-1.5 rounded-full bg-[#1e50ff] hover:bg-[#153ec7] px-6 text-xs font-extrabold uppercase tracking-wider text-white shadow-[0_8px_20px_-4px_rgba(30,80,255,0.4)] cursor-pointer group"
                                     >
-                                        <span>{user ? `Pilih ${recommendedPlanName}` : `Daftar ${recommendedPlanName}`}</span>
+                                        <span>{user ? `Pilih ${recommendedPlanName}` : `Mulai ${recommendedPlanName}`}</span>
                                         <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-150" />
                                     </motion.button>
                                 );
@@ -573,12 +550,14 @@ export default function Pricing({ plans = [], stats = {} }) {
                     className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 gsap-reveal"
                 >
                     <div className="text-center space-y-2 mb-10">
-                        <Badge variant="emerald" className="text-[10px] font-bold">MATRIKS LENGKAP</Badge>
-                        <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-                            Perbandingan Fitur Seluruh Paket
+                        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-blue-200 bg-blue-50 text-[#1e50ff] text-[10px] font-black uppercase tracking-widest">
+                            MATRIKS PERBANDINGAN FITUR
+                        </div>
+                        <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+                            Perbandingan Fitur <span className="font-editorial-italic font-normal">Seluruh Paket</span>
                         </h2>
                         <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">
-                            Tinjau setiap kapabilitas teknis yang disediakan di tiap tingkatan paket.
+                            Tinjau setiap kapabilitas teknis dan spesifikasi yang disediakan di tiap tingkatan paket.
                         </p>
                     </div>
 
@@ -589,7 +568,7 @@ export default function Pricing({ plans = [], stats = {} }) {
                                     <tr>
                                         <th className="py-3.5 px-5 font-bold">Fitur Platform</th>
                                         <th className="py-3.5 px-5 font-bold text-center">Starter Lite</th>
-                                        <th className="py-3.5 px-5 font-bold text-center text-emerald-800 bg-emerald-50/50">Pro Bisnis (Rekomendasi)</th>
+                                        <th className="py-3.5 px-5 font-bold text-center text-[#1e50ff] bg-blue-50/50">Pro Bisnis (Rekomendasi)</th>
                                         <th className="py-3.5 px-5 font-bold text-center">Enterprise Pro</th>
                                     </tr>
                                 </thead>
@@ -601,17 +580,17 @@ export default function Pricing({ plans = [], stats = {} }) {
                                             </td>
                                             <td className="py-3.5 px-5 text-center text-slate-700">
                                                 {typeof row.starter === 'boolean' ? (
-                                                    row.starter ? <Check className="w-4 h-4 text-emerald-600 mx-auto" /> : <span className="text-slate-300">—</span>
+                                                    row.starter ? <Check className="w-4 h-4 text-[#1e50ff] mx-auto" /> : <span className="text-slate-300">—</span>
                                                 ) : row.starter}
                                             </td>
-                                            <td className="py-3.5 px-5 text-center text-slate-700 bg-emerald-50/20 font-semibold">
+                                            <td className="py-3.5 px-5 text-center text-slate-700 bg-blue-50/20 font-semibold">
                                                 {typeof row.pro === 'boolean' ? (
-                                                    row.pro ? <Check className="w-4 h-4 text-emerald-600 mx-auto" /> : <span className="text-slate-300">—</span>
+                                                    row.pro ? <Check className="w-4 h-4 text-[#1e50ff] mx-auto" /> : <span className="text-slate-300">—</span>
                                                 ) : row.pro}
                                             </td>
                                             <td className="py-3.5 px-5 text-center text-slate-700 font-semibold">
                                                 {typeof row.enterprise === 'boolean' ? (
-                                                    row.enterprise ? <Check className="w-4 h-4 text-emerald-600 mx-auto" /> : <span className="text-slate-300">—</span>
+                                                    row.enterprise ? <Check className="w-4 h-4 text-[#1e50ff] mx-auto" /> : <span className="text-slate-300">—</span>
                                                 ) : row.enterprise}
                                             </td>
                                         </tr>
@@ -631,12 +610,14 @@ export default function Pricing({ plans = [], stats = {} }) {
                     className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8"
                 >
                     <div className="text-center space-y-2 mb-8 gsap-reveal">
-                        <Badge variant="emerald" className="text-[10px] font-bold">TANYA JAWAB</Badge>
-                        <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-                            Pertanyaan Umum Seputar Berlangganan
+                        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-blue-200 bg-blue-50 text-[#1e50ff] text-[10px] font-black uppercase tracking-widest">
+                            TANYA JAWAB BERLANGGANAN
+                        </div>
+                        <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+                            Pertanyaan Seputar <span className="font-editorial-italic font-normal">Aktivasi & Pembayaran</span>
                         </h2>
                         <p className="text-xs sm:text-sm text-slate-500 max-w-lg mx-auto">
-                            Hal-hal yang sering ditanyakan mengenai aktivasi, pembayaran, dan kuota.
+                            Hal-hal penting seputar aktivasi instan, metode pembayaran resmi, dan manajemen kuota pesan.
                         </p>
                     </div>
 
@@ -644,7 +625,7 @@ export default function Pricing({ plans = [], stats = {} }) {
                         {pricingFaqs.map((faq, idx) => (
                             <div
                                 key={idx}
-                                className="rounded-2xl border border-slate-200/90 bg-white overflow-hidden shadow-xs transition-all hover:border-emerald-300 gsap-card"
+                                className="rounded-2xl border border-slate-200/90 bg-white overflow-hidden shadow-xs transition-all hover:border-blue-300 gsap-card"
                             >
                                 <button
                                     type="button"
@@ -657,7 +638,7 @@ export default function Pricing({ plans = [], stats = {} }) {
                                         transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
                                         className="shrink-0 text-slate-400"
                                     >
-                                        <ChevronDown className="w-4 h-4 text-emerald-600" />
+                                        <ChevronDown className="w-4 h-4 text-[#1e50ff]" />
                                     </motion.span>
                                 </button>
                                 <AnimatePresence initial={false}>
@@ -688,30 +669,33 @@ export default function Pricing({ plans = [], stats = {} }) {
                     transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                     className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 gsap-scale"
                 >
-                    <div className="rounded-3xl bg-gradient-to-r from-emerald-800 via-[#064e3b] to-slate-900 p-8 sm:p-10 text-white text-center space-y-4 shadow-xl">
-                        <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
-                            Mulai Berlangganan dengan Aktivasi Otomatis
+                    <div className="rounded-3xl bg-gradient-to-r from-[#08112c] via-[#0d2260] to-[#1e50ff] p-8 sm:p-12 text-white text-center space-y-4 shadow-xl">
+                        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-blue-300/40 bg-white/10 text-blue-200 text-xs font-black uppercase tracking-widest">
+                            AKTIVASI OTOMATIS & CEPAT
+                        </div>
+                        <h2 className="text-3xl sm:text-4xl font-black tracking-tight">
+                            Mulai Berlangganan Sekarang, <span className="font-editorial-italic font-normal">Aktif dalam 1 Menit</span>
                         </h2>
-                        <p className="text-xs sm:text-sm text-emerald-100 max-w-xl mx-auto">
-                            Pembayaran mudah melalui QRIS instan atau Transfer Bank resmi kampus. Akun aktif otomatis dalam 1 menit.
+                        <p className="text-xs sm:text-sm text-blue-100 max-w-xl mx-auto leading-relaxed">
+                            Nikmati proses pembayaran mudah via QRIS instan atau Transfer Bank resmi kampus. Akun dan kuota aktif otomatis tanpa menunggu verifikasi manual.
                         </p>
-                        <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+                        <div className="pt-3 flex flex-wrap items-center justify-center gap-3">
                             <motion.button
                                 whileHover={{ scale: 1.03 }}
                                 whileTap={{ scale: 0.97 }}
                                 type="button"
                                 onClick={() => handleSelectPlan(displayPlans[1]?.id || displayPlans[0]?.id)}
-                                className="btn-press inline-flex h-10 items-center gap-2 rounded-xl bg-amber-400 hover:bg-amber-300 px-6 text-xs font-bold text-slate-950 shadow-md transition-all cursor-pointer"
+                                className="btn-press inline-flex h-11 items-center gap-2 rounded-full bg-white hover:bg-slate-100 px-8 text-xs font-extrabold uppercase tracking-wider text-[#1e50ff] shadow-lg transition-all cursor-pointer"
                             >
-                                <Zap className="w-3.5 h-3.5 fill-slate-950" />
+                                <Zap className="w-4 h-4 fill-[#1e50ff]" />
                                 <span>{user ? 'Buka Menu Langganan' : 'Daftar & Pilih Paket Sekarang'}</span>
                             </motion.button>
                             <Link
                                 href="/faq"
                                 prefetch
-                                className="inline-flex h-10 items-center gap-2 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 px-5 text-xs font-bold text-white transition-all"
+                                className="inline-flex h-11 items-center gap-2 rounded-full border border-white/30 bg-white/10 hover:bg-white/20 px-6 text-xs font-bold text-white transition-all"
                             >
-                                <span>Lihat Semua FAQ &rarr;</span>
+                                <span>Pusat Bantuan & FAQ &rarr;</span>
                             </Link>
                         </div>
                     </div>

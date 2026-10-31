@@ -138,56 +138,33 @@ export default function Faq({ plans = [], stats = {} }) {
         <PublicLayout title="FAQ & Pusat Bantuan" plans={safePlans} activeMenu="faq">
             <div className="space-y-16 lg:space-y-20">
                 {/* ================= HERO HEADER ================= */}
-                <section className="relative overflow-hidden bg-gradient-to-b from-emerald-950 via-emerald-900 to-emerald-950 text-white pt-36 sm:pt-44 lg:pt-48 pb-24 sm:pb-32 px-4 sm:px-6 lg:px-10">
-                    {/* Ambient Floating Glow Orbs */}
-                    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                        <motion.div
-                            animate={{
-                                scale: [1, 1.2, 1],
-                                opacity: [0.12, 0.25, 0.12],
-                                x: [0, 20, 0],
-                                y: [0, -15, 0],
-                            }}
-                            transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-                            className="absolute -top-32 left-1/4 w-96 h-96 rounded-full bg-emerald-500/25 blur-3xl"
-                        />
-                        <motion.div
-                            animate={{
-                                scale: [1, 1.25, 1],
-                                opacity: [0.08, 0.2, 0.08],
-                                x: [0, -25, 0],
-                                y: [0, 20, 0],
-                            }}
-                            transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-                            className="absolute top-1/3 -right-20 w-96 h-96 rounded-full bg-amber-400/15 blur-3xl"
-                        />
-                    </div>
-
+                <section className="relative overflow-hidden bg-white bg-grid-pattern text-slate-900 pt-32 sm:pt-40 pb-20 sm:pb-28 px-4 sm:px-6 lg:px-10 border-b border-slate-100">
                     <motion.div
                         variants={heroContainerVariants}
                         initial="hidden"
                         animate="visible"
-                        className="relative max-w-4xl mx-auto text-center space-y-4"
+                        className="relative max-w-4xl mx-auto text-center space-y-5"
                     >
                         <motion.div variants={heroItemVariants} className="inline-block gsap-hero-item">
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-bold shadow-xs">
-                                <HelpCircle className="w-3.5 h-3.5 text-amber-300" />
-                                <span>PUSAT BANTUAN & INFORMASI KAMPUS</span>
+                            <div className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full border-[1.5px] border-[#1e50ff] bg-white text-[#1e50ff] text-[10px] sm:text-xs font-bold sm:font-black uppercase tracking-normal sm:tracking-widest shadow-xs">
+                                <HelpCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#1e50ff] shrink-0" />
+                                <span className="hidden sm:inline">PUSAT BANTUAN & DUKUNGAN TEKNIS RESMI</span>
+                                <span className="sm:hidden">PUSAT BANTUAN RESMI</span>
                             </div>
                         </motion.div>
 
                         <motion.h1
                             variants={heroItemVariants}
-                            className="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight gsap-hero-item"
+                            className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight gsap-hero-item"
                         >
-                            Pertanyaan yang <span className="text-amber-300">Sering Diajukan</span>
+                            <span className="font-editorial-italic font-normal tracking-normal text-slate-900">Pusat Bantuan</span> Pertanyaan & <span className="text-[#1e50ff]">Jawaban Resmi</span>
                         </motion.h1>
 
                         <motion.p
                             variants={heroItemVariants}
-                            className="text-slate-200 text-sm sm:text-base max-w-xl mx-auto leading-relaxed gsap-hero-item"
+                            className="text-slate-600 text-sm sm:text-base max-w-xl mx-auto leading-relaxed gsap-hero-item"
                         >
-                            Temukan panduan cepat seputar operasional gateway, kuota pesan, teknologi BisnisWA UltraSync Engine, hingga integrasi API.
+                            Temukan panduan cepat seputar operasional gateway, kuota pesan, teknologi BisnisWA UltraSync Engine, hingga integrasi API instan.
                         </motion.p>
 
                         {/* Search Input Bar */}
@@ -199,7 +176,7 @@ export default function Faq({ plans = [], stats = {} }) {
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     placeholder="Cari pertanyaan, topik anti-ban, API, tagihan..."
-                                    className="w-full pl-11 pr-4 py-3 rounded-2xl bg-white text-slate-900 text-sm placeholder:text-slate-400 shadow-xl border border-white/20 focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all"
+                                    className="w-full pl-11 pr-4 py-3 rounded-full bg-white text-slate-900 text-sm placeholder:text-slate-400 shadow-md border border-slate-200 focus:outline-none focus:border-[#1e50ff] focus:ring-1 focus:ring-[#1e50ff] transition-all"
                                 />
                             </div>
                         </motion.div>
@@ -229,7 +206,7 @@ export default function Faq({ plans = [], stats = {} }) {
                                     {selectedCategory === cat.id && (
                                         <motion.div
                                             layoutId="activeFaqCategoryPill"
-                                            className="absolute inset-0 bg-emerald-700 rounded-xl shadow-xs"
+                                            className="absolute inset-0 bg-[#1e50ff] rounded-xl shadow-xs"
                                             transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                                         />
                                     )}
@@ -279,7 +256,7 @@ export default function Faq({ plans = [], stats = {} }) {
                                         className="gsap-card"
                                     >
                                         <Card
-                                            className="rounded-2xl border border-slate-200/90 bg-white shadow-card hover:shadow-card-hover hover:border-emerald-300 transition-all overflow-hidden"
+                                            className="rounded-2xl border border-slate-200/90 bg-white shadow-card hover:shadow-card-hover hover:border-blue-300 transition-all overflow-hidden"
                                         >
                                             <button
                                                 type="button"
@@ -294,7 +271,7 @@ export default function Faq({ plans = [], stats = {} }) {
                                                         animate={{ rotate: isOpen ? 180 : 0 }}
                                                         transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
                                                     >
-                                                        <ChevronDown className="w-4 h-4 text-emerald-600" />
+                                                        <ChevronDown className="w-4 h-4 text-[#1e50ff]" />
                                                     </motion.div>
                                                 </div>
                                             </button>

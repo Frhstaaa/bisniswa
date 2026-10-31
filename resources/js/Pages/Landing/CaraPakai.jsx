@@ -142,76 +142,53 @@ export default function CaraPakai({ plans = [], stats = {} }) {
         <PublicLayout title="Cara Pakai & Alur Integrasi" plans={safePlans} activeMenu="cara-pakai">
             <div className="space-y-16 lg:space-y-24">
                 {/* ================= HERO HEADER ================= */}
-                <section className="relative overflow-hidden bg-gradient-to-b from-emerald-950 via-emerald-900 to-emerald-950 text-white pt-36 sm:pt-44 lg:pt-48 pb-24 sm:pb-32 px-4 sm:px-6 lg:px-10">
-                    {/* Ambient Floating Glow Orbs */}
-                    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                        <motion.div
-                            animate={{
-                                scale: [1, 1.2, 1],
-                                opacity: [0.12, 0.25, 0.12],
-                                x: [0, 20, 0],
-                                y: [0, -15, 0],
-                            }}
-                            transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-                            className="absolute -top-32 left-1/4 w-96 h-96 rounded-full bg-emerald-500/25 blur-3xl"
-                        />
-                        <motion.div
-                            animate={{
-                                scale: [1, 1.25, 1],
-                                opacity: [0.08, 0.2, 0.08],
-                                x: [0, -25, 0],
-                                y: [0, 20, 0],
-                            }}
-                            transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-                            className="absolute top-1/3 -right-20 w-96 h-96 rounded-full bg-amber-400/15 blur-3xl"
-                        />
-                    </div>
-
+                <section className="relative overflow-hidden bg-white bg-grid-pattern text-slate-900 pt-32 sm:pt-40 pb-20 sm:pb-28 px-4 sm:px-6 lg:px-10 border-b border-slate-100">
                     <motion.div
                         variants={heroContainerVariants}
                         initial="hidden"
                         animate="visible"
-                        className="relative max-w-5xl mx-auto text-center space-y-4"
+                        className="relative max-w-5xl mx-auto text-center space-y-5"
                     >
                         <motion.div variants={heroItemVariants} className="inline-block gsap-hero-item">
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-bold shadow-xs">
-                                <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-                                <span>PANDUAN LENGKAP INTEGRASI WHATSAPP GATEWAY 2026</span>
+                            <div className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full border-[1.5px] border-[#1e50ff] bg-white text-[#1e50ff] text-[10px] sm:text-xs font-bold sm:font-black uppercase tracking-normal sm:tracking-widest shadow-xs">
+                                <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#1e50ff] shrink-0" />
+                                <span className="hidden sm:inline">PANDUAN OPERASIONAL & INTEGRASI KILAT</span>
+                                <span className="sm:hidden">PANDUAN INTEGRASI KILAT</span>
                             </div>
                         </motion.div>
 
                         <motion.h1
                             variants={heroItemVariants}
-                            className="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight gsap-hero-item"
+                            className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight gsap-hero-item"
                         >
-                            Cara Pakai & Alur Integrasi Cepat <span className="text-amber-300">Cuma 3 Menit</span>
+                            <span className="font-editorial-italic font-normal tracking-normal text-slate-900">Panduan Praktis</span> Integrasi Cepat dalam <span className="text-[#1e50ff]">3 Menit</span>
                         </motion.h1>
 
                         <motion.p
                             variants={heroItemVariants}
-                            className="text-slate-200 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed gsap-hero-item"
+                            className="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed gsap-hero-item"
                         >
-                            Mulai dari pendaftaran akun, menghubungkan nomor WhatsApp via scan QR, hingga otomasi broadcast massal dan REST API tanpa konfigurasi server yang rumit.
+                            Mulai dari pendaftaran workspace mandiri, menghubungkan perangkat via pemindaian kode QR, hingga otomatisasi pengiriman pesan broadcast massal dan bridging REST API terenkripsi.
                         </motion.p>
 
                         <motion.div variants={heroItemVariants} className="pt-4 flex flex-wrap items-center justify-center gap-3 gsap-hero-item">
                             <motion.button
-                                whileHover={{ scale: 1.03, y: -2 }}
+                                whileHover={{ scale: 1.03 }}
                                 whileTap={{ scale: 0.98 }}
                                 type="button"
                                 onClick={() => openRegisterModal()}
-                                className="btn-press inline-flex h-11 items-center gap-2 rounded-xl bg-amber-400 hover:bg-amber-300 px-6 text-sm font-bold text-slate-950 shadow-md transition-all cursor-pointer"
+                                className="btn-royal-pill inline-flex h-11 items-center gap-2 rounded-full bg-[#1e50ff] hover:bg-[#153ec7] px-8 text-xs font-extrabold uppercase tracking-wider text-white shadow-[0_12px_28px_-4px_rgba(30,80,255,0.45)] transition-all cursor-pointer"
                             >
-                                <Zap className="w-4 h-4 fill-slate-950" />
+                                <Zap className="w-4 h-4 fill-white" />
                                 <span>Mulai Uji Coba Gratis</span>
                             </motion.button>
                             <Link
                                 href="/rest-api"
                                 prefetch
-                                className="inline-flex h-11 items-center gap-2 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 px-5 text-sm font-bold text-white backdrop-blur-xs transition-all"
+                                className="inline-flex h-11 items-center gap-2 rounded-full border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50 px-6 text-xs font-bold text-slate-800 shadow-2xs transition-all"
                             >
-                                <Code2 className="w-4 h-4 text-emerald-300" />
-                                <span>Lihat Dokumentasi API</span>
+                                <Code2 className="w-4 h-4 text-[#1e50ff]" />
+                                <span>Dokumentasi REST API</span>
                             </Link>
                         </motion.div>
                     </motion.div>
@@ -233,22 +210,20 @@ export default function CaraPakai({ plans = [], stats = {} }) {
                                     className="gsap-card"
                                 >
                                     <Card
-                                        className="h-full p-6 sm:p-7 rounded-2xl border border-slate-200/90 bg-white shadow-card hover:shadow-lg transition-shadow space-y-4 group"
+                                        className="h-full p-6 sm:p-7 rounded-3xl border border-slate-200/90 bg-white shadow-card hover:shadow-lg transition-all space-y-4 group hover:border-blue-300"
                                     >
                                         <div className="flex items-center justify-between">
-                                            <span className="font-mono text-3xl font-black text-emerald-600/30 group-hover:text-emerald-600 transition-colors">
+                                            <span className="font-mono text-3xl font-black text-[#1e50ff]/20 group-hover:text-[#1e50ff] transition-colors">
                                                 {step.number}
                                             </span>
-                                            <Badge variant="emerald" className="text-[10px] uppercase font-bold tracking-wider">
-                                                {step.badge}
-                                            </Badge>
+                                            <span className="px-3 py-1 rounded-full text-[10px] uppercase font-extrabold tracking-wider bg-blue-50 text-[#1e50ff] border border-blue-200">{step.badge}</span>
                                         </div>
                                         <div className="flex items-start gap-3.5">
-                                            <div className="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200/70 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                                            <div className="w-11 h-11 rounded-xl bg-blue-50 text-[#1e50ff] border border-blue-200/70 flex items-center justify-center shrink-0 group-hover:bg-[#1e50ff] group-hover:text-white transition-colors">
                                                 <Icon className="w-5 h-5" />
                                             </div>
                                             <div>
-                                                <h3 className="text-base font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">
+                                                <h3 className="text-base font-bold text-slate-900 group-hover:text-[#1e50ff] transition-colors">
                                                     {step.title}
                                                 </h3>
                                                 <p className="text-xs text-slate-600 leading-relaxed mt-1.5">
@@ -257,7 +232,7 @@ export default function CaraPakai({ plans = [], stats = {} }) {
                                             </div>
                                         </div>
                                         <div className="pt-2 border-t border-slate-100 flex items-center gap-1.5 text-[11px] text-slate-500">
-                                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                                            <CheckCircle2 className="w-3.5 h-3.5 text-[#1e50ff] shrink-0" />
                                             <span><strong>Tips:</strong> {step.tips}</span>
                                         </div>
                                     </Card>
@@ -275,16 +250,14 @@ export default function CaraPakai({ plans = [], stats = {} }) {
                     transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                     className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 gsap-reveal"
                 >
-                    <div className="rounded-3xl bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 text-white p-6 sm:p-10 lg:p-12 border border-emerald-800/40 shadow-2xl">
+                    <div className="rounded-3xl bg-gradient-to-br from-[#08112c] via-[#0d2260] to-[#08112c] text-white p-6 sm:p-10 lg:p-12 border border-blue-800/40 shadow-2xl">
                         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                             {/* Left Controls */}
                             <div className="lg:col-span-7 space-y-6">
                                 <div className="space-y-2">
-                                    <Badge variant="gold" className="text-[10px] font-bold">
-                                        SIMULATOR INTERAKTIF
-                                    </Badge>
+                                    <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-blue-300/40 bg-white/10 text-blue-200 text-[10px] font-black uppercase tracking-widest">SIMULATOR PESAN INTERAKTIF</div>
                                     <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                                        Simulasikan Tampilan Pesan WhatsApp Penerima
+                                        Simulasi Tampilan Pesan di <span className="font-editorial-italic font-normal">Ponsel Pelanggan</span>
                                     </h2>
                                     <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
                                         Lihat bagaimana pesan otomatis dari sistem MARDIRA WA tampil dengan rapi di layar ponsel pelanggan atau mahasiswa Anda secara real-time.
@@ -326,7 +299,7 @@ export default function CaraPakai({ plans = [], stats = {} }) {
                                                     onClick={() => switchTemplateWithEffect(key)}
                                                     className={`px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                                                         simTemplate === key
-                                                            ? 'bg-amber-400 text-slate-950 shadow-xs'
+                                                            ? 'bg-[#1e50ff] text-white shadow-md'
                                                             : 'bg-white/10 text-white hover:bg-white/20 border border-white/15'
                                                     }`}
                                                 >
@@ -336,8 +309,8 @@ export default function CaraPakai({ plans = [], stats = {} }) {
                                         </div>
                                     </div>
 
-                                    <div className="p-4 rounded-xl bg-emerald-950/80 border border-emerald-700/40 text-emerald-200 text-xs flex items-start gap-2.5">
-                                        <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                                    <div className="p-4 rounded-xl bg-blue-950/80 border border-blue-700/40 text-blue-200 text-xs flex items-start gap-2.5">
+                                        <ShieldCheck className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
                                         <span className="leading-relaxed">
                                             Pesan dikirim melalui gateway terenkripsi resmi Politeknik Mardira Indonesia tanpa mencantumkan watermark pihak ketiga.
                                         </span>
@@ -396,7 +369,7 @@ export default function CaraPakai({ plans = [], stats = {} }) {
                                                             transition={{ duration: 0.18, ease: 'easeOut' }}
                                                             className="max-w-[88%] rounded-2xl rounded-tl-xs px-3.5 py-2.5 bg-white text-[#111b21] shadow-2xs text-[12px] leading-relaxed border border-slate-200/60 relative space-y-2"
                                                         >
-                                                            <span className="inline-block px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                                            <span className="inline-block px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-50 text-[#1e50ff] border border-blue-200">
                                                                 {simulationTemplates[simTemplate].badge}
                                                             </span>
                                                             <p className="whitespace-pre-line font-sans">
@@ -443,9 +416,9 @@ export default function CaraPakai({ plans = [], stats = {} }) {
                         transition={{ duration: 0.22 }}
                         className="text-center space-y-2 mb-10 gsap-reveal"
                     >
-                        <Badge variant="emerald" className="text-[10px] font-bold">PANDUAN KEAMANAN</Badge>
+                        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-blue-200 bg-blue-50 text-[#1e50ff] text-[10px] font-black uppercase tracking-widest">PANDUAN KEAMANAN NOMOR</div>
                         <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-                            Aturan Emas Agar Nomor WhatsApp Aman dari Banned
+                            Aturan Emas Menjaga <span className="font-editorial-italic font-normal">Reputasi Nomor WhatsApp</span>
                         </h2>
                         <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">
                             Ikuti standar pengiriman profesional berikut agar nomor Anda tetap beroperasi dengan skor reputasi tinggi di server Meta.
@@ -463,8 +436,8 @@ export default function CaraPakai({ plans = [], stats = {} }) {
                                 whileHover={{ y: -6, scale: 1.02 }}
                                 className="gsap-card"
                             >
-                                <Card className="h-full p-5 rounded-2xl border border-slate-200/90 bg-white shadow-card hover:shadow-card-hover hover:border-emerald-300 transition-all space-y-2.5">
-                                    <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-xs border border-emerald-200/60">
+                                <Card className="h-full p-5 rounded-3xl border border-slate-200/90 bg-white shadow-card hover:shadow-card-hover hover:border-blue-300 transition-all space-y-2.5">
+                                    <div className="w-8 h-8 rounded-lg bg-blue-50 text-[#1e50ff] flex items-center justify-center font-bold text-xs border border-blue-200/60 font-mono">
                                         0{idx + 1}
                                     </div>
                                     <h3 className="text-sm font-bold text-slate-900 leading-snug">
@@ -486,29 +459,32 @@ export default function CaraPakai({ plans = [], stats = {} }) {
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true, margin: '-20px' }}
                         transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                        className="rounded-3xl bg-gradient-to-r from-emerald-800 via-[#064e3b] to-slate-900 p-8 sm:p-10 text-white text-center space-y-4 shadow-xl gsap-scale"
+                        className="rounded-3xl bg-gradient-to-r from-[#08112c] via-[#0d2260] to-[#1e50ff] p-8 sm:p-12 text-white text-center space-y-4 shadow-xl gsap-scale"
                     >
-                        <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
-                            Siap Mengotomasi Pengiriman WhatsApp Anda?
+                        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-blue-300/40 bg-white/10 text-blue-200 text-xs font-black uppercase tracking-widest">
+                            OTOMATISASI WHATSAPP GATEWAY
+                        </div>
+                        <h2 className="text-3xl sm:text-4xl font-black tracking-tight">
+                            Siap Mengotomasi <span className="font-editorial-italic font-normal">Komunikasi Bisnis Anda?</span>
                         </h2>
-                        <p className="text-xs sm:text-sm text-emerald-100 max-w-xl mx-auto">
-                            Daftarkan akun sekarang, tautkan nomor Anda via scan QR dalam 10 detik, dan kirim pesan pertama Anda hari ini.
+                        <p className="text-xs sm:text-sm text-blue-100 max-w-xl mx-auto leading-relaxed">
+                            Daftarkan akun workspace sekarang, tautkan nomor Anda via scan QR dalam 10 detik, dan mulai kirim pesan pertama Anda hari ini.
                         </p>
-                        <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+                        <div className="pt-3 flex flex-wrap items-center justify-center gap-3">
                             <motion.button
-                                whileHover={{ scale: 1.03, y: -2 }}
+                                whileHover={{ scale: 1.03 }}
                                 whileTap={{ scale: 0.98 }}
                                 type="button"
                                 onClick={() => openRegisterModal()}
-                                className="btn-press inline-flex h-11 items-center gap-2 rounded-xl bg-amber-400 hover:bg-amber-300 px-6 text-xs font-bold text-slate-950 shadow-md transition-all cursor-pointer"
+                                className="btn-press inline-flex h-11 items-center gap-2 rounded-full bg-white hover:bg-slate-100 px-8 text-xs font-extrabold uppercase tracking-wider text-[#1e50ff] shadow-lg transition-all cursor-pointer"
                             >
-                                <Zap className="w-3.5 h-3.5 fill-slate-950" />
+                                <Zap className="w-3.5 h-3.5 fill-[#1e50ff]" />
                                 <span>Daftar Akun Baru Gratis</span>
                             </motion.button>
                             <Link
                                 href="/dual-engine"
                                 prefetch
-                                className="inline-flex h-11 items-center gap-2 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 px-5 text-xs font-bold text-white transition-all"
+                                className="inline-flex h-11 items-center gap-2 rounded-full border border-white/30 bg-white/10 hover:bg-white/20 px-6 text-xs font-bold text-white transition-all"
                             >
                                 <span>Pelajari UltraSync Engine &rarr;</span>
                             </Link>
