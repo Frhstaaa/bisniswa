@@ -82,11 +82,12 @@ class InternalGatewayWebhookController extends Controller
         }
 
         $deviceId = $request->input('device_id');
-        $sender = $request->input('sender');
-        $body = $request->input('message');
-        $senderName = $request->input('sender_name') ?? $request->input('push_name');
+        $sender = $request->input('sender') ?? $request->input('from');
+        $body = $request->input('message') ?? $request->input('text');
+        $senderName = $request->input('sender_name') ?? $request->input('push_name') ?? $request->input('from_name');
+        $mediaUrl = $request->input('media_url');
 
-        if (! $deviceId || ! $sender || ! $body) {
+        if (! $deviceId || ! $sender || ($body === null && empty($mediaUrl))) {
             return response()->json(['error' => 'Invalid payload'], 400);
         }
 
@@ -103,8 +104,9 @@ class InternalGatewayWebhookController extends Controller
             'device_id' => $device->id,
             'direction' => 'inbound',
             'receiver_number' => $sender,
-            'message_type' => 'text',
-            'content' => $body,
+            'message_type' => ! empty($mediaUrl) ? 'media' : 'text',
+            'content' => $body ?? ($mediaUrl ? '[Media File]' : ''),
+            'media_url' => $mediaUrl,
             'status' => 'delivered',
             'sent_at' => Carbon::now(),
         ]);

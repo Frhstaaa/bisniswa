@@ -261,4 +261,24 @@ class WhatsAppSaasTest extends TestCase
             'content' => 'Halo min, mau tanya info pendaftaran mahasiswa baru',
         ]);
     }
+
+    public function test_internal_webhook_receives_inbound_from_gateway_node(): void
+    {
+        $response = $this->withHeader('X-Internal-Secret', 'internal_secret_token')
+            ->postJson('/api/internal/messages/inbound', [
+                'device_id' => $this->device->id,
+                'from' => '6281234567890',
+                'text' => 'Pesan dari WhatsApp Web JS',
+            ]);
+
+        $response->assertStatus(200)
+            ->assertJson(['success' => true]);
+
+        $this->assertDatabaseHas('messages', [
+            'workspace_id' => $this->workspace->id,
+            'direction' => 'inbound',
+            'receiver_number' => '6281234567890',
+            'content' => 'Pesan dari WhatsApp Web JS',
+        ]);
+    }
 }

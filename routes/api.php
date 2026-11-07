@@ -24,4 +24,5 @@ Route::prefix('v1')->middleware('throttle:60,1')->group(function () {
 Route::prefix('internal')->group(function () {
     Route::post('/devices/webhook', [InternalGatewayWebhookController::class, 'deviceStatusWebhook']);
     Route::post('/messages/receive', [InternalGatewayWebhookController::class, 'receiveMessageWebhook']);
+    Route::post('/messages/inbound', [InternalGatewayWebhookController::class, 'receiveMessageWebhook']);
 });
