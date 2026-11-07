@@ -61,18 +61,22 @@ class SubscriptionController extends Controller
         $validated = $request->validate([
             'plan_id' => 'required|exists:plans,id',
             'payment_method' => 'required|in:qris,bca_va,bank_transfer',
+            'billing_cycle' => 'nullable|in:monthly,annually',
         ]);
 
+        $billingCycle = $validated['billing_cycle'] ?? 'monthly';
         $plan = Plan::findOrFail($validated['plan_id']);
         $invoiceNumber = 'INV-'.strtoupper(Str::random(8));
+        $amount = $billingCycle === 'annually' ? $plan->price_annually : $plan->price_monthly;
 
         $payment = Payment::create([
             'workspace_id' => $workspace->id,
             'plan_id' => $plan->id,
             'subscription_id' => $workspace->subscription?->id,
             'invoice_number' => $invoiceNumber,
-            'amount' => $plan->price_monthly,
+            'amount' => $amount,
             'payment_method' => $validated['payment_method'],
+            'billing_cycle' => $billingCycle,
             'status' => 'pending',
         ]);
 

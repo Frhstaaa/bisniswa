@@ -31,7 +31,7 @@ class AdminPaymentController extends Controller
         $paidCount = Payment::where('status', 'paid')->count();
 
         $workspaces = Workspace::select('id', 'name')->orderBy('name')->get();
-        $plans = Plan::select('id', 'name', 'price_monthly')->get();
+        $plans = Plan::select('id', 'name', 'price_monthly', 'price_annually')->get();
 
         return Inertia::render('Admin/Payments/Index', [
             'payments' => $payments,
@@ -66,6 +66,7 @@ class AdminPaymentController extends Controller
             'plan_id' => 'required|exists:plans,id',
             'amount' => 'required|numeric|min:0',
             'payment_method' => 'required|string',
+            'billing_cycle' => 'nullable|in:monthly,annually',
             'status' => 'required|in:pending,paid',
             'notes' => 'nullable|string',
         ]);

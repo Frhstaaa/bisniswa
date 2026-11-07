@@ -1083,7 +1083,9 @@ print(res.json())`,
                         {displayPlans.map((plan, pIdx) => {
                             const isYearly = billingCycle === 'annually';
                             const monthlyPrice = Math.round(Number(plan.price_monthly ?? plan.price ?? 99000));
-                            const finalPrice = isYearly ? Math.round(monthlyPrice * 0.8) : monthlyPrice;
+                            const annualPrice = Math.round(Number(plan.price_annually ?? (monthlyPrice * 10)));
+                            const finalPrice = isYearly ? Math.round(annualPrice / 12) : monthlyPrice;
+                            const annualSavings = (monthlyPrice * 12) - annualPrice;
                             const isRecommended = plan.is_popular;
                             const maxDev = plan.limits?.max_devices ?? plan.max_devices ?? 1;
                             const quota = plan.limits?.monthly_message_quota ?? plan.monthly_message_quota ?? 5000;
@@ -1126,12 +1128,19 @@ print(res.json())`,
                                                 <span className="text-3xl sm:text-4xl font-black text-[#0f172a] font-mono">
                                                     {finalPrice.toLocaleString('id-ID')}
                                                 </span>
-                                                <span className="text-xs text-slate-500">/{isYearly ? 'bulan' : 'bulan'}</span>
+                                                <span className="text-xs text-slate-500">/bulan</span>
                                             </div>
                                             {isYearly && (
-                                                <p className="text-[11px] text-emerald-600 font-semibold mt-1">
-                                                    Ditagihkan tahunan Rp {(finalPrice * 12).toLocaleString('id-ID')}
-                                                </p>
+                                                <div className="flex items-center gap-1.5 mt-1">
+                                                    <p className="text-[11px] text-emerald-600 font-semibold">
+                                                        Ditagihkan tahunan Rp {annualPrice.toLocaleString('id-ID')}
+                                                    </p>
+                                                    {annualSavings > 0 && (
+                                                        <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.2 rounded">
+                                                            Hemat Rp {annualSavings.toLocaleString('id-ID')}
+                                                        </span>
+                                                    )}
+                                                </div>
                                             )}
                                         </div>
 

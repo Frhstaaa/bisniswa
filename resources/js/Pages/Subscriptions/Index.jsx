@@ -44,16 +44,21 @@ export default function SubscriptionsIndex({ workspace, subscription, plans = []
     const [isTopupModalOpen, setIsTopupModalOpen] = useState(false);
     const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
     const [selectedPlanForCheckout, setSelectedPlanForCheckout] = useState(plans[0]?.id || 1);
+    const [billingCycle, setBillingCycle] = useState('monthly'); // 'monthly' | 'annually'
     const [paymentMethod, setPaymentMethod] = useState('qris'); // 'qris' | 'bca_va' | 'bank_transfer'
     const [topupAmount, setTopupAmount] = useState(10000);
     const [topupReason, setTopupReason] = useState('Top-up kuota pesan tambahan');
     const [processing, setProcessing] = useState(false);
 
-    // Auto-open checkout modal if plan_id is passed in query string (from pricing page)
+    // Auto-open checkout modal if plan_id or billing_cycle is passed in query string (from pricing page)
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const params = new URLSearchParams(window.location.search);
             const planParam = params.get('plan_id');
+            const cycleParam = params.get('billing_cycle');
+            if (cycleParam === 'annually' || cycleParam === 'yearly') {
+                setBillingCycle('annually');
+            }
             if (planParam) {
                 const targetId = parseInt(planParam);
                 if (targetId && plans.some((p) => p.id === targetId)) {
@@ -88,6 +93,7 @@ export default function SubscriptionsIndex({ workspace, subscription, plans = []
         router.post('/subscriptions/checkout', {
             plan_id: selectedPlanForCheckout,
             payment_method: paymentMethod,
+            billing_cycle: billingCycle,
         }, {
             preserveScroll: true,
             onFinish: () => {
@@ -481,29 +487,87 @@ export default function SubscriptionsIndex({ workspace, subscription, plans = []
                                 </div>
 
                                 <form onSubmit={handleCheckout} className="space-y-4 text-xs">
+                                    {/* Billing Cycle Selector */}
+                                    <div>
+                                        <label className="block font-semibold text-slate-700 mb-1.5">Siklus Berlangganan:</label>
+                                        <div className="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-xl">
+                                            <button
+                                                type="button"
+                                                onClick={() => setBillingCycle('monthly')}
+                                                className={`py-2 px-3 rounded-lg font-bold text-center transition-all ${
+                                                    billingCycle === 'monthly'
+                                                        ? 'bg-white text-emerald-800 shadow-xs'
+                                                        : 'text-slate-600 hover:text-slate-900'
+                                                }`}
+                                            >
+                                                <span>Bulanan</span>
+                                                <span className="block text-[10px] font-normal text-slate-500">Tagihan per 30 Hari</span>
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => setBillingCycle('annually')}
+                                                className={`py-2 px-3 rounded-lg font-bold text-center transition-all ${
+                                                    billingCycle === 'annually'
+                                                        ? 'bg-emerald-600 text-white shadow-xs'
+                                                        : 'text-slate-600 hover:text-slate-900'
+                                                }`}
+                                            >
+                                                <div className="flex items-center justify-center gap-1">
+                                                    <span>Tahunan</span>
+                                                    <span className={`text-[9px] px-1 py-0.2 rounded font-black ${
+                                                        billingCycle === 'annually' ? 'bg-amber-300 text-amber-950' : 'bg-emerald-100 text-emerald-800'
+                                                    }`}>
+                                                        Hemat 2 Bln
+                                                    </span>
+                                                </div>
+                                                <span className={`block text-[10px] font-normal ${billingCycle === 'annually' ? 'text-emerald-100' : 'text-slate-500'}`}>
+                                                    Tagihan per 365 Hari
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+
                                     {/* Choose Plan */}
                                     <div>
                                         <label className="block font-semibold text-slate-700 mb-1.5">Pilih Paket Langganan:</label>
                                         <div className="grid grid-cols-2 gap-2.5">
-                                            {plans.map((p) => (
-                                                <div
-                                                    key={p.id}
-                                                    onClick={() => setSelectedPlanForCheckout(p.id)}
-                                                    className={`p-3 rounded-xl border cursor-pointer transition-all ${
-                                                        selectedPlanForCheckout === p.id
-                                                            ? 'border-emerald-600 bg-emerald-50/60 ring-2 ring-emerald-600'
-                                                            : 'border-slate-200 hover:border-slate-300'
-                                                    }`}
-                                                >
-                                                    <div className="font-bold text-[#0f172a] text-xs">{p.name}</div>
-                                                    <div className="text-xs font-black text-emerald-700 mt-0.5">
-                                                        Rp {parseInt(p.price_monthly).toLocaleString('id-ID')} /bln
+                                            {plans.map((p) => {
+                                                const isYearly = billingCycle === 'annually';
+                                                const price = isYearly
+                                                    ? parseInt(p.price_annually || (p.price_monthly * 10))
+                                                    : parseInt(p.price_monthly);
+                                                const quota = isYearly
+                                                    ? ((p.limits?.monthly_message_quota ?? 5000) * 12)
+                                                    : (p.limits?.monthly_message_quota ?? 5000);
+
+                                                return (
+                                                    <div
+                                                        key={p.id}
+                                                        onClick={() => setSelectedPlanForCheckout(p.id)}
+                                                        className={`p-3 rounded-xl border cursor-pointer transition-all ${
+                                                            selectedPlanForCheckout === p.id
+                                                                ? 'border-emerald-600 bg-emerald-50/60 ring-2 ring-emerald-600'
+                                                                : 'border-slate-200 hover:border-slate-300'
+                                                        }`}
+                                                    >
+                                                        <div className="flex items-center justify-between">
+                                                            <span className="font-bold text-[#0f172a] text-xs">{p.name}</span>
+                                                            {isYearly && (
+                                                                <span className="text-[9px] font-bold text-emerald-700 bg-emerald-100/70 px-1 py-0.2 rounded">
+                                                                    1 Tahun
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                        <div className="text-xs font-black text-emerald-700 mt-0.5">
+                                                            Rp {price.toLocaleString('id-ID')}
+                                                            <span className="text-[10px] font-normal text-slate-500"> {isYearly ? '/tahun' : '/bln'}</span>
+                                                        </div>
+                                                        <div className="text-[10px] text-slate-500 mt-1">
+                                                            +{quota.toLocaleString()} Kuota Pesan
+                                                        </div>
                                                     </div>
-                                                    <div className="text-[10px] text-slate-500 mt-1">
-                                                        +{p.limits?.monthly_message_quota?.toLocaleString()} Kuota Pesan
-                                                    </div>
-                                                </div>
-                                            ))}
+                                                );
+                                            })}
                                         </div>
                                     </div>
 
@@ -562,7 +626,11 @@ export default function SubscriptionsIndex({ workspace, subscription, plans = []
                                                 Scan dengan BCA, Mandiri, GoPay, OVO, Dana, ShopeePay
                                             </div>
                                             <div className="text-xs font-mono font-black text-emerald-700">
-                                                Total: Rp {chosenPlan ? parseInt(chosenPlan.price_monthly).toLocaleString('id-ID') : '299.000'}
+                                                Total: Rp {chosenPlan
+                                                    ? (billingCycle === 'annually'
+                                                        ? parseInt(chosenPlan.price_annually || (chosenPlan.price_monthly * 10)).toLocaleString('id-ID')
+                                                        : parseInt(chosenPlan.price_monthly).toLocaleString('id-ID'))
+                                                    : '299.000'} ({billingCycle === 'annually' ? '1 Tahun' : '1 Bulan'})
                                             </div>
                                         </div>
                                     )}

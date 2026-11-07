@@ -34,6 +34,7 @@ export default function PaymentsIndex({ payments, filters, stats, workspaces, pl
     const { data, setData, post, processing, reset, errors } = useForm({
         workspace_id: workspaces[0]?.id || '',
         plan_id: plans[0]?.id || '',
+        billing_cycle: 'monthly',
         amount: plans[0]?.price_monthly || 99000,
         payment_method: 'bank_transfer',
         status: 'paid',
@@ -372,20 +373,23 @@ export default function PaymentsIndex({ payments, filters, stats, workspaces, pl
                                     </select>
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                     <div>
                                         <label className="block font-medium text-slate-700 mb-1.5">Paket Langganan</label>
                                         <select
                                             value={data.plan_id}
                                             onChange={(e) => {
                                                 const selected = plans.find((p) => p.id === parseInt(e.target.value));
+                                                const amt = data.billing_cycle === 'annually'
+                                                    ? (selected?.price_annually || 990000)
+                                                    : (selected?.price_monthly || 99000);
                                                 setData((prev) => ({
                                                     ...prev,
                                                     plan_id: e.target.value,
-                                                    amount: selected?.price_monthly || 99000,
+                                                    amount: amt,
                                                 }));
                                             }}
-                                            className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600"
+                                            className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600 text-xs"
                                             required
                                         >
                                             {plans.map((p) => (
@@ -395,12 +399,35 @@ export default function PaymentsIndex({ payments, filters, stats, workspaces, pl
                                     </div>
 
                                     <div>
+                                        <label className="block font-medium text-slate-700 mb-1.5">Siklus</label>
+                                        <select
+                                            value={data.billing_cycle || 'monthly'}
+                                            onChange={(e) => {
+                                                const cycle = e.target.value;
+                                                const selected = plans.find((p) => p.id === parseInt(data.plan_id));
+                                                const amt = cycle === 'annually'
+                                                    ? (selected?.price_annually || 990000)
+                                                    : (selected?.price_monthly || 99000);
+                                                setData((prev) => ({
+                                                    ...prev,
+                                                    billing_cycle: cycle,
+                                                    amount: amt,
+                                                }));
+                                            }}
+                                            className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600 text-xs font-semibold"
+                                        >
+                                            <option value="monthly">Bulanan (30 Hari)</option>
+                                            <option value="annually">Tahunan (365 Hari)</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
                                         <label className="block font-medium text-slate-700 mb-1.5">Nominal (Rp) <span className="text-red-500">*</span></label>
                                         <input
                                             type="number"
                                             value={data.amount}
                                             onChange={(e) => setData('amount', e.target.value)}
-                                            className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600 font-bold"
+                                            className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600 font-bold text-xs"
                                             required
                                         />
                                     </div>

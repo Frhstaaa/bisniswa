@@ -67,6 +67,7 @@ export default function Pricing({ plans = [], stats = {} }) {
             name: 'Starter Lite',
             slug: 'starter',
             price_monthly: 99000,
+            price_annually: 990000,
             monthly_message_quota: 5000,
             max_devices: 1,
             features: [
@@ -85,6 +86,7 @@ export default function Pricing({ plans = [], stats = {} }) {
             name: 'Pro Bisnis',
             slug: 'pro-bisnis',
             price_monthly: 179000,
+            price_annually: 1790000,
             monthly_message_quota: 15000,
             max_devices: 3,
             is_popular: true,
@@ -104,6 +106,7 @@ export default function Pricing({ plans = [], stats = {} }) {
             name: 'Enterprise Pro',
             slug: 'enterprise-pro',
             price_monthly: 299000,
+            price_annually: 2890000,
             monthly_message_quota: 50000,
             max_devices: 5,
             features: [
@@ -177,6 +180,7 @@ export default function Pricing({ plans = [], stats = {} }) {
     const sourcePlans = safePlans.length > 0 ? safePlans : DEFAULT_FALLBACK_PLANS;
     const displayPlans = sourcePlans.map((plan) => {
         const monthlyPrice = Math.round(Number(plan.price_monthly ?? plan.price ?? 99000));
+        const annualPrice = Math.round(Number(plan.price_annually ?? (monthlyPrice * 10)));
         const maxDev = plan.limits?.max_devices ?? plan.max_devices ?? 1;
         const quota = plan.limits?.monthly_message_quota ?? plan.monthly_message_quota ?? 5000;
         const features = getNormalizedFeatures(plan);
@@ -188,6 +192,7 @@ export default function Pricing({ plans = [], stats = {} }) {
             name: plan.name,
             slug: plan.slug,
             monthlyPrice,
+            annualPrice,
             max_devices: maxDev,
             monthly_message_quota: quota,
             features,
@@ -199,7 +204,7 @@ export default function Pricing({ plans = [], stats = {} }) {
     const handleSelectPlan = (planId) => {
         if (user) {
             // Logged-in user: redirect directly to subscription checkout with plan pre-selected
-            router.visit(`/subscriptions?plan_id=${planId}`);
+            router.visit(`/subscriptions?plan_id=${planId}&billing_cycle=${billingCycle}`);
         } else {
             // Guest visitor: open auth modal in registration mode with plan pre-selected
             openRegisterModal(planId);
@@ -329,7 +334,9 @@ export default function Pricing({ plans = [], stats = {} }) {
                         {displayPlans.map((plan, idx) => {
                             const isYearly = billingCycle === 'yearly';
                             const monthlyPrice = plan.monthlyPrice || plan.price || 99000;
-                            const finalPrice = isYearly ? Math.round(monthlyPrice * 0.8) : monthlyPrice;
+                            const annualPrice = plan.annualPrice || (monthlyPrice * 10);
+                            const finalPrice = isYearly ? Math.round(annualPrice / 12) : monthlyPrice;
+                            const annualSavings = (monthlyPrice * 12) - annualPrice;
                             const isRecommended = plan.is_popular;
                             const isMatchedBySlider = plan.name === recommendedPlanName;
 
@@ -379,9 +386,16 @@ export default function Pricing({ plans = [], stats = {} }) {
                                                     <span className="text-xs text-slate-500">/ bulan</span>
                                                 </div>
                                                 {isYearly && (
-                                                    <p className="text-[11px] text-[#1e50ff] font-semibold mt-1 animate-scale-pop">
-                                                        Ditagihkan tahunan Rp {(finalPrice * 12).toLocaleString('id-ID')}
-                                                    </p>
+                                                    <div className="flex items-center gap-1.5 mt-1 animate-scale-pop">
+                                                        <p className="text-[11px] text-[#1e50ff] font-semibold">
+                                                            Ditagihkan tahunan Rp {annualPrice.toLocaleString('id-ID')}
+                                                        </p>
+                                                        {annualSavings > 0 && (
+                                                            <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.2 rounded">
+                                                                Hemat Rp {annualSavings.toLocaleString('id-ID')}
+                                                            </span>
+                                                        )}
+                                                    </div>
                                                 )}
                                             </div>
 
@@ -513,7 +527,9 @@ export default function Pricing({ plans = [], stats = {} }) {
                                 </h4>
                                 {(() => {
                                     const matched = displayPlans.find((p) => p.name === recommendedPlanName) || displayPlans[0];
-                                    const price = billingCycle === 'yearly' ? Math.round(matched.monthlyPrice * 0.8) : matched.monthlyPrice;
+                                    const price = billingCycle === 'yearly'
+                                        ? Math.round((matched.annualPrice || (matched.monthlyPrice * 10)) / 12)
+                                        : matched.monthlyPrice;
                                     const perMsg = (price / Math.max(1, sliderQuota)).toFixed(1);
                                     return (
                                         <p className="text-[11px] text-slate-500 font-medium">

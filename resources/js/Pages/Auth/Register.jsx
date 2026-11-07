@@ -14,6 +14,7 @@ export default function Register({ plans, selectedPlanSlug }) {
         password: '',
         password_confirmation: '',
         plan_id: selectedPlan ? selectedPlan.id : 2,
+        billing_cycle: 'monthly',
     });
 
     // Real-time Email Validity Checker state
@@ -99,36 +100,79 @@ export default function Register({ plans, selectedPlanSlug }) {
             <div className="mt-6 sm:mt-8 w-full max-w-xl mx-auto">
                 <div className="bg-white border border-[#e2e8f0] py-6 px-4 sm:py-8 sm:px-8 shadow-card rounded-2xl space-y-6">
                     <form onSubmit={handleSubmit} className="space-y-4 text-xs">
-                        {/* Plan Selector Radios */}
+                        {/* Billing Cycle & Plan Selector */}
                         <div>
-                            <label className="block font-semibold text-[#334155] mb-1.5">Pilih Paket Langganan:</label>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                {plans && plans.map((plan) => (
-                                    <div
-                                        key={plan.id}
-                                        onClick={() => setData('plan_id', plan.id)}
-                                        className={`p-3.5 rounded-xl border cursor-pointer transition-all flex flex-col justify-between ${
-                                            data.plan_id === plan.id
-                                                ? 'border-[#1e50ff] bg-blue-50/50 ring-2 ring-[#1e50ff]'
-                                                : 'border-[#e2e8f0] hover:border-slate-300'
+                            <div className="flex items-center justify-between mb-2">
+                                <label className="block font-semibold text-[#334155]">Pilih Paket & Siklus:</label>
+                                <div className="flex items-center p-0.5 bg-slate-100 rounded-lg text-[11px] font-bold">
+                                    <button
+                                        type="button"
+                                        onClick={() => setData('billing_cycle', 'monthly')}
+                                        className={`px-2.5 py-1 rounded-md transition-all ${
+                                            data.billing_cycle === 'monthly'
+                                                ? 'bg-white text-[#1e50ff] shadow-xs'
+                                                : 'text-slate-500 hover:text-slate-800'
                                         }`}
                                     >
-                                        <div className="flex items-center justify-between">
-                                            <span className="font-bold text-[#0f172a] text-xs">{plan.name}</span>
-                                            {data.plan_id === plan.id && (
-                                                <span className="w-4 h-4 rounded-full bg-[#1e50ff] text-white flex items-center justify-center">
-                                                    <Check className="w-2.5 h-2.5" />
-                                                </span>
-                                            )}
+                                        Bulanan
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setData('billing_cycle', 'annually')}
+                                        className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1 ${
+                                            data.billing_cycle === 'annually'
+                                                ? 'bg-[#1e50ff] text-white shadow-xs'
+                                                : 'text-slate-500 hover:text-slate-800'
+                                        }`}
+                                    >
+                                        <span>Tahunan</span>
+                                        <span className={`text-[9px] px-1 py-0.2 rounded font-black ${
+                                            data.billing_cycle === 'annually' ? 'bg-amber-300 text-amber-950' : 'bg-emerald-100 text-emerald-800'
+                                        }`}>
+                                            Hemat
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                {plans && plans.map((plan) => {
+                                    const isYearly = data.billing_cycle === 'annually';
+                                    const price = isYearly
+                                        ? parseInt(plan.price_annually || (plan.price_monthly * 10))
+                                        : parseInt(plan.price_monthly);
+                                    const quota = isYearly
+                                        ? ((plan.limits?.monthly_message_quota ?? 5000) * 12)
+                                        : (plan.limits?.monthly_message_quota ?? 5000);
+
+                                    return (
+                                        <div
+                                            key={plan.id}
+                                            onClick={() => setData('plan_id', plan.id)}
+                                            className={`p-3.5 rounded-xl border cursor-pointer transition-all flex flex-col justify-between ${
+                                                data.plan_id === plan.id
+                                                    ? 'border-[#1e50ff] bg-blue-50/50 ring-2 ring-[#1e50ff]'
+                                                    : 'border-[#e2e8f0] hover:border-slate-300'
+                                            }`}
+                                        >
+                                            <div className="flex items-center justify-between">
+                                                <span className="font-bold text-[#0f172a] text-xs">{plan.name}</span>
+                                                {data.plan_id === plan.id && (
+                                                    <span className="w-4 h-4 rounded-full bg-[#1e50ff] text-white flex items-center justify-center">
+                                                        <Check className="w-2.5 h-2.5" />
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <p className="text-xs text-[#1e50ff] font-black mt-1">
+                                                Rp {price.toLocaleString('id-ID')}
+                                                <span className="text-[10px] font-normal text-slate-500"> {isYearly ? '/tahun' : '/bln'}</span>
+                                            </p>
+                                            <p className="text-[10px] text-[#64748b] mt-0.5">
+                                                {plan.limits?.max_devices} Device • {quota.toLocaleString()} Kuota
+                                            </p>
                                         </div>
-                                        <p className="text-xs text-[#1e50ff] font-black mt-1">
-                                            Rp {parseInt(plan.price_monthly).toLocaleString('id-ID')} /bln
-                                        </p>
-                                        <p className="text-[10px] text-[#64748b] mt-0.5">
-                                            {plan.limits?.max_devices} Device • {plan.limits?.monthly_message_quota?.toLocaleString()} Kuota
-                                        </p>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         </div>
 

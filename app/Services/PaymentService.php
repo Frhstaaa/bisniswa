@@ -30,18 +30,23 @@ class PaymentService
         $plan = $payment->plan ?? Plan::first();
 
         if ($workspace && $plan) {
+            $isAnnually = ($payment->billing_cycle === 'annually')
+                || ((float) $payment->amount >= ((float) $plan->price_annually - 100) && (float) $plan->price_annually > 0 && (float) $payment->amount > (float) $plan->price_monthly);
+            $daysToAdd = $isAnnually ? 365 : 30;
+            $quotaMultiplier = $isAnnually ? 12 : 1;
+
             $subscription = $workspace->subscription;
 
             if ($subscription) {
                 // Determine new end date
                 $currentEnd = Carbon::parse($subscription->ends_at);
                 $baseDate = $currentEnd->isPast() ? now() : $currentEnd;
-                $newEndDate = $baseDate->copy()->addDays(30);
+                $newEndDate = $baseDate->copy()->addDays($daysToAdd);
 
                 $previousEnd = $subscription->ends_at;
                 $previousQuota = $subscription->remaining_message_quota;
 
-                $addedQuota = $plan->limits['monthly_message_quota'] ?? 5000;
+                $addedQuota = ($plan->limits['monthly_message_quota'] ?? 5000) * $quotaMultiplier;
                 $newQuota = $subscription->remaining_message_quota + $addedQuota;
 
                 $subscription->update([
@@ -56,7 +61,7 @@ class PaymentService
                     'subscription_id' => $subscription->id,
                     'admin_user_id' => $adminId,
                     'action' => 'PAYMENT_APPROVED',
-                    'reason' => "Pembayaran Invoice {$payment->invoice_number} sebesar Rp ".number_format($payment->amount, 0, ',', '.').' disetujui.',
+                    'reason' => "Pembayaran Invoice {$payment->invoice_number} ({$payment->billing_cycle}) sebesar Rp ".number_format($payment->amount, 0, ',', '.').' disetujui.',
                     'previous_value' => [
                         'ends_at' => $previousEnd instanceof Carbon ? $previousEnd->toIso8601String() : $previousEnd,
                         'remaining_message_quota' => $previousQuota,
@@ -71,8 +76,8 @@ class PaymentService
             } else {
                 // Create brand new subscription
                 $startsAt = now();
-                $endsAt = now()->addDays(30);
-                $quota = $plan->limits['monthly_message_quota'] ?? 5000;
+                $endsAt = now()->addDays($daysToAdd);
+                $quota = ($plan->limits['monthly_message_quota'] ?? 5000) * $quotaMultiplier;
 
                 $newSubscription = Subscription::create([
                     'workspace_id' => $workspace->id,
@@ -89,7 +94,7 @@ class PaymentService
                     'subscription_id' => $newSubscription->id,
                     'admin_user_id' => $adminId,
                     'action' => 'PAYMENT_APPROVED_NEW_SUBSCRIPTION',
-                    'reason' => "Aktivasi langganan baru via Invoice {$payment->invoice_number}.",
+                    'reason' => "Aktivasi langganan baru ({$payment->billing_cycle}) via Invoice {$payment->invoice_number}.",
                     'previous_value' => [],
                     'new_value' => [
                         'ends_at' => $endsAt->toIso8601String(),
@@ -119,6 +124,7 @@ class PaymentService
             'plan_id' => $data['plan_id'] ?? null,
             'amount' => $data['amount'],
             'payment_method' => $data['payment_method'] ?? 'manual_admin',
+            'billing_cycle' => $data['billing_cycle'] ?? 'monthly',
             'status' => $data['status'] ?? 'pending',
             'paid_at' => ($data['status'] ?? '') === 'paid' ? now() : null,
             'notes' => $data['notes'] ?? 'Dibuat secara manual oleh Super Admin',

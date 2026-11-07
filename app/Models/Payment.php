@@ -22,6 +22,7 @@ class Payment extends Model
         'plan_id',
         'amount',
         'payment_method',
+        'billing_cycle',
         'status',
         'paid_at',
         'proof_url',

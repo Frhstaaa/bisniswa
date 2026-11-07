@@ -28,6 +28,7 @@ const DEFAULT_FALLBACK_PLANS = [
         name: 'Starter Lite',
         slug: 'starter',
         price_monthly: 99000,
+        price_annually: 990000,
         limits: { monthly_message_quota: 5000, max_devices: 1 },
     },
     {
@@ -35,6 +36,7 @@ const DEFAULT_FALLBACK_PLANS = [
         name: 'Pro Bisnis',
         slug: 'pro-bisnis',
         price_monthly: 179000,
+        price_annually: 1790000,
         limits: { monthly_message_quota: 15000, max_devices: 3 },
     },
     {
@@ -42,6 +44,7 @@ const DEFAULT_FALLBACK_PLANS = [
         name: 'Enterprise Pro',
         slug: 'enterprise-pro',
         price_monthly: 299000,
+        price_annually: 2890000,
         limits: { monthly_message_quota: 50000, max_devices: 5 },
     },
 ];
@@ -69,6 +72,7 @@ export default function AuthModal({
         password: '',
         password_confirmation: '',
         plan_id: initialPlanId || (safePlans[0]?.id || 1),
+        billing_cycle: 'monthly',
     });
 
     // Form for Login
@@ -367,15 +371,51 @@ export default function AuthModal({
 
                             {/* Interactive Plan Picker */}
                             <div>
-                                <label className="block text-xs font-semibold text-slate-700 mb-2">
-                                    Pilih Paket Layanan:
-                                </label>
+                                <div className="flex items-center justify-between mb-2">
+                                    <label className="block text-xs font-semibold text-slate-700">
+                                        Pilih Paket Layanan:
+                                    </label>
+                                    <div className="flex items-center p-0.5 bg-slate-100 rounded-lg text-[10px] font-bold">
+                                        <button
+                                            type="button"
+                                            onClick={() => registerForm.setData('billing_cycle', 'monthly')}
+                                            className={`px-2 py-0.5 rounded-md transition-all ${
+                                                registerForm.data.billing_cycle === 'monthly'
+                                                    ? 'bg-white text-[#1e50ff] shadow-xs'
+                                                    : 'text-slate-500 hover:text-slate-800'
+                                            }`}
+                                        >
+                                            Bulanan
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => registerForm.setData('billing_cycle', 'annually')}
+                                            className={`px-2 py-0.5 rounded-md transition-all flex items-center gap-1 ${
+                                                registerForm.data.billing_cycle === 'annually'
+                                                    ? 'bg-[#1e50ff] text-white shadow-xs'
+                                                    : 'text-slate-500 hover:text-slate-800'
+                                            }`}
+                                        >
+                                            <span>Tahunan</span>
+                                            <span className={`text-[9px] px-1 py-0.2 rounded font-black ${
+                                                registerForm.data.billing_cycle === 'annually' ? 'bg-amber-300 text-amber-950' : 'bg-emerald-100 text-emerald-800'
+                                            }`}>
+                                                Hemat
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                                     {safePlans.map((p) => {
                                         const isSelected = parseInt(registerForm.data.plan_id) === p.id;
-                                        const monthlyPrice = parseInt(p.price_monthly || p.price || 0);
+                                        const isYearly = registerForm.data.billing_cycle === 'annually';
+                                        const price = isYearly
+                                            ? parseInt(p.price_annually || (p.price_monthly * 10))
+                                            : parseInt(p.price_monthly || p.price || 0);
                                         const maxDev = p.limits?.max_devices ?? p.max_devices ?? 1;
-                                        const quota = p.limits?.monthly_message_quota ?? p.monthly_message_quota ?? 1000;
+                                        const quota = isYearly
+                                            ? ((p.limits?.monthly_message_quota ?? 5000) * 12)
+                                            : (p.limits?.monthly_message_quota ?? p.monthly_message_quota ?? 1000);
                                         return (
                                             <div
                                                 key={p.id}
@@ -395,8 +435,8 @@ export default function AuthModal({
                                                     )}
                                                 </div>
                                                 <div className="text-[#1e50ff] font-extrabold text-sm font-mono tabular-nums mt-1">
-                                                    Rp {monthlyPrice.toLocaleString('id-ID')}
-                                                    <span className="text-[10px] font-normal text-slate-500"> /bln</span>
+                                                    Rp {price.toLocaleString('id-ID')}
+                                                    <span className="text-[10px] font-normal text-slate-500"> {isYearly ? '/tahun' : '/bln'}</span>
                                                 </div>
                                                 <p className="text-[10px] text-slate-500 mt-0.5">
                                                     {maxDev} Perangkat • {quota?.toLocaleString('id-ID')} Kuota

@@ -75,6 +75,7 @@ class AuthController extends Controller
             'workspace_name' => 'required|string|max:150',
             'phone' => 'required|string|max:30',
             'plan_id' => 'required|exists:plans,id',
+            'billing_cycle' => 'nullable|in:monthly,annually',
         ], [
             'name.required' => 'Nama lengkap wajib diisi.',
             'email.required' => 'Alamat email wajib diisi.',
@@ -116,17 +117,20 @@ class AuthController extends Controller
 
         // 3. Create Subscription
         $plan = Plan::findOrFail($validated['plan_id']);
-        $monthlyQuota = $plan->limits['monthly_message_quota'] ?? 5000;
+        $isAnnually = ($validated['billing_cycle'] ?? 'monthly') === 'annually';
+        $days = $isAnnually ? 365 : 30;
+        $quotaMultiplier = $isAnnually ? 12 : 1;
+        $initialQuota = ($plan->limits['monthly_message_quota'] ?? 5000) * $quotaMultiplier;
 
         $subscription = Subscription::create([
             'workspace_id' => $workspace->id,
             'plan_id' => $plan->id,
             'status' => 'active',
             'starts_at' => now(),
-            'ends_at' => now()->addDays(30),
+            'ends_at' => now()->addDays($days),
             'grace_period_days' => 3,
-            'monthly_message_quota' => $monthlyQuota,
-            'remaining_message_quota' => $monthlyQuota,
+            'monthly_message_quota' => $initialQuota,
+            'remaining_message_quota' => $initialQuota,
         ]);
 
         // 4. Record Audit
@@ -135,7 +139,7 @@ class AuthController extends Controller
             'admin_user_id' => $user->id,
             'action' => 'REGISTRATION_NEW',
             'previous_value' => [],
-            'new_value' => ['plan' => $plan->name, 'duration_days' => 30, 'quota' => $monthlyQuota],
+            'new_value' => ['plan' => $plan->name, 'duration_days' => $days, 'quota' => $initialQuota],
             'reason' => 'Pendaftaran akun baru dan aktivasi paket '.$plan->name,
         ]);
 

@@ -121,6 +121,7 @@ class AdminPlanController extends Controller
         ]);
 
         Cache::forget('public_plans');
+        Cache::forget('public_landing_plans');
 
         return back()->with('success', "Paket langganan '{$validated['name']}' berhasil ditambahkan.");
     }
@@ -181,6 +182,7 @@ class AdminPlanController extends Controller
         ]);
 
         Cache::forget('public_plans');
+        Cache::forget('public_landing_plans');
 
         return back()->with('success', "Paket langganan '{$plan->name}' berhasil diperbarui.");
     }
@@ -195,6 +197,7 @@ class AdminPlanController extends Controller
         $plan->save();
 
         Cache::forget('public_plans');
+        Cache::forget('public_landing_plans');
 
         $statusStr = $plan->is_active ? 'diaktifkan' : 'dinonaktifkan';
 
@@ -220,6 +223,7 @@ class AdminPlanController extends Controller
         $plan->delete();
 
         Cache::forget('public_plans');
+        Cache::forget('public_landing_plans');
 
         return back()->with('success', "Paket langganan '{$planName}' berhasil dihapus.");
     }

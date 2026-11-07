@@ -527,7 +527,30 @@ export default function AdminPlansIndex({ plans, metrics, filters }) {
                                     </div>
 
                                     <div className="space-y-1.5">
-                                        <label className="font-bold text-emerald-950">Harga Tahunan (Rp) *</label>
+                                        <div className="flex items-center justify-between">
+                                            <label className="font-bold text-emerald-950">Harga Tahunan (Rp) *</label>
+                                            {Number(form.price_monthly) > 0 && (
+                                                <div className="flex items-center gap-1.5 text-[10px]">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setForm({ ...form, price_annually: Math.round(Number(form.price_monthly) * 10) })}
+                                                        className="text-emerald-700 hover:text-emerald-900 font-semibold underline cursor-pointer"
+                                                        title="Bayar 10 bulan, dapat 12 bulan (hemat 2 bulan)"
+                                                    >
+                                                        10x Bln (Hemat 2 Bln)
+                                                    </button>
+                                                    <span className="text-emerald-300">•</span>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setForm({ ...form, price_annually: Math.round(Number(form.price_monthly) * 12 * 0.8) })}
+                                                        className="text-emerald-700 hover:text-emerald-900 font-semibold underline cursor-pointer"
+                                                        title="Diskon 20% dari 12 bulan"
+                                                    >
+                                                        Diskon 20%
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
                                         <input
                                             type="number"
                                             required
@@ -538,6 +561,15 @@ export default function AdminPlansIndex({ plans, metrics, filters }) {
                                             placeholder="990000"
                                             className="w-full px-3 py-2 rounded-xl border border-emerald-200 bg-white text-xs font-mono font-bold focus:outline-none focus:ring-1 focus:ring-emerald-500"
                                         />
+                                        {Number(form.price_monthly) > 0 && Number(form.price_annually) > 0 && (
+                                            <div className="text-[10px] text-emerald-800 font-medium">
+                                                {Number(form.price_monthly) * 12 > Number(form.price_annually) ? (
+                                                    <span>🎉 Klien hemat <strong>Rp {(Number(form.price_monthly) * 12 - Number(form.price_annually)).toLocaleString('id-ID')}</strong> ({Math.round(((Number(form.price_monthly) * 12 - Number(form.price_annually)) / (Number(form.price_monthly) * 12)) * 100)}%) per tahun</span>
+                                                ) : (
+                                                    <span>Setara Rp {Math.round(Number(form.price_annually) / 12).toLocaleString('id-ID')} / bulan</span>
+                                                )}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
 

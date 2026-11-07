@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Payment;
 use App\Models\Plan;
 use App\Models\Subscription;
 use App\Models\User;
@@ -396,5 +397,62 @@ class AdminPlanAndStaffRbacTest extends TestCase
     {
         $this->actingAs($this->supportStaff)->get('/admin/gateways')->assertStatus(200);
         $this->actingAs($this->supportStaff)->get('/admin/payments')->assertStatus(403);
+    }
+
+    public function test_superadmin_can_setup_annual_pricing_and_client_can_checkout_annually(): void
+    {
+        // 1. Superadmin sets up a plan with monthly and annual price
+        $planData = [
+            'name' => 'Paket Edukasi Tahunan',
+            'slug' => 'edukasi-tahunan',
+            'price_monthly' => 100000,
+            'price_annually' => 1000000,
+            'max_devices' => 2,
+            'monthly_message_quota' => 6000,
+            'daily_broadcast_limit' => 2000,
+            'api_rate_limit_per_minute' => 60,
+            'spintax_enabled' => true,
+            'auto_reply' => true,
+            'webhook_access' => true,
+            'schedule_broadcast' => true,
+            'multi_agent' => false,
+            'ai_bot' => false,
+            'is_active' => true,
+        ];
+
+        $response = $this->actingAs($this->superAdmin)->post('/admin/plans', $planData);
+        $response->assertRedirect();
+        $response->assertSessionHas('success');
+
+        $plan = Plan::where('slug', 'edukasi-tahunan')->first();
+        $this->assertNotNull($plan);
+        $this->assertEquals(100000, (int) $plan->price_monthly);
+        $this->assertEquals(1000000, (int) $plan->price_annually);
+
+        // 2. Client initiates checkout with annually billing cycle
+        $checkoutResponse = $this->actingAs($this->regularClient)->post('/subscriptions/checkout', [
+            'plan_id' => $plan->id,
+            'payment_method' => 'qris',
+            'billing_cycle' => 'annually',
+        ]);
+
+        $checkoutResponse->assertRedirect();
+        $checkoutResponse->assertSessionHas('success');
+
+        // Verify payment record
+        $payment = Payment::where('workspace_id', $this->regularClient->workspace_id)
+            ->latest('id')
+            ->first();
+
+        $this->assertNotNull($payment);
+        $this->assertEquals(1000000, (int) $payment->amount);
+        $this->assertEquals('annually', $payment->billing_cycle);
+        $this->assertEquals('paid', $payment->status);
+
+        // Verify subscription duration extended by ~365 days and 12x quota added
+        $sub = Subscription::where('workspace_id', $this->workspace->id)->first();
+        $this->assertNotNull($sub);
+        $this->assertTrue($sub->ends_at->isFuture());
+        $this->assertEquals(72000, $sub->remaining_message_quota);
     }
 }

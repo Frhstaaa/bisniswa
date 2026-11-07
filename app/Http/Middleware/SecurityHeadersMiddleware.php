@@ -68,13 +68,26 @@ class SecurityHeadersMiddleware
         $response->headers->set('Cross-Origin-Resource-Policy', 'same-origin');
 
         // Content Security Policy (CSP) tailored for Inertia + Vite + Google Fonts + Lucide + WebSockets
+        $scriptSrc = "'self' 'unsafe-inline' 'unsafe-eval'";
+        $styleSrc = "'self' 'unsafe-inline' https://fonts.googleapis.com";
+        $connectSrc = "'self' ws: wss: https:";
+
+        if (app()->environment('local', 'testing')) {
+            $viteHosts = 'http://localhost:5173 http://127.0.0.1:5173';
+            $viteWs = 'ws://localhost:5173 ws://127.0.0.1:5173';
+
+            $scriptSrc .= " {$viteHosts}";
+            $styleSrc .= " {$viteHosts}";
+            $connectSrc .= " {$viteHosts} {$viteWs}";
+        }
+
         $cspPolicy = implode('; ', [
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+            "script-src {$scriptSrc}",
+            "style-src {$styleSrc}",
             "font-src 'self' https://fonts.gstatic.com data:",
             "img-src 'self' data: https: blob:",
-            "connect-src 'self' ws: wss: https:",
+            "connect-src {$connectSrc}",
             "frame-ancestors 'self'",
             "base-uri 'self'",
             "form-action 'self'",
