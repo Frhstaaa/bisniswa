@@ -50,6 +50,9 @@ import {
     Store,
     Layers,
     Tags,
+    PanelRightClose,
+    PanelRightOpen,
+    RotateCcw,
 } from 'lucide-react';
 
 export default function AutoReplyIndex({
@@ -104,7 +107,16 @@ export default function AutoReplyIndex({
     const [ruleStatusFilter, setRuleStatusFilter] = useState('');
     const [ruleCategoryFilter, setRuleCategoryFilter] = useState('');
 
-    // Simulator states
+    const handleResetFilters = () => {
+        setRuleSearch('');
+        setRuleDeviceFilter('');
+        setRuleStatusFilter('');
+        setRuleCategoryFilter('');
+    };
+
+    // Simulator states & drawer/dock toggle
+    const [isSimulatorOpen, setIsSimulatorOpen] = useState(false);
+    const [isSimulatorDocked, setIsSimulatorDocked] = useState(false);
     const [simulatedMessage, setSimulatedMessage] = useState('');
     const [selectedDeviceId, setSelectedDeviceId] = useState('');
     const [simulateOutsideHours, setSimulateOutsideHours] = useState(false);
@@ -499,6 +511,239 @@ export default function AutoReplyIndex({
         { num: 7, label: 'Min' },
     ];
 
+    const renderSimulatorContent = (isDocked = false) => (
+        <div className={`bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.02)] overflow-hidden flex flex-col ${isDocked ? 'h-[680px]' : 'h-full'} relative`}>
+            {/* WhatsApp Desktop Header with Device Selector & Testing Mode */}
+            <div className="p-3 bg-[#0b0f17] text-white flex flex-col gap-2 border-b border-slate-800">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                        <div className="relative">
+                            <div className="w-8 h-8 rounded-full bg-[#1677ff]/20 text-[#1677ff] border border-[#1677ff]/40 flex items-center justify-center font-bold text-xs">
+                                WA
+                            </div>
+                            <span className={`w-2 h-2 rounded-full absolute -bottom-0.5 -right-0.5 border border-[#0b0f17] ${isMasterOn ? 'bg-[#52c41a]' : 'bg-[#faad14]'}`} />
+                        </div>
+                        <div>
+                            <div className="font-bold text-xs text-slate-100">Simulator WhatsApp Bisnis</div>
+                            <div className={`text-[10px] font-medium flex items-center gap-1 ${isMasterOn ? 'text-[#52c41a]' : 'text-amber-400'}`}>
+                                <span className={`w-1.5 h-1.5 rounded-full ${isMasterOn ? 'bg-[#52c41a] animate-pulse' : 'bg-amber-400'}`} />
+                                {isMasterOn ? 'Online & Auto-Responder' : 'Bot Nonaktif (Simulasi)'}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-1">
+                        <button
+                            type="button"
+                            onClick={() => setIsSimulatorDocked(!isSimulatorDocked)}
+                            className="p-1 text-slate-400 hover:text-white rounded border border-transparent hover:border-slate-700 transition-colors cursor-pointer"
+                            title={isDocked ? 'Ubah ke mode Drawer Mengambang' : 'Sematkan di samping tabel'}
+                        >
+                            {isDocked ? <PanelRightClose className="w-4 h-4" /> : <PanelRightOpen className="w-4 h-4" />}
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setChatHistory([{ sender: 'bot', text: 'Chat simulasi telah dibersihkan. Silakan mulai chat baru.', source: 'Reset' }])}
+                            className="p-1 text-slate-400 hover:text-white rounded border border-transparent hover:border-slate-700 transition-colors cursor-pointer"
+                            title="Bersihkan riwayat simulasi"
+                        >
+                            <RotateCcw className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setIsSimulatorOpen(false)}
+                            className="p-1 text-slate-400 hover:text-white rounded border border-transparent hover:border-slate-700 transition-colors cursor-pointer"
+                            title="Tutup simulator"
+                        >
+                            <X className="w-4 h-4" />
+                        </button>
+                    </div>
+                </div>
+
+                {/* Target Device & Away Simulation Controls */}
+                <div className="pt-2 border-t border-slate-800 flex items-center justify-between gap-2">
+                    <select
+                        value={selectedDeviceId}
+                        onChange={(e) => setSelectedDeviceId(e.target.value)}
+                        className="bg-slate-900 border border-slate-700 text-slate-200 text-[10px] rounded px-2 py-1 focus:outline-none flex-1 truncate"
+                    >
+                        <option value="">Semua Nomor WA (Global)</option>
+                        {safeDevices.map((device) => (
+                            <option key={device.id} value={device.id}>
+                                {device.name}
+                            </option>
+                        ))}
+                    </select>
+
+                    <button
+                        type="button"
+                        onClick={() => setSimulateOutsideHours(!simulateOutsideHours)}
+                        className={`text-[10px] font-semibold px-2 py-1 rounded border flex items-center gap-1 transition-colors cursor-pointer ${
+                            simulateOutsideHours
+                                ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                                : 'bg-slate-800 text-slate-400 border-slate-700 hover:text-slate-200'
+                        }`}
+                        title="Simulasikan waktu chat saat kantor sedang tutup"
+                    >
+                        {simulateOutsideHours ? <Moon className="w-3 h-3 text-amber-400" /> : <Sun className="w-3 h-3" />}
+                        <span>{simulateOutsideHours ? 'Luar Jam' : 'Jam Buka'}</span>
+                    </button>
+                </div>
+            </div>
+
+            {/* Warning Banner if Master is OFF */}
+            {!isMasterOn && (
+                <div className="px-3 py-1.5 bg-amber-50 border-b border-amber-200 text-[10px] text-amber-800 flex items-center gap-1.5">
+                    <AlertCircle className="w-3 h-3 text-amber-600 shrink-0" />
+                    <span>Bot sedang <strong>nonaktif</strong>. Tampilan ini adalah simulasi respon.</span>
+                </div>
+            )}
+
+            {/* Chat History Bubbles */}
+            <div className="flex-1 p-3.5 overflow-y-auto space-y-3 bg-[#efeae2]/60 text-xs">
+                {chatHistory.map((item, idx) => (
+                    <div
+                        key={idx}
+                        className={`flex flex-col ${item.sender === 'user' ? 'items-end' : 'items-start'}`}
+                    >
+                        <div
+                            className={`max-w-[88%] p-3 rounded-xl shadow-2xs leading-relaxed text-xs ${
+                                item.sender === 'user'
+                                    ? 'bg-[#d9fdd3] text-[#111b21] rounded-tr-xs border border-[#c1f5b8]/50'
+                                    : 'bg-white text-[#111b21] rounded-tl-xs border border-slate-200/60'
+                            }`}
+                        >
+                            {item.quote && (
+                                <div className="mb-1.5 p-1.5 rounded-lg bg-emerald-900/10 border-l-4 border-emerald-600 text-[10px] text-slate-700 select-none">
+                                    <div className="truncate italic">{item.quote}</div>
+                                </div>
+                            )}
+
+                            {item.mediaUrl && (
+                                <div className="mb-2 rounded-lg overflow-hidden border border-slate-200">
+                                    <img
+                                        src={item.mediaUrl}
+                                        alt="Lampiran"
+                                        className="w-full h-32 object-cover"
+                                        onError={(e) => {
+                                            e.target.style.display = 'none';
+                                        }}
+                                    />
+                                </div>
+                            )}
+
+                            <div className="whitespace-pre-wrap font-sans text-xs leading-relaxed">
+                                {item.text}
+                            </div>
+
+                            {/* Interactive Quick Reply Buttons */}
+                            {item.buttons && Array.isArray(item.buttons) && item.buttons.length > 0 && (
+                                <div className="mt-2.5 pt-2 border-t border-slate-100 flex flex-col gap-1.5">
+                                    <div className="flex flex-wrap gap-1.5">
+                                        {item.buttons.map((btn, bIdx) => (
+                                            <button
+                                                key={bIdx}
+                                                type="button"
+                                                onClick={() => executeSimulation(btn.keyword || btn.label, btn.label)}
+                                                className="px-2.5 py-1.5 rounded-lg bg-[#e6f4ff] hover:bg-[#bae0ff] text-[#1677ff] border border-[#91caff]/40 text-[11px] font-semibold transition-all cursor-pointer shadow-2xs flex items-center gap-1 active:scale-95 text-left"
+                                            >
+                                                <CornerDownLeft className="w-3 h-3 text-[#1677ff] shrink-0" />
+                                                <span>{btn.label}</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Interactive CTA Link Web Button */}
+                            {item.cta_url && (
+                                <div className="mt-2.5 pt-2 border-t border-slate-100">
+                                    <a
+                                        href={item.cta_url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 text-[11px] font-bold transition-all shadow-2xs"
+                                    >
+                                        <ExternalLink className="w-3.5 h-3.5 text-sky-600" />
+                                        <span>{item.cta_text || 'Buka Tautan Web'}</span>
+                                    </a>
+                                </div>
+                            )}
+
+                            {/* Action Options */}
+                            {item.action_buttons && Array.isArray(item.action_buttons) && item.action_buttons.length > 0 && (
+                                <div className="mt-2.5 pt-2 border-t border-slate-100 flex flex-wrap gap-1">
+                                    {item.action_buttons.map((act, actIdx) => (
+                                        <button
+                                            key={actIdx}
+                                            type="button"
+                                            onClick={() => executeSimulation(act, act)}
+                                            className="text-[10px] font-medium px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer border border-slate-200"
+                                        >
+                                            ➔ {act}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+
+                            <div className="mt-1 flex items-center justify-end gap-1 text-[9px] text-slate-400 font-mono">
+                                <span>{new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</span>
+                                {item.sender === 'user' && <CheckCheck className="w-3 h-3 text-sky-500" />}
+                            </div>
+                        </div>
+
+                        {item.source && (
+                            <span className={`text-[9px] mt-0.5 px-1 font-mono ${item.isAway ? 'text-amber-600 font-bold' : 'text-slate-400'}`}>
+                                {item.source}
+                            </span>
+                        )}
+                    </div>
+                ))}
+
+                {isSimulating && (
+                    <div className="flex items-center gap-2 text-slate-400 text-xs italic bg-white p-2 rounded-xl w-fit shadow-2xs border border-slate-200/60">
+                        <div className="w-2 h-2 rounded-full bg-[#1677ff] animate-ping" />
+                        <span>Bot sedang mengetik balasan...</span>
+                    </div>
+                )}
+                <div ref={chatEndRef} />
+            </div>
+
+            {/* Quick Testing Chips for Business */}
+            <div className="px-3 py-1.5 bg-slate-50 border-t border-[#e6ebf1] flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+                <span className="text-[10px] text-slate-400 font-medium shrink-0">Tes:</span>
+                {['Menu', '1', '2', 'Katalog', 'Format Order', 'Rekening', 'Jam Buka', 'CS'].map((chip) => (
+                    <button
+                        key={chip}
+                        type="button"
+                        onClick={() => executeSimulation(chip)}
+                        className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-white hover:bg-[#e6f4ff] text-slate-600 hover:text-[#1677ff] border border-slate-200 hover:border-[#91caff]/60 transition-colors shrink-0 cursor-pointer"
+                    >
+                        {chip}
+                    </button>
+                ))}
+            </div>
+
+            {/* Chat Input Simulator Form */}
+            <form onSubmit={handleRunSimulation} className="p-3 bg-white border-t border-[#e6ebf1] flex items-center gap-2">
+                <input
+                    type="text"
+                    value={simulatedMessage}
+                    onChange={(e) => setSimulatedMessage(e.target.value)}
+                    placeholder="Ketik pesan tes (misal: 'info', '1', 'daftar')..."
+                    className="flex-1 px-3 py-2 text-xs rounded-lg border border-[#e6ebf1] focus:border-[#1677ff] focus:outline-none"
+                />
+                <Button
+                    type="submit"
+                    disabled={!simulatedMessage.trim() || isSimulating}
+                    className="h-8 w-8 p-0 rounded-lg bg-[#1677ff] hover:bg-[#1060d4] text-white flex items-center justify-center shrink-0 cursor-pointer shadow-xs disabled:opacity-40"
+                >
+                    <Send className="w-3.5 h-3.5" />
+                </Button>
+            </form>
+        </div>
+    );
+
     return (
         <AppLayout title="Auto-Reply & AI Bot">
             <Head title="Auto-Reply & Asisten AI Gemini — MARDIRA WA" />
@@ -537,7 +782,7 @@ export default function AutoReplyIndex({
                             title="Buka template formulir pemesanan cepat"
                         >
                             <FileText className="w-3.5 h-3.5 text-indigo-600" />
-                            <span>Format Order WhatsApp</span>
+                            <span>Format Order WA</span>
                         </Button>
 
                         {/* 2. Muat Template Bisnis */}
@@ -549,28 +794,42 @@ export default function AutoReplyIndex({
                             title="Pilih template industri bisnis siap pakai"
                         >
                             <Store className="w-3.5 h-3.5 text-[#1677ff]" />
-                            <span>Template Bisnis UMKM</span>
+                            <span>Template Bisnis</span>
                         </Button>
 
-                        {/* 3. Tambah Aturan */}
+                        {/* 3. Simulator Bot Toggle */}
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setIsSimulatorOpen(!isSimulatorOpen)}
+                            className={`h-9 px-3 text-xs font-semibold rounded-xl transition-all cursor-pointer flex items-center gap-1.5 shadow-[0_1px_2px_rgba(0,0,0,0.02)] border ${
+                                isSimulatorOpen
+                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-300 hover:bg-emerald-100'
+                                    : 'border-[#e6ebf1] text-slate-700 hover:text-emerald-700 hover:bg-emerald-50/50'
+                            }`}
+                            title="Buka simulator WhatsApp untuk menguji balasan bot secara langsung"
+                        >
+                            <Smartphone className="w-3.5 h-3.5 text-emerald-600" />
+                            <span>{isSimulatorOpen ? 'Tutup Simulator' : 'Uji Simulator Bot'}</span>
+                        </Button>
+
+                        {/* 4. Tambah Aturan */}
                         <Button
                             onClick={() => setIsAddModalOpen(true)}
-                            className="h-9 px-4 text-xs font-semibold bg-[#1677ff] hover:bg-[#1060d4] text-white rounded-xl shadow-[0_2px_4px_rgba(22,119,255,0.2)] gap-1.5 cursor-pointer transition-all flex items-center"
+                            className="h-9 px-3.5 text-xs font-semibold bg-[#1677ff] hover:bg-[#1060d4] text-white rounded-xl shadow-[0_2px_4px_rgba(22,119,255,0.2)] gap-1.5 cursor-pointer transition-all flex items-center"
                         >
                             <Plus className="w-4 h-4 text-white" />
-                            <span>Tambah Aturan Kata Kunci</span>
+                            <span>Tambah Aturan</span>
                         </Button>
                     </div>
                 </div>
 
                 {/* 2. MASTER TOGGLE SWITCH CARD (GLOBAL ON/OFF) */}
-                <div className={`rounded-2xl border p-4 sm:p-5 transition-all shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
-                    isMasterOn
-                        ? 'bg-gradient-to-r from-[#f6ffed]/80 via-white to-[#f6ffed]/30 border-[#b7eb8f]'
-                        : 'bg-gradient-to-r from-[#fffbe6]/80 via-white to-slate-50/70 border-[#ffe58f]'
+                <div className={`rounded-xl border p-4 sm:p-5 transition-all shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white ${
+                    isMasterOn ? 'border-[#b7eb8f] ring-1 ring-[#52c41a]/15' : 'border-[#ffe58f] ring-1 ring-[#faad14]/15'
                 }`}>
                     <div className="flex items-start sm:items-center gap-3.5">
-                        <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 border shadow-2xs transition-colors ${
+                        <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 border shadow-2xs transition-colors ${
                             isMasterOn
                                 ? 'bg-[#f6ffed] text-[#52c41a] border-[#b7eb8f]'
                                 : 'bg-[#fffbe6] text-[#faad14] border-[#ffe58f]'
@@ -582,7 +841,7 @@ export default function AutoReplyIndex({
                                 <span className="font-bold text-slate-900 text-sm sm:text-base tracking-tight">
                                     Sakelar Utama Auto-Reply & Asisten Bot
                                 </span>
-                                <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border ${
+                                <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${
                                     isMasterOn
                                         ? 'bg-[#f6ffed] text-[#52c41a] border-[#b7eb8f]'
                                         : 'bg-[#fffbe6] text-[#faad14] border-[#ffe58f]'
@@ -599,9 +858,9 @@ export default function AutoReplyIndex({
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-3 self-end sm:self-auto shrink-0 bg-white/95 backdrop-blur-xs px-3.5 py-2 rounded-2xl border border-[#e6ebf1] shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+                    <div className="flex items-center gap-3 self-end sm:self-auto shrink-0 bg-slate-50 px-3.5 py-2 rounded-xl border border-[#e6ebf1]">
                         <span className={`text-xs font-bold select-none ${isMasterOn ? 'text-[#52c41a]' : 'text-slate-500'}`}>
-                            {isMasterOn ? 'Aktif' : 'Nonaktif'}
+                            {isMasterOn ? 'Aktif Merespon' : 'Nonaktif'}
                         </span>
                         <Switch
                             checked={isMasterOn}
@@ -614,10 +873,10 @@ export default function AutoReplyIndex({
                     </div>
                 </div>
 
-                {/* 3. FOUR BALANCED OVERVIEW STAT CARDS */}
+                {/* 3. FOUR BALANCED OVERVIEW STAT CARDS (MANTIS STYLE) */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     {/* Card 1: Total Rules */}
-                    <div className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.02)] p-4 flex flex-col justify-between">
+                    <div className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.02)] p-4 flex flex-col justify-between hover:border-[#1677ff]/40 transition-colors">
                         <div className="flex items-center justify-between pb-2">
                             <div className="flex items-center gap-2">
                                 <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center border border-slate-200/70">
@@ -638,13 +897,13 @@ export default function AutoReplyIndex({
                             Aturan kata kunci respon terdaftar
                         </div>
                         <div className="mt-3 pt-2 border-t border-[#f0f0f0] flex items-center justify-between text-xs">
-                            <span className="text-slate-400 text-[10px]">Filter Kategori:</span>
+                            <span className="text-slate-400 text-[10px]">Kategori Terdaftar:</span>
                             <span className="font-semibold text-slate-700 text-[10px]">{existingCategories.length || 1} Kategori</span>
                         </div>
                     </div>
 
                     {/* Card 2: Active Rules */}
-                    <div className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.02)] p-4 flex flex-col justify-between">
+                    <div className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.02)] p-4 flex flex-col justify-between hover:border-[#52c41a]/40 transition-colors">
                         <div className="flex items-center justify-between pb-2">
                             <div className="flex items-center gap-2">
                                 <div className="w-8 h-8 rounded-lg bg-[#f6ffed] text-[#52c41a] flex items-center justify-center border border-[#b7eb8f]">
@@ -677,7 +936,7 @@ export default function AutoReplyIndex({
                     </div>
 
                     {/* Card 3: Total Hits */}
-                    <div className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.02)] p-4 flex flex-col justify-between">
+                    <div className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.02)] p-4 flex flex-col justify-between hover:border-[#1677ff]/40 transition-colors">
                         <div className="flex items-center justify-between pb-2">
                             <div className="flex items-center gap-2">
                                 <div className="w-8 h-8 rounded-lg bg-[#e6f4ff] text-[#1677ff] flex items-center justify-center border border-[#91caff]">
@@ -705,7 +964,7 @@ export default function AutoReplyIndex({
                     </div>
 
                     {/* Card 4: Business Working Hours */}
-                    <div className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.02)] p-4 flex flex-col justify-between">
+                    <div className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.02)] p-4 flex flex-col justify-between hover:border-amber-300 transition-colors">
                         <div className="flex items-center justify-between pb-2">
                             <div className="flex items-center gap-2">
                                 <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center border border-amber-200/70">
@@ -738,16 +997,16 @@ export default function AutoReplyIndex({
                     </div>
                 </div>
 
-                {/* 4. MAIN WORKSPACE: 2-COLUMN BALANCED LAYOUT */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                    {/* LEFT COLUMN: TABS & CONFIGURATION CARDS (7 or 8 cols) */}
-                    <div className="lg:col-span-7 xl:col-span-8 space-y-4">
+                {/* 4. MAIN WORKSPACE: RESPONSIVE GRID / EXPANDED LAYOUT */}
+                <div className={`grid grid-cols-1 ${isSimulatorOpen && isSimulatorDocked ? 'lg:grid-cols-12' : 'grid-cols-1'} gap-6 items-start`}>
+                    {/* LEFT / FULL-WIDTH WORKSPACE COLUMN */}
+                    <div className={`${isSimulatorOpen && isSimulatorDocked ? 'lg:col-span-7 xl:col-span-8' : 'w-full'} space-y-4`}>
                         {/* SEGMENTED TAB NAVIGATION (MANTIS STYLE) */}
-                        <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-xl border border-[#e6ebf1] w-full sm:w-fit overflow-x-auto shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+                        <div className="flex items-center gap-1.5 p-1 bg-slate-100/90 rounded-xl border border-[#e6ebf1] overflow-x-auto no-scrollbar scroll-smooth w-full sm:w-auto shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
                             <button
                                 type="button"
                                 onClick={() => setActiveTab('rules')}
-                                className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+                                className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer shrink-0 whitespace-nowrap ${
                                     activeTab === 'rules'
                                         ? 'bg-white text-[#1677ff] shadow-[0_1px_2px_rgba(0,0,0,0.05)] font-bold'
                                         : 'text-slate-600 hover:text-slate-900'
@@ -763,7 +1022,7 @@ export default function AutoReplyIndex({
                             <button
                                 type="button"
                                 onClick={() => setActiveTab('greeting')}
-                                className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+                                className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer shrink-0 whitespace-nowrap ${
                                     activeTab === 'greeting'
                                         ? 'bg-white text-[#1677ff] shadow-[0_1px_2px_rgba(0,0,0,0.05)] font-bold'
                                         : 'text-slate-600 hover:text-slate-900'
@@ -783,7 +1042,7 @@ export default function AutoReplyIndex({
                             <button
                                 type="button"
                                 onClick={() => setActiveTab('ai')}
-                                className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+                                className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer shrink-0 whitespace-nowrap ${
                                     activeTab === 'ai'
                                         ? 'bg-white text-[#1677ff] shadow-[0_1px_2px_rgba(0,0,0,0.05)] font-bold'
                                         : 'text-slate-600 hover:text-slate-900'
@@ -803,7 +1062,7 @@ export default function AutoReplyIndex({
                             <button
                                 type="button"
                                 onClick={() => setActiveTab('schedule')}
-                                className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+                                className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer shrink-0 whitespace-nowrap ${
                                     activeTab === 'schedule'
                                         ? 'bg-white text-[#1677ff] shadow-[0_1px_2px_rgba(0,0,0,0.05)] font-bold'
                                         : 'text-slate-600 hover:text-slate-900'
@@ -823,7 +1082,7 @@ export default function AutoReplyIndex({
                             <button
                                 type="button"
                                 onClick={() => setActiveTab('templates')}
-                                className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+                                className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer shrink-0 whitespace-nowrap ${
                                     activeTab === 'templates'
                                         ? 'bg-white text-[#1677ff] shadow-[0_1px_2px_rgba(0,0,0,0.05)] font-bold'
                                         : 'text-slate-600 hover:text-slate-900'
@@ -841,22 +1100,22 @@ export default function AutoReplyIndex({
                         {activeTab === 'rules' && (
                             <div className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.02)] overflow-hidden">
                                 {/* Filter & Search Toolbar */}
-                                <div className="p-4 border-b border-[#f0f0f0] bg-slate-50/50 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                                <div className="p-3.5 sm:p-4 border-b border-[#f0f0f0] bg-slate-50/50 flex flex-col xl:flex-row xl:items-center justify-between gap-3">
                                     <div className="flex items-center gap-2 flex-1 flex-wrap">
-                                        <div className="relative flex-1 min-w-[200px]">
+                                        <div className="relative flex-1 min-w-[200px] max-w-sm">
                                             <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                                             <input
                                                 type="text"
                                                 value={ruleSearch}
                                                 onChange={(e) => setRuleSearch(e.target.value)}
                                                 placeholder="Cari nama aturan, kata kunci, balasan..."
-                                                className="w-full pl-8 pr-3 py-1.5 rounded-lg border border-[#e6ebf1] bg-white text-xs focus:border-[#1677ff] focus:outline-none placeholder-slate-400 shadow-2xs"
+                                                className="w-full pl-8 pr-7 py-1.5 rounded-lg border border-[#e6ebf1] bg-white text-xs focus:border-[#1677ff] focus:outline-none placeholder-slate-400 shadow-2xs"
                                             />
                                             {ruleSearch && (
                                                 <button
                                                     type="button"
                                                     onClick={() => setRuleSearch('')}
-                                                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                                                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
                                                 >
                                                     <X className="w-3.5 h-3.5" />
                                                 </button>
@@ -867,7 +1126,7 @@ export default function AutoReplyIndex({
                                         <select
                                             value={ruleCategoryFilter}
                                             onChange={(e) => setRuleCategoryFilter(e.target.value)}
-                                            className="px-2.5 py-1.5 rounded-lg border border-[#e6ebf1] bg-white text-xs focus:border-[#1677ff] focus:outline-none text-slate-700 shadow-2xs font-medium"
+                                            className="px-2.5 py-1.5 rounded-lg border border-[#e6ebf1] bg-white text-xs focus:border-[#1677ff] focus:outline-none text-slate-700 shadow-2xs font-medium cursor-pointer"
                                         >
                                             <option value="">Semua Kategori</option>
                                             <option value="Penjualan">Penjualan & Order</option>
@@ -882,7 +1141,7 @@ export default function AutoReplyIndex({
                                         <select
                                             value={ruleStatusFilter}
                                             onChange={(e) => setRuleStatusFilter(e.target.value)}
-                                            className="px-2.5 py-1.5 rounded-lg border border-[#e6ebf1] bg-white text-xs focus:border-[#1677ff] focus:outline-none text-slate-700 shadow-2xs font-medium"
+                                            className="px-2.5 py-1.5 rounded-lg border border-[#e6ebf1] bg-white text-xs focus:border-[#1677ff] focus:outline-none text-slate-700 shadow-2xs font-medium cursor-pointer"
                                         >
                                             <option value="">Semua Status</option>
                                             <option value="active">Hanya Aktif</option>
@@ -893,7 +1152,7 @@ export default function AutoReplyIndex({
                                         <select
                                             value={ruleDeviceFilter}
                                             onChange={(e) => setRuleDeviceFilter(e.target.value)}
-                                            className="px-2.5 py-1.5 rounded-lg border border-[#e6ebf1] bg-white text-xs focus:border-[#1677ff] focus:outline-none text-slate-700 shadow-2xs"
+                                            className="px-2.5 py-1.5 rounded-lg border border-[#e6ebf1] bg-white text-xs focus:border-[#1677ff] focus:outline-none text-slate-700 shadow-2xs font-medium max-w-[170px] truncate cursor-pointer"
                                         >
                                             <option value="">Semua Nomor</option>
                                             <option value="global">Khusus Semua Nomor (Global)</option>
@@ -905,8 +1164,17 @@ export default function AutoReplyIndex({
                                         </select>
                                     </div>
 
-                                    <div className="text-[11px] text-slate-500 font-medium self-end md:self-auto shrink-0">
-                                        Menampilkan <strong className="font-mono text-slate-900">{filteredRules.length}</strong> dari {safeAutoReplies.length} aturan
+                                    <div className="flex items-center gap-2 text-[11px] text-slate-500 font-medium shrink-0">
+                                        <span>Menampilkan <strong className="font-mono text-slate-900">{filteredRules.length}</strong> dari {safeAutoReplies.length} aturan</span>
+                                        {(ruleSearch || ruleCategoryFilter || ruleStatusFilter || ruleDeviceFilter) && (
+                                            <button
+                                                type="button"
+                                                onClick={handleResetFilters}
+                                                className="text-[11px] text-[#1677ff] hover:underline cursor-pointer font-semibold ml-1"
+                                            >
+                                                (Reset)
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
 
@@ -914,12 +1182,12 @@ export default function AutoReplyIndex({
                                     <table className="w-full text-left text-xs">
                                         <thead className="bg-[#fafafb] text-slate-500 uppercase tracking-wider font-semibold text-[10px] border-b border-[#e6ebf1]">
                                             <tr>
-                                                <th className="py-3 px-4 min-w-[200px]">Aturan, Kategori & Kata Kunci</th>
-                                                <th className="py-3 px-3 w-[105px]">Tipe Pemicu</th>
-                                                <th className="py-3 px-3 min-w-[180px]">Pesan Balasan</th>
-                                                <th className="py-3 px-2 text-center w-[75px]">Terjawab</th>
-                                                <th className="py-3 px-3 text-center w-[120px]">Status</th>
-                                                <th className="py-3 px-4 text-right w-[85px]">Aksi</th>
+                                                <th className="py-3 px-4 min-w-[240px]">Aturan & Kata Kunci</th>
+                                                <th className="py-3 px-3 w-[115px]">Tipe Pemicu</th>
+                                                <th className="py-3 px-3 min-w-[240px]">Pesan Balasan</th>
+                                                <th className="py-3 px-2 text-center w-[85px]">Terjawab</th>
+                                                <th className="py-3 px-3 text-center w-[130px]">Status</th>
+                                                <th className="py-3 px-4 text-right w-[90px]">Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-[#f0f0f0]">
@@ -1685,221 +1953,47 @@ export default function AutoReplyIndex({
                         )}
                     </div>
 
-                    {/* RIGHT COLUMN: STICKY REAL-TIME WHATSAPP BOT SIMULATOR */}
-                    <div className="lg:col-span-5 xl:col-span-4 space-y-3 sticky top-20">
-                        <div className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.02)] overflow-hidden flex flex-col h-[670px] relative">
-                            {/* WhatsApp Desktop Header with Device Selector & Testing Mode */}
-                            <div className="p-3 bg-[#0b0f17] text-white flex flex-col gap-2 border-b border-slate-800">
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-2.5">
-                                        <div className="relative">
-                                            <div className="w-8 h-8 rounded-full bg-[#1677ff]/20 text-[#1677ff] border border-[#1677ff]/40 flex items-center justify-center font-bold text-xs">
-                                                WA
-                                            </div>
-                                            <span className={`w-2 h-2 rounded-full absolute -bottom-0.5 -right-0.5 border border-[#0b0f17] ${isMasterOn ? 'bg-[#52c41a]' : 'bg-[#faad14]'}`} />
-                                        </div>
-                                        <div>
-                                            <div className="font-bold text-xs text-slate-100">Simulator WhatsApp Bisnis</div>
-                                            <div className={`text-[10px] font-medium flex items-center gap-1 ${isMasterOn ? 'text-[#52c41a]' : 'text-amber-400'}`}>
-                                                <span className={`w-1.5 h-1.5 rounded-full ${isMasterOn ? 'bg-[#52c41a] animate-pulse' : 'bg-amber-400'}`} />
-                                                {isMasterOn ? 'Online & Auto-Responder' : 'Bot Nonaktif (Simulasi)'}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button
-                                        type="button"
-                                        onClick={() => setChatHistory([{ sender: 'bot', text: 'Chat simulasi telah dibersihkan. Silakan mulai chat baru.', source: 'Reset' }])}
-                                        className="text-[10px] text-slate-400 hover:text-white px-2 py-0.5 rounded border border-slate-700 hover:border-slate-500 transition-colors cursor-pointer"
-                                        title="Bersihkan riwayat simulasi"
-                                    >
-                                        Bersihkan
-                                    </button>
-                                </div>
+                    {/* DOCKED SIMULATOR COLUMN (ONLY WHEN OPEN & DOCKED) */}
+                    {isSimulatorOpen && isSimulatorDocked && (
+                        <div className="lg:col-span-5 xl:col-span-4 space-y-3 sticky top-20">
+                            {renderSimulatorContent(true)}
+                        </div>
+                    )}
+                </div>
 
-                                {/* Target Device & Away Simulation Controls */}
-                                <div className="pt-2 border-t border-slate-800 flex items-center justify-between gap-2">
-                                    <select
-                                        value={selectedDeviceId}
-                                        onChange={(e) => setSelectedDeviceId(e.target.value)}
-                                        className="bg-slate-900 border border-slate-700 text-slate-200 text-[10px] rounded px-2 py-1 focus:outline-none flex-1 truncate"
-                                    >
-                                        <option value="">Semua Nomor WA (Global)</option>
-                                        {safeDevices.map((device) => (
-                                            <option key={device.id} value={device.id}>
-                                                {device.name}
-                                            </option>
-                                        ))}
-                                    </select>
+                {/* FLOATING ACTION BUTTON (BOTTOM-RIGHT) TO OPEN SIMULATOR */}
+                {!isSimulatorOpen && (
+                    <button
+                        type="button"
+                        onClick={() => setIsSimulatorOpen(true)}
+                        className="fixed bottom-6 right-6 z-40 bg-slate-900 hover:bg-slate-800 text-white pl-3.5 pr-4 py-2.5 rounded-full shadow-2xl border border-slate-700/80 flex items-center gap-2.5 text-xs font-semibold hover:scale-105 active:scale-95 transition-all cursor-pointer group"
+                        title="Buka simulator WhatsApp untuk uji interaktif"
+                    >
+                        <span className="relative flex h-2.5 w-2.5">
+                            <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isMasterOn ? 'bg-emerald-400' : 'bg-amber-400'}`}></span>
+                            <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${isMasterOn ? 'bg-emerald-500' : 'bg-amber-500'}`}></span>
+                        </span>
+                        <Smartphone className="w-3.5 h-3.5 text-emerald-400" />
+                        <span>Uji Simulator Bot</span>
+                    </button>
+                )}
 
-                                    <button
-                                        type="button"
-                                        onClick={() => setSimulateOutsideHours(!simulateOutsideHours)}
-                                        className={`text-[10px] font-semibold px-2 py-1 rounded border flex items-center gap-1 transition-colors cursor-pointer ${
-                                            simulateOutsideHours
-                                                ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
-                                                : 'bg-slate-800 text-slate-400 border-slate-700 hover:text-slate-200'
-                                        }`}
-                                        title="Simulasikan waktu chat saat kantor sedang tutup"
-                                    >
-                                        {simulateOutsideHours ? <Moon className="w-3 h-3 text-amber-400" /> : <Sun className="w-3 h-3" />}
-                                        <span>{simulateOutsideHours ? 'Luar Jam' : 'Jam Buka'}</span>
-                                    </button>
-                                </div>
+                {/* SLIDE-OVER DRAWER SIMULATOR */}
+                {isSimulatorOpen && !isSimulatorDocked && (
+                    <div className="fixed inset-0 z-50 overflow-hidden">
+                        {/* Backdrop */}
+                        <div
+                            className="fixed inset-0 bg-slate-950/40 backdrop-blur-2xs transition-opacity duration-200"
+                            onClick={() => setIsSimulatorOpen(false)}
+                        />
+                        {/* Slide-over sheet */}
+                        <div className="fixed inset-y-0 right-0 max-w-full flex pl-10 z-50">
+                            <div className="w-screen max-w-[430px] bg-white shadow-2xl flex flex-col h-full border-l border-slate-200 animate-in slide-in-from-right duration-200">
+                                {renderSimulatorContent(false)}
                             </div>
-
-                            {/* Warning Banner if Master is OFF */}
-                            {!isMasterOn && (
-                                <div className="px-3 py-1.5 bg-amber-50 border-b border-amber-200 text-[10px] text-amber-800 flex items-center gap-1.5">
-                                    <AlertCircle className="w-3 h-3 text-amber-600 shrink-0" />
-                                    <span>Bot sedang <strong>nonaktif</strong>. Tampilan ini adalah simulasi respon.</span>
-                                </div>
-                            )}
-
-                            {/* Chat History Bubbles */}
-                            <div className="flex-1 p-3.5 overflow-y-auto space-y-3 bg-[#efeae2]/60 text-xs">
-                                {chatHistory.map((item, idx) => (
-                                    <div
-                                        key={idx}
-                                        className={`flex flex-col ${item.sender === 'user' ? 'items-end' : 'items-start'}`}
-                                    >
-                                        <div
-                                            className={`max-w-[88%] p-3 rounded-xl shadow-2xs leading-relaxed text-xs ${
-                                                item.sender === 'user'
-                                                    ? 'bg-[#d9fdd3] text-[#111b21] rounded-tr-xs border border-[#c1f5b8]/50'
-                                                    : 'bg-white text-[#111b21] rounded-tl-xs border border-slate-200/60'
-                                            }`}
-                                        >
-                                            {item.quote && (
-                                                <div className="mb-1.5 p-1.5 rounded-lg bg-emerald-900/10 border-l-4 border-emerald-600 text-[10px] text-slate-700 select-none">
-                                                    <div className="truncate italic">{item.quote}</div>
-                                                </div>
-                                            )}
-
-                                            {item.mediaUrl && (
-                                                <div className="mb-2 rounded-lg overflow-hidden border border-slate-200">
-                                                    <img
-                                                        src={item.mediaUrl}
-                                                        alt="Lampiran"
-                                                        className="w-full h-32 object-cover"
-                                                        onError={(e) => {
-                                                            e.target.style.display = 'none';
-                                                        }}
-                                                    />
-                                                </div>
-                                            )}
-
-                                            <div className="whitespace-pre-wrap font-sans text-xs leading-relaxed">
-                                                {item.text}
-                                            </div>
-
-                                            {/* Interactive Quick Reply Buttons */}
-                                            {item.buttons && Array.isArray(item.buttons) && item.buttons.length > 0 && (
-                                                <div className="mt-2.5 pt-2 border-t border-slate-100 flex flex-col gap-1.5">
-                                                    <div className="flex flex-wrap gap-1.5">
-                                                        {item.buttons.map((btn, bIdx) => (
-                                                            <button
-                                                                key={bIdx}
-                                                                type="button"
-                                                                onClick={() => executeSimulation(btn.keyword || btn.label, btn.label)}
-                                                                className="px-2.5 py-1.5 rounded-lg bg-[#e6f4ff] hover:bg-[#bae0ff] text-[#1677ff] border border-[#91caff]/40 text-[11px] font-semibold transition-all cursor-pointer shadow-2xs flex items-center gap-1 active:scale-95 text-left"
-                                                            >
-                                                                <CornerDownLeft className="w-3 h-3 text-[#1677ff] shrink-0" />
-                                                                <span>{btn.label}</span>
-                                                            </button>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            )}
-
-                                            {/* Interactive CTA Link Web Button */}
-                                            {item.cta_url && (
-                                                <div className="mt-2.5 pt-2 border-t border-slate-100">
-                                                    <a
-                                                        href={item.cta_url}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 text-[11px] font-bold transition-all shadow-2xs"
-                                                    >
-                                                        <ExternalLink className="w-3.5 h-3.5 text-sky-600" />
-                                                        <span>{item.cta_text || 'Buka Tautan Web'}</span>
-                                                    </a>
-                                                </div>
-                                            )}
-
-                                            {/* Action Options */}
-                                            {item.action_buttons && Array.isArray(item.action_buttons) && item.action_buttons.length > 0 && (
-                                                <div className="mt-2.5 pt-2 border-t border-slate-100 flex flex-wrap gap-1">
-                                                    {item.action_buttons.map((act, actIdx) => (
-                                                        <button
-                                                            key={actIdx}
-                                                            type="button"
-                                                            onClick={() => executeSimulation(act, act)}
-                                                            className="text-[10px] font-medium px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer border border-slate-200"
-                                                        >
-                                                            ➔ {act}
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            )}
-
-                                            <div className="mt-1 flex items-center justify-end gap-1 text-[9px] text-slate-400 font-mono">
-                                                <span>{new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</span>
-                                                {item.sender === 'user' && <CheckCheck className="w-3 h-3 text-sky-500" />}
-                                            </div>
-                                        </div>
-
-                                        {item.source && (
-                                            <span className={`text-[9px] mt-0.5 px-1 font-mono ${item.isAway ? 'text-amber-600 font-bold' : 'text-slate-400'}`}>
-                                                {item.source}
-                                            </span>
-                                        )}
-                                    </div>
-                                ))}
-
-                                {isSimulating && (
-                                    <div className="flex items-center gap-2 text-slate-400 text-xs italic bg-white p-2 rounded-xl w-fit shadow-2xs border border-slate-200/60">
-                                        <div className="w-2 h-2 rounded-full bg-[#1677ff] animate-ping" />
-                                        <span>Bot sedang mengetik balasan...</span>
-                                    </div>
-                                )}
-                                <div ref={chatEndRef} />
-                            </div>
-
-                            {/* Quick Testing Chips for Business */}
-                            <div className="px-3 py-1.5 bg-slate-50 border-t border-[#e6ebf1] flex items-center gap-1.5 overflow-x-auto no-scrollbar">
-                                <span className="text-[10px] text-slate-400 font-medium shrink-0">Tes:</span>
-                                {['Menu', '1', '2', 'Katalog', 'Format Order', 'Rekening', 'Jam Buka', 'CS'].map((chip) => (
-                                    <button
-                                        key={chip}
-                                        type="button"
-                                        onClick={() => executeSimulation(chip)}
-                                        className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-white hover:bg-[#e6f4ff] text-slate-600 hover:text-[#1677ff] border border-slate-200 hover:border-[#91caff]/60 transition-colors shrink-0 cursor-pointer"
-                                    >
-                                        {chip}
-                                    </button>
-                                ))}
-                            </div>
-
-                            {/* Chat Input Simulator Form */}
-                            <form onSubmit={handleRunSimulation} className="p-3 bg-white border-t border-[#e6ebf1] flex items-center gap-2">
-                                <input
-                                    type="text"
-                                    value={simulatedMessage}
-                                    onChange={(e) => setSimulatedMessage(e.target.value)}
-                                    placeholder="Ketik pesan tes (misal: 'info', '1', 'daftar')..."
-                                    className="flex-1 px-3 py-2 text-xs rounded-lg border border-[#e6ebf1] focus:border-[#1677ff] focus:outline-none"
-                                />
-                                <Button
-                                    type="submit"
-                                    disabled={!simulatedMessage.trim() || isSimulating}
-                                    className="h-8 w-8 p-0 rounded-lg bg-[#1677ff] hover:bg-[#1060d4] text-white flex items-center justify-center shrink-0 cursor-pointer shadow-xs disabled:opacity-40"
-                                >
-                                    <Send className="w-3.5 h-3.5" />
-                                </Button>
-                            </form>
                         </div>
                     </div>
-                </div>
+                )}
             </div>
 
             {/* ================= MODAL 1: TAMBAH ATURAN AUTO-REPLY ================= */}
