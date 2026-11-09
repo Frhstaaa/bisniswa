@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import PublicLayout, { usePublicAuth } from '../../Layouts/PublicLayout';
 import { Card } from '../../Components/ui/card';
 import { Button } from '../../Components/ui/button';
-import { Badge } from '../../Components/ui/badge';
 import {
     Cpu,
     Zap,
@@ -195,29 +194,21 @@ export default function DualEngine({ plans = [], stats = {} }) {
                         animate="visible"
                         className="relative max-w-5xl mx-auto text-center space-y-5"
                     >
-                        <motion.div variants={heroItemVariants} className="inline-block gsap-hero-item">
-                            <div className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full border-[1.5px] border-[#1e50ff] bg-white text-[#1e50ff] text-[10px] sm:text-xs font-bold sm:font-black uppercase tracking-normal sm:tracking-widest shadow-xs">
-                                <Cpu className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#1e50ff] shrink-0" />
-                                <span className="hidden sm:inline">ARSITEKTUR SINGLE-ENGINE BISNISWA ULTRASYNC RESMI</span>
-                                <span className="sm:hidden">ENGINE BISNISWA ULTRASYNC</span>
-                            </div>
-                        </motion.div>
-
                         <motion.h1
                             variants={heroItemVariants}
-                            className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight gsap-hero-item"
+                            className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight"
                         >
                             <span className="font-editorial-italic font-normal tracking-normal text-slate-900">Arsitektur Tangguh</span> UltraSync Engine & <span className="text-[#1e50ff]">FrankenPHP</span>
                         </motion.h1>
 
                         <motion.p
                             variants={heroItemVariants}
-                            className="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed gsap-hero-item"
+                            className="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed"
                         >
                             Enkripsi Signal Protocol resmi Meta dijalankan via sandbox protokol enterprise terisolasi. Pesan terbuka seketika di ponsel penerima tanpa kendala desinkronisasi, didukung akselerasi performa tinggi dari Laravel Octane dan FrankenPHP.
                         </motion.p>
 
-                        <motion.div variants={heroItemVariants} className="pt-4 flex flex-wrap items-center justify-center gap-3 gsap-hero-item">
+                        <motion.div variants={heroItemVariants} className="pt-4 flex flex-wrap items-center justify-center gap-3">
                             <motion.button
                                 whileHover={{ scale: 1.03 }}
                                 whileTap={{ scale: 0.98 }}
@@ -241,7 +232,7 @@ export default function DualEngine({ plans = [], stats = {} }) {
 
                 {/* ================= CORE PILLAR CARDS ================= */}
                 <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 sm:-mt-14">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 gsap-card-grid">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* BisnisWA UltraSync Engine Card */}
                         <motion.div
                             initial={{ opacity: 0, y: 24 }}
@@ -249,12 +240,9 @@ export default function DualEngine({ plans = [], stats = {} }) {
                             viewport={{ once: true, margin: '-30px' }}
                             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                             whileHover={{ y: -8, scale: 1.02 }}
-                            className="gsap-card gsap-reveal-left"
+                            className="flex flex-col"
                         >
                             <Card className="h-full p-7 rounded-3xl border-2 border-emerald-500/40 bg-white shadow-xl space-y-5 relative overflow-hidden transition-all duration-300 hover:shadow-2xl hover:border-emerald-500">
-                                <div className="absolute top-0 right-0 px-4 py-1.5 bg-[#1e50ff] text-white rounded-bl-2xl text-[10px] font-black uppercase tracking-wider">
-                                    NATIVE E2EE & ANTI-BAN
-                                </div>
                                 <div className="flex items-center gap-3">
                                     <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-black text-lg shadow-2xs">
                                         ⚡
@@ -295,12 +283,9 @@ export default function DualEngine({ plans = [], stats = {} }) {
                             viewport={{ once: true, margin: '-30px' }}
                             transition={{ duration: 0.25, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
                             whileHover={{ y: -8, scale: 1.02 }}
-                            className="gsap-card gsap-reveal-right"
+                            className="flex flex-col"
                         >
                             <Card className="h-full p-7 rounded-3xl border-2 border-blue-400/40 bg-white shadow-xl space-y-5 relative overflow-hidden transition-all duration-300 hover:shadow-2xl hover:border-blue-400">
-                                <div className="absolute top-0 right-0 px-4 py-1.5 bg-blue-600 text-white rounded-bl-2xl text-[10px] font-black uppercase tracking-wider">
-                                    HIGH PERFORMANCE RUNTIME
-                                </div>
                                 <div className="flex items-center gap-3">
                                     <div className="w-12 h-12 rounded-2xl bg-blue-100 text-blue-800 flex items-center justify-center font-black text-lg shadow-2xs">
                                         🚀
@@ -342,10 +327,10 @@ export default function DualEngine({ plans = [], stats = {} }) {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: '-30px' }}
                     transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 gsap-reveal"
+                    className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"
                 >
                     <div className="text-center space-y-2 mb-10">
-                        <span className="px-3 py-1 rounded-full text-[10px] uppercase font-extrabold tracking-wider bg-blue-50 text-[#1e50ff] border border-blue-200" className="text-[10px] font-bold">PERBANDINGAN ARSITEKTUR</span>
+                        <p className="text-xs font-bold uppercase tracking-widest text-[#1e50ff]">Perbandingan Arsitektur</p>
                         <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                             Mengapa BisnisWA UltraSync Menjadi Standar Utama?
                         </h2>
@@ -390,7 +375,7 @@ export default function DualEngine({ plans = [], stats = {} }) {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: '-30px' }}
                     transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 gsap-reveal"
+                    className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8"
                 >
                     <div className="rounded-3xl bg-slate-900 text-white p-7 sm:p-10 border border-slate-800 shadow-xl space-y-6">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
@@ -425,7 +410,7 @@ export default function DualEngine({ plans = [], stats = {} }) {
                 {/* ================= 6 PILARS ANTI-BAN ================= */}
                 <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
                     <div className="text-center space-y-2">
-                        <span className="px-3 py-1 rounded-full text-[10px] uppercase font-extrabold tracking-wider bg-blue-50 text-[#1e50ff] border border-blue-200" className="text-[10px] font-bold">PROTEKSI ANTI-BAN</span>
+                        <p className="text-xs font-bold uppercase tracking-widest text-[#1e50ff]">Proteksi Anti-Ban</p>
                         <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                             6 Pilar Perlindungan Nomor Bisnis Anda
                         </h2>
@@ -470,11 +455,8 @@ export default function DualEngine({ plans = [], stats = {} }) {
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true, margin: '-20px' }}
                         transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                        className="rounded-3xl bg-gradient-to-r from-[#08112c] via-[#0d2260] to-[#1e50ff] p-8 sm:p-12 text-white text-center space-y-4 shadow-xl gsap-scale"
+                        className="rounded-3xl bg-gradient-to-r from-[#08112c] via-[#0d2260] to-[#1e50ff] p-8 sm:p-12 text-white text-center space-y-4 shadow-xl"
                     >
-                        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-blue-300/40 bg-white/10 text-blue-200 text-xs font-black uppercase tracking-widest">
-                            INFRASTRUKTUR HIGH-PERFORMANCE
-                        </div>
                         <h2 className="text-3xl sm:text-4xl font-black tracking-tight">
                             Akselerasi Pengiriman Pesan dengan <span className="font-editorial-italic font-normal">UltraSync Engine</span>
                         </h2>

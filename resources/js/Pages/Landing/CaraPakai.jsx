@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import PublicLayout, { usePublicAuth } from '../../Layouts/PublicLayout';
 import { Card } from '../../Components/ui/card';
 import { Button } from '../../Components/ui/button';
-import { Badge } from '../../Components/ui/badge';
 import {
     QrCode,
     Smartphone,
@@ -172,29 +171,21 @@ export default function CaraPakai({ plans = [], stats = {} }) {
                         animate="visible"
                         className="relative max-w-5xl mx-auto text-center space-y-5"
                     >
-                        <motion.div variants={heroItemVariants} className="inline-block gsap-hero-item">
-                            <div className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full border-[1.5px] border-[#1e50ff] bg-white text-[#1e50ff] text-[10px] sm:text-xs font-bold sm:font-black uppercase tracking-normal sm:tracking-widest shadow-xs">
-                                <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#1e50ff] shrink-0" />
-                                <span className="hidden sm:inline">PANDUAN OPERASIONAL & INTEGRASI KILAT</span>
-                                <span className="sm:hidden">PANDUAN INTEGRASI KILAT</span>
-                            </div>
-                        </motion.div>
-
                         <motion.h1
                             variants={heroItemVariants}
-                            className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight gsap-hero-item"
+                            className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight"
                         >
                             <span className="font-editorial-italic font-normal tracking-normal text-slate-900">Panduan Praktis</span> Integrasi Cepat dalam <span className="text-[#1e50ff]">3 Menit</span>
                         </motion.h1>
 
                         <motion.p
                             variants={heroItemVariants}
-                            className="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed gsap-hero-item"
+                            className="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed"
                         >
                             Mulai dari pendaftaran workspace mandiri, menghubungkan perangkat via pemindaian kode QR, hingga otomatisasi pengiriman pesan broadcast massal dan bridging REST API terenkripsi.
                         </motion.p>
 
-                        <motion.div variants={heroItemVariants} className="pt-4 flex flex-wrap items-center justify-center gap-3 gsap-hero-item">
+                        <motion.div variants={heroItemVariants} className="pt-4 flex flex-wrap items-center justify-center gap-3">
                             <motion.button
                                 whileHover={{ scale: 1.03 }}
                                 whileTap={{ scale: 0.98 }}
@@ -219,7 +210,7 @@ export default function CaraPakai({ plans = [], stats = {} }) {
 
                 {/* ================= 4-STEP WALKTHROUGH ================= */}
                 <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 sm:-mt-14">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 gsap-card-grid">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {steps.map((step, idx) => {
                             const Icon = step.icon;
                             return (
@@ -230,7 +221,7 @@ export default function CaraPakai({ plans = [], stats = {} }) {
                                     viewport={{ once: true, margin: '-30px' }}
                                     transition={{ duration: 0.25, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
                                     whileHover={{ y: -8, scale: 1.02 }}
-                                    className="gsap-card"
+                                    className="flex flex-col"
                                 >
                                     <Card
                                         className="h-full p-6 sm:p-7 rounded-3xl border border-slate-200/90 bg-white shadow-card hover:shadow-lg transition-all space-y-4 group hover:border-blue-300"
@@ -239,7 +230,6 @@ export default function CaraPakai({ plans = [], stats = {} }) {
                                             <span className="font-mono text-3xl font-black text-[#1e50ff]/20 group-hover:text-[#1e50ff] transition-colors">
                                                 {step.number}
                                             </span>
-                                            <span className="px-3 py-1 rounded-full text-[10px] uppercase font-extrabold tracking-wider bg-blue-50 text-[#1e50ff] border border-blue-200">{step.badge}</span>
                                         </div>
                                         <div className="flex items-start gap-3.5">
                                             <div className="w-11 h-11 rounded-xl bg-blue-50 text-[#1e50ff] border border-blue-200/70 flex items-center justify-center shrink-0 group-hover:bg-[#1e50ff] group-hover:text-white transition-colors">
@@ -271,14 +261,14 @@ export default function CaraPakai({ plans = [], stats = {} }) {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: '-30px' }}
                     transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 gsap-reveal"
+                    className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"
                 >
                     <div className="rounded-3xl bg-gradient-to-br from-[#08112c] via-[#0d2260] to-[#08112c] text-white p-6 sm:p-10 lg:p-12 border border-blue-800/40 shadow-2xl">
                         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                             {/* Left Controls */}
                             <div className="lg:col-span-7 space-y-6">
-                                <div className="space-y-2">
-                                    <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-blue-300/40 bg-white/10 text-blue-200 text-[10px] font-black uppercase tracking-widest">SIMULATOR PESAN INTERAKTIF</div>
+                                <div className="space-y-1.5">
+                                    <p className="text-xs font-bold uppercase tracking-widest text-blue-300">Simulator Pesan</p>
                                     <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
                                         Simulasi Tampilan Pesan di <span className="font-editorial-italic font-normal">Ponsel Pelanggan</span>
                                     </h2>
@@ -392,9 +382,6 @@ export default function CaraPakai({ plans = [], stats = {} }) {
                                                             transition={{ duration: 0.18, ease: 'easeOut' }}
                                                             className="max-w-[88%] rounded-2xl rounded-tl-xs px-3.5 py-2.5 bg-white text-[#111b21] shadow-2xs text-[12px] leading-relaxed border border-slate-200/60 relative space-y-2"
                                                         >
-                                                            <span className="inline-block px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-50 text-[#1e50ff] border border-blue-200">
-                                                                {simulationTemplates[simTemplate].badge}
-                                                            </span>
                                                             <p className="whitespace-pre-line font-sans">
                                                                 {simulationTemplates[simTemplate].content(simStudentName || 'Siswa')}
                                                             </p>
@@ -432,23 +419,17 @@ export default function CaraPakai({ plans = [], stats = {} }) {
 
                 {/* ================= BEST PRACTICES & ANTI-BANNED ================= */}
                 <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <motion.div
-                        initial={{ opacity: 0, y: 16 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: '-20px' }}
-                        transition={{ duration: 0.22 }}
-                        className="text-center space-y-2 mb-10 gsap-reveal"
-                    >
-                        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-blue-200 bg-blue-50 text-[#1e50ff] text-[10px] font-black uppercase tracking-widest">PANDUAN KEAMANAN NOMOR</div>
+                    <div className="text-center space-y-2 mb-10">
+                        <p className="text-xs font-bold uppercase tracking-widest text-[#1e50ff]">Panduan Keamanan Nomor</p>
                         <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                             Aturan Emas Menjaga <span className="font-editorial-italic font-normal">Reputasi Nomor WhatsApp</span>
                         </h2>
                         <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">
                             Ikuti standar pengiriman profesional berikut agar nomor Anda tetap beroperasi dengan skor reputasi tinggi di server Meta.
                         </p>
-                    </motion.div>
+                    </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 gsap-card-grid">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                         {antiBanGuidelines.map((rule, idx) => (
                             <motion.div
                                 key={idx}
@@ -457,7 +438,7 @@ export default function CaraPakai({ plans = [], stats = {} }) {
                                 viewport={{ once: true, margin: '-20px' }}
                                 transition={{ duration: 0.25, delay: idx * 0.06, ease: [0.16, 1, 0.3, 1] }}
                                 whileHover={{ y: -6, scale: 1.02 }}
-                                className="gsap-card"
+                                className="flex flex-col"
                             >
                                 <Card className="h-full p-5 rounded-3xl border border-slate-200/90 bg-white shadow-card hover:shadow-card-hover hover:border-blue-300 transition-all space-y-2.5">
                                     <div className="w-8 h-8 rounded-lg bg-blue-50 text-[#1e50ff] flex items-center justify-center font-bold text-xs border border-blue-200/60 font-mono">
@@ -482,11 +463,8 @@ export default function CaraPakai({ plans = [], stats = {} }) {
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true, margin: '-20px' }}
                         transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                        className="rounded-3xl bg-gradient-to-r from-[#08112c] via-[#0d2260] to-[#1e50ff] p-8 sm:p-12 text-white text-center space-y-4 shadow-xl gsap-scale"
+                        className="rounded-3xl bg-gradient-to-r from-[#08112c] via-[#0d2260] to-[#1e50ff] p-8 sm:p-12 text-white text-center space-y-4 shadow-xl"
                     >
-                        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-blue-300/40 bg-white/10 text-blue-200 text-xs font-black uppercase tracking-widest">
-                            OTOMATISASI WHATSAPP GATEWAY
-                        </div>
                         <h2 className="text-3xl sm:text-4xl font-black tracking-tight">
                             Siap Mengotomasi <span className="font-editorial-italic font-normal">Komunikasi Bisnis Anda?</span>
                         </h2>

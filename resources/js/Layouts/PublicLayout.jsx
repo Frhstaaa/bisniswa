@@ -352,14 +352,15 @@ export default function PublicLayout({
                                 <p className="text-slate-300 text-xs leading-relaxed max-w-sm">
                                     Platform Resmi WhatsApp Gateway & Messaging Engine Terpadu Politeknik Mardira Indonesia. Menghubungkan otomasi layanan akademik, notifikasi transaksi kampus, serta integrasi digital enterprise dengan reliabilitas tinggi.
                                 </p>
-                                <div className="flex flex-wrap items-center gap-2 pt-1 text-[11px]">
-                                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-950/80 text-blue-300 border border-blue-800/60 font-medium">
+                                <div className="flex flex-wrap items-center gap-3 pt-1 text-xs text-slate-400">
+                                    <span className="inline-flex items-center gap-1.5 text-slate-300">
                                         <Shield className="w-3.5 h-3.5 text-[#1e50ff]" />
                                         <span>Enkripsi TLS 256-Bit</span>
                                     </span>
-                                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-950/80 text-blue-300 border border-blue-800/60 font-medium">
+                                    <span>•</span>
+                                    <span className="inline-flex items-center gap-1.5 text-slate-300">
                                         <Server className="w-3.5 h-3.5 text-[#1e50ff]" />
-                                        <span>Dual-Server 99.9% SLA</span>
+                                        <span>UltraSync Engine 99.9% SLA</span>
                                     </span>
                                 </div>
                             </div>

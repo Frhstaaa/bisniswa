@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import PublicLayout, { usePublicAuth } from '../../Layouts/PublicLayout';
 import { Card } from '../../Components/ui/card';
 import { Button } from '../../Components/ui/button';
-import { Badge } from '../../Components/ui/badge';
 import {
     HelpCircle,
     Search,
@@ -166,30 +165,22 @@ export default function Faq({ plans = [], stats = {} }) {
                         animate="visible"
                         className="relative max-w-4xl mx-auto text-center space-y-5"
                     >
-                        <motion.div variants={heroItemVariants} className="inline-block gsap-hero-item">
-                            <div className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full border-[1.5px] border-[#1e50ff] bg-white text-[#1e50ff] text-[10px] sm:text-xs font-bold sm:font-black uppercase tracking-normal sm:tracking-widest shadow-xs">
-                                <HelpCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#1e50ff] shrink-0" />
-                                <span className="hidden sm:inline">PUSAT BANTUAN & DUKUNGAN TEKNIS RESMI</span>
-                                <span className="sm:hidden">PUSAT BANTUAN RESMI</span>
-                            </div>
-                        </motion.div>
-
                         <motion.h1
                             variants={heroItemVariants}
-                            className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight gsap-hero-item"
+                            className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight"
                         >
                             <span className="font-editorial-italic font-normal tracking-normal text-slate-900">Pusat Bantuan</span> Pertanyaan & <span className="text-[#1e50ff]">Jawaban Resmi</span>
                         </motion.h1>
 
                         <motion.p
                             variants={heroItemVariants}
-                            className="text-slate-600 text-sm sm:text-base max-w-xl mx-auto leading-relaxed gsap-hero-item"
+                            className="text-slate-600 text-sm sm:text-base max-w-xl mx-auto leading-relaxed"
                         >
                             Temukan panduan cepat seputar operasional gateway, kuota pesan, teknologi BisnisWA UltraSync Engine, hingga integrasi API instan.
                         </motion.p>
 
                         {/* Search Input Bar */}
-                        <motion.div variants={heroItemVariants} className="pt-4 max-w-xl mx-auto gsap-hero-item">
+                        <motion.div variants={heroItemVariants} className="pt-4 max-w-xl mx-auto">
                             <div className="relative">
                                 <Search className="w-4 h-4 text-slate-400 absolute left-4 top-3.5" />
                                 <input
@@ -205,7 +196,7 @@ export default function Faq({ plans = [], stats = {} }) {
                 </section>
 
                 {/* ================= CATEGORY FILTER TABS WITH FLUID LAYOUTID PILL ================= */}
-                <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 sm:-mt-10 gsap-reveal">
+                <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 sm:-mt-10">
                     <motion.div
                         initial={{ opacity: 0, y: 14 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -244,7 +235,7 @@ export default function Faq({ plans = [], stats = {} }) {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: '-40px' }}
                     transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 gsap-reveal"
+                    className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8"
                 >
                     {filteredFaqs.length === 0 ? (
                         <div className="p-12 text-center bg-white rounded-3xl border border-slate-200 shadow-xs space-y-3">
@@ -265,7 +256,7 @@ export default function Faq({ plans = [], stats = {} }) {
                             </Button>
                         </div>
                     ) : (
-                        <div className="space-y-3.5 gsap-card-grid">
+                        <div className="space-y-3.5">
                             {filteredFaqs.map((faq, idx) => {
                                 const isOpen = openIndex === idx;
                                 return (
@@ -274,7 +265,6 @@ export default function Faq({ plans = [], stats = {} }) {
                                         initial={{ opacity: 0, y: 12 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ duration: 0.2, delay: idx * 0.03, ease: [0.16, 1, 0.3, 1] }}
-                                        className="gsap-card"
                                     >
                                         <Card
                                             className="rounded-2xl border border-slate-200/90 bg-white shadow-card hover:shadow-card-hover hover:border-blue-300 transition-all overflow-hidden"
@@ -325,7 +315,7 @@ export default function Faq({ plans = [], stats = {} }) {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: '-40px' }}
                     transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 gsap-reveal"
+                    className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8"
                 >
                     <Card className="p-8 rounded-3xl border border-emerald-200 bg-emerald-50/70 shadow-card space-y-6">
                         <div className="text-center space-y-1">
@@ -337,11 +327,11 @@ export default function Faq({ plans = [], stats = {} }) {
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs gsap-card-grid">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
                             <motion.div
                                 whileHover={{ y: -6, scale: 1.03 }}
                                 transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-                                className="p-4 rounded-2xl bg-white border border-emerald-200/80 space-y-2 text-center shadow-card hover:shadow-card-hover transition-all gsap-card"
+                                className="p-4 rounded-2xl bg-white border border-emerald-200/80 space-y-2 text-center shadow-card hover:shadow-card-hover transition-all"
                             >
                                 <Phone className="w-5 h-5 text-emerald-700 mx-auto" />
                                 <span className="font-bold text-slate-900 block">WhatsApp Resmi</span>
@@ -358,7 +348,7 @@ export default function Faq({ plans = [], stats = {} }) {
                             <motion.div
                                 whileHover={{ y: -6, scale: 1.03 }}
                                 transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-                                className="p-4 rounded-2xl bg-white border border-emerald-200/80 space-y-2 text-center shadow-card hover:shadow-card-hover transition-all gsap-card"
+                                className="p-4 rounded-2xl bg-white border border-emerald-200/80 space-y-2 text-center shadow-card hover:shadow-card-hover transition-all"
                             >
                                 <Mail className="w-5 h-5 text-emerald-700 mx-auto" />
                                 <span className="font-bold text-slate-900 block">Email Helpdesk</span>
@@ -373,7 +363,7 @@ export default function Faq({ plans = [], stats = {} }) {
                             <motion.div
                                 whileHover={{ y: -6, scale: 1.03 }}
                                 transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-                                className="p-4 rounded-2xl bg-white border border-emerald-200/80 space-y-2 text-center shadow-card hover:shadow-card-hover transition-all gsap-card"
+                                className="p-4 rounded-2xl bg-white border border-emerald-200/80 space-y-2 text-center shadow-card hover:shadow-card-hover transition-all"
                             >
                                 <Clock className="w-5 h-5 text-emerald-700 mx-auto" />
                                 <span className="font-bold text-slate-900 block">Jam Operasional</span>
@@ -391,7 +381,7 @@ export default function Faq({ plans = [], stats = {} }) {
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true, margin: '-40px' }}
                     transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 gsap-scale"
+                    className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-8"
                 >
                     <div className="rounded-3xl bg-gradient-to-r from-emerald-800 via-[#064e3b] to-slate-900 p-8 sm:p-10 text-white text-center space-y-4 shadow-xl">
                         <h2 className="text-2xl sm:text-3xl font-black tracking-tight">

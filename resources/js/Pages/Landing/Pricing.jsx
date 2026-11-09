@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import PublicLayout, { usePublicAuth } from '../../Layouts/PublicLayout';
 import { Card } from '../../Components/ui/card';
 import { Button } from '../../Components/ui/button';
-import { Badge } from '../../Components/ui/badge';
 import {
     Check,
     Zap,
@@ -315,30 +314,22 @@ export default function Pricing({ plans = [], stats = {} }) {
                         animate="visible"
                         className="relative max-w-5xl mx-auto text-center space-y-5"
                     >
-                        <motion.div variants={heroItemVariants} className="inline-block gsap-hero-item">
-                            <div className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full border-[1.5px] border-[#1e50ff] bg-white text-[#1e50ff] text-[10px] sm:text-xs font-bold sm:font-black uppercase tracking-normal sm:tracking-widest shadow-xs">
-                                <CreditCard className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#1e50ff] shrink-0" />
-                                <span className="hidden sm:inline">PAKET & INVESTASI LAYANAN RESMI</span>
-                                <span className="sm:hidden">PAKET & INVESTASI RESMI</span>
-                            </div>
-                        </motion.div>
-
                         <motion.h1
                             variants={heroItemVariants}
-                            className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight gsap-hero-item"
+                            className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight"
                         >
                             <span className="font-editorial-italic font-normal tracking-normal text-slate-900">Pilihan Paket</span> Investasi Terbaik untuk <span className="text-[#1e50ff]">Bisnis Anda</span>
                         </motion.h1>
 
                         <motion.p
                             variants={heroItemVariants}
-                            className="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed gsap-hero-item"
+                            className="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed"
                         >
                             Pilih paket yang dirancang khusus untuk mengakselerasi skala operasional bisnis Anda. Nikmati kuota pesan melimpah, arsitektur single-engine UltraSync yang stabil, serta integrasi API instan tanpa biaya tersembunyi.
                         </motion.p>
 
                         {/* Billing Cycle Switch with Fluid layoutId Pill */}
-                        <motion.div variants={heroItemVariants} className="pt-6 flex items-center justify-center gsap-hero-item">
+                        <motion.div variants={heroItemVariants} className="pt-6 flex items-center justify-center">
                             <div className="inline-flex items-center p-1 rounded-full bg-slate-100 border border-slate-200/90 shadow-xs">
                                 <button
                                     type="button"
@@ -382,7 +373,7 @@ export default function Pricing({ plans = [], stats = {} }) {
 
                 {/* ================= PRICING CARDS ================= */}
                 <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 sm:-mt-14">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch gsap-card-grid">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch">
                         {displayPlans.map((plan, idx) => {
                             const isYearly = billingCycle === 'yearly';
                             const monthlyPrice = plan.monthlyPrice || plan.price || 99000;
@@ -400,7 +391,7 @@ export default function Pricing({ plans = [], stats = {} }) {
                                     viewport={{ once: true, margin: '-30px' }}
                                     transition={{ duration: 0.25, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
                                     whileHover={{ y: -6 }}
-                                    className={`flex flex-col gsap-card ${isRecommended ? 'gsap-scale' : ''}`}
+                                    className="flex flex-col"
                                 >
                                     <Card
                                         className={`card-interactive rounded-3xl p-7 flex flex-col justify-between relative bg-white h-full transition-all duration-300 ${
@@ -511,7 +502,7 @@ export default function Pricing({ plans = [], stats = {} }) {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: '-40px' }}
                     transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 gsap-reveal"
+                    className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8"
                 >
                     <Card className="p-7 sm:p-10 rounded-3xl border border-slate-200 bg-white shadow-xl space-y-6">
                         <div className="flex items-center gap-3">
@@ -621,12 +612,10 @@ export default function Pricing({ plans = [], stats = {} }) {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: '-40px' }}
                     transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 gsap-reveal"
+                    className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"
                 >
                     <div className="text-center space-y-2 mb-10">
-                        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-blue-200 bg-blue-50 text-[#1e50ff] text-[10px] font-black uppercase tracking-widest">
-                            MATRIKS PERBANDINGAN FITUR
-                        </div>
+                        <p className="text-xs font-bold uppercase tracking-widest text-[#1e50ff]">Matriks Perbandingan Fitur</p>
                         <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
                             Perbandingan Fitur <span className="font-editorial-italic font-normal">Seluruh Paket</span>
                         </h2>
@@ -683,10 +672,8 @@ export default function Pricing({ plans = [], stats = {} }) {
                     transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                     className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8"
                 >
-                    <div className="text-center space-y-2 mb-8 gsap-reveal">
-                        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-blue-200 bg-blue-50 text-[#1e50ff] text-[10px] font-black uppercase tracking-widest">
-                            TANYA JAWAB BERLANGGANAN
-                        </div>
+                    <div className="text-center space-y-2 mb-8">
+                        <p className="text-xs font-bold uppercase tracking-widest text-[#1e50ff]">Tanya Jawab Berlangganan</p>
                         <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
                             Pertanyaan Seputar <span className="font-editorial-italic font-normal">Aktivasi & Pembayaran</span>
                         </h2>
@@ -695,11 +682,11 @@ export default function Pricing({ plans = [], stats = {} }) {
                         </p>
                     </div>
 
-                    <div className="space-y-3 gsap-card-grid">
+                    <div className="space-y-3">
                         {pricingFaqs.map((faq, idx) => (
                             <div
                                 key={idx}
-                                className="rounded-2xl border border-slate-200/90 bg-white overflow-hidden shadow-xs transition-all hover:border-blue-300 gsap-card"
+                                className="rounded-2xl border border-slate-200/90 bg-white overflow-hidden shadow-xs transition-all hover:border-blue-300"
                             >
                                 <button
                                     type="button"
@@ -741,12 +728,9 @@ export default function Pricing({ plans = [], stats = {} }) {
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true, margin: '-40px' }}
                     transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 gsap-scale"
+                    className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-8"
                 >
                     <div className="rounded-3xl bg-gradient-to-r from-[#08112c] via-[#0d2260] to-[#1e50ff] p-8 sm:p-12 text-white text-center space-y-4 shadow-xl">
-                        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-blue-300/40 bg-white/10 text-blue-200 text-xs font-black uppercase tracking-widest">
-                            AKTIVASI OTOMATIS & CEPAT
-                        </div>
                         <h2 className="text-3xl sm:text-4xl font-black tracking-tight">
                             Mulai Berlangganan Sekarang, <span className="font-editorial-italic font-normal">Aktif dalam 1 Menit</span>
                         </h2>
