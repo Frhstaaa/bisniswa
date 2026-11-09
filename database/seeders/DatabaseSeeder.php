@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Admin;
 use App\Models\ApiKey;
 use App\Models\Device;
 use App\Models\Message;
@@ -29,15 +30,26 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        // 2. Create Super Admin & Workspace Owner
-        $admin = User::firstOrCreate([
+        // 2. Create Super Admin (in admins table) & Workspace Client Owner (in users table)
+        Admin::firstOrCreate([
             'email' => 'admin@kirimwa.pro',
         ], [
             'name' => 'Super Administrator',
             'password' => bcrypt('password'),
             'role' => 'superadmin',
+            'phone' => '+6281298430911',
+            'is_active' => true,
+        ]);
+
+        $admin = User::firstOrCreate([
+            'email' => 'owner@digitalmandiri.com',
+        ], [
+            'name' => 'Direktur Digital Mandiri',
+            'password' => bcrypt('password'),
+            'role' => 'owner',
             'workspace_id' => $workspace->id,
             'phone' => '+6281298430911',
+            'is_active' => true,
         ]);
 
         // 3. Create Plans

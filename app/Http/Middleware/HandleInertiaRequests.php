@@ -35,29 +35,43 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $webUser = $request->user('web');
+        $adminUser = $request->user('admin');
+        $activeUser = $adminUser ?: $webUser;
+
         return [
             ...parent::share($request),
             'auth' => [
-                'user' => $request->user() ? [
-                    'id' => $request->user()->id,
-                    'name' => $request->user()->name,
-                    'email' => $request->user()->email,
-                    'role' => $request->user()->role,
-                    'phone' => $request->user()->phone,
-                    'is_active' => (bool) $request->user()->is_active,
-                    'is_superadmin' => $request->user()->isSuperAdmin(),
-                    'is_saas_staff' => $request->user()->isSaaSStaff(),
+                'user' => $activeUser ? [
+                    'id' => $activeUser->id,
+                    'name' => $activeUser->name,
+                    'email' => $activeUser->email,
+                    'role' => $activeUser->role,
+                    'phone' => $activeUser->phone,
+                    'is_active' => (bool) $activeUser->is_active,
+                    'is_superadmin' => method_exists($activeUser, 'isSuperAdmin') ? $activeUser->isSuperAdmin() : false,
+                    'is_saas_staff' => method_exists($activeUser, 'isSaaSStaff') ? $activeUser->isSaaSStaff() : false,
                     'permissions' => [
-                        'can_manage_staff' => $request->user()->canManageStaff(),
-                        'can_manage_settings' => $request->user()->canManageSettings(),
-                        'can_manage_plans' => $request->user()->canManagePlans(),
-                        'can_manage_payments' => $request->user()->canManagePayments(),
-                        'can_manage_gateways' => $request->user()->canManageGateways(),
-                        'can_manage_clients' => $request->user()->canManageClients(),
-                        'can_manage_subscriptions' => $request->user()->canManageSubscriptions(),
+                        'can_manage_staff' => method_exists($activeUser, 'canManageStaff') ? $activeUser->canManageStaff() : false,
+                        'can_manage_settings' => method_exists($activeUser, 'canManageSettings') ? $activeUser->canManageSettings() : false,
+                        'can_manage_plans' => method_exists($activeUser, 'canManagePlans') ? $activeUser->canManagePlans() : false,
+                        'can_manage_payments' => method_exists($activeUser, 'canManagePayments') ? $activeUser->canManagePayments() : false,
+                        'can_manage_gateways' => method_exists($activeUser, 'canManageGateways') ? $activeUser->canManageGateways() : false,
+                        'can_manage_clients' => method_exists($activeUser, 'canManageClients') ? $activeUser->canManageClients() : false,
+                        'can_manage_subscriptions' => method_exists($activeUser, 'canManageSubscriptions') ? $activeUser->canManageSubscriptions() : false,
                     ],
-                    'workspace_id' => $request->user()->workspace_id,
-                    'workspace_name' => $request->user()->workspace?->name,
+                    'workspace_id' => $webUser ? $webUser->workspace_id : null,
+                    'workspace_name' => $webUser ? $webUser->workspace?->name : 'SaaS Central Platform',
+                ] : null,
+                'admin' => $adminUser ? [
+                    'id' => $adminUser->id,
+                    'name' => $adminUser->name,
+                    'email' => $adminUser->email,
+                    'role' => $adminUser->role,
+                    'phone' => $adminUser->phone,
+                    'is_active' => (bool) $adminUser->is_active,
+                    'is_superadmin' => $adminUser->isSuperAdmin(),
+                    'is_saas_staff' => $adminUser->isSaaSStaff(),
                 ] : null,
             ],
             'flash' => [

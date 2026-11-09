@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Admin;
 use App\Models\Payment;
 use App\Models\Plan;
 use App\Models\Subscription;
@@ -17,13 +18,13 @@ class AdminPlanAndStaffRbacTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected User $superAdmin;
+    protected Admin $superAdmin;
 
-    protected User $adminStaff;
+    protected Admin $adminStaff;
 
-    protected User $marketingStaff;
+    protected Admin $marketingStaff;
 
-    protected User $supportStaff;
+    protected Admin $supportStaff;
 
     protected User $regularClient;
 
@@ -41,7 +42,7 @@ class AdminPlanAndStaffRbacTest extends TestCase
             'is_active' => true,
         ]);
 
-        $this->superAdmin = User::create([
+        $this->superAdmin = Admin::create([
             'name' => 'Super Administrator',
             'email' => 'superadmin@kirimwa.pro',
             'password' => bcrypt('password'),
@@ -49,7 +50,7 @@ class AdminPlanAndStaffRbacTest extends TestCase
             'is_active' => true,
         ]);
 
-        $this->adminStaff = User::create([
+        $this->adminStaff = Admin::create([
             'name' => 'Admin Operasional',
             'email' => 'admin@kirimwa.pro',
             'password' => bcrypt('password'),
@@ -57,7 +58,7 @@ class AdminPlanAndStaffRbacTest extends TestCase
             'is_active' => true,
         ]);
 
-        $this->marketingStaff = User::create([
+        $this->marketingStaff = Admin::create([
             'name' => 'Marketing Officer',
             'email' => 'marketing@kirimwa.pro',
             'password' => bcrypt('password'),
@@ -65,7 +66,7 @@ class AdminPlanAndStaffRbacTest extends TestCase
             'is_active' => true,
         ]);
 
-        $this->supportStaff = User::create([
+        $this->supportStaff = Admin::create([
             'name' => 'Support Agent',
             'email' => 'support@kirimwa.pro',
             'password' => bcrypt('password'),
@@ -89,15 +90,19 @@ class AdminPlanAndStaffRbacTest extends TestCase
 
     public function test_superadmin_and_marketing_can_view_plans_list(): void
     {
-        $this->actingAs($this->superAdmin)->get('/admin/plans')->assertStatus(200);
-        $this->actingAs($this->adminStaff)->get('/admin/plans')->assertStatus(200);
-        $this->actingAs($this->marketingStaff)->get('/admin/plans')->assertStatus(200);
+        $this->actingAs($this->superAdmin, 'admin')->get('/admin/plans')->assertStatus(200);
+        $this->actingAs($this->adminStaff, 'admin')->get('/admin/plans')->assertStatus(200);
+        $this->actingAs($this->marketingStaff, 'admin')->get('/admin/plans')->assertStatus(200);
     }
 
-    public function test_support_and_regular_client_are_forbidden_from_plans(): void
+    public function test_support_is_forbidden_from_plans(): void
     {
-        $this->actingAs($this->supportStaff)->get('/admin/plans')->assertStatus(403);
-        $this->actingAs($this->regularClient)->get('/admin/plans')->assertStatus(403);
+        $this->actingAs($this->supportStaff, 'admin')->get('/admin/plans')->assertStatus(403);
+    }
+
+    public function test_regular_client_is_forbidden_from_plans_and_redirected_to_admin_login(): void
+    {
+        $this->actingAs($this->regularClient)->get('/admin/plans')->assertRedirect('/admin/login');
     }
 
     public function test_superadmin_can_create_new_plan_and_cache_is_cleared(): void
@@ -122,7 +127,7 @@ class AdminPlanAndStaffRbacTest extends TestCase
             'is_active' => true,
         ];
 
-        $response = $this->actingAs($this->superAdmin)->post('/admin/plans', $payload);
+        $response = $this->actingAs($this->superAdmin, 'admin')->post('/admin/plans', $payload);
 
         $response->assertRedirect();
         $response->assertSessionHas('success');
@@ -147,7 +152,7 @@ class AdminPlanAndStaffRbacTest extends TestCase
             'is_active' => true,
         ]);
 
-        $response = $this->actingAs($this->superAdmin)->put("/admin/plans/{$plan->id}", [
+        $response = $this->actingAs($this->superAdmin, 'admin')->put("/admin/plans/{$plan->id}", [
             'name' => 'New Plan Name',
             'slug' => 'new-plan',
             'price_monthly' => 95000,
@@ -177,11 +182,11 @@ class AdminPlanAndStaffRbacTest extends TestCase
             'is_active' => true,
         ]);
 
-        $response = $this->actingAs($this->superAdmin)->post("/admin/plans/{$plan->id}/toggle-status");
+        $response = $this->actingAs($this->superAdmin, 'admin')->post("/admin/plans/{$plan->id}/toggle-status");
         $response->assertRedirect();
         $this->assertFalse($plan->fresh()->is_active);
 
-        $response2 = $this->actingAs($this->superAdmin)->post("/admin/plans/{$plan->id}/toggle-status");
+        $response2 = $this->actingAs($this->superAdmin, 'admin')->post("/admin/plans/{$plan->id}/toggle-status");
         $response2->assertRedirect();
         $this->assertTrue($plan->fresh()->is_active);
     }
@@ -208,7 +213,7 @@ class AdminPlanAndStaffRbacTest extends TestCase
             'remaining_message_quota' => 15000,
         ]);
 
-        $response = $this->actingAs($this->superAdmin)->delete("/admin/plans/{$plan->id}");
+        $response = $this->actingAs($this->superAdmin, 'admin')->delete("/admin/plans/{$plan->id}");
 
         $response->assertRedirect();
         $response->assertSessionHas('error');
@@ -227,7 +232,7 @@ class AdminPlanAndStaffRbacTest extends TestCase
             'is_active' => true,
         ]);
 
-        $response = $this->actingAs($this->superAdmin)->delete("/admin/plans/{$plan->id}");
+        $response = $this->actingAs($this->superAdmin, 'admin')->delete("/admin/plans/{$plan->id}");
 
         $response->assertRedirect();
         $response->assertSessionHas('success');
@@ -238,20 +243,24 @@ class AdminPlanAndStaffRbacTest extends TestCase
     // 2. Staff Management & RBAC Tests
     // ==========================================
 
-    public function test_superadmin_and_admin_can_access_staff_management_while_clients_cannot(): void
+    public function test_superadmin_and_admin_can_access_staff_management_while_subordinates_cannot(): void
     {
-        $this->actingAs($this->superAdmin)->get('/admin/staff')->assertStatus(200);
-        $this->actingAs($this->adminStaff)->get('/admin/staff')->assertStatus(200);
+        $this->actingAs($this->superAdmin, 'admin')->get('/admin/staff')->assertStatus(200);
+        $this->actingAs($this->adminStaff, 'admin')->get('/admin/staff')->assertStatus(200);
 
-        // Marketing, support, and regular clients cannot access staff management
-        $this->actingAs($this->marketingStaff)->get('/admin/staff')->assertStatus(403);
-        $this->actingAs($this->supportStaff)->get('/admin/staff')->assertStatus(403);
-        $this->actingAs($this->regularClient)->get('/admin/staff')->assertStatus(403);
+        // Marketing and support cannot access staff management
+        $this->actingAs($this->marketingStaff, 'admin')->get('/admin/staff')->assertStatus(403);
+        $this->actingAs($this->supportStaff, 'admin')->get('/admin/staff')->assertStatus(403);
+    }
+
+    public function test_regular_client_is_redirected_to_admin_login_from_staff_management(): void
+    {
+        $this->actingAs($this->regularClient)->get('/admin/staff')->assertRedirect('/admin/login');
     }
 
     public function test_subordinate_admin_cannot_see_superadmin_in_rbac_list(): void
     {
-        $response = $this->actingAs($this->adminStaff)->get('/admin/staff');
+        $response = $this->actingAs($this->adminStaff, 'admin')->get('/admin/staff');
         $response->assertStatus(200);
 
         $staffList = $response->viewData('page')['props']['staff'];
@@ -271,7 +280,7 @@ class AdminPlanAndStaffRbacTest extends TestCase
     public function test_subordinate_admin_cannot_update_or_delete_superadmin(): void
     {
         // If an admin tries to update superadmin by ID, gets 404
-        $updateResp = $this->actingAs($this->adminStaff)->put("/admin/staff/{$this->superAdmin->id}", [
+        $updateResp = $this->actingAs($this->adminStaff, 'admin')->put("/admin/staff/{$this->superAdmin->id}", [
             'name' => 'Hacked Superadmin',
             'email' => 'hacked@example.com',
             'role' => 'marketing',
@@ -279,11 +288,11 @@ class AdminPlanAndStaffRbacTest extends TestCase
         $updateResp->assertStatus(404);
 
         // If an admin tries to delete superadmin by ID, gets 404
-        $deleteResp = $this->actingAs($this->adminStaff)->delete("/admin/staff/{$this->superAdmin->id}");
+        $deleteResp = $this->actingAs($this->adminStaff, 'admin')->delete("/admin/staff/{$this->superAdmin->id}");
         $deleteResp->assertStatus(404);
 
         // If an admin tries to toggle status of superadmin, gets 404
-        $toggleResp = $this->actingAs($this->adminStaff)->post("/admin/staff/{$this->superAdmin->id}/toggle-status");
+        $toggleResp = $this->actingAs($this->adminStaff, 'admin')->post("/admin/staff/{$this->superAdmin->id}/toggle-status");
         $toggleResp->assertStatus(404);
     }
 
@@ -297,7 +306,7 @@ class AdminPlanAndStaffRbacTest extends TestCase
             'password_confirmation' => 'supersecret12345',
         ];
 
-        $response = $this->actingAs($this->superAdmin)->put("/admin/staff/{$this->superAdmin->id}", $payload);
+        $response = $this->actingAs($this->superAdmin, 'admin')->put("/admin/staff/{$this->superAdmin->id}", $payload);
 
         $response->assertRedirect();
         $response->assertSessionHas('success');
@@ -319,12 +328,12 @@ class AdminPlanAndStaffRbacTest extends TestCase
             'password_confirmation' => 'secret12345',
         ];
 
-        $response = $this->actingAs($this->superAdmin)->post('/admin/staff', $payload);
+        $response = $this->actingAs($this->superAdmin, 'admin')->post('/admin/staff', $payload);
 
         $response->assertRedirect();
         $response->assertSessionHas('success');
 
-        $this->assertDatabaseHas('users', [
+        $this->assertDatabaseHas('admins', [
             'email' => 'newmarketing@kirimwa.pro',
             'role' => 'marketing',
             'is_active' => true,
@@ -341,24 +350,24 @@ class AdminPlanAndStaffRbacTest extends TestCase
             'password_confirmation' => 'secret12345',
         ];
 
-        $response = $this->actingAs($this->superAdmin)->post('/admin/staff', $payload);
+        $response = $this->actingAs($this->superAdmin, 'admin')->post('/admin/staff', $payload);
 
         $response->assertSessionHasErrors(['role']);
-        $this->assertDatabaseMissing('users', ['email' => 'fake_superadmin@kirimwa.pro']);
+        $this->assertDatabaseMissing('admins', ['email' => 'fake_superadmin@kirimwa.pro']);
     }
 
     public function test_superadmin_cannot_be_deleted(): void
     {
-        $response = $this->actingAs($this->superAdmin)->delete("/admin/staff/{$this->superAdmin->id}");
+        $response = $this->actingAs($this->superAdmin, 'admin')->delete("/admin/staff/{$this->superAdmin->id}");
 
         $response->assertRedirect();
         $response->assertSessionHas('error');
-        $this->assertDatabaseHas('users', ['id' => $this->superAdmin->id]);
+        $this->assertDatabaseHas('admins', ['id' => $this->superAdmin->id]);
     }
 
     public function test_superadmin_cannot_be_deactivated(): void
     {
-        $response = $this->actingAs($this->superAdmin)->post("/admin/staff/{$this->superAdmin->id}/toggle-status");
+        $response = $this->actingAs($this->superAdmin, 'admin')->post("/admin/staff/{$this->superAdmin->id}/toggle-status");
 
         $response->assertRedirect();
         $response->assertSessionHas('error');
@@ -367,7 +376,7 @@ class AdminPlanAndStaffRbacTest extends TestCase
 
     public function test_superadmin_can_toggle_and_delete_other_staff(): void
     {
-        $staff = User::create([
+        $staff = Admin::create([
             'name' => 'Staff To Delete',
             'email' => 'delete_me@kirimwa.pro',
             'password' => bcrypt('password'),
@@ -376,27 +385,27 @@ class AdminPlanAndStaffRbacTest extends TestCase
         ]);
 
         // Toggle status
-        $toggleResp = $this->actingAs($this->superAdmin)->post("/admin/staff/{$staff->id}/toggle-status");
+        $toggleResp = $this->actingAs($this->superAdmin, 'admin')->post("/admin/staff/{$staff->id}/toggle-status");
         $toggleResp->assertRedirect();
         $this->assertFalse($staff->fresh()->is_active);
 
         // Delete
-        $deleteResp = $this->actingAs($this->superAdmin)->delete("/admin/staff/{$staff->id}");
+        $deleteResp = $this->actingAs($this->superAdmin, 'admin')->delete("/admin/staff/{$staff->id}");
         $deleteResp->assertRedirect();
         $deleteResp->assertSessionHas('success');
-        $this->assertDatabaseMissing('users', ['id' => $staff->id]);
+        $this->assertDatabaseMissing('admins', ['id' => $staff->id]);
     }
 
     public function test_marketing_cannot_access_gateways_or_settings(): void
     {
-        $this->actingAs($this->marketingStaff)->get('/admin/gateways')->assertStatus(403);
-        $this->actingAs($this->marketingStaff)->get('/admin/settings')->assertStatus(403);
+        $this->actingAs($this->marketingStaff, 'admin')->get('/admin/gateways')->assertStatus(403);
+        $this->actingAs($this->marketingStaff, 'admin')->get('/admin/settings')->assertStatus(403);
     }
 
     public function test_support_can_access_gateways_but_not_payments(): void
     {
-        $this->actingAs($this->supportStaff)->get('/admin/gateways')->assertStatus(200);
-        $this->actingAs($this->supportStaff)->get('/admin/payments')->assertStatus(403);
+        $this->actingAs($this->supportStaff, 'admin')->get('/admin/gateways')->assertStatus(200);
+        $this->actingAs($this->supportStaff, 'admin')->get('/admin/payments')->assertStatus(403);
     }
 
     public function test_superadmin_can_setup_annual_pricing_and_client_can_checkout_annually(): void
@@ -420,7 +429,7 @@ class AdminPlanAndStaffRbacTest extends TestCase
             'is_active' => true,
         ];
 
-        $response = $this->actingAs($this->superAdmin)->post('/admin/plans', $planData);
+        $response = $this->actingAs($this->superAdmin, 'admin')->post('/admin/plans', $planData);
         $response->assertRedirect();
         $response->assertSessionHas('success');
 

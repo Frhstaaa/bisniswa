@@ -44,6 +44,7 @@ export default function AppLayout({ children, title }) {
     const isSuperAdmin = user.role === 'superadmin';
     const isSaaSStaff = Boolean(user.is_saas_staff || ['superadmin', 'admin', 'marketing', 'support'].includes(user.role));
     const isAdminRoute = url.startsWith('/admin');
+    const logoutHref = isAdminRoute ? '/admin/logout' : '/logout';
 
     const perms = user.permissions || {
         can_manage_staff: isSuperAdmin,
@@ -288,7 +289,7 @@ export default function AppLayout({ children, title }) {
 
                         {user.id ? (
                             <Link
-                                href="/logout"
+                                href={logoutHref}
                                 method="post"
                                 as="button"
                                 className="h-7 w-7 rounded-lg flex items-center justify-center text-blue-300/80 hover:text-rose-300 hover:bg-rose-500/20 transition-colors ml-1 cursor-pointer"
@@ -573,7 +574,7 @@ export default function AppLayout({ children, title }) {
 
                                 {user.id ? (
                                     <Link
-                                        href="/logout"
+                                        href={logoutHref}
                                         method="post"
                                         as="button"
                                         className="text-xs text-rose-400 font-semibold hover:text-rose-300"

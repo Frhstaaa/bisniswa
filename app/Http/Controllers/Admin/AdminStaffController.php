@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Admin;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -19,13 +19,13 @@ class AdminStaffController extends Controller
      */
     public function index(Request $request): Response
     {
-        $currentUser = $request->user();
+        $currentUser = $request->user('admin') ?? $request->user();
         $isSuperAdmin = $currentUser->isSuperAdmin();
 
         $search = $request->query('search', '');
         $roleFilter = $request->query('role', 'all');
 
-        $query = User::whereIn('role', ['superadmin', 'admin', 'marketing', 'support']);
+        $query = Admin::whereIn('role', ['superadmin', 'admin', 'marketing', 'support']);
 
         // Explicit security rule: Subordinate staff (Admin, Marketing, Support) cannot see Superadmin
         if (! $isSuperAdmin) {
@@ -56,12 +56,12 @@ class AdminStaffController extends Controller
 
         $metrics = [
             'total_staff' => $isSuperAdmin
-                ? User::whereIn('role', ['superadmin', 'admin', 'marketing', 'support'])->count()
-                : User::whereIn('role', ['admin', 'marketing', 'support'])->count(),
-            'superadmin_count' => $isSuperAdmin ? User::where('role', 'superadmin')->count() : 0,
-            'admin_count' => User::where('role', 'admin')->count(),
-            'marketing_count' => User::where('role', 'marketing')->count(),
-            'support_count' => User::where('role', 'support')->count(),
+                ? Admin::whereIn('role', ['superadmin', 'admin', 'marketing', 'support'])->count()
+                : Admin::whereIn('role', ['admin', 'marketing', 'support'])->count(),
+            'superadmin_count' => $isSuperAdmin ? Admin::where('role', 'superadmin')->count() : 0,
+            'admin_count' => Admin::where('role', 'admin')->count(),
+            'marketing_count' => Admin::where('role', 'marketing')->count(),
+            'support_count' => Admin::where('role', 'support')->count(),
         ];
 
         // Roles available to be assigned based on who is logged in
@@ -111,11 +111,12 @@ class AdminStaffController extends Controller
             ]);
         }
 
-        $allowedRoles = $request->user()->isSuperAdmin() ? 'admin,marketing,support' : 'marketing,support';
+        $currentUser = $request->user('admin') ?? $request->user();
+        $allowedRoles = $currentUser->isSuperAdmin() ? 'admin,marketing,support' : 'marketing,support';
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email',
+            'email' => 'required|string|email|max:255|unique:admins,email',
             'phone' => 'nullable|string|max:30',
             'password' => 'required|string|min:8|confirmed',
             'role' => 'required|string|in:'.$allowedRoles,
@@ -126,14 +127,13 @@ class AdminStaffController extends Controller
             'email.unique' => 'Email ini sudah terdaftar di sistem.',
         ]);
 
-        User::create([
+        Admin::create([
             'name' => $validated['name'],
             'email' => strtolower($validated['email']),
             'phone' => $validated['phone'] ?? null,
             'password' => Hash::make($validated['password']),
             'role' => $validated['role'],
             'is_active' => true,
-            'workspace_id' => null, // SaaS internal staff are global across workspaces
         ]);
 
         return back()->with('success', "Staff baru '{$validated['name']}' ({$validated['role']}) berhasil ditambahkan.");
@@ -145,11 +145,11 @@ class AdminStaffController extends Controller
      */
     public function update(Request $request, int $id): RedirectResponse
     {
-        $currentUser = $request->user();
-        $user = User::findOrFail($id);
+        $currentUser = $request->user('admin') ?? $request->user();
+        $admin = Admin::findOrFail($id);
 
         // Security: Non-superadmin cannot see or edit superadmin!
-        if ($user->isSuperAdmin()) {
+        if ($admin->isSuperAdmin()) {
             if (! $currentUser->isSuperAdmin()) {
                 abort(404);
             }
@@ -157,7 +157,7 @@ class AdminStaffController extends Controller
             // Superadmin updating their OWN account:
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
+                'email' => 'required|string|email|max:255|unique:admins,email,'.$admin->id,
                 'phone' => 'nullable|string|max:30',
                 'password' => 'nullable|string|min:8|confirmed',
             ], [
@@ -176,7 +176,7 @@ class AdminStaffController extends Controller
                 $updateData['password'] = Hash::make($validated['password']);
             }
 
-            $user->update($updateData);
+            $admin->update($updateData);
 
             return back()->with('success', 'Email, data akun & kata sandi Super Administrator berhasil diperbarui.');
         }
@@ -192,7 +192,7 @@ class AdminStaffController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
+            'email' => 'required|string|email|max:255|unique:admins,email,'.$admin->id,
             'phone' => 'nullable|string|max:30',
             'password' => 'nullable|string|min:8|confirmed',
             'role' => 'required|string|in:'.$allowedRoles,
@@ -213,9 +213,9 @@ class AdminStaffController extends Controller
             $updateData['password'] = Hash::make($validated['password']);
         }
 
-        $user->update($updateData);
+        $admin->update($updateData);
 
-        return back()->with('success', "Data staff '{$user->name}' berhasil diperbarui.");
+        return back()->with('success', "Data staff '{$admin->name}' berhasil diperbarui.");
     }
 
     /**
@@ -224,10 +224,10 @@ class AdminStaffController extends Controller
      */
     public function toggleStatus(Request $request, int $id): RedirectResponse
     {
-        $currentUser = $request->user();
-        $user = User::findOrFail($id);
+        $currentUser = $request->user('admin') ?? $request->user();
+        $admin = Admin::findOrFail($id);
 
-        if ($user->isSuperAdmin()) {
+        if ($admin->isSuperAdmin()) {
             if (! $currentUser->isSuperAdmin()) {
                 abort(404);
             }
@@ -235,16 +235,16 @@ class AdminStaffController extends Controller
             return back()->with('error', 'Akun Super Administrator utama dilindungi dan tidak dapat dinonaktifkan.');
         }
 
-        if ($user->id === $currentUser->id) {
+        if ($admin->id === $currentUser->id) {
             return back()->with('error', 'Anda tidak dapat menonaktifkan akun Anda sendiri.');
         }
 
-        $user->is_active = ! $user->is_active;
-        $user->save();
+        $admin->is_active = ! $admin->is_active;
+        $admin->save();
 
-        $statusStr = $user->is_active ? 'diaktifkan' : 'dinonaktifkan';
+        $statusStr = $admin->is_active ? 'diaktifkan' : 'dinonaktifkan';
 
-        return back()->with('success', "Akun staff '{$user->name}' berhasil {$statusStr}.");
+        return back()->with('success', "Akun staff '{$admin->name}' berhasil {$statusStr}.");
     }
 
     /**
@@ -253,10 +253,10 @@ class AdminStaffController extends Controller
      */
     public function destroy(Request $request, int $id): RedirectResponse
     {
-        $currentUser = $request->user();
-        $user = User::findOrFail($id);
+        $currentUser = $request->user('admin') ?? $request->user();
+        $admin = Admin::findOrFail($id);
 
-        if ($user->isSuperAdmin()) {
+        if ($admin->isSuperAdmin()) {
             if (! $currentUser->isSuperAdmin()) {
                 abort(404);
             }
@@ -264,13 +264,13 @@ class AdminStaffController extends Controller
             return back()->with('error', 'Akun Super Administrator utama dilindungi dan tidak dapat dihapus.');
         }
 
-        if ($user->id === $currentUser->id) {
+        if ($admin->id === $currentUser->id) {
             return back()->with('error', 'Anda tidak dapat menghapus akun Anda sendiri yang sedang aktif.');
         }
 
-        $userName = $user->name;
-        $user->delete();
+        $adminName = $admin->name;
+        $admin->delete();
 
-        return back()->with('success', "Akun staff '{$userName}' berhasil dihapus.");
+        return back()->with('success', "Akun staff '{$adminName}' berhasil dihapus.");
     }
 }

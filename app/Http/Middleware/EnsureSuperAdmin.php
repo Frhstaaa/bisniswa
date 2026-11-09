@@ -16,19 +16,20 @@ class EnsureSuperAdmin
      */
     public function handle(Request $request, Closure $next, ?string $permission = null): Response
     {
-        $user = $request->user();
+        $user = $request->user('admin') ?? $request->user();
 
         if (! $user) {
-            return redirect()->route('login');
+            return redirect()->route('admin.login');
         }
 
         if ($user->is_active === false) {
+            auth('admin')->logout();
             auth()->logout();
 
-            return redirect()->route('login')->withErrors(['email' => 'Akun Anda dinonaktifkan oleh Administrator.']);
+            return redirect()->route('admin.login')->withErrors(['email' => 'Akun Administrator Anda telah dinonaktifkan.']);
         }
 
-        if (! $user->isSaaSStaff()) {
+        if (! method_exists($user, 'isSaaSStaff') || ! $user->isSaaSStaff()) {
             abort(403, 'Akses ditolak. Fitur ini khusus untuk Tim Manajemen SaaS.');
         }
 

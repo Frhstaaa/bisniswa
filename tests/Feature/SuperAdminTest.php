@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Admin;
 use App\Models\Payment;
 use App\Models\Plan;
 use App\Models\Subscription;
@@ -16,7 +17,7 @@ class SuperAdminTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected User $superAdmin;
+    protected Admin $superAdmin;
 
     protected User $regularClient;
 
@@ -36,12 +37,12 @@ class SuperAdminTest extends TestCase
             'is_active' => true,
         ]);
 
-        $this->superAdmin = User::create([
+        $this->superAdmin = Admin::create([
             'name' => 'Super Administrator',
             'email' => 'superadmin@kirimwa.pro',
             'password' => bcrypt('password'),
             'role' => 'superadmin',
-            'workspace_id' => $this->workspace->id,
+            'is_active' => true,
         ]);
 
         $this->regularClient = User::create([
@@ -71,31 +72,31 @@ class SuperAdminTest extends TestCase
     {
         $response = $this->get('/admin/dashboard');
 
-        $response->assertRedirect('/login');
+        $response->assertRedirect('/admin/login');
     }
 
     public function test_regular_client_is_forbidden_from_admin_dashboard(): void
     {
         $response = $this->actingAs($this->regularClient)->get('/admin/dashboard');
 
-        $response->assertStatus(403);
+        $response->assertRedirect('/admin/login');
     }
 
     public function test_super_admin_can_access_admin_dashboard(): void
     {
-        $response = $this->actingAs($this->superAdmin)->get('/admin/dashboard');
+        $response = $this->actingAs($this->superAdmin, 'admin')->get('/admin/dashboard');
 
         $response->assertStatus(200);
     }
 
     public function test_super_admin_can_view_and_toggle_client_workspace_status(): void
     {
-        $response = $this->actingAs($this->superAdmin)->get('/admin/clients');
+        $response = $this->actingAs($this->superAdmin, 'admin')->get('/admin/clients');
         $response->assertStatus(200);
 
         $this->assertTrue($this->workspace->is_active);
 
-        $toggleResponse = $this->actingAs($this->superAdmin)
+        $toggleResponse = $this->actingAs($this->superAdmin, 'admin')
             ->post("/admin/clients/{$this->workspace->id}/toggle-status");
 
         $toggleResponse->assertRedirect();
@@ -113,7 +114,7 @@ class SuperAdminTest extends TestCase
             'status' => 'pending',
         ]);
 
-        $response = $this->actingAs($this->superAdmin)
+        $response = $this->actingAs($this->superAdmin, 'admin')
             ->post("/admin/payments/{$payment->id}/approve");
 
         $response->assertRedirect();
@@ -126,7 +127,7 @@ class SuperAdminTest extends TestCase
 
     public function test_super_admin_can_update_production_settings(): void
     {
-        $response = $this->actingAs($this->superAdmin)->post('/admin/settings', [
+        $response = $this->actingAs($this->superAdmin, 'admin')->post('/admin/settings', [
             'settings' => [
                 'platform_name' => 'MARDIRA WA Gateway Pro',
                 'support_phone' => '+628999999999',
@@ -152,7 +153,7 @@ class SuperAdminTest extends TestCase
             'remaining_message_quota' => 5000,
         ]);
 
-        $response = $this->actingAs($this->superAdmin)
+        $response = $this->actingAs($this->superAdmin, 'admin')
             ->post('/admin/subscriptions/adjust-duration', [
                 'subscription_id' => $sub->id,
                 'days' => 15,
@@ -166,18 +167,70 @@ class SuperAdminTest extends TestCase
 
     public function test_super_admin_can_view_all_management_pages(): void
     {
-        $this->actingAs($this->superAdmin)->get('/admin/payments')->assertStatus(200);
-        $this->actingAs($this->superAdmin)->get('/admin/subscriptions')->assertStatus(200);
-        $this->actingAs($this->superAdmin)->get('/admin/gateways')->assertStatus(200);
-        $this->actingAs($this->superAdmin)->get('/admin/settings')->assertStatus(200);
+        $this->actingAs($this->superAdmin, 'admin')->get('/admin/payments')->assertStatus(200);
+        $this->actingAs($this->superAdmin, 'admin')->get('/admin/subscriptions')->assertStatus(200);
+        $this->actingAs($this->superAdmin, 'admin')->get('/admin/gateways')->assertStatus(200);
+        $this->actingAs($this->superAdmin, 'admin')->get('/admin/settings')->assertStatus(200);
     }
 
     public function test_super_admin_can_restart_gateways(): void
     {
-        $response = $this->actingAs($this->superAdmin)
-            ->post('/admin/gateways/restart', ['engine' => 'wwebjs']);
+        $response = $this->actingAs($this->superAdmin, 'admin')
+            ->post('/admin/gateways/restart', ['engine' => 'baileys']);
 
         $response->assertRedirect();
         $response->assertSessionHas('success');
+    }
+
+    public function test_super_admin_can_login_via_admin_login_page(): void
+    {
+        $response = $this->post('/admin/login', [
+            'email' => 'superadmin@kirimwa.pro',
+            'password' => 'password',
+        ]);
+
+        $response->assertRedirect('/admin/dashboard');
+        $this->assertAuthenticated('admin');
+    }
+
+    public function test_super_admin_cannot_login_with_invalid_password(): void
+    {
+        $response = $this->post('/admin/login', [
+            'email' => 'superadmin@kirimwa.pro',
+            'password' => 'wrong-password',
+        ]);
+
+        $response->assertSessionHasErrors(['email']);
+        $this->assertGuest('admin');
+    }
+
+    public function test_super_admin_can_logout_via_admin_logout_route(): void
+    {
+        $response = $this->actingAs($this->superAdmin, 'admin')->post('/admin/logout');
+
+        $response->assertRedirect('/admin/login');
+        $this->assertGuest('admin');
+    }
+
+    public function test_tenant_user_cannot_login_via_admin_login_page(): void
+    {
+        $response = $this->post('/admin/login', [
+            'email' => 'client@kirimwa.pro',
+            'password' => 'password',
+        ]);
+
+        $response->assertSessionHasErrors(['email']);
+        $this->assertGuest('admin');
+    }
+
+    public function test_admin_attempting_login_on_client_login_page_gets_guidance(): void
+    {
+        $response = $this->post('/login', [
+            'email' => 'superadmin@kirimwa.pro',
+            'password' => 'password',
+        ]);
+
+        $response->assertSessionHasErrors(['email']);
+        $this->assertGuest('web');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
 use App\Models\ApiKey;
 use App\Models\Plan;
 use App\Models\Subscription;
@@ -32,9 +33,11 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
-            if (Auth::user()->is_active === false) {
-                Auth::logout();
+        if (Auth::guard('web')->attempt($credentials, $request->boolean('remember'))) {
+            $user = Auth::guard('web')->user();
+
+            if ($user->is_active === false) {
+                Auth::guard('web')->logout();
 
                 return back()->withErrors([
                     'email' => 'Akun Anda telah dinonaktifkan oleh Administrator.',
@@ -43,11 +46,14 @@ class AuthController extends Controller
 
             $request->session()->regenerate();
 
-            if (Auth::user()->isSaaSStaff()) {
-                return redirect()->intended('/admin/dashboard')->with('success', 'Selamat datang kembali, '.Auth::user()->name.'!');
-            }
+            return redirect()->intended('/dashboard')->with('success', 'Selamat datang kembali, '.$user->name.'!');
+        }
 
-            return redirect()->intended('/dashboard')->with('success', 'Selamat datang kembali!');
+        // If email belongs to a system admin, guide them to /admin/login
+        if (Admin::where('email', $credentials['email'])->exists()) {
+            return back()->withErrors([
+                'email' => 'Akun ini adalah Administrator Sistem. Silakan masuk melalui Portal Admin di /admin/login.',
+            ])->onlyInput('email');
         }
 
         return back()->withErrors([

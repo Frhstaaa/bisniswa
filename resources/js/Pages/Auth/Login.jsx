@@ -123,11 +123,19 @@ export default function Login() {
                         </button>
                     </form>
 
-                    <div className="pt-4 border-t border-[#e2e8f0] text-center text-xs text-[#64748b]">
-                        Belum memiliki akun bisnis?{' '}
-                        <Link href="/register" className="font-bold text-[#1e50ff] hover:underline">
-                            Daftar & Mulai Langganan
-                        </Link>
+                    <div className="pt-4 border-t border-[#e2e8f0] text-center text-xs text-[#64748b] space-y-2">
+                        <div>
+                            Belum memiliki akun bisnis?{' '}
+                            <Link href="/register" className="font-bold text-[#1e50ff] hover:underline">
+                                Daftar & Mulai Langganan
+                            </Link>
+                        </div>
+                        <div className="pt-1 text-[11px] text-slate-400">
+                            Administrator Sistem?{' '}
+                            <Link href="/admin/login" className="font-medium text-slate-600 hover:text-[#1e50ff] underline">
+                                Masuk ke Portal Admin &rarr;
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </div>
