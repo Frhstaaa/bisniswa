@@ -111,9 +111,9 @@ Setelah database dimigrasi & di-seed, Anda dapat langsung login menggunakan akun
 
 ---
 
-### 7. Menjalankan Engine WhatsApp Web JS & Queue Worker
+### 7. Menjalankan Engine WhatsApp Baileys & Queue Worker
 
-Aplikasi WhatsApp membutuhkan Node.js agar bot dan scan QR WhatsApp Web JS tetap standby:
+Aplikasi WhatsApp menggunakan **Engine Baileys (WebSocket Native)** yang sangat ringan (hanya ~20-30 MB RAM) dan **TIDAK memerlukan browser Chromium**:
 
 #### Pilihan A: Jika Ada Menu "NodeJS" di CyberPanel Anda
 1. Buka **Websites** -> **List Websites** -> **Manage** -> **NodeJS App**.
@@ -122,16 +122,14 @@ Aplikasi WhatsApp membutuhkan Node.js agar bot dan scan QR WhatsApp Web JS tetap
 4. **Port**: `3001`
 5. Jalankan `npm install` dan klik **Start App**.
 
-#### Pilihan B: Menggunakan PM2 (Jika Anda / Admin Memiliki Akses SSH VPS)
+#### Pilihan B: Menggunakan PM2 (Jika Memiliki Akses SSH VPS)
 Jalankan perintah ini:
 ```bash
-# 1. Install dependencies Chromium di VPS Ubuntu/Debian (Wajib untuk WhatsApp Web JS)
-sudo apt-get update && sudo apt-get install -y \
-  libasound2 libatk-bridge2.0-0 libdrm2 libgbm1 libnss3 libx11-xcb1 libxcomposite1 libxdamage1 libxrandr2
-
-# 2. Jalankan Gateway WhatsApp
+# 1. Masuk ke direktori gateway dan install dependencies
 cd /home/mardirawa.frahesta.com/public_html/gateway-node
 npm install --omit=dev
+
+# 2. Jalankan Gateway Baileys
 pm2 start server.js --name "wa-gateway"
 
 # 3. Jalankan Queue Worker Pesan
