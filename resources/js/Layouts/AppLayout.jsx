@@ -19,6 +19,7 @@ import {
     AlertCircle,
     Search,
     ChevronRight,
+    ChevronLeft,
     Sparkles,
     MessageSquare,
     Bot,
@@ -28,6 +29,8 @@ import {
     Lightbulb,
     Package,
     ShieldCheck,
+    PanelLeftClose,
+    PanelLeft,
 } from 'lucide-react';
 import Toast from '../Components/ui/toast';
 import { Alert, AlertTitle, AlertDescription } from '../Components/ui/alert';
@@ -62,6 +65,24 @@ export default function AppLayout({ children, title }) {
     const [searchQuery, setSearchQuery] = useState('');
     const [dismissedFlash, setDismissedFlash] = useState(false);
 
+    // Persisted Desktop Sidebar Collapsed State (Mantis style mini-drawer)
+    const [isCollapsed, setIsCollapsed] = useState(() => {
+        if (typeof window !== 'undefined') {
+            return localStorage.getItem('sidebar_collapsed') === 'true';
+        }
+        return false;
+    });
+
+    const toggleSidebar = () => {
+        setIsCollapsed((prev) => {
+            const next = !prev;
+            if (typeof window !== 'undefined') {
+                localStorage.setItem('sidebar_collapsed', String(next));
+            }
+            return next;
+        });
+    };
+
     useEffect(() => {
         setDismissedFlash(false);
     }, [flash]);
@@ -83,7 +104,7 @@ export default function AppLayout({ children, title }) {
         { label: 'Gateways', href: '/admin/gateways', icon: Cpu, active: url.startsWith('/admin/gateways') },
     ];
 
-    // Categorized Client Navigation
+    // Categorized Client Navigation (Tidy Mantis Groups)
     const clientNavGroups = [
         {
             title: 'IKHTISAR UTAMA',
@@ -92,7 +113,7 @@ export default function AppLayout({ children, title }) {
             ],
         },
         {
-            title: 'KOMUNIKASI & OPERASIONAL',
+            title: 'KOMUNIKASI & PESAN',
             items: [
                 { label: 'Manajemen Gateway', href: '/devices', icon: Smartphone, active: url.startsWith('/devices') },
                 { label: 'Kampanye Broadcast', href: '/broadcast', icon: Send, active: url.startsWith('/broadcast') },
@@ -116,10 +137,10 @@ export default function AppLayout({ children, title }) {
         },
     ];
 
-    // Categorized Super Admin & SaaS Staff Navigation
+    // Categorized Super Admin & SaaS Staff Navigation (Tidy Mantis Groups)
     const rawAdminNavGroups = [
         {
-            title: 'SISTEM UTAMA',
+            title: 'DASHBOARD & STATISTIK',
             items: [
                 { label: 'Ikhtisar Eksekutif', href: '/admin/dashboard', icon: LayoutDashboard, active: url === '/admin/dashboard' || url === '/admin', badge: 'SaaS', show: true },
             ],
@@ -134,13 +155,13 @@ export default function AppLayout({ children, title }) {
             ],
         },
         {
-            title: 'TIM & AKSES SAAS',
+            title: 'TIM & OTORISASI',
             items: [
                 { label: 'Tim & Akses RBAC', href: '/admin/staff', icon: ShieldCheck, active: url.startsWith('/admin/staff'), badge: 'Staff', show: perms.can_manage_staff },
             ],
         },
         {
-            title: 'INFRASTRUKTUR GATEWAY',
+            title: 'INFRASTRUKTUR SISTEM',
             items: [
                 { label: 'Node Microservices', href: '/admin/gateways', icon: Cpu, active: url.startsWith('/admin/gateways'), badge: 'Online', show: perms.can_manage_gateways },
                 { label: 'Pengaturan Produksi', href: '/admin/settings', icon: Settings, active: url.startsWith('/admin/settings'), show: perms.can_manage_settings },
@@ -190,43 +211,74 @@ export default function AppLayout({ children, title }) {
     }, [url]);
 
     return (
-        <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex font-sans antialiased selection:bg-blue-100 selection:text-[#1e50ff]">
-            {/* ================= 1. REFINED LUXURY DARK NAVY SIDEBAR ================= */}
-            <aside className="hidden lg:flex w-64 flex-col fixed inset-y-0 left-0 z-50 bg-[#08112c] text-white border-r border-blue-950/80 shadow-xl transition-all">
+        <div className="min-h-screen bg-[#fafafb] text-slate-800 flex font-sans antialiased selection:bg-[#e6f4ff] selection:text-[#1677ff]">
+            {/* ================= 1. REFINED MANTIS DASHBOARD SIDEBAR ================= */}
+            <aside
+                className={`hidden lg:flex flex-col fixed inset-y-0 left-0 z-50 bg-white text-slate-700 border-r border-[#e6ebf1] shadow-[0_1px_4px_rgba(0,0,0,0.02)] transition-all duration-300 ease-in-out ${
+                    isCollapsed ? 'w-[72px]' : 'w-64'
+                }`}
+            >
                 {/* Brand Header */}
-                <div className="h-16 px-5 flex items-center justify-between border-b border-blue-950/80 bg-[#050b1e]">
-                    <Link href={isAdminRoute ? '/admin/dashboard' : '/dashboard'} prefetch className="flex items-center gap-3 group">
+                <div className={`h-16 border-b border-[#e6ebf1] bg-white flex items-center ${isCollapsed ? 'justify-center px-2' : 'justify-between px-4'}`}>
+                    <Link
+                        href={isAdminRoute ? '/admin/dashboard' : '/dashboard'}
+                        prefetch
+                        className="flex items-center gap-3 overflow-hidden group"
+                        title="MARDIRA WA"
+                    >
                         <img
                             src="/images/logo.png"
                             alt="Politeknik Mardira Indonesia"
-                            className="h-9 w-auto object-contain shrink-0 transition-transform duration-200 group-hover:scale-105"
+                            className="h-8 w-auto object-contain shrink-0 transition-transform duration-200 group-hover:scale-105"
                         />
-                        <div className="overflow-hidden">
-                            <div className="flex items-center gap-1">
-                                <span className="font-extrabold text-sm tracking-tight text-white">
-                                    MARDIRA<span className="text-[#1e50ff]">WA</span>
-                                </span>
+                        {!isCollapsed && (
+                            <div className="overflow-hidden">
+                                <div className="flex items-center gap-1.5">
+                                    <span className="font-black text-sm tracking-tight text-slate-900">
+                                        MARDIRA<span className="text-[#1677ff]">WA</span>
+                                    </span>
+                                    {isAdminRoute ? (
+                                        <span className="text-[9px] font-bold font-mono px-1.5 py-0.5 rounded bg-[#e6f4ff] text-[#1677ff] border border-[#91caff]/40">
+                                            {isSuperAdmin ? 'SUPER' : 'STAFF'}
+                                        </span>
+                                    ) : (
+                                        <span className="text-[9px] font-bold font-mono px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-600 border border-emerald-200/50">
+                                            SAAS
+                                        </span>
+                                    )}
+                                </div>
+                                <div className="text-[10px] font-medium text-slate-400 truncate max-w-[125px]" title={user.workspace_name || user.name}>
+                                    {isAdminRoute ? 'Admin Control Center' : (user.workspace_name || user.name || 'Tenant Workspace')}
+                                </div>
                             </div>
-                            <div className="text-[10px] font-medium text-blue-200/70 truncate max-w-[130px]" title={user.workspace_name || user.name}>
-                                {isAdminRoute ? (isSuperAdmin ? 'Superadmin Platform' : `Panel Staff (${(user.role || 'Staff').toUpperCase()})`) : (user.workspace_name || user.name || 'Tenant Workspace')}
-                            </div>
-                        </div>
+                        )}
                     </Link>
 
-                    {isAdminRoute ? (
-                        <span className="h-2 w-2 rounded-full bg-amber-400 shadow-[0_0_6px_rgba(251,191,36,0.6)]" title="Superadmin Mode" />
-                    ) : (
-                        <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.6)]" title="Sistem Aktif" />
+                    {!isCollapsed && (
+                        <button
+                            type="button"
+                            onClick={toggleSidebar}
+                            className="h-7 w-7 rounded-lg border border-[#e6ebf1] bg-slate-50 hover:bg-slate-100 flex items-center justify-center text-slate-400 hover:text-[#1677ff] transition-colors cursor-pointer shrink-0"
+                            title="Perkecil Sidebar"
+                            aria-label="Perkecil Sidebar"
+                        >
+                            <PanelLeftClose className="w-3.5 h-3.5" />
+                        </button>
                     )}
                 </div>
 
-                {/* Navigation Sections with no-scrollbar */}
-                <div className="flex-1 overflow-y-auto no-scrollbar px-3 py-3 space-y-4">
+                {/* Navigation Sections */}
+                <div className={`flex-1 overflow-y-auto no-scrollbar py-3 space-y-3.5 ${isCollapsed ? 'px-2' : 'px-3'}`}>
                     {currentNavGroups.map((group, idx) => (
                         <div key={idx} className="space-y-1">
-                            <div className="px-3 text-[10px] font-bold uppercase tracking-wider text-blue-300/60">
-                                {group.title}
-                            </div>
+                            {!isCollapsed ? (
+                                <div className="px-3 pt-1 pb-1 text-[10px] font-bold uppercase tracking-wider text-[#8c8c8c]">
+                                    {group.title}
+                                </div>
+                            ) : (
+                                idx > 0 && <div className="h-px bg-[#e6ebf1] my-2 mx-1.5" />
+                            )}
+
                             <nav className="space-y-0.5">
                                 {group.items.map((item) => {
                                     const Icon = item.icon;
@@ -235,24 +287,44 @@ export default function AppLayout({ children, title }) {
                                             key={item.href}
                                             href={item.href}
                                             prefetch
-                                            className={`group w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all ${
-                                                item.active
-                                                    ? 'bg-[#1e50ff] text-white font-semibold shadow-xs border border-blue-400/40'
-                                                    : 'text-slate-300 hover:bg-white/10 hover:text-white font-medium'
+                                            title={isCollapsed ? item.label : undefined}
+                                            className={`group w-full flex items-center rounded-lg text-xs transition-all relative ${
+                                                isCollapsed
+                                                    ? `justify-center p-2.5 ${
+                                                          item.active
+                                                              ? 'bg-[#e6f4ff] text-[#1677ff] font-semibold border-r-2 border-[#1677ff]'
+                                                              : 'text-[#595959] hover:bg-slate-50 hover:text-[#1677ff]'
+                                                      }`
+                                                    : `justify-between px-3 py-2 ${
+                                                          item.active
+                                                              ? 'bg-[#e6f4ff] text-[#1677ff] font-semibold border-r-2 border-[#1677ff]'
+                                                              : 'text-[#595959] hover:bg-slate-50 hover:text-[#1677ff] font-medium'
+                                                      }`
                                             }`}
                                         >
-                                            <div className="flex items-center gap-2.5">
-                                                <Icon className={`w-4 h-4 transition-colors ${item.active ? 'text-white' : 'text-blue-300/70 group-hover:text-blue-100'}`} />
-                                                <span className="truncate">{item.label}</span>
+                                            <div className="flex items-center gap-2.5 min-w-0">
+                                                <Icon
+                                                    className={`w-4 h-4 shrink-0 transition-colors ${
+                                                        item.active ? 'text-[#1677ff]' : 'text-slate-400 group-hover:text-[#1677ff]'
+                                                    }`}
+                                                />
+                                                {!isCollapsed && <span className="truncate">{item.label}</span>}
                                             </div>
-                                            {item.badge && (
-                                                <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded-md ${
-                                                    item.active
-                                                        ? 'bg-white/20 text-white border border-white/30 font-semibold'
-                                                        : 'bg-[#050b1e] text-blue-300 border border-blue-900/60'
-                                                }`}>
+
+                                            {item.badge && !isCollapsed && (
+                                                <span
+                                                    className={`text-[10px] font-mono font-medium px-2 py-0.5 rounded-full shrink-0 ${
+                                                        item.active
+                                                            ? 'bg-[#1677ff] text-white font-semibold'
+                                                            : 'bg-slate-100 text-slate-600 border border-slate-200'
+                                                    }`}
+                                                >
                                                     {item.badge}
                                                 </span>
+                                            )}
+
+                                            {item.badge && isCollapsed && (
+                                                <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#1677ff]" />
                                             )}
                                         </Link>
                                     );
@@ -263,73 +335,128 @@ export default function AppLayout({ children, title }) {
                 </div>
 
                 {/* Bottom User Profile Section */}
-                <div className="p-3 border-t border-blue-950/80 bg-[#050b1e] space-y-2">
-                    <button
-                        type="button"
-                        onClick={() => setIsGuideModalOpen(true)}
-                        className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-blue-950/60 border border-blue-800/60 text-blue-200 hover:text-white hover:bg-blue-900/60 text-xs font-semibold transition-all shadow-xs cursor-pointer"
-                    >
-                        <div className="flex items-center gap-2">
-                            <Lightbulb className="w-4 h-4 text-amber-400" />
-                            <span>Panduan Fitur</span>
-                        </div>
-                        <span className="bg-blue-900/80 text-blue-300 border border-blue-700/50 text-[9px] py-0.5 px-2 font-mono font-medium rounded-md">
-                            PANDUAN
-                        </span>
-                    </button>
+                <div className={`border-t border-[#e6ebf1] bg-[#fafafb] ${isCollapsed ? 'p-2 flex flex-col items-center gap-2' : 'p-3 space-y-2'}`}>
+                    {!isCollapsed ? (
+                        <>
+                            <button
+                                type="button"
+                                onClick={() => setIsGuideModalOpen(true)}
+                                className="w-full flex items-center justify-between px-3 py-2 rounded-lg bg-white border border-[#e6ebf1] text-slate-700 hover:text-[#1677ff] hover:border-[#91caff] text-xs font-medium transition-all shadow-[0_1px_2px_rgba(0,0,0,0.02)] cursor-pointer"
+                            >
+                                <div className="flex items-center gap-2">
+                                    <Lightbulb className="w-4 h-4 text-amber-500" />
+                                    <span>Panduan Fitur</span>
+                                </div>
+                                <span className="bg-amber-50 text-amber-700 border border-amber-200/60 text-[9px] py-0.5 px-1.5 font-mono font-semibold rounded">
+                                    GUIDE
+                                </span>
+                            </button>
 
-                    <div className="flex items-center justify-between p-2 rounded-xl bg-[#08112c] border border-blue-950/80">
-                        <Link href="/profile" className="flex items-center gap-2.5 overflow-hidden hover:opacity-90 transition-opacity flex-1 min-w-0">
-                            <div className="h-8 w-8 rounded-lg bg-[#1e50ff]/20 text-[#60a5fa] border border-[#1e50ff]/30 flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
+                            <div className="flex items-center justify-between p-2 rounded-xl bg-white border border-[#e6ebf1] shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+                                <Link
+                                    href={isAdminRoute ? '/admin/settings' : '/profile'}
+                                    className="flex items-center gap-2.5 overflow-hidden hover:opacity-90 transition-opacity flex-1 min-w-0"
+                                >
+                                    <div className="h-8 w-8 rounded-lg bg-[#e6f4ff] text-[#1677ff] border border-[#91caff]/40 flex items-center justify-center font-bold text-xs shrink-0">
+                                        {user.name ? user.name.slice(0, 2).toUpperCase() : 'WA'}
+                                    </div>
+                                    <div className="overflow-hidden text-left">
+                                        <div className="text-xs font-semibold text-slate-900 truncate">
+                                            {user.name || 'Tamu'}
+                                        </div>
+                                        <div className="text-[10px] text-slate-400 truncate">
+                                            {isAdminRoute
+                                                ? (isSuperAdmin ? 'Superadmin Platform' : (user.role || 'Staff').toUpperCase())
+                                                : (user.workspace_name || user.email || 'Workspace')}
+                                        </div>
+                                    </div>
+                                </Link>
+
+                                {user.id ? (
+                                    <Link
+                                        href={logoutHref}
+                                        method="post"
+                                        as="button"
+                                        className="h-7 w-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors ml-1 cursor-pointer"
+                                        title="Keluar"
+                                    >
+                                        <LogOut className="w-3.5 h-3.5" />
+                                    </Link>
+                                ) : (
+                                    <Link
+                                        href="/login"
+                                        className="h-7 px-2 rounded-lg flex items-center justify-center text-xs font-semibold text-[#1677ff] hover:bg-blue-50 transition-colors ml-1"
+                                    >
+                                        Login
+                                    </Link>
+                                )}
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <button
+                                type="button"
+                                onClick={() => setIsGuideModalOpen(true)}
+                                className="h-8 w-8 rounded-lg flex items-center justify-center text-amber-500 hover:bg-amber-50 transition-colors cursor-pointer"
+                                title="Panduan Fitur"
+                            >
+                                <Lightbulb className="w-4 h-4" />
+                            </button>
+                            <Link
+                                href={isAdminRoute ? '/admin/settings' : '/profile'}
+                                className="h-8 w-8 rounded-lg bg-[#e6f4ff] text-[#1677ff] border border-[#91caff]/40 flex items-center justify-center font-bold text-xs"
+                                title={user.name || 'Profil'}
+                            >
                                 {user.name ? user.name.slice(0, 2).toUpperCase() : 'WA'}
-                            </div>
-                            <div className="overflow-hidden text-left">
-                                <div className="text-xs font-semibold text-white truncate">
-                                    {user.name || 'Tamu'}
-                                </div>
-                                <div className="text-[10px] text-blue-300/70 truncate">
-                                    {user.email || 'Belum Masuk'}
-                                </div>
-                            </div>
-                        </Link>
-
-                        {user.id ? (
-                            <Link
-                                href={logoutHref}
-                                method="post"
-                                as="button"
-                                className="h-7 w-7 rounded-lg flex items-center justify-center text-blue-300/80 hover:text-rose-300 hover:bg-rose-500/20 transition-colors ml-1 cursor-pointer"
-                                title="Keluar"
-                            >
-                                <LogOut className="w-3.5 h-3.5" />
                             </Link>
-                        ) : (
-                            <Link
-                                href="/login"
-                                className="h-7 px-2.5 rounded-lg flex items-center justify-center text-xs font-semibold text-blue-300 hover:bg-white/10 transition-colors ml-1"
-                            >
-                                Login
-                            </Link>
-                        )}
-                    </div>
+                            {user.id && (
+                                <Link
+                                    href={logoutHref}
+                                    method="post"
+                                    as="button"
+                                    className="h-8 w-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                                    title="Keluar"
+                                >
+                                    <LogOut className="w-3.5 h-3.5" />
+                                </Link>
+                            )}
+                        </>
+                    )}
                 </div>
             </aside>
 
             {/* ================= 2. MAIN CONTENT AREA & TOPBAR ================= */}
-            <div className="flex-1 flex flex-col lg:pl-64 min-w-0">
+            <div
+                className={`flex-1 flex flex-col ${
+                    isCollapsed ? 'lg:pl-[72px]' : 'lg:pl-64'
+                } min-w-0 transition-all duration-300 ease-in-out`}
+            >
                 {/* TOP HEADER BAR */}
-                <header className="sticky top-0 z-40 h-14 sm:h-16 bg-white/85 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3">
-                    {/* Left: Mobile Brand & Menu Button */}
+                <header className="sticky top-0 z-40 h-16 bg-white/95 backdrop-blur-md border-b border-[#e6ebf1] px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+                    {/* Left: Mobile Drawer Trigger, Desktop Sidebar Toggle & Breadcrumb */}
                     <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                        {/* Mobile Drawer Button */}
                         <button
                             type="button"
                             onClick={() => setIsMobileDrawerOpen(true)}
-                            className="lg:hidden h-9 w-9 rounded-xl border border-slate-200 bg-white flex items-center justify-center text-slate-700 hover:text-[#1e50ff] hover:border-[#1e50ff] shadow-2xs active:scale-95 transition-all shrink-0 cursor-pointer"
+                            className="lg:hidden h-9 w-9 rounded-lg border border-[#e6ebf1] bg-white flex items-center justify-center text-slate-600 hover:text-[#1677ff] hover:border-[#1677ff] shadow-2xs active:scale-95 transition-all shrink-0 cursor-pointer"
                             aria-label="Buka Menu Navigasi"
                         >
                             <Menu className="w-4 h-4" />
                         </button>
 
+                        {/* Desktop Sidebar Expand/Collapse Toggle */}
+                        <button
+                            type="button"
+                            onClick={toggleSidebar}
+                            className="hidden lg:flex h-8 w-8 rounded-lg border border-[#e6ebf1] bg-white items-center justify-center text-slate-500 hover:text-[#1677ff] hover:border-[#91caff] shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition-colors cursor-pointer shrink-0"
+                            title={isCollapsed ? 'Perluas Sidebar' : 'Perkecil Sidebar'}
+                            aria-label="Toggle Sidebar"
+                        >
+                            {isCollapsed ? <PanelLeft className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
+                        </button>
+
+                        {/* Mobile Brand Logo */}
                         <Link href="/" className="lg:hidden flex items-center gap-2 shrink-0">
                             <img
                                 src="/images/logo.png"
@@ -337,10 +464,11 @@ export default function AppLayout({ children, title }) {
                                 className="h-7 w-auto object-contain shrink-0"
                             />
                             <span className="font-black text-xs tracking-tight text-slate-900 block leading-none">
-                                MARDIRA<span className="text-[#1e50ff]">WA</span>
+                                MARDIRA<span className="text-[#1677ff]">WA</span>
                             </span>
                         </Link>
 
+                        {/* Mantis Breadcrumb Hierarchy */}
                         <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-500 font-medium truncate">
                             <span className="text-slate-400">{breadcrumb.category}</span>
                             <ChevronRight className="w-3.5 h-3.5 text-slate-300 shrink-0" />
@@ -353,33 +481,33 @@ export default function AppLayout({ children, title }) {
                         <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
                         <input
                             type="text"
-                            placeholder="Cari fitur, kontak... (Ctrl+K)"
+                            placeholder="Cari fitur, menu, kontak... (Ctrl+K)"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full h-8 pl-8 pr-10 text-xs rounded-lg border border-slate-200 bg-slate-50/60 placeholder:text-slate-400 focus:bg-white focus:border-[#1e50ff] focus:outline-none transition-all shadow-2xs"
+                            className="w-full h-8 pl-8 pr-10 text-xs rounded-lg border border-[#e6ebf1] bg-slate-50/70 placeholder:text-slate-400 focus:bg-white focus:border-[#1677ff] focus:outline-none transition-all shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
                         />
-                        <kbd className="pointer-events-none absolute right-2 top-1.5 hidden h-5 select-none items-center gap-0.5 rounded border border-slate-200 bg-white px-1.5 font-mono text-[10px] font-medium text-slate-400 sm:flex">
+                        <kbd className="pointer-events-none absolute right-2 top-1.5 hidden h-5 select-none items-center gap-0.5 rounded border border-[#e6ebf1] bg-white px-1.5 font-mono text-[10px] font-medium text-slate-400 sm:flex">
                             ⌘K
                         </kbd>
                     </div>
 
-                    {/* Right: Mode Switcher & Status */}
+                    {/* Right: SLA, Mode Switcher & Primary Action */}
                     <div className="flex items-center gap-2 sm:gap-2.5">
                         {/* SLA Indicator */}
-                        <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-blue-200/80 bg-blue-50/60 text-[11px] font-medium text-[#1e50ff]">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#1e50ff] animate-pulse" />
+                        <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-blue-200/80 bg-[#e6f4ff]/60 text-[11px] font-medium text-[#1677ff]">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#1677ff] animate-pulse" />
                             <span>Uptime <strong>99.9%</strong></span>
                         </div>
 
                         {/* Mode Switcher Segmented Control */}
                         {isSaaSStaff && (
-                            <div className="flex items-center p-0.5 rounded-lg bg-slate-100 border border-slate-200 text-xs font-semibold">
+                            <div className="flex items-center p-0.5 rounded-lg bg-slate-100 border border-[#e6ebf1] text-xs font-medium">
                                 <Link
                                     href="/dashboard"
                                     prefetch
                                     className={`px-2 sm:px-2.5 py-1 rounded-md transition-all text-xs ${
                                         !isAdminRoute
-                                            ? 'bg-white text-[#1e50ff] font-bold shadow-2xs'
+                                            ? 'bg-white text-[#1677ff] font-semibold shadow-[0_1px_2px_rgba(0,0,0,0.05)]'
                                             : 'text-slate-500 hover:text-slate-900'
                                     }`}
                                 >
@@ -390,7 +518,7 @@ export default function AppLayout({ children, title }) {
                                     prefetch
                                     className={`px-2 sm:px-2.5 py-1 rounded-md transition-all text-xs ${
                                         isAdminRoute
-                                            ? 'bg-[#1e50ff] text-white font-bold shadow-2xs'
+                                            ? 'bg-[#1677ff] text-white font-semibold shadow-[0_1px_2px_rgba(0,0,0,0.05)]'
                                             : 'text-slate-500 hover:text-slate-900'
                                     }`}
                                 >
@@ -402,15 +530,23 @@ export default function AppLayout({ children, title }) {
                         {/* Top Context Action Button */}
                         {isAdminRoute ? (
                             <Link href="/admin/payments" prefetch>
-                                <Button variant="outline" size="sm" className="h-8 text-xs font-semibold border-slate-200 text-[#1e50ff] hover:border-[#1e50ff] hover:bg-blue-50/50 rounded-lg">
-                                    <Receipt className="w-3.5 h-3.5 mr-1 text-[#1e50ff]" />
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="h-8 text-xs font-semibold border-[#e6ebf1] text-[#1677ff] hover:border-[#1677ff] hover:bg-[#e6f4ff]/50 rounded-lg"
+                                >
+                                    <Receipt className="w-3.5 h-3.5 mr-1 text-[#1677ff]" />
                                     <span className="hidden sm:inline">Verifikasi Tagihan</span>
                                     <span className="sm:hidden">Invoice</span>
                                 </Button>
                             </Link>
                         ) : (
                             <Link href="/broadcast" prefetch>
-                                <Button variant="default" size="sm" className="bg-[#1e50ff] hover:bg-[#153ec7] text-white h-8 text-xs font-bold shadow-md shadow-blue-500/20 rounded-lg">
+                                <Button
+                                    variant="default"
+                                    size="sm"
+                                    className="bg-[#1677ff] hover:bg-[#1060d4] text-white h-8 text-xs font-semibold shadow-[0_2px_4px_rgba(22,119,255,0.2)] rounded-lg"
+                                >
                                     <Send className="w-3.5 h-3.5 mr-1.5 text-white" />
                                     <span className="hidden sm:inline">Broadcast Baru</span>
                                     <span className="sm:hidden">Broadcast</span>
@@ -453,19 +589,19 @@ export default function AppLayout({ children, title }) {
                 </main>
             </div>
 
-            {/* MOBILE SLIDE-OVER DRAWER */}
+            {/* ================= 3. MOBILE SLIDE-OVER DRAWER (MANTIS LIGHT THEME) ================= */}
             {isMobileDrawerOpen && (
                 <div className="lg:hidden fixed inset-0 z-50 flex animate-fade-in">
                     {/* Backdrop */}
                     <div
-                        className="fixed inset-0 bg-slate-950/65 backdrop-blur-md transition-opacity"
+                        className="fixed inset-0 bg-slate-950/40 backdrop-blur-xs transition-opacity"
                         onClick={() => setIsMobileDrawerOpen(false)}
                     />
 
                     {/* Drawer Panel */}
-                    <div className="relative flex-1 flex flex-col max-w-xs w-full bg-[#08112c] text-white border-r border-blue-950/80 z-10 shadow-2xl">
+                    <div className="relative flex-1 flex flex-col max-w-xs w-full bg-white text-slate-800 border-r border-[#e6ebf1] z-10 shadow-2xl">
                         {/* Drawer Header */}
-                        <div className="h-16 px-5 flex items-center justify-between border-b border-blue-950/80 bg-[#050b1e]">
+                        <div className="h-16 px-5 flex items-center justify-between border-b border-[#e6ebf1] bg-white">
                             <div className="flex items-center gap-2.5">
                                 <img
                                     src="/images/logo.png"
@@ -473,10 +609,10 @@ export default function AppLayout({ children, title }) {
                                     className="h-8 w-auto object-contain shrink-0"
                                 />
                                 <div>
-                                    <span className="font-extrabold text-sm tracking-tight text-white">
-                                        MARDIRA<span className="text-[#1e50ff]">WA</span>
+                                    <span className="font-black text-sm tracking-tight text-slate-900">
+                                        MARDIRA<span className="text-[#1677ff]">WA</span>
                                     </span>
-                                    <p className="text-[10px] text-blue-200/70">
+                                    <p className="text-[10px] text-slate-400">
                                         {isAdminRoute ? 'Super Admin' : 'Tenant Workspace'}
                                     </p>
                                 </div>
@@ -484,7 +620,7 @@ export default function AppLayout({ children, title }) {
                             <button
                                 type="button"
                                 onClick={() => setIsMobileDrawerOpen(false)}
-                                className="h-8 w-8 rounded-lg flex items-center justify-center text-blue-300 hover:text-white hover:bg-white/10 cursor-pointer"
+                                className="h-8 w-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer transition-colors"
                             >
                                 <X className="w-4 h-4" />
                             </button>
@@ -494,7 +630,7 @@ export default function AppLayout({ children, title }) {
                         <div className="flex-1 overflow-y-auto px-3 py-4 space-y-4">
                             {currentNavGroups.map((group, idx) => (
                                 <div key={idx} className="space-y-1">
-                                    <div className="px-3 text-[10px] font-bold uppercase tracking-wider text-blue-300/60">
+                                    <div className="px-3 text-[10px] font-bold uppercase tracking-wider text-[#8c8c8c]">
                                         {group.title}
                                     </div>
                                     <nav className="space-y-0.5">
@@ -506,22 +642,24 @@ export default function AppLayout({ children, title }) {
                                                     href={item.href}
                                                     prefetch
                                                     onClick={() => setIsMobileDrawerOpen(false)}
-                                                    className={`group w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs transition-all ${
+                                                    className={`group w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-xs transition-all ${
                                                         item.active
-                                                            ? 'bg-[#1e50ff] text-white font-semibold shadow-xs border border-blue-400/40'
-                                                            : 'text-slate-300 hover:bg-white/10 hover:text-white font-medium'
+                                                            ? 'bg-[#e6f4ff] text-[#1677ff] font-semibold border-r-2 border-[#1677ff]'
+                                                            : 'text-[#595959] hover:bg-slate-50 hover:text-[#1677ff] font-medium'
                                                     }`}
                                                 >
                                                     <div className="flex items-center gap-2.5">
-                                                        <Icon className={`w-4 h-4 ${item.active ? 'text-white' : 'text-blue-300/70'}`} />
+                                                        <Icon className={`w-4 h-4 ${item.active ? 'text-[#1677ff]' : 'text-slate-400'}`} />
                                                         <span>{item.label}</span>
                                                     </div>
                                                     {item.badge && (
-                                                        <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded-md ${
-                                                            item.active
-                                                                ? 'bg-white/20 text-white border border-white/30 font-semibold'
-                                                                : 'bg-[#050b1e] text-blue-300 border border-blue-900/60'
-                                                        }`}>
+                                                        <span
+                                                            className={`text-[10px] font-mono px-2 py-0.5 rounded-full ${
+                                                                item.active
+                                                                    ? 'bg-[#1677ff] text-white font-semibold'
+                                                                    : 'bg-slate-100 text-slate-600 border border-slate-200'
+                                                            }`}
+                                                        >
                                                             {item.badge}
                                                         </span>
                                                     )}
@@ -539,33 +677,37 @@ export default function AppLayout({ children, title }) {
                                     setIsMobileDrawerOpen(false);
                                     setIsGuideModalOpen(true);
                                 }}
-                                className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-blue-950/60 border border-blue-800/60 text-blue-200 hover:text-white hover:bg-blue-900/60 text-xs font-semibold shadow-xs cursor-pointer transition-all"
+                                className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg bg-[#fafafb] border border-[#e6ebf1] text-slate-700 hover:text-[#1677ff] text-xs font-medium shadow-[0_1px_2px_rgba(0,0,0,0.02)] cursor-pointer transition-all"
                             >
                                 <div className="flex items-center gap-2">
-                                    <Lightbulb className="w-4 h-4 text-amber-400" />
+                                    <Lightbulb className="w-4 h-4 text-amber-500" />
                                     <span>Buka Panduan Fitur</span>
                                 </div>
-                                <span className="bg-blue-900/80 text-blue-300 border border-blue-700/50 text-[9px] py-0.5 px-2 font-mono rounded-md">GUIDE</span>
+                                <span className="bg-amber-50 text-amber-700 border border-amber-200/60 text-[9px] py-0.5 px-1.5 font-mono font-semibold rounded">
+                                    GUIDE
+                                </span>
                             </button>
                         </div>
 
                         {/* Drawer Bottom Profile */}
-                        <div className="p-3 border-t border-blue-950/80 bg-[#050b1e]">
+                        <div className="p-3 border-t border-[#e6ebf1] bg-[#fafafb]">
                             <div className="flex items-center justify-between">
                                 <Link
-                                    href="/profile"
+                                    href={isAdminRoute ? '/admin/settings' : '/profile'}
                                     onClick={() => setIsMobileDrawerOpen(false)}
                                     className="flex items-center gap-2 min-w-0"
                                 >
-                                    <div className="h-7 w-7 rounded-lg bg-[#1e50ff]/20 text-[#60a5fa] border border-[#1e50ff]/30 flex items-center justify-center font-bold text-xs shrink-0">
+                                    <div className="h-8 w-8 rounded-lg bg-[#e6f4ff] text-[#1677ff] border border-[#91caff]/40 flex items-center justify-center font-bold text-xs shrink-0">
                                         {user.name ? user.name.slice(0, 2).toUpperCase() : 'WA'}
                                     </div>
                                     <div className="overflow-hidden">
-                                        <div className="truncate text-xs font-semibold text-white">
+                                        <div className="truncate text-xs font-semibold text-slate-800">
                                             {user.name || 'Tamu'}
                                         </div>
-                                        <div className="truncate text-[10px] text-blue-300/70">
-                                            {user.workspace_name || user.email || 'Belum Masuk'}
+                                        <div className="truncate text-[10px] text-slate-400">
+                                            {isAdminRoute
+                                                ? (isSuperAdmin ? 'Superadmin' : (user.role || 'Staff').toUpperCase())
+                                                : (user.workspace_name || user.email || 'Workspace')}
                                         </div>
                                     </div>
                                 </Link>
@@ -575,14 +717,14 @@ export default function AppLayout({ children, title }) {
                                         href={logoutHref}
                                         method="post"
                                         as="button"
-                                        className="text-xs text-rose-400 font-semibold hover:text-rose-300"
+                                        className="text-xs text-rose-600 font-semibold hover:text-rose-700 p-1.5"
                                     >
                                         Keluar
                                     </Link>
                                 ) : (
                                     <Link
                                         href="/login"
-                                        className="text-xs text-blue-300 font-semibold hover:underline"
+                                        className="text-xs text-[#1677ff] font-semibold hover:underline p-1.5"
                                     >
                                         Login
                                     </Link>
@@ -593,8 +735,8 @@ export default function AppLayout({ children, title }) {
                 </div>
             )}
 
-            {/* CURATED MOBILE FLOATING DOCK */}
-            <nav className="lg:hidden fixed bottom-2.5 inset-x-3 bg-white/95 backdrop-blur-md border border-slate-200/90 px-2 py-1.5 rounded-2xl flex items-center justify-around z-30 shadow-xl shadow-slate-900/10">
+            {/* ================= 4. CURATED MOBILE FLOATING DOCK ================= */}
+            <nav className="lg:hidden fixed bottom-2.5 inset-x-3 bg-white/95 backdrop-blur-md border border-[#e6ebf1] px-2 py-1.5 rounded-2xl flex items-center justify-around z-30 shadow-xl shadow-slate-900/5">
                 {(isAdminRoute ? adminMobileDockItems : clientMobileDockItems).map((item) => {
                     const Icon = item.icon;
                     return (
@@ -604,7 +746,7 @@ export default function AppLayout({ children, title }) {
                             prefetch
                             className={`flex flex-col items-center gap-1 text-[10px] transition-all py-1.5 px-3 rounded-xl min-h-[44px] justify-center ${
                                 item.active
-                                    ? 'font-bold text-white bg-[#1e50ff] shadow-md shadow-blue-500/25'
+                                    ? 'font-semibold text-white bg-[#1677ff] shadow-md shadow-blue-500/20'
                                     : 'font-medium text-slate-500 hover:text-slate-900'
                             }`}
                         >
