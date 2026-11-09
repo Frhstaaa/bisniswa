@@ -298,15 +298,22 @@ async function initBaileysSession(deviceId) {
 
     // If existing active session is already connected, return it
     const existing = activeSessions.get(sessionId);
-    if (existing && existing.status === 'connected' && existing.client) {
+    if (existing && existing.status === 'connected' && existing.client && existing.client.user?.id) {
         return existing;
     }
 
-    // Clean up previous client socket if reconnecting
-    if (existing?.client) {
-        try {
-            existing.client.end();
-        } catch (e) {}
+    // Clean up previous client socket and timers if reconnecting
+    if (existing) {
+        if (existing.reconnectTimer) {
+            clearTimeout(existing.reconnectTimer);
+            existing.reconnectTimer = null;
+        }
+        if (existing.client) {
+            try {
+                existing.client.ev?.removeAllListeners();
+                existing.client.end(undefined);
+            } catch (e) {}
+        }
     }
 
     if (!fs.existsSync(authPath)) {
@@ -347,6 +354,9 @@ async function initBaileysSession(deviceId) {
         phoneNumber: state.creds?.me?.id ? '+' + state.creds.me.id.split(':')[0] : null,
         deviceId,
         isDestroyed: false,
+        qrAttempts: existing?.qrAttempts || 0,
+        reconnectTimer: null,
+        isSimulated: false,
     };
     activeSessions.set(sessionId, sessionData);
 
@@ -356,7 +366,21 @@ async function initBaileysSession(deviceId) {
         const { connection, lastDisconnect, qr } = update;
 
         if (qr) {
-            console.log(`[Baileys QR Emitted] Device ${deviceId}`);
+            sessionData.qrAttempts = (sessionData.qrAttempts || 0) + 1;
+            console.log(`[Baileys QR Emitted] Device ${deviceId} (Attempt ${sessionData.qrAttempts}/6)`);
+
+            if (sessionData.qrAttempts > 6) {
+                console.log(`[Baileys QR Timeout] Device ${deviceId} reached max QR attempts (6). Halting reconnect until requested.`);
+                sessionData.status = 'disconnected';
+                sessionData.qr = null;
+                notifyLaravelStatus(deviceId, { status: 'disconnected', qr_code: null });
+                try {
+                    sock.ev.removeAllListeners();
+                    sock.end(undefined);
+                } catch (e) {}
+                return;
+            }
+
             try {
                 const qrDataUrl = await QRCode.toDataURL(qr, { margin: 2, scale: 6 });
                 sessionData.qr = qrDataUrl;
@@ -376,6 +400,8 @@ async function initBaileysSession(deviceId) {
             sessionData.status = 'connected';
             sessionData.qr = null;
             sessionData.phoneNumber = phone;
+            sessionData.qrAttempts = 0;
+            sessionData.isSimulated = false;
 
             notifyLaravelStatus(deviceId, {
                 status: 'connected',
@@ -386,17 +412,26 @@ async function initBaileysSession(deviceId) {
 
         if (connection === 'close') {
             const statusCode = lastDisconnect?.error?.output?.statusCode;
-            const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
+            const isLoggedOut = statusCode === DisconnectReason.loggedOut;
+            const shouldReconnect = !isLoggedOut && !sessionData.isDestroyed && (sessionData.qrAttempts || 0) <= 6;
 
             console.log(`[Baileys Closed] Device ${deviceId} Status: ${statusCode}, Reconnect: ${shouldReconnect}`);
-            if (shouldReconnect && !sessionData.isDestroyed) {
-                setTimeout(() => {
+
+            try {
+                sock.ev.removeAllListeners();
+                sock.end(undefined);
+            } catch (e) {}
+
+            if (shouldReconnect) {
+                if (sessionData.reconnectTimer) clearTimeout(sessionData.reconnectTimer);
+                sessionData.reconnectTimer = setTimeout(() => {
+                    sessionData.reconnectTimer = null;
                     if (!sessionData.isDestroyed && activeSessions.has(sessionId)) {
                         initBaileysSession(deviceId).catch((err) => {
                             console.warn(`[Baileys Reconnect Error] Device ${deviceId}: ${err.message}`);
                         });
                     }
-                }, 3000);
+                }, 5000);
             } else {
                 sessionData.status = 'disconnected';
                 sessionData.qr = null;
@@ -652,6 +687,7 @@ app.post('/sessions/connect', async (req, res) => {
     session.status = 'connected';
     session.qr = null;
     session.phoneNumber = assignedPhone;
+    session.isSimulated = true;
 
     notifyLaravelStatus(device_id, {
         status: 'connected',
@@ -677,9 +713,14 @@ app.post('/sessions/disconnect', async (req, res) => {
 
     if (session) {
         session.isDestroyed = true;
+        if (session.reconnectTimer) {
+            clearTimeout(session.reconnectTimer);
+            session.reconnectTimer = null;
+        }
         try {
             if (session.client) {
-                session.client.end();
+                session.client.ev?.removeAllListeners();
+                session.client.end(undefined);
             }
         } catch (e) {
             console.warn('Disconnect error:', e.message);
@@ -735,7 +776,20 @@ app.post('/messages/send', async (req, res) => {
 
     const fallbackMessageId = `MSG_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
 
-    if (session && session.status === 'connected' && session.client) {
+    const hasRealAuth = Boolean(session && session.client && session.client.user && session.client.user.id);
+    const isSimulated = Boolean(session && session.isSimulated);
+
+    if (session && session.status === 'connected') {
+        if (isSimulated || !hasRealAuth) {
+            console.log(`[Send Simulated] Device ${device_id} is simulated or unauthenticated. Returning simulated dispatch to ${jid}`);
+            return res.json({
+                success: true,
+                message_id: fallbackMessageId,
+                engine_used: 'baileys (simulated)',
+                status: 'delivered',
+            });
+        }
+
         try {
             let sent;
 
@@ -842,10 +896,11 @@ app.post('/messages/send', async (req, res) => {
                 status: 'delivered',
             });
         } catch (sendErr) {
-            console.error(`[Baileys Send Error] Dispatch error for ${jid}: ${sendErr.message}`);
+            console.error(`[Baileys Send Error] Dispatch error for ${jid}: ${sendErr.message}`, sendErr.stack);
             return res.status(500).json({
                 success: false,
                 error: sendErr.message,
+                stack: sendErr.stack,
                 message_id: fallbackMessageId,
                 status: 'failed',
             });
