@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Mail\ResetPasswordMail;
+use App\Models\Admin;
 use App\Models\ApiKey;
 use App\Models\Device;
 use App\Models\Plan;
@@ -312,5 +313,115 @@ class AuthAndPublicTest extends TestCase
         $resMalformed->assertJson([
             'valid' => false,
         ]);
+    }
+
+    public function test_tenant_logout_invalidates_session_and_clears_auth_user_on_public_landing_page(): void
+    {
+        $user = User::factory()->create([
+            'email' => 'tenant@bisnis.com',
+            'password' => bcrypt('password123'),
+        ]);
+
+        $this->actingAs($user, 'web');
+
+        // Check landing page while authenticated
+        $resAuth = $this->get('/');
+        $resAuth->assertStatus(200);
+        $resAuth->assertInertia(fn ($page) => $page
+            ->where('auth.user.id', $user->id)
+        );
+
+        // Perform logout
+        $logoutRes = $this->post('/logout');
+        $logoutRes->assertRedirect('/');
+        $logoutRes->assertSessionHas('success');
+
+        $this->assertGuest('web');
+        $this->assertGuest('admin');
+
+        // Check landing page after logout: auth.user must be null so Dashboard button does not show
+        $resPublic = $this->get('/');
+        $resPublic->assertStatus(200);
+        $resPublic->assertInertia(fn ($page) => $page
+            ->where('auth.user', null)
+        );
+    }
+
+    public function test_admin_session_does_not_leak_into_public_landing_page_auth_user(): void
+    {
+        $admin = Admin::create([
+            'name' => 'Superadmin System',
+            'email' => 'admin@kirimwa.pro',
+            'password' => bcrypt('adminsecret123'),
+            'role' => 'superadmin',
+            'is_active' => true,
+        ]);
+
+        $this->actingAs($admin, 'admin');
+
+        // Public page must not set auth.user to admin, preventing tenant dashboard button
+        $response = $this->get('/');
+        $response->assertStatus(200);
+        $response->assertInertia(fn ($page) => $page
+            ->where('auth.user', null)
+            ->where('auth.admin.id', $admin->id)
+        );
+    }
+
+    public function test_admin_logout_clears_session_and_redirects_to_admin_login(): void
+    {
+        $admin = Admin::create([
+            'name' => 'Admin System',
+            'email' => 'staffadmin@kirimwa.pro',
+            'password' => bcrypt('adminsecret123'),
+            'role' => 'admin',
+            'is_active' => true,
+        ]);
+
+        $this->actingAs($admin, 'admin');
+
+        $logoutRes = $this->post('/admin/logout');
+        $logoutRes->assertRedirect(route('admin.login'));
+        $logoutRes->assertSessionHas('success');
+
+        $this->assertGuest('admin');
+        $this->assertGuest('web');
+    }
+
+    public function test_tenant_login_rejects_admin_email_with_differentiated_guidance(): void
+    {
+        Admin::create([
+            'name' => 'Root Admin',
+            'email' => 'root@kirimwa.pro',
+            'password' => bcrypt('secret123'),
+            'role' => 'superadmin',
+            'is_active' => true,
+        ]);
+
+        $response = $this->post('/login', [
+            'email' => 'root@kirimwa.pro',
+            'password' => 'secret123',
+        ]);
+
+        $response->assertSessionHasErrors(['email']);
+        $errors = session('errors')->get('email');
+        $this->assertStringContainsString('Portal Admin', $errors[0]);
+    }
+
+    public function test_admin_login_rejects_tenant_email_with_differentiated_guidance(): void
+    {
+        User::factory()->create([
+            'email' => 'client@tokokita.com',
+            'password' => bcrypt('secret123'),
+        ]);
+
+        $response = $this->post('/admin/login', [
+            'email' => 'client@tokokita.com',
+            'password' => 'secret123',
+        ]);
+
+        $response->assertSessionHasErrors(['email']);
+        $errors = session('errors')->get('email');
+        $this->assertStringContainsString('Klien / Tenant', $errors[0]);
     }
 }

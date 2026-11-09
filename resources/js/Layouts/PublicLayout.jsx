@@ -8,9 +8,12 @@ import { useGsapReveal } from '../hooks/useGsapReveal';
 import {
     Zap,
     LogIn,
+    LogOut,
     Menu,
     X,
     Shield,
+    ShieldCheck,
+    Building2,
     Server,
     MapPin,
     Mail,
@@ -52,6 +55,9 @@ export default function PublicLayout({
     const safePlans = Array.isArray(plans) ? plans : [];
     const { url, props } = usePage();
     const user = props?.auth?.user;
+    const admin = props?.auth?.admin;
+    const isTenantAuthenticated = Boolean(user && user.id);
+    const isAdminAuthenticated = Boolean(admin && admin.id);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const mainRef = useGsapReveal([url]);
 
@@ -186,15 +192,48 @@ export default function PublicLayout({
 
                         {/* Desktop Right Action Buttons */}
                         <div className="hidden md:flex items-center gap-2 shrink-0">
-                            {user ? (
-                                <Link
-                                    href="/dashboard"
-                                    prefetch
-                                    className="btn-press inline-flex h-9 items-center gap-1.5 rounded-full bg-[#1e50ff] hover:bg-[#153ec7] px-4 text-xs font-extrabold uppercase tracking-wider text-white shadow-md shadow-blue-500/25 transition-all cursor-pointer whitespace-nowrap shrink-0"
-                                >
-                                    <LayoutDashboard className="w-3.5 h-3.5" />
-                                    <span>Dashboard</span>
-                                </Link>
+                            {isTenantAuthenticated ? (
+                                <div className="flex items-center gap-1.5">
+                                    <Link
+                                        href="/dashboard"
+                                        prefetch
+                                        className="btn-press inline-flex h-9 items-center gap-1.5 rounded-full bg-[#1e50ff] hover:bg-[#153ec7] px-4 text-xs font-extrabold uppercase tracking-wider text-white shadow-md shadow-blue-500/25 transition-all cursor-pointer whitespace-nowrap shrink-0"
+                                    >
+                                        <LayoutDashboard className="w-3.5 h-3.5" />
+                                        <span>Dashboard</span>
+                                    </Link>
+                                    <Link
+                                        href="/logout"
+                                        method="post"
+                                        as="button"
+                                        className="btn-press inline-flex h-9 items-center gap-1 rounded-full border border-slate-200 hover:border-rose-200 bg-white hover:bg-rose-50 px-3 text-xs font-bold text-slate-600 hover:text-rose-600 transition-all cursor-pointer whitespace-nowrap shrink-0"
+                                        title="Keluar dari akun"
+                                    >
+                                        <LogOut className="w-3.5 h-3.5" />
+                                        <span className="hidden lg:inline">Keluar</span>
+                                    </Link>
+                                </div>
+                            ) : isAdminAuthenticated ? (
+                                <div className="flex items-center gap-1.5">
+                                    <Link
+                                        href="/admin/dashboard"
+                                        prefetch
+                                        className="btn-press inline-flex h-9 items-center gap-1.5 rounded-full bg-slate-900 hover:bg-slate-800 px-4 text-xs font-extrabold uppercase tracking-wider text-white shadow-md shadow-slate-900/25 transition-all cursor-pointer whitespace-nowrap shrink-0 border border-slate-700"
+                                    >
+                                        <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />
+                                        <span>Portal Admin</span>
+                                    </Link>
+                                    <Link
+                                        href="/admin/logout"
+                                        method="post"
+                                        as="button"
+                                        className="btn-press inline-flex h-9 items-center gap-1 rounded-full border border-slate-200 hover:border-rose-200 bg-white hover:bg-rose-50 px-3 text-xs font-bold text-slate-600 hover:text-rose-600 transition-all cursor-pointer whitespace-nowrap shrink-0"
+                                        title="Keluar dari Portal Admin"
+                                    >
+                                        <LogOut className="w-3.5 h-3.5" />
+                                        <span className="hidden lg:inline">Keluar</span>
+                                    </Link>
+                                </div>
                             ) : (
                                 <>
                                     <motion.button
@@ -223,7 +262,7 @@ export default function PublicLayout({
 
                         {/* Mobile Actions & Toggle */}
                         <div className="flex md:hidden items-center gap-2 shrink-0">
-                            {user ? (
+                            {isTenantAuthenticated ? (
                                 <Link
                                     href="/dashboard"
                                     prefetch
@@ -231,6 +270,15 @@ export default function PublicLayout({
                                 >
                                     <LayoutDashboard className="w-3 h-3" />
                                     <span>Dashboard</span>
+                                </Link>
+                            ) : isAdminAuthenticated ? (
+                                <Link
+                                    href="/admin/dashboard"
+                                    prefetch
+                                    className="btn-press inline-flex h-8 items-center gap-1 rounded-full bg-slate-900 hover:bg-slate-800 px-3 text-[11px] font-bold text-white shadow-xs whitespace-nowrap border border-slate-700"
+                                >
+                                    <ShieldCheck className="w-3 h-3 text-blue-400" />
+                                    <span>Admin</span>
                                 </Link>
                             ) : (
                                 <button
@@ -278,16 +326,50 @@ export default function PublicLayout({
                                 </div>
 
                                 <div className="pt-2 border-t border-slate-100 flex flex-col gap-2">
-                                    {user ? (
-                                        <Link
-                                            href="/dashboard"
-                                            prefetch
-                                            onClick={() => setIsMobileMenuOpen(false)}
-                                            className="w-full inline-flex h-10 items-center justify-center gap-2 rounded-full bg-[#1e50ff] hover:bg-[#153ec7] text-xs font-extrabold uppercase tracking-wider text-white shadow-xs"
-                                        >
-                                            <LayoutDashboard className="w-3.5 h-3.5" />
-                                            <span>Buka Dashboard Workspace</span>
-                                        </Link>
+                                    {isTenantAuthenticated ? (
+                                        <>
+                                            <Link
+                                                href="/dashboard"
+                                                prefetch
+                                                onClick={() => setIsMobileMenuOpen(false)}
+                                                className="w-full inline-flex h-10 items-center justify-center gap-2 rounded-full bg-[#1e50ff] hover:bg-[#153ec7] text-xs font-extrabold uppercase tracking-wider text-white shadow-xs"
+                                            >
+                                                <LayoutDashboard className="w-3.5 h-3.5" />
+                                                <span>Buka Dashboard Workspace</span>
+                                            </Link>
+                                            <Link
+                                                href="/logout"
+                                                method="post"
+                                                as="button"
+                                                onClick={() => setIsMobileMenuOpen(false)}
+                                                className="w-full inline-flex h-9 items-center justify-center gap-1.5 rounded-full border border-rose-200 bg-rose-50 text-xs font-bold text-rose-600 hover:bg-rose-100 cursor-pointer"
+                                            >
+                                                <LogOut className="w-3.5 h-3.5" />
+                                                <span>Keluar dari Akun</span>
+                                            </Link>
+                                        </>
+                                    ) : isAdminAuthenticated ? (
+                                        <>
+                                            <Link
+                                                href="/admin/dashboard"
+                                                prefetch
+                                                onClick={() => setIsMobileMenuOpen(false)}
+                                                className="w-full inline-flex h-10 items-center justify-center gap-2 rounded-full bg-slate-900 hover:bg-slate-800 text-xs font-extrabold uppercase tracking-wider text-white shadow-xs border border-slate-700"
+                                            >
+                                                <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />
+                                                <span>Buka Portal Admin SaaS</span>
+                                            </Link>
+                                            <Link
+                                                href="/admin/logout"
+                                                method="post"
+                                                as="button"
+                                                onClick={() => setIsMobileMenuOpen(false)}
+                                                className="w-full inline-flex h-9 items-center justify-center gap-1.5 rounded-full border border-rose-200 bg-rose-50 text-xs font-bold text-rose-600 hover:bg-rose-100 cursor-pointer"
+                                            >
+                                                <LogOut className="w-3.5 h-3.5" />
+                                                <span>Keluar dari Portal Admin</span>
+                                            </Link>
+                                        </>
                                     ) : (
                                         <>
                                             <button
@@ -382,22 +464,21 @@ export default function PublicLayout({
                                 <h4 className="font-bold text-white uppercase text-[11px] tracking-wider">Portal Layanan</h4>
                                 <ul className="space-y-2 text-slate-300">
                                     <li>
-                                        <button
-                                            type="button"
-                                            onClick={openLoginModal}
-                                            className="hover:text-[#1e50ff] transition-colors text-left"
-                                        >
-                                            Masuk ke Workspace
-                                        </button>
+                                        <Link href="/login" className="hover:text-[#1e50ff] transition-colors flex items-center gap-1.5">
+                                            <Building2 className="w-3.5 h-3.5 text-[#1e50ff]" />
+                                            <span>Login Klien / Tenant</span>
+                                        </Link>
                                     </li>
                                     <li>
-                                        <button
-                                            type="button"
-                                            onClick={() => openRegisterModal()}
-                                            className="hover:text-[#1e50ff] transition-colors text-left"
-                                        >
+                                        <Link href="/register" className="hover:text-[#1e50ff] transition-colors">
                                             Pendaftaran Akun Baru
-                                        </button>
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <a href="/admin/login" className="hover:text-blue-400 transition-colors flex items-center gap-1.5 text-slate-400">
+                                            <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />
+                                            <span>Portal Admin Sistem</span>
+                                        </a>
                                     </li>
                                     <li>
                                         <Link href="/forgot-password" className="hover:text-[#1e50ff] transition-colors">

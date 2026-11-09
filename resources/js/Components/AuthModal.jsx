@@ -247,7 +247,7 @@ export default function AuthModal({
                                 onClick={() => setMode('register')}
                                 className={`flex-1 py-1.5 rounded-lg transition-all ${
                                     mode === 'register'
-                                        ? 'bg-white text-emerald-950 font-bold shadow-2xs'
+                                        ? 'bg-white text-slate-900 font-bold shadow-2xs'
                                         : 'text-slate-600 hover:text-slate-900'
                                 }`}
                             >
@@ -258,7 +258,7 @@ export default function AuthModal({
                                 onClick={() => setMode('login')}
                                 className={`flex-1 py-1.5 rounded-lg transition-all ${
                                     mode === 'login'
-                                        ? 'bg-white text-emerald-950 font-bold shadow-2xs'
+                                        ? 'bg-white text-slate-900 font-bold shadow-2xs'
                                         : 'text-slate-600 hover:text-slate-900'
                                 }`}
                             >
@@ -271,17 +271,21 @@ export default function AuthModal({
                     {mode === 'login' && (
                         <div className="space-y-4">
                             <div>
+                                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 border border-blue-200 text-[10.5px] font-bold text-blue-700 mb-2">
+                                    <Building2 className="w-3.5 h-3.5 text-blue-600" />
+                                    <span>Portal Klien & Bisnis (Tenant)</span>
+                                </div>
                                 <h3 className="text-lg font-bold text-slate-900 tracking-tight">
-                                    Masuk ke Workspace
+                                    Masuk ke Workspace Bisnis
                                 </h3>
                                 <p className="text-xs text-slate-500 mt-0.5">
-                                    Gunakan alamat email dan kata sandi yang telah terdaftar.
+                                    Gunakan alamat email dan kata sandi akun bisnis/klien Anda.
                                 </p>
                             </div>
 
                             <form onSubmit={handleLoginSubmit} className="space-y-3.5 text-xs">
                                 <div>
-                                    <label className="block font-medium text-slate-700 mb-1">Alamat Email</label>
+                                    <label className="block font-medium text-slate-700 mb-1">Email Bisnis / Klien</label>
                                     <div className="relative">
                                         <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                                         <input
@@ -289,7 +293,7 @@ export default function AuthModal({
                                             value={loginForm.data.email}
                                             onChange={(e) => loginForm.setData('email', e.target.value)}
                                             placeholder="nama@mardira.ac.id / bisnis.com"
-                                            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:border-[#1e50ff] focus:outline-none focus:ring-1 focus:ring-emerald-600 shadow-2xs"
+                                            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:border-[#1e50ff] focus:outline-none focus:ring-1 focus:ring-blue-600 shadow-2xs"
                                             required
                                         />
                                     </div>
@@ -316,7 +320,7 @@ export default function AuthModal({
                                             value={loginForm.data.password}
                                             onChange={(e) => loginForm.setData('password', e.target.value)}
                                             placeholder="••••••••"
-                                            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:border-[#1e50ff] focus:outline-none focus:ring-1 focus:ring-emerald-600 shadow-2xs"
+                                            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:border-[#1e50ff] focus:outline-none focus:ring-1 focus:ring-blue-600 shadow-2xs"
                                             required
                                         />
                                     </div>
@@ -331,7 +335,7 @@ export default function AuthModal({
                                             type="checkbox"
                                             checked={loginForm.data.remember}
                                             onChange={(e) => loginForm.setData('remember', e.target.checked)}
-                                            className="rounded border-slate-300 text-[#1e50ff] focus:ring-emerald-500"
+                                            className="rounded border-slate-300 text-[#1e50ff] focus:ring-blue-500"
                                         />
                                         <span>Ingat sesi masuk</span>
                                     </label>
@@ -356,6 +360,20 @@ export default function AuthModal({
                                 >
                                     Daftar & Berlangganan Sekarang
                                 </button>
+                            </div>
+
+                            <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 text-[11px] text-slate-600 flex items-center justify-between gap-2">
+                                <div className="flex items-center gap-2 min-w-0">
+                                    <ShieldCheck className="w-4 h-4 text-blue-600 shrink-0" />
+                                    <span className="truncate">Administrator internal SaaS?</span>
+                                </div>
+                                <a
+                                    href="/admin/login"
+                                    className="font-bold text-blue-600 hover:text-blue-700 hover:underline shrink-0 inline-flex items-center gap-1"
+                                >
+                                    <span>Portal Admin</span>
+                                    <span>&rarr;</span>
+                                </a>
                             </div>
                         </div>
                     )}

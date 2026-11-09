@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -35,9 +36,14 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $isAdminRequest = $request->is('admin*');
         $webUser = $request->user('web');
         $adminUser = $request->user('admin');
-        $activeUser = $adminUser ?: $webUser;
+
+        // Context-aware active user:
+        // In admin routes, use adminUser (or webUser if none).
+        // In tenant and public routes, only use webUser so admin sessions do not leak into client views.
+        $activeUser = $isAdminRequest ? ($adminUser ?: $webUser) : $webUser;
 
         return [
             ...parent::share($request),
@@ -60,8 +66,8 @@ class HandleInertiaRequests extends Middleware
                         'can_manage_clients' => method_exists($activeUser, 'canManageClients') ? $activeUser->canManageClients() : false,
                         'can_manage_subscriptions' => method_exists($activeUser, 'canManageSubscriptions') ? $activeUser->canManageSubscriptions() : false,
                     ],
-                    'workspace_id' => $webUser ? $webUser->workspace_id : null,
-                    'workspace_name' => $webUser ? $webUser->workspace?->name : 'SaaS Central Platform',
+                    'workspace_id' => $activeUser instanceof User ? $activeUser->workspace_id : ($webUser ? $webUser->workspace_id : null),
+                    'workspace_name' => $activeUser instanceof User ? $activeUser->workspace?->name : ($webUser ? $webUser->workspace?->name : 'SaaS Central Platform'),
                 ] : null,
                 'admin' => $adminUser ? [
                     'id' => $adminUser->id,

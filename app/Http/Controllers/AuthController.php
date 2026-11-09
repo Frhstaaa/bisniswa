@@ -21,8 +21,12 @@ use Inertia\Response;
 
 class AuthController extends Controller
 {
-    public function showLogin(): Response
+    public function showLogin(): Response|RedirectResponse
     {
+        if (Auth::guard('web')->check()) {
+            return redirect()->route('dashboard');
+        }
+
         return Inertia::render('Auth/Login');
     }
 
@@ -170,10 +174,13 @@ class AuthController extends Controller
 
     public function logout(Request $request): RedirectResponse
     {
-        Auth::logout();
+        Auth::guard('web')->logout();
+        Auth::guard('admin')->logout();
+
+        $request->session()->flush();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/')->with('success', 'Anda telah berhasil keluar.');
+        return redirect('/')->with('success', 'Anda telah berhasil keluar dari akun.');
     }
 }
