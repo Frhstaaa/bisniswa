@@ -10,28 +10,22 @@ use App\Models\User;
 use App\Models\Workspace;
 use App\Rules\SafePublicUrlRule;
 use App\Services\WhatsApp\WhatsAppGatewayService;
+use App\Traits\HasWorkspaceContext;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class InboxController extends Controller
 {
+    use HasWorkspaceContext;
+
     public function __construct(
         protected WhatsAppGatewayService $gateway
     ) {}
-
-    protected function getWorkspace(Request $request): Workspace
-    {
-        return $request->user()?->workspace ?? Workspace::firstOrCreate(
-            ['slug' => 'digital-sukses-mandiri'],
-            ['name' => 'PT Digital Sukses Mandiri', 'uuid' => (string) Str::uuid()]
-        );
-    }
 
     /**
      * Generate normalized phone number variants (+62, 62, 0)
@@ -85,7 +79,7 @@ class InboxController extends Controller
                     ->whereIn('phone', $variants)
                     ->first();
 
-                $knownUser = User::whereIn('phone', $variants)->first();
+                $knownUser = User::where('workspace_id', $workspace->id)->whereIn('phone', $variants)->first();
                 $displayName = $contact ? $contact->name : ($knownUser ? $knownUser->name : 'Pelanggan '.substr($conv->receiver_number, -4));
 
                 return [

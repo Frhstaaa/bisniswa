@@ -6,25 +6,14 @@ use App\Models\Device;
 use App\Models\Message;
 use App\Models\Subscription;
 use App\Models\Workspace;
+use App\Traits\HasWorkspaceContext;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class DashboardController extends Controller
 {
-    protected function getWorkspace(Request $request): Workspace
-    {
-        return $request->user()?->workspace ?? Workspace::firstOrCreate(
-            ['slug' => 'digital-sukses-mandiri'],
-            [
-                'uuid' => (string) Str::uuid(),
-                'name' => 'PT Digital Sukses Mandiri',
-                'phone' => '+6281298430911',
-                'is_active' => true,
-            ]
-        );
-    }
+    use HasWorkspaceContext;
 
     public function index(Request $request): Response
     {

@@ -5,22 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\Contact;
 use App\Models\ContactGroup;
 use App\Models\Workspace;
+use App\Traits\HasWorkspaceContext;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class ContactController extends Controller
 {
-    protected function getWorkspace(Request $request): Workspace
-    {
-        return $request->user()?->workspace ?? Workspace::firstOrCreate(
-            ['slug' => 'digital-sukses-mandiri'],
-            ['name' => 'PT Digital Sukses Mandiri', 'uuid' => (string) Str::uuid()]
-        );
-    }
+    use HasWorkspaceContext;
 
     public function index(Request $request): Response
     {

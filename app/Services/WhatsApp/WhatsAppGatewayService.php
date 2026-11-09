@@ -50,6 +50,7 @@ class WhatsAppGatewayService
                 ->withHeaders(['X-Internal-Secret' => $this->gatewaySecret])
                 ->post("{$this->gatewayNodeUrl}/sessions/init", [
                     'device_id' => $device->id,
+                    'workspace_id' => $device->workspace_id,
                     'engine' => 'baileys',
                 ]);
 
@@ -109,6 +110,7 @@ class WhatsAppGatewayService
                 ->withHeaders(['X-Internal-Secret' => $this->gatewaySecret])
                 ->get("{$this->gatewayNodeUrl}/sessions/status", [
                     'device_id' => $device->id,
+                    'workspace_id' => $device->workspace_id,
                 ]);
 
             if ($response->successful()) {
@@ -150,6 +152,7 @@ class WhatsAppGatewayService
                 ->post("{$this->gatewayNodeUrl}/sessions/connect", [
                     'device_id' => $device->id,
                     'phone_number' => $phone,
+                    'workspace_id' => $device->workspace_id,
                 ]);
 
             if ($response->successful()) {
@@ -178,16 +181,38 @@ class WhatsAppGatewayService
     /**
      * Disconnect device session
      */
-    public function disconnectDevice(Device $device): void
+    public function disconnectDevice(Device $device, bool $wipeCredentials = true): void
     {
         try {
             Http::timeout(3)
                 ->withHeaders(['X-Internal-Secret' => $this->gatewaySecret])
                 ->post("{$this->gatewayNodeUrl}/sessions/disconnect", [
                     'device_id' => $device->id,
+                    'wipe_credentials' => $wipeCredentials,
                 ]);
         } catch (\Throwable $e) {
             // Ignore
+        }
+
+        $device->update([
+            'status' => 'disconnected',
+            'qr_code' => null,
+        ]);
+    }
+
+    /**
+     * Completely destroy device session and purge auth files
+     */
+    public function destroyDeviceSession(Device $device): void
+    {
+        try {
+            Http::timeout(5)
+                ->withHeaders(['X-Internal-Secret' => $this->gatewaySecret])
+                ->post("{$this->gatewayNodeUrl}/sessions/destroy", [
+                    'device_id' => $device->id,
+                ]);
+        } catch (\Throwable $e) {
+            Log::warning("Node WhatsApp Gateway destroy error for device {$device->id}: {$e->getMessage()}");
         }
 
         $device->update([

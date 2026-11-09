@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ApiKey;
 use App\Models\Device;
 use App\Models\Webhook;
-use App\Models\Workspace;
+use App\Traits\HasWorkspaceContext;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,13 +16,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ApiController extends Controller
 {
-    protected function getWorkspace(Request $request): Workspace
-    {
-        return $request->user()?->workspace ?? Workspace::firstOrCreate(
-            ['slug' => 'digital-sukses-mandiri'],
-            ['name' => 'PT Digital Sukses Mandiri', 'uuid' => (string) Str::uuid()]
-        );
-    }
+    use HasWorkspaceContext;
 
     public function index(Request $request): Response
     {

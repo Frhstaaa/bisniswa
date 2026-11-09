@@ -8,10 +8,10 @@ use App\Models\ContactGroup;
 use App\Models\Device;
 use App\Models\Message;
 use App\Models\Subscription;
-use App\Models\Workspace;
 use App\Rules\SafePublicUrlRule;
 use App\Services\WhatsApp\AntiBanThrottleService;
 use App\Services\WhatsApp\WhatsAppGatewayService;
+use App\Traits\HasWorkspaceContext;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -23,18 +23,12 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class BroadcastController extends Controller
 {
+    use HasWorkspaceContext;
+
     public function __construct(
         protected AntiBanThrottleService $throttleService,
         protected WhatsAppGatewayService $gatewayService
     ) {}
-
-    protected function getWorkspace(Request $request): Workspace
-    {
-        return $request->user()?->workspace ?? Workspace::firstOrCreate(
-            ['slug' => 'digital-sukses-mandiri'],
-            ['name' => 'PT Digital Sukses Mandiri', 'uuid' => (string) Str::uuid()]
-        );
-    }
 
     public function index(Request $request): Response
     {

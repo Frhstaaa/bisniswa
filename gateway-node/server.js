@@ -292,13 +292,14 @@ app.get('/health', (req, res) => {
 /**
  * Initialize Baileys Engine Session
  */
-async function initBaileysSession(deviceId) {
+async function initBaileysSession(deviceId, workspaceId = null) {
     const sessionId = `device_${deviceId}`;
     const authPath = path.join(SESSIONS_DIR, `baileys_${deviceId}`);
 
     // If existing active session is already connected, return it
     const existing = activeSessions.get(sessionId);
     if (existing && existing.status === 'connected' && existing.client && existing.client.user?.id) {
+        if (workspaceId) existing.workspaceId = workspaceId;
         return existing;
     }
 
@@ -353,6 +354,7 @@ async function initBaileysSession(deviceId) {
         qr: null,
         phoneNumber: state.creds?.me?.id ? '+' + state.creds.me.id.split(':')[0] : null,
         deviceId,
+        workspaceId: workspaceId || existing?.workspaceId || null,
         isDestroyed: false,
         qrAttempts: existing?.qrAttempts || 0,
         reconnectTimer: null,
@@ -367,13 +369,13 @@ async function initBaileysSession(deviceId) {
 
         if (qr) {
             sessionData.qrAttempts = (sessionData.qrAttempts || 0) + 1;
-            console.log(`[Baileys QR Emitted] Device ${deviceId} (Attempt ${sessionData.qrAttempts}/6)`);
+            console.log(`[Baileys QR Emitted] Device ${deviceId} (Workspace: ${sessionData.workspaceId || 'N/A'}, Attempt ${sessionData.qrAttempts}/6)`);
 
             if (sessionData.qrAttempts > 6) {
                 console.log(`[Baileys QR Timeout] Device ${deviceId} reached max QR attempts (6). Halting reconnect until requested.`);
                 sessionData.status = 'disconnected';
                 sessionData.qr = null;
-                notifyLaravelStatus(deviceId, { status: 'disconnected', qr_code: null });
+                notifyLaravelStatus(deviceId, { status: 'disconnected', qr_code: null, workspace_id: sessionData.workspaceId });
                 try {
                     sock.ev.removeAllListeners();
                     sock.end(undefined);
@@ -385,7 +387,7 @@ async function initBaileysSession(deviceId) {
                 const qrDataUrl = await QRCode.toDataURL(qr, { margin: 2, scale: 6 });
                 sessionData.qr = qrDataUrl;
                 sessionData.status = 'qr_ready';
-                notifyLaravelStatus(deviceId, { status: 'qr_ready', qr_code: qrDataUrl });
+                notifyLaravelStatus(deviceId, { status: 'qr_ready', qr_code: qrDataUrl, workspace_id: sessionData.workspaceId });
             } catch (qrErr) {
                 console.error('QR Encode Error:', qrErr);
             }
@@ -396,7 +398,33 @@ async function initBaileysSession(deviceId) {
             let phone = rawPhone ? rawPhone.replace(/[^0-9]/g, '') : null;
             if (phone && !phone.startsWith('+')) phone = '+' + phone;
 
-            console.log(`[Baileys Connected] Device ${deviceId} Phone: ${phone || 'Unknown'}`);
+            console.log(`[Baileys Connected] Device ${deviceId} (Workspace: ${sessionData.workspaceId || 'N/A'}) Phone: ${phone || 'Unknown'}`);
+
+            // MULTI-TENANT ISOLATION: Prevent different devices from claiming the same phone number concurrently
+            if (phone) {
+                for (const [otherSessionId, otherSession] of activeSessions.entries()) {
+                    if (otherSessionId !== sessionId && otherSession.phoneNumber === phone && otherSession.status === 'connected') {
+                        console.warn(`[Multi-Tenant Conflict] Phone ${phone} is already connected on ${otherSessionId} (Workspace ${otherSession.workspaceId || 'N/A'}). Disconnecting ${sessionId} to prevent cross-tenant collision!`);
+
+                        try {
+                            sock.ev.removeAllListeners();
+                            sock.end(undefined);
+                        } catch (e) {}
+
+                        sessionData.status = 'disconnected';
+                        sessionData.qr = null;
+                        notifyLaravelStatus(deviceId, {
+                            status: 'disconnected',
+                            error: 'DUPLICATE_PHONE_CONFLICT',
+                            error_message: `Nomor WhatsApp ${phone} sudah aktif terhubung pada tenant/perangkat lain. Harap gunakan nomor WhatsApp masing-masing agar bridging tidak bentrok.`,
+                            qr_code: null,
+                            workspace_id: sessionData.workspaceId,
+                        });
+                        return;
+                    }
+                }
+            }
+
             sessionData.status = 'connected';
             sessionData.qr = null;
             sessionData.phoneNumber = phone;
@@ -405,6 +433,7 @@ async function initBaileysSession(deviceId) {
 
             notifyLaravelStatus(deviceId, {
                 status: 'connected',
+                workspace_id: sessionData.workspaceId,
                 ...(phone ? { phone_number: phone } : {}),
                 qr_code: null,
             });
@@ -427,7 +456,7 @@ async function initBaileysSession(deviceId) {
                 sessionData.reconnectTimer = setTimeout(() => {
                     sessionData.reconnectTimer = null;
                     if (!sessionData.isDestroyed && activeSessions.has(sessionId)) {
-                        initBaileysSession(deviceId).catch((err) => {
+                        initBaileysSession(deviceId, sessionData.workspaceId).catch((err) => {
                             console.warn(`[Baileys Reconnect Error] Device ${deviceId}: ${err.message}`);
                         });
                     }
@@ -435,7 +464,7 @@ async function initBaileysSession(deviceId) {
             } else {
                 sessionData.status = 'disconnected';
                 sessionData.qr = null;
-                notifyLaravelStatus(deviceId, { status: 'disconnected', qr_code: null });
+                notifyLaravelStatus(deviceId, { status: 'disconnected', qr_code: null, workspace_id: sessionData.workspaceId });
             }
         }
     });
@@ -534,6 +563,7 @@ async function initBaileysSession(deviceId) {
 
                 notifyLaravelMessage({
                     device_id: deviceId,
+                    workspace_id: sessionData.workspaceId,
                     sender: resolvedPhone,
                     sender_name: pushName,
                     message: bodyText,
@@ -560,13 +590,16 @@ async function initBaileysSession(deviceId) {
  * Initialize a device session with Baileys engine
  */
 app.post('/sessions/init', async (req, res) => {
-    const { device_id } = req.body;
+    const { device_id, workspace_id } = req.body;
     if (!device_id) {
         return res.status(400).json({ error: 'device_id is required' });
     }
 
     const sessionId = `device_${device_id}`;
     let existing = activeSessions.get(sessionId);
+    if (existing && workspace_id) {
+        existing.workspaceId = workspace_id;
+    }
 
     // If already connected, return connected immediately
     if (existing && existing.status === 'connected') {
@@ -589,7 +622,7 @@ app.post('/sessions/init', async (req, res) => {
     }
 
     try {
-        await initBaileysSession(device_id);
+        await initBaileysSession(device_id, workspace_id);
 
         // Wait up to 6 seconds for initial QR emission or connection
         let attempts = 0;
@@ -630,19 +663,22 @@ app.post('/sessions/init', async (req, res) => {
  * Route: Check session status (polling by frontend/Laravel)
  */
 app.get('/sessions/status', async (req, res) => {
-    const { device_id } = req.query;
+    const { device_id, workspace_id } = req.query;
     if (!device_id) {
         return res.status(400).json({ error: 'device_id is required' });
     }
 
     const sessionId = `device_${device_id}`;
     let session = activeSessions.get(sessionId);
+    if (session && workspace_id) {
+        session.workspaceId = workspace_id;
+    }
 
     // If not in memory but credentials exist on disk, auto-restore
     if (!session) {
         const authPath = path.join(SESSIONS_DIR, `baileys_${device_id}`);
         if (fs.existsSync(path.join(authPath, 'creds.json'))) {
-            initBaileysSession(device_id).catch(() => {});
+            initBaileysSession(device_id, workspace_id).catch(() => {});
             session = activeSessions.get(sessionId);
         }
     }
@@ -670,7 +706,7 @@ app.get('/sessions/status', async (req, res) => {
  * Route: Connect session immediately (Simulated / Fast Connect)
  */
 app.post('/sessions/connect', async (req, res) => {
-    const { device_id, phone_number } = req.body;
+    const { device_id, phone_number, workspace_id } = req.body;
     const sessionId = `device_${device_id}`;
 
     let session = activeSessions.get(sessionId);
@@ -680,8 +716,11 @@ app.post('/sessions/connect', async (req, res) => {
         session = {
             engine: 'baileys',
             deviceId: device_id,
+            workspaceId: workspace_id || null,
         };
         activeSessions.set(sessionId, session);
+    } else if (workspace_id) {
+        session.workspaceId = workspace_id;
     }
 
     session.status = 'connected';
@@ -693,6 +732,7 @@ app.post('/sessions/connect', async (req, res) => {
         status: 'connected',
         phone_number: assignedPhone,
         qr_code: null,
+        workspace_id: session.workspaceId,
     });
 
     return res.json({
@@ -707,7 +747,7 @@ app.post('/sessions/connect', async (req, res) => {
  * Route: Disconnect / Logout Session
  */
 app.post('/sessions/disconnect', async (req, res) => {
-    const { device_id } = req.body;
+    const { device_id, wipe_credentials } = req.body;
     const sessionId = `device_${device_id}`;
     const session = activeSessions.get(sessionId);
 
@@ -728,11 +768,67 @@ app.post('/sessions/disconnect', async (req, res) => {
         activeSessions.delete(sessionId);
     }
 
+    if (wipe_credentials) {
+        const authPath = path.join(SESSIONS_DIR, `baileys_${device_id}`);
+        if (fs.existsSync(authPath)) {
+            try {
+                fs.rmSync(authPath, { recursive: true, force: true });
+            } catch (e) {}
+        }
+    }
+
     notifyLaravelStatus(device_id, { status: 'disconnected', qr_code: null });
 
     return res.json({
         success: true,
         status: 'disconnected',
+        device_id,
+    });
+});
+
+/**
+ * Route: Completely destroy device session and purge authentication files from disk
+ */
+app.post('/sessions/destroy', async (req, res) => {
+    const { device_id } = req.body;
+    if (!device_id) {
+        return res.status(400).json({ error: 'device_id is required' });
+    }
+    const sessionId = `device_${device_id}`;
+    const session = activeSessions.get(sessionId);
+
+    if (session) {
+        session.isDestroyed = true;
+        if (session.reconnectTimer) {
+            clearTimeout(session.reconnectTimer);
+            session.reconnectTimer = null;
+        }
+        try {
+            if (session.client) {
+                session.client.ev?.removeAllListeners();
+                session.client.end(undefined);
+            }
+        } catch (e) {
+            console.warn(`[Destroy Client Error] ${e.message}`);
+        }
+        activeSessions.delete(sessionId);
+    }
+
+    const authPath = path.join(SESSIONS_DIR, `baileys_${device_id}`);
+    if (fs.existsSync(authPath)) {
+        try {
+            fs.rmSync(authPath, { recursive: true, force: true });
+            console.log(`[Session Destroyed] Device ${device_id} auth folder wiped`);
+        } catch (e) {
+            console.warn(`[Destroy Auth Dir Error] ${e.message}`);
+        }
+    }
+
+    notifyLaravelStatus(device_id, { status: 'disconnected', qr_code: null });
+
+    return res.json({
+        success: true,
+        status: 'destroyed',
         device_id,
     });
 });

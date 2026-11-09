@@ -8,6 +8,7 @@ use App\Models\Subscription;
 use App\Models\Workspace;
 use App\Services\Billing\SubscriptionService;
 use App\Services\PaymentService;
+use App\Traits\HasWorkspaceContext;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -16,18 +17,12 @@ use Inertia\Response;
 
 class SubscriptionController extends Controller
 {
+    use HasWorkspaceContext;
+
     public function __construct(
         protected SubscriptionService $subscriptionService,
         protected PaymentService $paymentService
     ) {}
-
-    protected function getWorkspace(Request $request): Workspace
-    {
-        return $request->user()?->workspace ?? Workspace::firstOrCreate(
-            ['slug' => 'digital-sukses-mandiri'],
-            ['name' => 'PT Digital Sukses Mandiri', 'uuid' => (string) Str::uuid()]
-        );
-    }
 
     public function index(Request $request): Response
     {

@@ -4,33 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Models\Device;
 use App\Models\Subscription;
-use App\Models\Workspace;
 use App\Services\WhatsApp\WhatsAppGatewayService;
+use App\Traits\HasWorkspaceContext;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class DeviceController extends Controller
 {
+    use HasWorkspaceContext;
+
     public function __construct(
         protected WhatsAppGatewayService $gatewayService
     ) {}
-
-    protected function getWorkspace(Request $request): Workspace
-    {
-        return $request->user()?->workspace ?? Workspace::firstOrCreate(
-            ['slug' => 'digital-sukses-mandiri'],
-            [
-                'uuid' => (string) Str::uuid(),
-                'name' => 'PT Digital Sukses Mandiri',
-                'phone' => '+6281298430911',
-                'is_active' => true,
-            ]
-        );
-    }
 
     public function index(Request $request): Response
     {
@@ -95,6 +83,28 @@ class DeviceController extends Controller
             'meta_waba_id' => 'nullable|string|max:100',
             'meta_verify_token' => 'nullable|string|max:100',
         ]);
+
+        if (! empty($validated['phone_number'])) {
+            $conflictingConnectedDevice = Device::where('workspace_id', '!=', $workspace->id)
+                ->where('status', 'connected')
+                ->where('phone_number', $validated['phone_number'])
+                ->exists();
+
+            if ($conflictingConnectedDevice) {
+                $conflictMessage = "Nomor WhatsApp {$validated['phone_number']} sedang aktif terhubung pada tenant/workspace lain. Harap gunakan nomor lain.";
+                if (! $request->header('X-Inertia') && ($request->wantsJson() || $request->isJson())) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => $conflictMessage,
+                        'error' => 'duplicate_phone_conflict',
+                    ], 422);
+                }
+
+                return redirect()->back()
+                    ->with('error', $conflictMessage)
+                    ->withErrors(['phone_number' => $conflictMessage]);
+            }
+        }
 
         $engine = 'baileys';
         $status = 'initializing';
@@ -240,7 +250,7 @@ class DeviceController extends Controller
         $workspace = $this->getWorkspace($request);
         $device = Device::where('workspace_id', $workspace->id)->findOrFail($id);
 
-        $this->gatewayService->disconnectDevice($device);
+        $this->gatewayService->destroyDeviceSession($device);
         $device->delete();
 
         return redirect()->back()->with('success', 'Perangkat berhasil diputuskan dan dihapus.');

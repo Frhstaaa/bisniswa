@@ -57,6 +57,30 @@ class InternalGatewayWebhookController extends Controller
         }
 
         if ($request->input('status') === 'connected') {
+            $phoneToCheck = $updates['phone_number'] ?? $device->phone_number;
+            if (! empty($phoneToCheck)) {
+                $conflictingDevice = Device::where('id', '!=', $device->id)
+                    ->where('workspace_id', '!=', $device->workspace_id)
+                    ->where('status', 'connected')
+                    ->where('phone_number', $phoneToCheck)
+                    ->first();
+
+                if ($conflictingDevice) {
+                    Log::warning("Cross-Tenant Phone Conflict: Device {$deviceId} (Workspace {$device->workspace_id}) attempted to connect with {$phoneToCheck}, but it is already active on Device {$conflictingDevice->id} (Workspace {$conflictingDevice->workspace_id}). Rejecting connection.");
+
+                    $device->update([
+                        'status' => 'disconnected',
+                        'qr_code' => null,
+                    ]);
+
+                    return response()->json([
+                        'success' => false,
+                        'error' => 'PHONE_CONFLICT',
+                        'message' => 'Nomor WhatsApp sudah aktif di workspace/tenant lain.',
+                    ], 409);
+                }
+            }
+
             $updates['qr_code'] = null;
             $updates['last_connected_at'] = Carbon::now();
             if ($request->has('battery_level')) {
@@ -98,6 +122,31 @@ class InternalGatewayWebhookController extends Controller
 
         $workspaceId = $device->workspace_id;
 
+        if (! $device->workspace || ! $device->workspace->is_active) {
+            return response()->json(['error' => 'Workspace inactive or not found'], 403);
+        }
+
+        $messageContent = $body ?? ($mediaUrl ? '[Media File]' : '');
+
+        // Deduplication check: ignore if exact same message arrived within last 10 seconds
+        $recentDuplicate = Message::where('workspace_id', $workspaceId)
+            ->where('device_id', $device->id)
+            ->where('direction', 'inbound')
+            ->where('receiver_number', $sender)
+            ->where('content', $messageContent)
+            ->where('created_at', '>=', Carbon::now()->subSeconds(10)->toDateTimeString())
+            ->first();
+
+        if ($recentDuplicate) {
+            Log::info("Ignored duplicate inbound message from {$sender} for Device {$device->id}");
+
+            return response()->json([
+                'success' => true,
+                'message_id' => $recentDuplicate->id,
+                'duplicate' => true,
+            ]);
+        }
+
         // Save incoming message to Live Chat Inbox
         $message = Message::create([
             'workspace_id' => $workspaceId,
@@ -105,7 +154,7 @@ class InternalGatewayWebhookController extends Controller
             'direction' => 'inbound',
             'receiver_number' => $sender,
             'message_type' => ! empty($mediaUrl) ? 'media' : 'text',
-            'content' => $body ?? ($mediaUrl ? '[Media File]' : ''),
+            'content' => $messageContent,
             'media_url' => $mediaUrl,
             'status' => 'delivered',
             'sent_at' => Carbon::now(),

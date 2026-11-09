@@ -5,30 +5,23 @@ namespace App\Http\Controllers;
 use App\Models\AutoReply;
 use App\Models\Device;
 use App\Models\SystemSetting;
-use App\Models\Workspace;
 use App\Rules\SafePublicUrlRule;
 use App\Services\AutoReplyService;
+use App\Traits\HasWorkspaceContext;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class AutoReplyController extends Controller
 {
+    use HasWorkspaceContext;
+
     public function __construct(
         protected AutoReplyService $autoReplyService
     ) {}
-
-    protected function getWorkspace(Request $request): Workspace
-    {
-        return $request->user()?->workspace ?? Workspace::firstOrCreate(
-            ['slug' => 'digital-sukses-mandiri'],
-            ['name' => 'PT Digital Sukses Mandiri', 'uuid' => (string) Str::uuid()]
-        );
-    }
 
     public function index(Request $request): Response
     {
