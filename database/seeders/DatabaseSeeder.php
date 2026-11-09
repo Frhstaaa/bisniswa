@@ -66,9 +66,9 @@ class DatabaseSeeder extends Seeder
             'price_annually' => 1790000,
             'limits' => [
                 'max_devices' => 3,
-                'monthly_message_quota' => 15000,
-                'daily_broadcast_limit' => 1500,
-                'max_contacts' => 5000,
+                'monthly_message_quota' => 20000,
+                'daily_broadcast_limit' => 2500,
+                'max_contacts' => 10000,
                 'api_rate_limit_per_minute' => 60,
             ],
             'features' => [
@@ -82,7 +82,7 @@ class DatabaseSeeder extends Seeder
         $planPro = Plan::firstOrCreate(['slug' => 'enterprise-pro'], [
             'name' => 'Enterprise Pro',
             'price_monthly' => 299000,
-            'price_annually' => 2890000,
+            'price_annually' => 2990000,
             'limits' => [
                 'max_devices' => 5,
                 'monthly_message_quota' => 50000,

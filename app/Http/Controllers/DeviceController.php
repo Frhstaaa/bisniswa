@@ -152,6 +152,29 @@ class DeviceController extends Controller
         ]);
     }
 
+    public function rescanQr(Request $request, int $id): RedirectResponse|JsonResponse
+    {
+        $workspace = $this->getWorkspace($request);
+        $device = Device::where('workspace_id', $workspace->id)->findOrFail($id);
+
+        $device->update([
+            'status' => 'qr_ready',
+            'qr_code' => null,
+        ]);
+
+        $session = $this->gatewayService->initializeDeviceSession($device);
+
+        if (! $request->header('X-Inertia') && ($request->wantsJson() || $request->isJson())) {
+            return response()->json([
+                'success' => true,
+                'device' => $device->fresh(),
+                'session' => $session,
+            ]);
+        }
+
+        return redirect()->back()->with('success', "QR code baru untuk '{$device->name}' berhasil dimuat. Silakan pindai dengan WhatsApp di HP Anda.");
+    }
+
     public function simulateConnect(Request $request, int $id): RedirectResponse|JsonResponse
     {
         $workspace = $this->getWorkspace($request);

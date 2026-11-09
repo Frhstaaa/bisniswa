@@ -31,7 +31,14 @@ import {
     TableCell,
 } from '../../../Components/ui/table';
 
-export default function SubscriptionsIndex({ subscriptions, audits }) {
+export default function SubscriptionsIndex({ subscriptions = {}, audits = [] }) {
+    const subscriptionsList = Array.isArray(subscriptions?.data)
+        ? subscriptions.data
+        : (Array.isArray(subscriptions) ? subscriptions : Object.values(subscriptions?.data || subscriptions || {}));
+    const auditList = Array.isArray(audits)
+        ? audits
+        : (Array.isArray(audits?.data) ? audits.data : Object.values(audits || {}));
+
     const [selectedSubscription, setSelectedSubscription] = useState(null);
     const [isAdjustModalOpen, setIsAdjustModalOpen] = useState(false);
     const [isTopupModalOpen, setIsTopupModalOpen] = useState(false);
@@ -226,8 +233,15 @@ export default function SubscriptionsIndex({ subscriptions, audits }) {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {subscriptions?.data?.map((sub) => (
-                                    <TableRow key={sub.id} className="hover:bg-slate-50/80 transition-colors">
+                                {subscriptionsList.length === 0 ? (
+                                    <TableRow>
+                                        <TableCell colSpan={6} className="text-center py-8 text-xs text-slate-400">
+                                            Belum ada data langganan yang ditemukan.
+                                        </TableCell>
+                                    </TableRow>
+                                ) : (
+                                    subscriptionsList.map((sub) => (
+                                        <TableRow key={sub.id} className="hover:bg-slate-50/80 transition-colors">
                                         {/* Klien / Workspace */}
                                         <TableCell className="py-3.5">
                                             <div className="font-bold text-xs text-slate-900">
@@ -317,7 +331,7 @@ export default function SubscriptionsIndex({ subscriptions, audits }) {
                                             </div>
                                         </TableCell>
                                     </TableRow>
-                                ))}
+                                )))}
                             </TableBody>
                         </Table>
                     </div>
@@ -348,14 +362,14 @@ export default function SubscriptionsIndex({ subscriptions, audits }) {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {audits.length === 0 ? (
+                                {auditList.length === 0 ? (
                                     <TableRow>
                                         <TableCell colSpan={5} className="text-center py-8 text-xs text-slate-400">
                                             Belum ada log penyesuaian langganan.
                                         </TableCell>
                                     </TableRow>
                                 ) : (
-                                    audits.map((audit) => (
+                                    auditList.map((audit) => (
                                         <TableRow key={audit.id} className="hover:bg-slate-50/80 transition-colors">
                                             <TableCell className="py-3 text-[11px] font-mono text-slate-500 whitespace-nowrap">
                                                 {new Date(audit.created_at).toLocaleString('id-ID')}

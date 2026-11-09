@@ -8,6 +8,7 @@ use App\Models\Payment;
 use App\Models\Workspace;
 use App\Repositories\Contracts\ClientRepositoryInterface;
 use App\Repositories\Contracts\PaymentRepositoryInterface;
+use Illuminate\Support\Facades\Cache;
 
 class SuperAdminService
 {
@@ -18,46 +19,51 @@ class SuperAdminService
 
     /**
      * Aggregate system-wide operational metrics for the Super Admin overview.
+     * Cached with short TTL for snappy, low-latency SPA navigation.
      *
      * @return array<string, mixed>
      */
     public function getOverviewStats(): array
     {
-        $totalWorkspaces = $this->clientRepo->getTotalCount();
-        $activeWorkspaces = $this->clientRepo->getActiveCount();
-        $totalRevenue = $this->paymentRepo->getTotalRevenue();
-        $pendingPaymentsCount = Payment::where('status', 'pending')->count();
+        return Cache::remember('admin_overview_stats', 5, function () {
+            $totalWorkspaces = $this->clientRepo->getTotalCount();
+            $activeWorkspaces = $this->clientRepo->getActiveCount();
+            $totalRevenue = $this->paymentRepo->getTotalRevenue();
+            $pendingPaymentsCount = Payment::where('status', 'pending')->count();
 
-        $totalDevices = Device::count();
-        $onlineDevices = Device::where('status', 'connected')->count();
+            $totalDevices = Device::count();
+            $onlineDevices = Device::where('status', 'connected')->count();
 
-        $messagesToday = Message::whereDate('created_at', today())->count();
-        $messagesTotal = Message::count();
+            $messagesToday = Message::whereDate('created_at', today())->count();
+            $messagesTotal = Message::count();
 
-        return [
-            'metrics' => [
-                'total_workspaces' => $totalWorkspaces,
-                'active_workspaces' => $activeWorkspaces,
-                'total_revenue' => $totalRevenue,
-                'pending_payments_count' => $pendingPaymentsCount,
-                'total_devices' => $totalDevices,
-                'online_devices' => $onlineDevices,
-                'messages_today' => $messagesToday,
-                'messages_total' => $messagesTotal,
-            ],
-            'engine_health' => [
-                'wwebjs' => [
-                    'active_instances' => $onlineDevices,
-                    'status' => 'operational',
-                    'estimated_ram_mb' => $onlineDevices * 120,
-                    'engine_version' => 'BisnisWA UltraSync Engine v2.0 (Enterprise Native)',
+            return [
+                'metrics' => [
+                    'total_workspaces' => $totalWorkspaces,
+                    'active_workspaces' => $activeWorkspaces,
+                    'total_revenue' => $totalRevenue,
+                    'pending_payments_count' => $pendingPaymentsCount,
+                    'total_devices' => $totalDevices,
+                    'online_devices' => $onlineDevices,
+                    'messages_today' => $messagesToday,
+                    'messages_total' => $messagesTotal,
                 ],
-            ],
-            'recent_payments' => $this->paymentRepo->getRecentPayments(6),
-            'recent_clients' => Workspace::with(['users', 'subscription.plan'])
-                ->latest()
-                ->limit(5)
-                ->get(),
-        ];
+                'engine_health' => [
+                    'wwebjs' => [
+                        'active_instances' => $onlineDevices,
+                        'status' => 'operational',
+                        'estimated_ram_mb' => $onlineDevices * 120,
+                        'engine_version' => 'BisnisWA UltraSync Engine v2.0 (Enterprise Native)',
+                    ],
+                ],
+                'recent_payments' => $this->paymentRepo->getRecentPayments(6)->values()->all(),
+                'recent_clients' => Workspace::with(['users', 'subscription.plan'])
+                    ->latest()
+                    ->limit(5)
+                    ->get()
+                    ->values()
+                    ->all(),
+            ];
+        });
     }
 }

@@ -71,7 +71,7 @@ class SecurityHardeningTest extends TestCase
             'name' => 'Enterprise Pro',
             'slug' => 'enterprise-pro',
             'price_monthly' => 299000,
-            'price_annually' => 2890000,
+            'price_annually' => 2990000,
             'limits' => ['max_devices' => 5],
             'features' => ['webhook_access' => true],
         ]);

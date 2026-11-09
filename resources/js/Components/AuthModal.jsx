@@ -37,14 +37,14 @@ const DEFAULT_FALLBACK_PLANS = [
         slug: 'pro-bisnis',
         price_monthly: 179000,
         price_annually: 1790000,
-        limits: { monthly_message_quota: 15000, max_devices: 3 },
+        limits: { monthly_message_quota: 20000, max_devices: 3 },
     },
     {
         id: 2,
         name: 'Enterprise Pro',
         slug: 'enterprise-pro',
         price_monthly: 299000,
-        price_annually: 2890000,
+        price_annually: 2990000,
         limits: { monthly_message_quota: 50000, max_devices: 5 },
     },
 ];
@@ -54,6 +54,7 @@ export default function AuthModal({
     onClose,
     initialMode = 'register',
     initialPlanId = null,
+    initialBillingCycle = 'monthly',
     plans = [],
 }) {
     const safePlans = Array.isArray(plans) && plans.length > 0 ? plans : DEFAULT_FALLBACK_PLANS;
@@ -72,7 +73,7 @@ export default function AuthModal({
         password: '',
         password_confirmation: '',
         plan_id: initialPlanId || (safePlans[0]?.id || 1),
-        billing_cycle: 'monthly',
+        billing_cycle: initialBillingCycle || 'monthly',
     });
 
     // Form for Login
@@ -141,11 +142,13 @@ export default function AuthModal({
     useEffect(() => {
         if (isOpen) {
             setMode(initialMode);
-            if (initialPlanId) {
-                registerForm.setData('plan_id', initialPlanId);
-            }
+            registerForm.setData((prev) => ({
+                ...prev,
+                ...(initialPlanId ? { plan_id: initialPlanId } : {}),
+                ...(initialBillingCycle ? { billing_cycle: initialBillingCycle } : {}),
+            }));
         }
-    }, [isOpen, initialMode, initialPlanId]);
+    }, [isOpen, initialMode, initialPlanId, initialBillingCycle]);
 
     // Handle ESC key to close
     useEffect(() => {
@@ -409,13 +412,11 @@ export default function AuthModal({
                                     {safePlans.map((p) => {
                                         const isSelected = parseInt(registerForm.data.plan_id) === p.id;
                                         const isYearly = registerForm.data.billing_cycle === 'annually';
-                                        const price = isYearly
-                                            ? parseInt(p.price_annually || (p.price_monthly * 10))
-                                            : parseInt(p.price_monthly || p.price || 0);
+                                        const monthlyPrice = Math.round(Number(p.price_monthly ?? p.price ?? 99000));
+                                        const annualPrice = Math.round(Number(p.price_annually ?? (monthlyPrice * 10)));
+                                        const price = isYearly ? annualPrice : monthlyPrice;
                                         const maxDev = p.limits?.max_devices ?? p.max_devices ?? 1;
-                                        const quota = isYearly
-                                            ? ((p.limits?.monthly_message_quota ?? 5000) * 12)
-                                            : (p.limits?.monthly_message_quota ?? p.monthly_message_quota ?? 1000);
+                                        const quota = p.limits?.monthly_message_quota ?? p.monthly_message_quota ?? 5000;
                                         return (
                                             <div
                                                 key={p.id}
@@ -434,12 +435,19 @@ export default function AuthModal({
                                                         </span>
                                                     )}
                                                 </div>
-                                                <div className="text-[#1e50ff] font-extrabold text-sm font-mono tabular-nums mt-1">
-                                                    Rp {price.toLocaleString('id-ID')}
+                                                <div className="flex items-baseline gap-1 mt-1">
+                                                    <span className="text-[#1e50ff] font-extrabold text-sm font-mono tabular-nums">
+                                                        Rp {price.toLocaleString('id-ID')}
+                                                    </span>
                                                     <span className="text-[10px] font-normal text-slate-500"> {isYearly ? '/tahun' : '/bln'}</span>
                                                 </div>
-                                                <p className="text-[10px] text-slate-500 mt-0.5">
-                                                    {maxDev} Perangkat • {quota?.toLocaleString('id-ID')} Kuota
+                                                {isYearly && (
+                                                    <div className="text-[10px] text-emerald-700 font-semibold leading-tight mt-0.5">
+                                                        Setara Rp {Math.round(annualPrice / 12).toLocaleString('id-ID')}/bln (Hemat 2 Bln)
+                                                    </div>
+                                                )}
+                                                <p className="text-[10px] text-slate-500 mt-1">
+                                                    {maxDev} Perangkat • {quota.toLocaleString('id-ID')} Pesan/bln
                                                 </p>
                                             </div>
                                         );

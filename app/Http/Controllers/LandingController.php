@@ -12,21 +12,11 @@ use Inertia\Response;
 class LandingController extends Controller
 {
     /**
-     * Retrieve cached active subscription plans.
+     * Retrieve active subscription plans directly from storage.
      */
     protected function getCachedPlans(): array
     {
-        $plans = Cache::remember('public_landing_plans', 3600, function () {
-            return Plan::where('is_active', true)->orderBy('price_monthly', 'asc')->get()->toArray();
-        });
-
-        if (! is_array($plans)) {
-            Cache::forget('public_landing_plans');
-
-            return Plan::where('is_active', true)->orderBy('price_monthly', 'asc')->get()->toArray();
-        }
-
-        return $plans;
+        return Plan::where('is_active', true)->orderBy('price_monthly', 'asc')->get()->toArray();
     }
 
     /**
@@ -113,6 +103,30 @@ class LandingController extends Controller
         return Inertia::render('Landing/Faq', [
             'plans' => $this->getCachedPlans(),
             'stats' => $this->getPlatformStats(),
+        ]);
+    }
+
+    /**
+     * Generate dynamic XML sitemap for search engines.
+     */
+    public function sitemap(): \Illuminate\Http\Response
+    {
+        $baseUrl = rtrim(config('app.url', url('/')), '/');
+        $today = now()->toAtomString();
+
+        $routes = [
+            ['url' => "{$baseUrl}/", 'priority' => '1.0', 'changefreq' => 'daily', 'lastmod' => $today],
+            ['url' => "{$baseUrl}/harga", 'priority' => '0.9', 'changefreq' => 'weekly', 'lastmod' => $today],
+            ['url' => "{$baseUrl}/cara-pakai", 'priority' => '0.8', 'changefreq' => 'weekly', 'lastmod' => $today],
+            ['url' => "{$baseUrl}/dual-engine", 'priority' => '0.8', 'changefreq' => 'monthly', 'lastmod' => $today],
+            ['url' => "{$baseUrl}/rest-api", 'priority' => '0.8', 'changefreq' => 'weekly', 'lastmod' => $today],
+            ['url' => "{$baseUrl}/faq", 'priority' => '0.7', 'changefreq' => 'monthly', 'lastmod' => $today],
+        ];
+
+        $content = view('sitemap', compact('routes'))->render();
+
+        return response($content, 200, [
+            'Content-Type' => 'application/xml; charset=utf-8',
         ]);
     }
 }

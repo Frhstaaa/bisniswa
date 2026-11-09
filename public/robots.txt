@@ -1,2 +1,39 @@
+# Robots.txt for MARDIRA WA
+# https://mardirawa.frahesta.com
+
 User-agent: *
-Disallow:
+Allow: /
+Allow: /sitemap.xml
+Allow: /harga
+Allow: /cara-pakai
+Allow: /dual-engine
+Allow: /rest-api
+Allow: /faq
+
+# Protect Authenticated App & Admin Paths from Crawling
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /dashboard
+Disallow: /dashboard/*
+Disallow: /devices
+Disallow: /devices/*
+Disallow: /broadcast
+Disallow: /broadcast/*
+Disallow: /auto-reply
+Disallow: /auto-reply/*
+Disallow: /inbox
+Disallow: /inbox/*
+Disallow: /contacts
+Disallow: /contacts/*
+Disallow: /subscriptions
+Disallow: /subscriptions/*
+Disallow: /api-keys
+Disallow: /api-keys/*
+Disallow: /api/*
+Disallow: /login
+Disallow: /register
+Disallow: /forgot-password
+Disallow: /reset-password
+
+# Search Engine Sitemap Location
+Sitemap: https://mardirawa.frahesta.com/sitemap.xml

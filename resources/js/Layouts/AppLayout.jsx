@@ -188,7 +188,7 @@ export default function AppLayout({ children, title }) {
             <aside className="hidden lg:flex w-64 flex-col fixed inset-y-0 left-0 z-50 bg-[#08112c] text-white border-r border-blue-950/80 shadow-xl transition-all">
                 {/* Brand Header */}
                 <div className="h-16 px-5 flex items-center justify-between border-b border-blue-950/80 bg-[#050b1e]">
-                    <Link href={isAdminRoute ? '/admin/dashboard' : '/dashboard'} className="flex items-center gap-3 group">
+                    <Link href={isAdminRoute ? '/admin/dashboard' : '/dashboard'} prefetch className="flex items-center gap-3 group">
                         <img
                             src="/images/logo.png"
                             alt="Politeknik Mardira Indonesia"
@@ -227,6 +227,7 @@ export default function AppLayout({ children, title }) {
                                         <Link
                                             key={item.href}
                                             href={item.href}
+                                            prefetch
                                             className={`group w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all ${
                                                 item.active
                                                     ? 'bg-[#1e50ff] text-white font-semibold shadow-xs border border-blue-400/40'
@@ -368,6 +369,7 @@ export default function AppLayout({ children, title }) {
                             <div className="flex items-center p-0.5 rounded-lg bg-slate-100 border border-slate-200 text-xs font-semibold">
                                 <Link
                                     href="/dashboard"
+                                    prefetch
                                     className={`px-2 sm:px-2.5 py-1 rounded-md transition-all text-xs ${
                                         !isAdminRoute
                                             ? 'bg-white text-[#1e50ff] font-bold shadow-2xs'
@@ -378,6 +380,7 @@ export default function AppLayout({ children, title }) {
                                 </Link>
                                 <Link
                                     href="/admin/dashboard"
+                                    prefetch
                                     className={`px-2 sm:px-2.5 py-1 rounded-md transition-all text-xs ${
                                         isAdminRoute
                                             ? 'bg-[#1e50ff] text-white font-bold shadow-2xs'
@@ -391,7 +394,7 @@ export default function AppLayout({ children, title }) {
 
                         {/* Top Context Action Button */}
                         {isAdminRoute ? (
-                            <Link href="/admin/payments">
+                            <Link href="/admin/payments" prefetch>
                                 <Button variant="outline" size="sm" className="h-8 text-xs font-semibold border-slate-200 text-[#1e50ff] hover:border-[#1e50ff] hover:bg-blue-50/50 rounded-lg">
                                     <Receipt className="w-3.5 h-3.5 mr-1 text-[#1e50ff]" />
                                     <span className="hidden sm:inline">Verifikasi Tagihan</span>
@@ -399,7 +402,7 @@ export default function AppLayout({ children, title }) {
                                 </Button>
                             </Link>
                         ) : (
-                            <Link href="/broadcast">
+                            <Link href="/broadcast" prefetch>
                                 <Button variant="default" size="sm" className="bg-[#1e50ff] hover:bg-[#153ec7] text-white h-8 text-xs font-bold shadow-md shadow-blue-500/20 rounded-lg">
                                     <Send className="w-3.5 h-3.5 mr-1.5 text-white" />
                                     <span className="hidden sm:inline">Broadcast Baru</span>
@@ -418,6 +421,16 @@ export default function AppLayout({ children, title }) {
                             <div className="flex items-center gap-2">
                                 <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
                                 <span>{flash.success}</span>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Flash Warning Notification */}
+                    {flash.warning && (
+                        <div className="p-3 rounded-lg border border-amber-200 bg-amber-50 text-amber-900 text-xs font-medium flex items-center justify-between shadow-2xs animate-fade-in-up">
+                            <div className="flex items-center gap-2">
+                                <AlertCircle className="w-4 h-4 shrink-0 text-amber-600" />
+                                <span>{flash.warning}</span>
                             </div>
                         </div>
                     )}
@@ -492,6 +505,7 @@ export default function AppLayout({ children, title }) {
                                                 <Link
                                                     key={item.href}
                                                     href={item.href}
+                                                    prefetch
                                                     onClick={() => setIsMobileDrawerOpen(false)}
                                                     className={`group w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs transition-all ${
                                                         item.active
@@ -588,6 +602,7 @@ export default function AppLayout({ children, title }) {
                         <Link
                             key={item.href}
                             href={item.href}
+                            prefetch
                             className={`flex flex-col items-center gap-1 text-[10px] transition-all py-1.5 px-3 rounded-xl min-h-[44px] justify-center ${
                                 item.active
                                     ? 'font-bold text-white bg-[#1e50ff] shadow-md shadow-blue-500/25'

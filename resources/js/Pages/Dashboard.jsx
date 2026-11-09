@@ -64,9 +64,15 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
     const { props } = usePage();
     const user = props.auth?.user || {};
     const isSuperAdmin = user.role === 'superadmin';
+    const messagesList = Array.isArray(recentMessages)
+        ? recentMessages
+        : (Array.isArray(recentMessages?.data) ? recentMessages.data : Object.values(recentMessages || {}));
+    const devicesList = Array.isArray(devices)
+        ? devices
+        : (Array.isArray(devices?.data) ? devices.data : Object.values(devices || {}));
     const maxAllowedDevices = stats?.max_devices ?? (subscription?.plan?.limits?.max_devices ?? 1);
-    const connectedCount = stats?.connected_devices ?? devices.filter((d) => d.status === 'connected').length;
-    const isDeviceLimitReached = (devices?.length || 0) >= maxAllowedDevices;
+    const connectedCount = stats?.connected_devices ?? devicesList.filter((d) => d.status === 'connected').length;
+    const isDeviceLimitReached = (devicesList?.length || 0) >= maxAllowedDevices;
 
     const [isQrModalOpen, setIsQrModalOpen] = useState(false);
     const [isDurationModalOpen, setIsDurationModalOpen] = useState(false);
@@ -228,7 +234,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                     className="bg-[#1e50ff] hover:bg-[#153ec7] text-white gap-1.5 shadow-md shadow-blue-500/25 cursor-pointer text-xs font-bold rounded-xl h-9 px-4 active:scale-95 transition-all"
                                 >
                                     <Sparkles className="size-3.5" />
-                                    <span>Upgrade Slot ({devices?.length || 0}/{maxAllowedDevices})</span>
+                                    <span>Upgrade Slot ({devicesList?.length || 0}/{maxAllowedDevices})</span>
                                 </Button>
                             </Link>
                         ) : (
@@ -440,7 +446,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                     </Link>
                                 </CardHeader>
                                 <CardContent className="p-0 space-y-4 pt-1 flex-1">
-                                    {recentMessages.length === 0 ? (
+                                    {messagesList.length === 0 ? (
                                         <div className="flex flex-col items-center justify-center py-10 text-center text-slate-400 space-y-2">
                                             <MessageSquare className="size-8 text-slate-300" />
                                             <p className="text-xs font-semibold text-slate-700">Belum Ada Aktivitas Pesan</p>
@@ -449,7 +455,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                             </p>
                                         </div>
                                     ) : (
-                                        recentMessages.slice(0, 5).map((msg) => (
+                                        messagesList.slice(0, 5).map((msg) => (
                                             <div key={msg.id} className="flex items-center justify-between gap-3 text-xs">
                                                 <div className="flex items-center gap-3 min-w-0">
                                                     <Avatar className="size-9 bg-blue-50 border border-blue-100 shrink-0">
@@ -549,7 +555,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
-                                        {recentMessages.length === 0 ? (
+                                        {messagesList.length === 0 ? (
                                             <TableRow>
                                                 <TableCell colSpan={5} className="text-center py-12">
                                                     <div className="flex flex-col items-center justify-center space-y-2">
@@ -571,7 +577,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                                 </TableCell>
                                             </TableRow>
                                         ) : (
-                                            recentMessages.map((msg) => (
+                                            messagesList.map((msg) => (
                                                 <TableRow key={msg.id} className="hover:bg-slate-50/70 border-slate-100 transition-colors">
                                                     <TableCell className="py-3 pl-6">
                                                         <div className="flex items-center gap-2.5">
@@ -818,7 +824,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                         Daftar Perangkat <span className="font-editorial-italic font-normal text-slate-800">Terhubung</span>
                                     </CardTitle>
                                     <CardDescription className="text-xs text-slate-500">
-                                        {devices?.length || 0} dari {maxAllowedDevices} slot perangkat aktif digunakan
+                                        {devicesList?.length || 0} dari {maxAllowedDevices} slot perangkat aktif digunakan
                                     </CardDescription>
                                 </div>
                                 <Button
@@ -843,14 +849,14 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
-                                        {devices?.length === 0 ? (
+                                        {devicesList?.length === 0 ? (
                                             <TableRow>
                                                 <TableCell colSpan={5} className="text-center py-8 text-xs text-slate-500">
                                                     Belum ada nomor WhatsApp yang ditautkan ke gateway ini.
                                                 </TableCell>
                                             </TableRow>
                                         ) : (
-                                            devices.map((device) => (
+                                            devicesList.map((device) => (
                                                 <TableRow key={device.id} className="hover:bg-slate-50/70 border-slate-100 transition-colors">
                                                     <TableCell className="pl-6 font-bold text-slate-900 text-xs">
                                                         {device.name}
@@ -939,7 +945,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
-                                        {recentMessages.length === 0 ? (
+                                        {messagesList.length === 0 ? (
                                             <TableRow>
                                                 <TableCell colSpan={5} className="text-center py-12">
                                                     <div className="flex flex-col items-center justify-center space-y-2">
@@ -956,7 +962,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                                                 </TableCell>
                                             </TableRow>
                                         ) : (
-                                            recentMessages.map((msg) => (
+                                            messagesList.map((msg) => (
                                                 <TableRow key={msg.id} className="hover:bg-slate-50/70 border-slate-100 transition-colors">
                                                     <TableCell className="py-3 pl-6">
                                                         <div className="flex items-center gap-2.5">
@@ -1026,7 +1032,7 @@ export default function Dashboard({ workspace, subscription, stats, recentMessag
                 onClose={() => setIsQrModalOpen(false)}
                 canAddDevice={!isDeviceLimitReached}
                 maxDevices={maxAllowedDevices}
-                currentCount={devices?.length || 0}
+                currentCount={devicesList?.length || 0}
                 planName={stats?.plan_name || 'Starter Lite'}
             />
 

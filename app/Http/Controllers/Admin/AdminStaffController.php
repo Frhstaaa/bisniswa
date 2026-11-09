@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -32,10 +33,11 @@ class AdminStaffController extends Controller
         }
 
         if (! empty($search)) {
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'ilike', "%{$search}%")
-                    ->orWhere('email', 'ilike', "%{$search}%")
-                    ->orWhere('phone', 'ilike', "%{$search}%");
+            $like = DB::connection()->getDriverName() === 'pgsql' ? 'ilike' : 'like';
+            $query->where(function ($q) use ($search, $like) {
+                $q->where('name', $like, "%{$search}%")
+                    ->orWhere('email', $like, "%{$search}%")
+                    ->orWhere('phone', $like, "%{$search}%");
             });
         }
 

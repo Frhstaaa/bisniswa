@@ -6,6 +6,7 @@ use App\Models\Payment;
 use App\Repositories\Contracts\PaymentRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class PaymentRepository implements PaymentRepositoryInterface
 {
@@ -19,10 +20,11 @@ class PaymentRepository implements PaymentRepositoryInterface
         }
 
         if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('invoice_number', 'ilike', "%{$search}%")
-                    ->orWhereHas('workspace', function ($wq) use ($search) {
-                        $wq->where('name', 'ilike', "%{$search}%");
+            $like = DB::connection()->getDriverName() === 'pgsql' ? 'ilike' : 'like';
+            $query->where(function ($q) use ($search, $like) {
+                $q->where('invoice_number', $like, "%{$search}%")
+                    ->orWhereHas('workspace', function ($wq) use ($search, $like) {
+                        $wq->where('name', $like, "%{$search}%");
                     });
             });
         }

@@ -5,6 +5,7 @@ namespace App\Repositories\Eloquent;
 use App\Models\Workspace;
 use App\Repositories\Contracts\ClientRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class ClientRepository implements ClientRepositoryInterface
 {
@@ -19,13 +20,14 @@ class ClientRepository implements ClientRepositoryInterface
             ->latest();
 
         if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'ilike', "%{$search}%")
-                    ->orWhere('slug', 'ilike', "%{$search}%")
-                    ->orWhere('phone', 'ilike', "%{$search}%")
-                    ->orWhereHas('users', function ($uq) use ($search) {
-                        $uq->where('name', 'ilike', "%{$search}%")
-                            ->orWhere('email', 'ilike', "%{$search}%");
+            $like = DB::connection()->getDriverName() === 'pgsql' ? 'ilike' : 'like';
+            $query->where(function ($q) use ($search, $like) {
+                $q->where('name', $like, "%{$search}%")
+                    ->orWhere('slug', $like, "%{$search}%")
+                    ->orWhere('phone', $like, "%{$search}%")
+                    ->orWhereHas('users', function ($uq) use ($search, $like) {
+                        $uq->where('name', $like, "%{$search}%")
+                            ->orWhere('email', $like, "%{$search}%");
                     });
             });
         }

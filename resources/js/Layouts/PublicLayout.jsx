@@ -19,9 +19,9 @@ import {
     LayoutDashboard,
 } from 'lucide-react';
 
-export const openPublicRegisterModal = (planId = null) => {
+export const openPublicRegisterModal = (planId = null, cycle = 'monthly') => {
     if (typeof window !== 'undefined') {
-        window.dispatchEvent(new CustomEvent('open-public-auth-modal', { detail: { mode: 'register', planId } }));
+        window.dispatchEvent(new CustomEvent('open-public-auth-modal', { detail: { mode: 'register', planId, cycle } }));
     }
 };
 
@@ -41,6 +41,10 @@ export const usePublicAuth = () => useContext(PublicAuthContext);
 export default function PublicLayout({
     children,
     title,
+    description,
+    keywords,
+    canonicalUrl,
+    schema = null,
     plans = [],
     activeMenu = '',
 }) {
@@ -49,6 +53,12 @@ export default function PublicLayout({
     const user = props?.auth?.user;
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const mainRef = useGsapReveal([url]);
+
+    const pageTitle = title ? `${title} — MARDIRA WA` : 'MARDIRA WA — Portal Enterprise WhatsApp Gateway & Broadcast API';
+    const pageDesc = description || 'Platform Enterprise WhatsApp Gateway & Broadcast API resmi di Indonesia. Kirim pesan massal anti-banned, auto-reply bot AI pintar, integrasi REST API real-time, dan multi-CS.';
+    const pageKeywords = keywords || 'whatsapp gateway, whatsapp api indonesia, broadcast whatsapp massal, wa gateway murah, kirim wa massal, auto reply wa bot, rest api whatsapp, mardira wa';
+    const cleanPath = (url || '/').split('?')[0];
+    const pageCanonical = canonicalUrl || `https://mardirawa.frahesta.com${cleanPath === '/' ? '' : cleanPath}`;
 
     // Ensure page always starts at top on every navigation
     useEffect(() => {
@@ -63,10 +73,12 @@ export default function PublicLayout({
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
     const [authModalMode, setAuthModalMode] = useState('register'); // 'register' | 'login'
     const [authModalPlanId, setAuthModalPlanId] = useState(null);
+    const [authModalCycle, setAuthModalCycle] = useState('monthly');
 
-    const openRegisterModal = (planId = null) => {
+    const openRegisterModal = (planId = null, cycle = 'monthly') => {
         setAuthModalMode('register');
         setAuthModalPlanId(planId);
+        setAuthModalCycle(cycle);
         setIsAuthModalOpen(true);
     };
 
@@ -77,13 +89,14 @@ export default function PublicLayout({
 
     useEffect(() => {
         const handleAuthEvent = (e) => {
-            const { mode, planId } = e.detail || {};
+            const { mode, planId, cycle } = e.detail || {};
             if (mode === 'login') {
                 setAuthModalMode('login');
                 setIsAuthModalOpen(true);
             } else {
                 setAuthModalMode('register');
                 setAuthModalPlanId(planId || null);
+                if (cycle) setAuthModalCycle(cycle);
                 setIsAuthModalOpen(true);
             }
         };
@@ -103,7 +116,29 @@ export default function PublicLayout({
     return (
         <PublicAuthContext.Provider value={{ openRegisterModal, openLoginModal }}>
             <div className="min-h-screen bg-white text-[#0f172a] font-sans antialiased selection:bg-blue-100 selection:text-[#1e50ff] flex flex-col justify-between">
-                <Head title={title ? `${title} — MARDIRA WA` : 'MARDIRA WA — Portal Enterprise WhatsApp Gateway & Broadcast API'} />
+                <Head>
+                    <title>{pageTitle}</title>
+                    <meta name="description" content={pageDesc} head-key="description" />
+                    <meta name="keywords" content={pageKeywords} head-key="keywords" />
+                    <link rel="canonical" href={pageCanonical} head-key="canonical" />
+
+                    <meta property="og:type" content="website" head-key="og:type" />
+                    <meta property="og:title" content={pageTitle} head-key="og:title" />
+                    <meta property="og:description" content={pageDesc} head-key="og:description" />
+                    <meta property="og:url" content={pageCanonical} head-key="og:url" />
+                    <meta property="og:site_name" content="MARDIRA WA" head-key="og:site_name" />
+                    <meta property="og:locale" content="id_ID" head-key="og:locale" />
+
+                    <meta name="twitter:card" content="summary_large_image" head-key="twitter:card" />
+                    <meta name="twitter:title" content={pageTitle} head-key="twitter:title" />
+                    <meta name="twitter:description" content={pageDesc} head-key="twitter:description" />
+
+                    {schema && (
+                        <script type="application/ld+json">
+                            {JSON.stringify(schema)}
+                        </script>
+                    )}
+                </Head>
 
                 {/* ================= TOP NAVBAR ================= */}
                 <header className="fixed inset-x-0 top-0 z-50 transition-all duration-300 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-2xs">
@@ -217,63 +252,71 @@ export default function PublicLayout({
                     </nav>
 
                     {/* Mobile Dropdown Menu Sheet */}
-                    {isMobileMenuOpen && (
-                        <div className="md:hidden border-t border-slate-200 bg-white/98 backdrop-blur-xl px-4 py-4 space-y-3 animate-fade-in-up">
-                            <div className="space-y-1">
-                                {navLinks.map((item) => (
-                                    <Link
-                                        key={item.href}
-                                        href={item.href}
-                                        prefetch
-                                        onClick={() => setIsMobileMenuOpen(false)}
-                                        className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:text-[#1e50ff] hover:bg-blue-50/60 transition-colors"
-                                    >
-                                        <span>{item.label}</span>
-                                        <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
-                                    </Link>
-                                ))}
-                            </div>
+                    <AnimatePresence>
+                        {isMobileMenuOpen && (
+                            <motion.div
+                                initial={{ opacity: 0, height: 0, y: -8 }}
+                                animate={{ opacity: 1, height: 'auto', y: 0 }}
+                                exit={{ opacity: 0, height: 0, y: -8 }}
+                                transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                                className="overflow-hidden md:hidden border-t border-slate-200 bg-white/98 backdrop-blur-xl px-4 py-4 space-y-3"
+                            >
+                                <div className="space-y-1">
+                                    {navLinks.map((item) => (
+                                        <Link
+                                            key={item.href}
+                                            href={item.href}
+                                            prefetch
+                                            onClick={() => setIsMobileMenuOpen(false)}
+                                            className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:text-[#1e50ff] hover:bg-blue-50/60 transition-colors"
+                                        >
+                                            <span>{item.label}</span>
+                                            <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
+                                        </Link>
+                                    ))}
+                                </div>
 
-                            <div className="pt-2 border-t border-slate-100 flex flex-col gap-2">
-                                {user ? (
-                                    <Link
-                                        href="/dashboard"
-                                        prefetch
-                                        onClick={() => setIsMobileMenuOpen(false)}
-                                        className="w-full inline-flex h-10 items-center justify-center gap-2 rounded-full bg-[#1e50ff] hover:bg-[#153ec7] text-xs font-extrabold uppercase tracking-wider text-white shadow-xs"
-                                    >
-                                        <LayoutDashboard className="w-3.5 h-3.5" />
-                                        <span>Buka Dashboard Workspace</span>
-                                    </Link>
-                                ) : (
-                                    <>
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                setIsMobileMenuOpen(false);
-                                                openRegisterModal();
-                                            }}
-                                            className="w-full inline-flex h-10 items-center justify-center gap-2 rounded-full bg-[#1e50ff] hover:bg-[#153ec7] text-xs font-extrabold uppercase tracking-wider text-white shadow-xs cursor-pointer"
+                                <div className="pt-2 border-t border-slate-100 flex flex-col gap-2">
+                                    {user ? (
+                                        <Link
+                                            href="/dashboard"
+                                            prefetch
+                                            onClick={() => setIsMobileMenuOpen(false)}
+                                            className="w-full inline-flex h-10 items-center justify-center gap-2 rounded-full bg-[#1e50ff] hover:bg-[#153ec7] text-xs font-extrabold uppercase tracking-wider text-white shadow-xs"
                                         >
-                                            <Zap className="w-3.5 h-3.5 fill-white" />
-                                            <span>Mulai Sekarang</span>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                setIsMobileMenuOpen(false);
-                                                openLoginModal();
-                                            }}
-                                            className="w-full inline-flex h-9 items-center justify-center gap-1.5 rounded-full border border-slate-300 bg-white hover:bg-slate-50 text-xs font-bold uppercase tracking-wider text-slate-800 cursor-pointer"
-                                        >
-                                            <LogIn className="w-3.5 h-3.5 text-[#1e50ff]" />
-                                            <span>Masuk Workspace</span>
-                                        </button>
-                                    </>
-                                )}
-                            </div>
-                        </div>
-                    )}
+                                            <LayoutDashboard className="w-3.5 h-3.5" />
+                                            <span>Buka Dashboard Workspace</span>
+                                        </Link>
+                                    ) : (
+                                        <>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setIsMobileMenuOpen(false);
+                                                    openRegisterModal();
+                                                }}
+                                                className="w-full inline-flex h-10 items-center justify-center gap-2 rounded-full bg-[#1e50ff] hover:bg-[#153ec7] text-xs font-extrabold uppercase tracking-wider text-white shadow-xs cursor-pointer"
+                                            >
+                                                <Zap className="w-3.5 h-3.5 fill-white" />
+                                                <span>Mulai Sekarang</span>
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setIsMobileMenuOpen(false);
+                                                    openLoginModal();
+                                                }}
+                                                className="w-full inline-flex h-9 items-center justify-center gap-1.5 rounded-full border border-slate-300 bg-white hover:bg-slate-50 text-xs font-bold uppercase tracking-wider text-slate-800 cursor-pointer"
+                                            >
+                                                <LogIn className="w-3.5 h-3.5 text-[#1e50ff]" />
+                                                <span>Masuk Workspace</span>
+                                            </button>
+                                        </>
+                                    )}
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </header>
 
                 {/* ================= MAIN CONTENT BODY ================= */}
@@ -417,6 +460,7 @@ export default function PublicLayout({
                     onClose={() => setIsAuthModalOpen(false)}
                     initialMode={authModalMode}
                     initialPlanId={authModalPlanId}
+                    initialBillingCycle={authModalCycle}
                     plans={safePlans}
                 />
             </div>

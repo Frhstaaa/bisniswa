@@ -27,9 +27,10 @@ import {
     TableCell,
 } from '../../../Components/ui/table';
 
-export default function ClientsIndex({ clients, filters, totalClients, activeClients }) {
-    const [searchTerm, setSearchTerm] = useState(filters.search || '');
-    const [selectedStatus, setSelectedStatus] = useState(filters.status || 'all');
+export default function ClientsIndex({ clients = {}, filters = {}, totalClients = 0, activeClients = 0 }) {
+    const clientsList = Array.isArray(clients?.data) ? clients.data : (Array.isArray(clients) ? clients : Object.values(clients?.data || clients || {}));
+    const [searchTerm, setSearchTerm] = useState(filters?.search || '');
+    const [selectedStatus, setSelectedStatus] = useState(filters?.status || 'all');
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -136,14 +137,14 @@ export default function ClientsIndex({ clients, filters, totalClients, activeCli
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {clients.data.length === 0 ? (
+                                {clientsList.length === 0 ? (
                                     <TableRow>
                                         <TableCell colSpan={6} className="text-center py-10 text-xs text-slate-400">
                                             Tidak ada workspace yang sesuai dengan kriteria pencarian.
                                         </TableCell>
                                     </TableRow>
                                 ) : (
-                                    clients.data.map((client) => {
+                                    clientsList.map((client) => {
                                         const owner = client.users?.[0] || {};
                                         const sub = client.subscription || {};
                                         const plan = sub.plan || {};
@@ -212,7 +213,7 @@ export default function ClientsIndex({ clients, filters, totalClients, activeCli
                                                 {/* Action Buttons */}
                                                 <TableCell className="py-3.5 text-right whitespace-nowrap pr-6">
                                                     <div className="inline-flex items-center justify-end gap-1.5">
-                                                        <Link href={`/admin/clients/${client.id}`}>
+                                                        <Link href={`/admin/clients/${client.id}`} prefetch>
                                                             <Button variant="outline" size="sm" className="h-7 text-xs px-2.5 rounded-md border-slate-200 hover:bg-slate-50 cursor-pointer">
                                                                 Detail
                                                             </Button>

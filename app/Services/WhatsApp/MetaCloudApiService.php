@@ -93,7 +93,7 @@ class MetaCloudApiService
 
         // 6. Media message
         if (! empty($mediaUrl)) {
-            return $this->sendMediaMessage($device, $recipient, $mediaUrl, $text);
+            return $this->sendMediaMessage($device, $recipient, $mediaUrl, $text, $options['media_filename'] ?? null);
         }
 
         // 7. Regular text message
@@ -280,20 +280,38 @@ class MetaCloudApiService
     /**
      * Send Media Message (Image, Document)
      */
-    public function sendMediaMessage(Device $device, string $recipient, string $mediaUrl, ?string $caption = null): array
+    public function sendMediaMessage(Device $device, string $recipient, string $mediaUrl, ?string $caption = null, ?string $filename = null): array
     {
-        $payload = [
-            'messaging_product' => 'whatsapp',
-            'recipient_type' => 'individual',
-            'to' => $recipient,
-            'type' => 'image',
-            'image' => [
-                'link' => $mediaUrl,
-            ],
-        ];
+        $ext = strtolower(pathinfo(parse_url($mediaUrl, PHP_URL_PATH) ?? '', PATHINFO_EXTENSION));
+        $isDoc = in_array($ext, ['pdf', 'doc', 'docx', 'xls', 'xlsx']);
 
-        if (! empty($caption)) {
-            $payload['image']['caption'] = $caption;
+        if ($isDoc) {
+            $payload = [
+                'messaging_product' => 'whatsapp',
+                'recipient_type' => 'individual',
+                'to' => $recipient,
+                'type' => 'document',
+                'document' => [
+                    'link' => $mediaUrl,
+                    'filename' => $filename ?: basename(parse_url($mediaUrl, PHP_URL_PATH) ?? 'document.pdf'),
+                ],
+            ];
+            if (! empty($caption)) {
+                $payload['document']['caption'] = $caption;
+            }
+        } else {
+            $payload = [
+                'messaging_product' => 'whatsapp',
+                'recipient_type' => 'individual',
+                'to' => $recipient,
+                'type' => 'image',
+                'image' => [
+                    'link' => $mediaUrl,
+                ],
+            ];
+            if (! empty($caption)) {
+                $payload['image']['caption'] = $caption;
+            }
         }
 
         return $this->executeGraphPost($device, $payload);

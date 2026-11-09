@@ -87,12 +87,12 @@ export default function Pricing({ plans = [], stats = {} }) {
             slug: 'pro-bisnis',
             price_monthly: 179000,
             price_annually: 1790000,
-            monthly_message_quota: 15000,
+            monthly_message_quota: 20000,
             max_devices: 3,
             is_popular: true,
             features: [
                 '3 Perangkat WhatsApp Terhubung',
-                'Kuota 15.000 Pesan per Bulan',
+                'Kuota 20.000 Pesan per Bulan',
                 'Akses UltraSync Engine Sesi Stabil',
                 'Live Chat Inbox Multichat Tim',
                 'Broadcast Massal CSV + Proteksi Spintax',
@@ -106,7 +106,7 @@ export default function Pricing({ plans = [], stats = {} }) {
             name: 'Enterprise Pro',
             slug: 'enterprise-pro',
             price_monthly: 299000,
-            price_annually: 2890000,
+            price_annually: 2990000,
             monthly_message_quota: 50000,
             max_devices: 5,
             features: [
@@ -202,12 +202,13 @@ export default function Pricing({ plans = [], stats = {} }) {
 
     // Handle user clicking Subscribe / Choose Plan
     const handleSelectPlan = (planId) => {
+        const cycleParam = billingCycle === 'yearly' ? 'annually' : 'monthly';
         if (user) {
             // Logged-in user: redirect directly to subscription checkout with plan pre-selected
-            router.visit(`/subscriptions?plan_id=${planId}&billing_cycle=${billingCycle}`);
+            router.visit(`/subscriptions?plan_id=${planId}&billing_cycle=${cycleParam}`);
         } else {
             // Guest visitor: open auth modal in registration mode with plan pre-selected
-            openRegisterModal(planId);
+            openRegisterModal(planId, cycleParam);
         }
     };
 
@@ -252,8 +253,59 @@ export default function Pricing({ plans = [], stats = {} }) {
         },
     ];
 
+    const pricingSchema = {
+        '@context': 'https://schema.org',
+        '@graph': [
+            {
+                '@type': 'Product',
+                name: 'Layanan Berlangganan MARDIRA WA Gateway',
+                image: 'https://mardirawa.frahesta.com/images/logo.png',
+                description: 'Paket langganan WhatsApp Gateway resmi dengan kuota pesan melimpah, multi-perangkat, arsitektur UltraSync Engine, dan integrasi REST API instan.',
+                brand: {
+                    '@type': 'Brand',
+                    name: 'MARDIRA WA',
+                },
+                offers: {
+                    '@type': 'AggregateOffer',
+                    priceCurrency: 'IDR',
+                    lowPrice: '99000',
+                    highPrice: '2990000',
+                    offerCount: String(displayPlans.length),
+                    offers: displayPlans.map((p) => ({
+                        '@type': 'Offer',
+                        name: p.name,
+                        price: String(p.monthlyPrice),
+                        priceCurrency: 'IDR',
+                        availability: 'https://schema.org/InStock',
+                        url: 'https://mardirawa.frahesta.com/harga',
+                        priceValidUntil: '2027-12-31',
+                    })),
+                },
+            },
+            {
+                '@type': 'FAQPage',
+                mainEntity: pricingFaqs.map((f) => ({
+                    '@type': 'Question',
+                    name: f.q,
+                    acceptedAnswer: {
+                        '@type': 'Answer',
+                        text: f.a,
+                    },
+                })),
+            },
+        ],
+    };
+
     return (
-        <PublicLayout title="Paket & Harga Langganan" plans={safePlans} activeMenu="harga">
+        <PublicLayout
+            title="Paket & Harga Langganan WhatsApp Gateway Murah"
+            description="Daftar harga paket langganan WhatsApp Gateway & Broadcast resmi MARDIRA WA mulai Rp 99.000/bulan. Kuota pesan melimpah, multi-perangkat, REST API instan tanpa biaya tersembunyi."
+            keywords="harga whatsapp gateway, biaya wa gateway, paket wa gateway, whatsapp broadcast murah, whatsapp api indonesia, mardira wa"
+            canonicalUrl="https://mardirawa.frahesta.com/harga"
+            schema={pricingSchema}
+            plans={safePlans}
+            activeMenu="harga"
+        >
             <div className="space-y-16 lg:space-y-24">
                 {/* ================= HERO HEADER ================= */}
                 <section className="relative overflow-hidden bg-white bg-grid-pattern text-slate-900 pt-32 sm:pt-40 pb-20 sm:pb-28 px-4 sm:px-6 lg:px-10 border-b border-slate-100">
@@ -320,7 +372,7 @@ export default function Pricing({ plans = [], stats = {} }) {
                                     )}
                                     <span className="relative z-10">Tahunan</span>
                                     <span className="relative z-10 px-2 py-0.5 rounded-full text-[9px] font-black bg-amber-400 text-slate-950 shadow-xs">
-                                        HEMAT 20%
+                                        HEMAT 2 BULAN
                                     </span>
                                 </button>
                             </div>
@@ -381,21 +433,27 @@ export default function Pricing({ plans = [], stats = {} }) {
                                                 <div className="flex items-baseline gap-1" key={billingCycle}>
                                                     <span className="text-xs font-bold text-slate-500">Rp</span>
                                                     <span className="text-4xl font-black text-slate-900 font-mono tracking-tight animate-scale-pop">
-                                                        {finalPrice.toLocaleString('id-ID')}
+                                                        {(isYearly ? annualPrice : monthlyPrice).toLocaleString('id-ID')}
                                                     </span>
-                                                    <span className="text-xs text-slate-500">/ bulan</span>
+                                                    <span className="text-xs text-slate-500">
+                                                        {isYearly ? '/ tahun' : '/ bulan'}
+                                                    </span>
                                                 </div>
-                                                {isYearly && (
-                                                    <div className="flex items-center gap-1.5 mt-1 animate-scale-pop">
-                                                        <p className="text-[11px] text-[#1e50ff] font-semibold">
-                                                            Ditagihkan tahunan Rp {annualPrice.toLocaleString('id-ID')}
+                                                {isYearly ? (
+                                                    <div className="space-y-1 mt-2 animate-scale-pop">
+                                                        <p className="text-xs text-[#1e50ff] font-semibold">
+                                                            Setara <strong>Rp {Math.round(annualPrice / 12).toLocaleString('id-ID')}</strong> / bulan
                                                         </p>
                                                         {annualSavings > 0 && (
-                                                            <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.2 rounded">
-                                                                Hemat Rp {annualSavings.toLocaleString('id-ID')}
-                                                            </span>
+                                                            <div className="text-[10px] bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold px-2 py-0.5 rounded-md inline-flex items-center gap-1">
+                                                                <span>🎉 Hemat Rp {annualSavings.toLocaleString('id-ID')} (Gratis 2 Bulan)</span>
+                                                            </div>
                                                         )}
                                                     </div>
+                                                ) : (
+                                                    <p className="text-[11px] text-slate-500 mt-1.5">
+                                                        Ditagihkan per bulan, batalkan kapan saja
+                                                    </p>
                                                 )}
                                             </div>
 

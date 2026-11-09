@@ -42,14 +42,21 @@ import {
     TableCell,
 } from '../../Components/ui/table';
 
-export default function ApiIndex({ workspace, apiKeys = [], webhooks = [], devices = [], apiLogs = [] }) {
+export default function ApiIndex({
+    workspace,
+    apiKeys = [],
+    webhooks = [],
+    devices = [],
+    apiLogs = [],
+    baseUrl: serverBaseUrl,
+}) {
     const { flash } = usePage().props;
     const [keyName, setKeyName] = useState('Production ERP Backend');
     const [selectedDeviceId, setSelectedDeviceId] = useState(
         devices.find((d) => d.status === 'connected')?.id || devices[0]?.id || ''
     );
     const [webhookUrl, setWebhookUrl] = useState(
-        webhooks && webhooks[0] ? webhooks[0].url : 'https://api.klienanda.com/webhook/kirimwa'
+        webhooks && webhooks[0] ? webhooks[0].url : 'https://api.klienanda.com/webhook/whatsapp'
     );
     const [copiedKey, setCopiedKey] = useState(false);
     const [copiedBaseUrl, setCopiedBaseUrl] = useState(false);
@@ -61,7 +68,7 @@ export default function ApiIndex({ workspace, apiKeys = [], webhooks = [], devic
     const [pingLoading, setPingLoading] = useState(false);
     const [pingResult, setPingResult] = useState(null);
 
-    const baseUrl = 'https://api.kirimwa.pro/api/v1';
+    const baseUrl = (typeof window !== 'undefined' && window.location.origin ? `${window.location.origin}/api/v1` : null) || serverBaseUrl || 'https://mardirawa.frahesta.com/api/v1';
     const activeTokenDisplay = flash?.new_api_key || 'bk_live_••••••••••••••••••••••••••••••••';
 
     const openCreateModal = () => {
@@ -744,9 +751,9 @@ print(response.json())`,
 
                                             <button
                                                 type="button"
-                                                onClick={() => handleCopy(ep.path, `endpoint-${ep.path}`)}
+                                                onClick={() => handleCopy(`${baseUrl}${ep.path.replace('/api/v1', '')}`, `endpoint-${ep.path}`)}
                                                 className="p-1.5 rounded-md text-slate-400 hover:text-emerald-700 hover:bg-slate-100 transition-colors shrink-0 cursor-pointer"
-                                                title="Salin path endpoint"
+                                                title="Salin URL endpoint lengkap"
                                             >
                                                 {isCopied ? (
                                                     <Check className="w-3.5 h-3.5 text-emerald-600" />

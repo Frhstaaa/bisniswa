@@ -13,6 +13,19 @@ const { Client, LocalAuth, MessageMedia, Poll } = require('whatsapp-web.js');
 const app = express();
 app.use(express.json());
 
+// Global Exception & Rejection Handlers to prevent node process death on transient Puppeteer navigation
+process.on('uncaughtException', (err) => {
+    console.error('[Uncaught Exception]', err?.message || err);
+    if (err?.message && (err.message.includes('Execution context was destroyed') || err.message.includes('Session closed'))) {
+        console.warn('[Puppeteer Guard] Transient navigation context destroyed - ignoring to preserve process uptime.');
+        return;
+    }
+});
+
+process.on('unhandledRejection', (reason) => {
+    console.error('[Unhandled Rejection]', reason?.message || reason);
+});
+
 const PORT = process.env.PORT || 3001;
 const HOST = process.env.HOST || '127.0.0.1';
 const LARAVEL_URL = process.env.LARAVEL_URL || 'http://127.0.0.1:8001';
@@ -26,6 +39,27 @@ const WWEBJS_DIR = path.join(SESSIONS_DIR, 'wwebjs');
 if (!fs.existsSync(WWEBJS_DIR)) {
     fs.mkdirSync(WWEBJS_DIR, { recursive: true });
 }
+
+// Auto-patch whatsapp-web.js for upstream media __x_id collision bug
+function autoPatchWWebJS() {
+    try {
+        const utilsPath = path.join(__dirname, 'node_modules/whatsapp-web.js/src/util/Injected/Utils.js');
+        if (fs.existsSync(utilsPath)) {
+            let content = fs.readFileSync(utilsPath, 'utf8');
+            if (!content.includes('delete message.__x_id;')) {
+                const patchTarget = 'delete message.canonicalUrl;\n        }';
+                if (content.includes(patchTarget)) {
+                    content = content.replace(patchTarget, `${patchTarget}\n\n        delete message.__x_id;\n        message.id = newMsgKey;`);
+                    fs.writeFileSync(utilsPath, content, 'utf8');
+                    console.log('[WWebJS Patch] Successfully auto-patched whatsapp-web.js media __x_id collision bug.');
+                }
+            }
+        }
+    } catch (e) {
+        console.warn('[WWebJS Patch Warning]', e.message);
+    }
+}
+autoPatchWWebJS();
 
 // In-memory store for active sessions
 // Map<string, { client, status, qr, phoneNumber, deviceId, keepAliveTimer }>
@@ -140,7 +174,7 @@ async function notifyLaravelStatus(deviceId, payload) {
         console.log(`[Laravel Notified] Device ${deviceId} ->`, payload.status);
     } catch (err) {
         if (err.response && err.response.status === 404) {
-            console.warn(`[Device Removed] Device ${deviceId} not found in Laravel. Stopping session.`);
+            console.warn(`[Device Removed] Device ${deviceId} not found in Laravel. Stopping session and removing directory.`);
             const sessionId = `device_${deviceId}`;
             const session = activeSessions.get(sessionId);
             if (session) {
@@ -152,6 +186,12 @@ async function notifyLaravelStatus(deviceId, payload) {
                 }
             }
             activeSessions.delete(sessionId);
+            const folder = path.join(WWEBJS_DIR, `session-device_${deviceId}`);
+            if (fs.existsSync(folder)) {
+                try {
+                    fs.rmSync(folder, { recursive: true, force: true });
+                } catch (rmErr) {}
+            }
             return;
         }
         console.warn(`[Webhook Notice] Device ${deviceId} status update: ${err.message}`);
@@ -379,31 +419,35 @@ async function initWwebjsSession(deviceId) {
             qr_code: null,
         });
 
-        // Proactive keep-alive heartbeat every 15s to maintain frame and auto-recover
+        // Proactive keep-alive heartbeat every 30s to verify browser connection without triggering false restarts
         if (sessionData.keepAliveTimer) clearInterval(sessionData.keepAliveTimer);
         sessionData.keepAliveTimer = setInterval(async () => {
             try {
-                if (sessionData.client?.pupPage && !sessionData.client.pupPage.isClosed()) {
-                    await sessionData.client.pupPage.evaluate(() => window.WWebJS ? true : false);
+                const browser = sessionData.client?.pupBrowser;
+                const page = sessionData.client?.pupPage;
+
+                if (browser && !browser.isConnected()) {
+                    throw new Error('Browser disconnected');
+                }
+
+                if (page && page.isClosed()) {
+                    throw new Error('Page closed');
+                }
+
+                if (page && !page.isClosed()) {
+                    await page.evaluate(() => Boolean(window.WWebJS)).catch(() => {});
                 }
             } catch (err) {
-                if (err.message && (
-                    err.message.includes('detached Frame') ||
-                    err.message.includes('Execution context was destroyed') ||
-                    err.message.includes('Session closed') ||
-                    err.message.includes('Protocol error')
-                )) {
-                    console.warn(`[Keepalive Auto-Recovery] Detected detached frame on Device ${deviceId}: ${err.message}. Restarting session cleanly...`);
-                    if (sessionData.keepAliveTimer) {
-                        clearInterval(sessionData.keepAliveTimer);
-                        sessionData.keepAliveTimer = null;
-                    }
-                    cleanupWwebjsBrowser(deviceId).then(() => initWwebjsSession(deviceId)).catch(e => {
-                        console.error(`[Keepalive Recovery Err] Device ${deviceId}:`, e.message);
-                    });
+                console.warn(`[Keepalive Auto-Recovery] Browser lost on Device ${deviceId}: ${err.message}. Restarting session cleanly...`);
+                if (sessionData.keepAliveTimer) {
+                    clearInterval(sessionData.keepAliveTimer);
+                    sessionData.keepAliveTimer = null;
                 }
+                cleanupWwebjsBrowser(deviceId).then(() => initWwebjsSession(deviceId)).catch(e => {
+                    console.error(`[Keepalive Recovery Err] Device ${deviceId}:`, e.message);
+                });
             }
-        }, 15000);
+        }, 30000);
     });
 
     const handleIncomingWWebJSMessage = async (msg) => {
@@ -611,7 +655,7 @@ app.post('/sessions/disconnect', async (req, res) => {
  * Route: Send WhatsApp Message
  */
 app.post('/messages/send', async (req, res) => {
-    const { device_id, to, message, media_url, poll_options, poll_title } = req.body;
+    const { device_id, to, message, media_url, media_filename, poll_options, poll_title } = req.body;
     const sessionId = `device_${device_id}`;
     let session = activeSessions.get(sessionId);
 
@@ -632,7 +676,7 @@ app.post('/messages/send', async (req, res) => {
     }
 
     const jid = formatRecipientJid(to);
-    console.log(`[Dispatch Message] Device ${device_id} (wwebjs) -> To: ${to} (JID: ${jid}) | Length: ${message?.length || 0} | Poll: ${poll_options?.length || 0}`);
+    console.log(`[Dispatch Message] Device ${device_id} (wwebjs) -> To: ${to} (JID: ${jid}) | Length: ${message?.length || 0} | Media: ${media_url || 'none'} | Poll: ${poll_options?.length || 0}`);
 
     const messageId = `MSG_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
 
@@ -640,8 +684,53 @@ app.post('/messages/send', async (req, res) => {
         try {
             let sent;
             if (media_url) {
-                const media = await MessageMedia.fromUrl(media_url, { unsafeMime: true });
-                sent = await session.client.sendMessage(jid, media, { caption: message });
+                let media = null;
+                const customFilename = media_filename || null;
+                let localPath = null;
+
+                // Cek apakah media_url berada di disk lokal (folder uploads atau storage)
+                if (!media_url.startsWith('http://') && !media_url.startsWith('https://') && fs.existsSync(media_url)) {
+                    localPath = media_url;
+                } else if (media_url.includes('/uploads/')) {
+                    const rel = media_url.substring(media_url.indexOf('/uploads/'));
+                    const candidate = path.join(__dirname, '..', 'public', rel);
+                    if (fs.existsSync(candidate)) {
+                        localPath = candidate;
+                    }
+                } else if (media_url.includes('/storage/')) {
+                    const rel = media_url.substring(media_url.indexOf('/storage/') + 9);
+                    const candidate1 = path.join(__dirname, '..', 'public', 'storage', rel);
+                    const candidate2 = path.join(__dirname, '..', 'storage', 'app', 'public', rel);
+                    if (fs.existsSync(candidate1)) {
+                        localPath = candidate1;
+                    } else if (fs.existsSync(candidate2)) {
+                        localPath = candidate2;
+                    }
+                }
+
+                if (localPath) {
+                    console.log(`[Media Dispatch] Loading directly from local disk: ${localPath}`);
+                    media = MessageMedia.fromFilePath(localPath);
+                    if (customFilename) media.filename = customFilename;
+                } else {
+                    console.log(`[Media Dispatch] Downloading media from URL: ${media_url}`);
+                    media = await MessageMedia.fromUrl(media_url, { unsafeMime: true, filename: customFilename });
+                }
+
+                const isPdfOrDoc = (media.mimetype && (media.mimetype.includes('pdf') || media.mimetype.includes('document') || media.mimetype.includes('sheet'))) ||
+                    (media.filename && media.filename.match(/\.(pdf|docx?|xlsx?)$/i));
+
+                try {
+                    sent = await session.client.sendMessage(jid, media, {
+                        caption: message || '',
+                        sendMediaAsDocument: Boolean(isPdfOrDoc),
+                    });
+                } catch (docErr) {
+                    console.warn(`[WWebJS Doc Send Fallback] ${docErr.message}, retrying without sendMediaAsDocument...`);
+                    sent = await session.client.sendMessage(jid, media, {
+                        caption: message || '',
+                    });
+                }
             } else if (message) {
                 sent = await session.client.sendMessage(jid, message);
             }
@@ -699,7 +788,12 @@ async function autoRestoreSavedSessions() {
             for (const file of wwebFiles) {
                 if (file.startsWith('session-device_')) {
                     const deviceId = file.replace('session-device_', '');
-                    if (deviceId === '3') continue; // Skip obsolete test device
+                    if (['1', '2', '3', '8', '9'].includes(deviceId)) {
+                        try {
+                            fs.rmSync(path.join(WWEBJS_DIR, file), { recursive: true, force: true });
+                        } catch (e) {}
+                        continue;
+                    }
                     console.log(`[Auto-Restore] Found saved WWebJS session for Device ${deviceId}. Initializing...`);
                     await new Promise((r) => setTimeout(r, 1000));
                     initWwebjsSession(deviceId).catch((err) => {

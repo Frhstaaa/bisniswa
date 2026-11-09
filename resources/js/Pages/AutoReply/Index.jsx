@@ -47,6 +47,13 @@ export default function AutoReplyIndex({
     aiConfig = {},
     stats = {},
 }) {
+    const safeAutoReplies = Array.isArray(autoReplies)
+        ? autoReplies
+        : (Array.isArray(autoReplies?.data) ? autoReplies.data : Object.values(autoReplies || {}));
+    const safeDevices = Array.isArray(devices)
+        ? devices
+        : (Array.isArray(devices?.data) ? devices.data : Object.values(devices || {}));
+
     // Master switch state
     const [isMasterOn, setIsMasterOn] = useState(Boolean(masterEnabled));
     const [isTogglingMaster, setIsTogglingMaster] = useState(false);
@@ -294,7 +301,7 @@ export default function AutoReplyIndex({
     };
 
     // Filter rules by search, device & status
-    const filteredRules = autoReplies.filter((rule) => {
+    const filteredRules = safeAutoReplies.filter((rule) => {
         const matchesSearch = !ruleSearch ||
             (rule.name && rule.name.toLowerCase().includes(ruleSearch.toLowerCase())) ||
             (rule.keyword && rule.keyword.toLowerCase().includes(ruleSearch.toLowerCase())) ||
@@ -309,7 +316,7 @@ export default function AutoReplyIndex({
         return matchesSearch && matchesDevice && matchesStatus;
     });
 
-    const activeRulesCount = autoReplies.filter((r) => r.is_active).length;
+    const activeRulesCount = safeAutoReplies.filter((r) => r.is_active).length;
 
     return (
         <AppLayout title="Auto-Reply & AI Bot">
@@ -429,7 +436,7 @@ export default function AutoReplyIndex({
                             </span>
                         </div>
                         <div className="text-3xl font-extrabold tracking-tight text-slate-900 font-mono tabular-nums mt-1">
-                            {stats?.total_rules ?? autoReplies.length}
+                            {stats?.total_rules ?? safeAutoReplies.length}
                         </div>
                         <div className="text-xs text-slate-500 mt-1">
                             Aturan kata kunci respon otomatis terdaftar
@@ -457,7 +464,7 @@ export default function AutoReplyIndex({
                         <div className="text-3xl font-extrabold tracking-tight text-emerald-600 font-mono tabular-nums mt-1">
                             {activeRulesCount}{' '}
                             <span className="text-sm font-medium text-slate-400 font-sans">
-                                / {autoReplies.length}
+                                / {safeAutoReplies.length}
                             </span>
                         </div>
                         <div className="text-xs text-slate-500 mt-1">
@@ -487,7 +494,7 @@ export default function AutoReplyIndex({
                             </span>
                         </div>
                         <div className="text-3xl font-extrabold tracking-tight text-slate-900 font-mono tabular-nums mt-1">
-                            {(stats?.total_hits ?? autoReplies.reduce((acc, r) => acc + (r.hit_count || 0), 0)).toLocaleString('id-ID')}{' '}
+                            {(stats?.total_hits ?? safeAutoReplies.reduce((acc, r) => acc + (r.hit_count || 0), 0)).toLocaleString('id-ID')}{' '}
                             <span className="text-base font-medium text-slate-400 font-sans">Kali</span>
                         </div>
                         <div className="text-xs text-slate-500 mt-1">
@@ -518,7 +525,7 @@ export default function AutoReplyIndex({
                                 <Bot className="w-3.5 h-3.5 text-emerald-600" />
                                 <span>Aturan Kata Kunci</span>
                                 <span className="text-[10px] px-1.5 py-0.2 rounded-full font-mono bg-emerald-50 text-emerald-700 font-bold border border-emerald-200">
-                                    {autoReplies.length}
+                                    {safeAutoReplies.length}
                                 </span>
                             </button>
 
@@ -606,7 +613,7 @@ export default function AutoReplyIndex({
                                         >
                                             <option value="">Semua Filter Nomor</option>
                                             <option value="global">Khusus Semua Nomor (Global)</option>
-                                            {devices.map((device) => (
+                                            {safeDevices.map((device) => (
                                                 <option key={device.id} value={device.id}>
                                                     {device.name}
                                                 </option>
@@ -615,7 +622,7 @@ export default function AutoReplyIndex({
                                     </div>
 
                                     <div className="text-[11px] text-slate-500 font-medium self-end md:self-auto shrink-0">
-                                        Menampilkan <strong className="font-mono text-slate-900">{filteredRules.length}</strong> dari {autoReplies.length} aturan
+                                        Menampilkan <strong className="font-mono text-slate-900">{filteredRules.length}</strong> dari {safeAutoReplies.length} aturan
                                     </div>
                                 </div>
 
@@ -878,7 +885,7 @@ export default function AutoReplyIndex({
                                                 className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-xs focus:border-emerald-600 focus:outline-none text-slate-700 shadow-2xs"
                                             >
                                                 <option value="">Semua Nomor WA Terhubung (Global)</option>
-                                                {devices.map((device) => (
+                                                {safeDevices.map((device) => (
                                                     <option key={device.id} value={device.id}>
                                                         {device.name} ({device.phone_number || 'Belum ada nomor'})
                                                     </option>
@@ -1194,7 +1201,7 @@ export default function AutoReplyIndex({
                                         className="flex-1 bg-slate-900 border border-slate-700/80 text-slate-200 text-[11px] rounded-lg px-2 py-1 focus:outline-none focus:border-emerald-500 font-sans"
                                     >
                                         <option value="">Semua Nomor WA (Global)</option>
-                                        {devices.map((device) => (
+                                        {safeDevices.map((device) => (
                                             <option key={device.id} value={device.id}>
                                                 {device.name} ({device.phone_number || 'Tanpa nomor'})
                                             </option>
@@ -1520,7 +1527,7 @@ export default function AutoReplyIndex({
                                         className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:border-emerald-600 focus:outline-none"
                                     >
                                         <option value="">Semua Server & Nomor Terhubung</option>
-                                        {devices.map((device) => (
+                                        {safeDevices.map((device) => (
                                             <option key={device.id} value={device.id}>
                                                 {device.name} ({device.phone_number || 'Belum ada nomor'})
                                             </option>
@@ -1748,7 +1755,7 @@ export default function AutoReplyIndex({
                                         className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:border-emerald-600 focus:outline-none"
                                     >
                                         <option value="">Semua Server & Nomor Terhubung</option>
-                                        {devices.map((device) => (
+                                        {safeDevices.map((device) => (
                                             <option key={device.id} value={device.id}>
                                                 {device.name} ({device.phone_number || 'Belum ada nomor'})
                                             </option>

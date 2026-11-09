@@ -37,8 +37,25 @@ import {
     TableCell,
 } from '../../Components/ui/table';
 
-export default function AdminDashboard({ metrics, engineHealth, recentPayments, recentClients }) {
+export default function AdminDashboard({
+    metrics = {},
+    engineHealth = {},
+    recentPayments = [],
+    recentClients = [],
+}) {
     const [timeframe, setTimeframe] = useState('weekly');
+
+    const paymentsList = Array.isArray(recentPayments)
+        ? recentPayments
+        : (Array.isArray(recentPayments?.data)
+            ? recentPayments.data
+            : Object.values(recentPayments || {}));
+
+    const clientsList = Array.isArray(recentClients)
+        ? recentClients
+        : (Array.isArray(recentClients?.data)
+            ? recentClients.data
+            : Object.values(recentClients || {}));
 
     const formatRupiah = (val) => {
         return new Intl.NumberFormat('id-ID', {
@@ -89,7 +106,7 @@ export default function AdminDashboard({ metrics, engineHealth, recentPayments, 
                     </div>
 
                     <div className="flex items-center gap-2.5 flex-wrap sm:flex-nowrap shrink-0">
-                        <Link href="/admin/payments">
+                        <Link href="/admin/payments" prefetch>
                             <Button
                                 variant="default"
                                 size="sm"
@@ -99,7 +116,7 @@ export default function AdminDashboard({ metrics, engineHealth, recentPayments, 
                                 <span>Verifikasi Invoice ({metrics.pending_payments_count})</span>
                             </Button>
                         </Link>
-                        <Link href="/admin/settings">
+                        <Link href="/admin/settings" prefetch>
                             <Button
                                 variant="outline"
                                 size="sm"
@@ -336,7 +353,7 @@ export default function AdminDashboard({ metrics, engineHealth, recentPayments, 
                                         Daftar invoice langganan yang perlu diverifikasi atau telah lunas
                                     </CardDescription>
                                 </div>
-                                <Link href="/admin/payments">
+                                <Link href="/admin/payments" prefetch>
                                     <Button variant="ghost" size="sm" className="text-xs text-[#1e50ff] hover:text-[#153ec7] hover:bg-blue-50 font-bold cursor-pointer rounded-lg">
                                         <span>Kelola Seluruh Tagihan</span>
                                         <ArrowRight className="size-3.5 ml-1" />
@@ -355,14 +372,14 @@ export default function AdminDashboard({ metrics, engineHealth, recentPayments, 
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
-                                        {recentPayments.length === 0 ? (
+                                        {paymentsList.length === 0 ? (
                                             <TableRow>
                                                 <TableCell colSpan={5} className="text-center py-8 text-xs text-slate-400">
                                                     Belum ada invoice pembayaran masuk.
                                                 </TableCell>
                                             </TableRow>
                                         ) : (
-                                            recentPayments.map((p) => (
+                                            paymentsList.map((p) => (
                                                 <TableRow key={p.id} className="hover:bg-slate-50/80 transition-colors">
                                                     <TableCell className="py-3">
                                                         <div className="font-bold text-xs text-slate-900 font-mono">
@@ -410,7 +427,7 @@ export default function AdminDashboard({ metrics, engineHealth, recentPayments, 
                                                                 Verifikasi
                                                             </Button>
                                                         ) : (
-                                                            <Link href="/admin/payments">
+                                                            <Link href="/admin/payments" prefetch>
                                                                 <Button variant="outline" size="sm" className="h-7 text-xs px-2.5 rounded-lg border-slate-200 hover:bg-slate-50 cursor-pointer font-semibold">
                                                                     Detail
                                                                 </Button>
@@ -472,15 +489,20 @@ export default function AdminDashboard({ metrics, engineHealth, recentPayments, 
                                         Workspace tenant terbaru
                                     </CardDescription>
                                 </div>
-                                <Link href="/admin/clients">
+                                <Link href="/admin/clients" prefetch>
                                     <Button variant="ghost" size="sm" className="text-xs text-[#1e50ff] hover:text-[#153ec7] hover:bg-blue-50 font-bold cursor-pointer rounded-lg">
                                         <span>Lihat Semua</span>
                                     </Button>
                                 </Link>
                             </CardHeader>
                             <CardContent className="space-y-3 p-5 text-xs">
-                                {recentClients.map((client) => (
-                                    <div key={client.id} className="flex items-center justify-between p-3 rounded-xl border border-slate-200/80 bg-white hover:bg-slate-50 transition-colors">
+                                {clientsList.length === 0 ? (
+                                    <div className="text-center py-6 text-xs text-slate-400">
+                                        Belum ada klien terdaftar.
+                                    </div>
+                                ) : (
+                                    clientsList.map((client) => (
+                                        <div key={client.id} className="flex items-center justify-between p-3 rounded-xl border border-slate-200/80 bg-white hover:bg-slate-50 transition-colors">
                                         <div className="flex items-center gap-2.5 overflow-hidden">
                                             <div className="size-8 rounded-lg bg-blue-50 text-[#1e50ff] border border-blue-200/60 flex items-center justify-center font-bold text-xs shrink-0">
                                                 {client.name.slice(0, 2).toUpperCase()}
@@ -495,13 +517,13 @@ export default function AdminDashboard({ metrics, engineHealth, recentPayments, 
                                             </div>
                                         </div>
 
-                                        <Link href={`/admin/clients/${client.id}`}>
+                                        <Link href={`/admin/clients/${client.id}`} prefetch>
                                             <Button variant="outline" size="sm" className="h-7 text-xs px-2.5 rounded-lg border-slate-200 hover:bg-slate-50 cursor-pointer font-semibold">
                                                 Detail
                                             </Button>
                                         </Link>
                                     </div>
-                                ))}
+                                )))}
                             </CardContent>
                         </Card>
                     </div>

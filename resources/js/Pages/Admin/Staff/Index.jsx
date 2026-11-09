@@ -31,7 +31,9 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../..
 import { Badge } from '../../../Components/ui/badge';
 import { Button } from '../../../Components/ui/button';
 
-export default function AdminStaffIndex({ staff, metrics, filters, availableRoles, isSuperAdmin }) {
+export default function AdminStaffIndex({ staff, metrics = {}, filters = {}, availableRoles = [], isSuperAdmin }) {
+    const staffList = Array.isArray(staff) ? staff : (Array.isArray(staff?.data) ? staff.data : Object.values(staff || {}));
+    const rolesList = Array.isArray(availableRoles) ? availableRoles : Object.values(availableRoles || {});
     const [search, setSearch] = useState(filters?.search || '');
     const [roleFilter, setRoleFilter] = useState(filters?.role || 'all');
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -64,7 +66,7 @@ export default function AdminStaffIndex({ staff, metrics, filters, availableRole
             name: '',
             email: '',
             phone: '',
-            role: availableRoles.length > 0 ? availableRoles[0].value : 'marketing',
+            role: rolesList.length > 0 ? rolesList[0].value : 'marketing',
             password: '',
             password_confirmation: '',
         });
@@ -360,8 +362,15 @@ export default function AdminStaffIndex({ staff, metrics, filters, availableRole
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100">
-                                {staff.map((user) => {
-                                    const roleDetails = getRoleDetails(user.role);
+                                {staffList.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={6} className="text-center py-10 text-xs text-slate-400">
+                                            Tidak ada data staff yang ditemukan.
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    staffList.map((user) => {
+                                        const roleDetails = getRoleDetails(user.role);
                                     const RoleIcon = roleDetails.icon;
                                     const isRootSuperAdmin = user.role === 'superadmin' || user.id === 1;
 
@@ -494,7 +503,7 @@ export default function AdminStaffIndex({ staff, metrics, filters, availableRole
                                             </td>
                                         </tr>
                                     );
-                                })}
+                                }))}
                             </tbody>
                         </table>
                     </div>
@@ -551,7 +560,7 @@ export default function AdminStaffIndex({ staff, metrics, filters, availableRole
                                             required
                                             value={form.email}
                                             onChange={(e) => setForm({ ...form, email: e.target.value })}
-                                            placeholder="staff@kirimwa.pro"
+                                            placeholder="staff@mardira.ac.id"
                                             className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500"
                                         />
                                     </div>
@@ -574,7 +583,7 @@ export default function AdminStaffIndex({ staff, metrics, filters, availableRole
                                         Pilih Peran Operasional (Role RBAC) *
                                     </label>
                                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                                        {availableRoles.map((r) => {
+                                        {rolesList.map((r) => {
                                             const isSelected = form.role === r.value;
                                             return (
                                                 <div
@@ -753,7 +762,7 @@ export default function AdminStaffIndex({ staff, metrics, filters, availableRole
                                             Peran Operasional (Role RBAC) *
                                         </label>
                                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                                            {availableRoles.map((r) => {
+                                            {rolesList.map((r) => {
                                                 const isSelected = form.role === r.value;
                                                 return (
                                                     <div

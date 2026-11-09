@@ -30,7 +30,7 @@ class AuthAndPublicTest extends TestCase
             'name' => 'Enterprise Pro',
             'slug' => 'enterprise-pro',
             'price_monthly' => 299000,
-            'price_annually' => 2890000,
+            'price_annually' => 2990000,
             'limits' => [
                 'max_devices' => 5,
                 'monthly_message_quota' => 50000,

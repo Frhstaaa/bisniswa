@@ -26,7 +26,8 @@ import {
     TableCell,
 } from '../../../Components/ui/table';
 
-export default function GatewaysIndex({ devices, stats }) {
+export default function GatewaysIndex({ devices = {}, stats = {} }) {
+    const devicesList = Array.isArray(devices?.data) ? devices.data : (Array.isArray(devices) ? devices : Object.values(devices?.data || devices || {}));
     const handleRestartEngine = (engineName) => {
         if (confirm(`Apakah Anda yakin ingin me-restart worker cluster [${engineName}]?`)) {
             router.post('/admin/gateways/restart', { engine: engineName });
@@ -141,14 +142,14 @@ export default function GatewaysIndex({ devices, stats }) {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {devices.data.length === 0 ? (
+                                {devicesList.length === 0 ? (
                                     <TableRow>
                                         <TableCell colSpan={6} className="text-center py-8 text-xs text-slate-400">
                                             Belum ada perangkat yang terdaftar di sistem.
                                         </TableCell>
                                     </TableRow>
                                 ) : (
-                                    devices.data.map((device) => {
+                                    devicesList.map((device) => {
                                         const serverLabel = 'UltraSync Engine';
 
                                         return (

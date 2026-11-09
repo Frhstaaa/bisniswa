@@ -27,15 +27,18 @@ import {
     TableCell,
 } from '../../../Components/ui/table';
 
-export default function PaymentsIndex({ payments, filters, stats, workspaces, plans }) {
-    const [searchTerm, setSearchTerm] = useState(filters.search || '');
+export default function PaymentsIndex({ payments = {}, filters = {}, stats = {}, workspaces = [], plans = [] }) {
+    const paymentsList = Array.isArray(payments?.data) ? payments.data : (Array.isArray(payments) ? payments : Object.values(payments?.data || payments || {}));
+    const workspacesList = Array.isArray(workspaces) ? workspaces : (Array.isArray(workspaces?.data) ? workspaces.data : Object.values(workspaces || {}));
+    const plansList = Array.isArray(plans) ? plans : (Array.isArray(plans?.data) ? plans.data : Object.values(plans || {}));
+    const [searchTerm, setSearchTerm] = useState(filters?.search || '');
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
     const { data, setData, post, processing, reset, errors } = useForm({
-        workspace_id: workspaces[0]?.id || '',
-        plan_id: plans[0]?.id || '',
+        workspace_id: workspacesList[0]?.id || '',
+        plan_id: plansList[0]?.id || '',
         billing_cycle: 'monthly',
-        amount: plans[0]?.price_monthly || 99000,
+        amount: plansList[0]?.price_monthly || 99000,
         payment_method: 'bank_transfer',
         status: 'paid',
         notes: 'Konfirmasi pembayaran transfer bank manual oleh Super Admin',
@@ -246,14 +249,14 @@ export default function PaymentsIndex({ payments, filters, stats, workspaces, pl
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {payments.data.length === 0 ? (
+                                {paymentsList.length === 0 ? (
                                     <TableRow>
                                         <TableCell colSpan={7} className="text-center py-10 text-xs text-slate-400">
                                             Tidak ada riwayat pembayaran yang ditemukan.
                                         </TableCell>
                                     </TableRow>
                                 ) : (
-                                    payments.data.map((p) => (
+                                    paymentsList.map((p) => (
                                         <TableRow key={p.id} className="hover:bg-slate-50/80 transition-colors">
                                             {/* Invoice & Date */}
                                             <TableCell className="py-3.5">
@@ -367,7 +370,7 @@ export default function PaymentsIndex({ payments, filters, stats, workspaces, pl
                                         className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600"
                                         required
                                     >
-                                        {workspaces.map((w) => (
+                                        {workspacesList.map((w) => (
                                             <option key={w.id} value={w.id}>{w.name}</option>
                                         ))}
                                     </select>
@@ -379,7 +382,7 @@ export default function PaymentsIndex({ payments, filters, stats, workspaces, pl
                                         <select
                                             value={data.plan_id}
                                             onChange={(e) => {
-                                                const selected = plans.find((p) => p.id === parseInt(e.target.value));
+                                                const selected = plansList.find((p) => p.id === parseInt(e.target.value));
                                                 const amt = data.billing_cycle === 'annually'
                                                     ? (selected?.price_annually || 990000)
                                                     : (selected?.price_monthly || 99000);
@@ -392,7 +395,7 @@ export default function PaymentsIndex({ payments, filters, stats, workspaces, pl
                                             className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600 text-xs"
                                             required
                                         >
-                                            {plans.map((p) => (
+                                            {plansList.map((p) => (
                                                 <option key={p.id} value={p.id}>{p.name}</option>
                                             ))}
                                         </select>

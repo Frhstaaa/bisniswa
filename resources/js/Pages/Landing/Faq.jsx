@@ -134,8 +134,29 @@ export default function Faq({ plans = [], stats = {} }) {
         setOpenIndex(openIndex === index ? null : index);
     };
 
+    const faqSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: faqList.map((item) => ({
+            '@type': 'Question',
+            name: item.q,
+            acceptedAnswer: {
+                '@type': 'Answer',
+                text: item.a,
+            },
+        })),
+    };
+
     return (
-        <PublicLayout title="FAQ & Pusat Bantuan" plans={safePlans} activeMenu="faq">
+        <PublicLayout
+            title="Tanya Jawab & Bantuan Teknis WhatsApp Gateway"
+            description="Pusat bantuan & FAQ resmi MARDIRA WA seputar cara aktivasi, keamanan anti-banned, integrasi REST API, multi-perangkat, dan tagihan langganan."
+            keywords="faq whatsapp gateway, bantuan wa gateway, panduan whatsapp api, tanya jawab wa gateway, mardira wa"
+            canonicalUrl="https://mardirawa.frahesta.com/faq"
+            schema={faqSchema}
+            plans={safePlans}
+            activeMenu="faq"
+        >
             <div className="space-y-16 lg:space-y-20">
                 {/* ================= HERO HEADER ================= */}
                 <section className="relative overflow-hidden bg-white bg-grid-pattern text-slate-900 pt-32 sm:pt-40 pb-20 sm:pb-28 px-4 sm:px-6 lg:px-10 border-b border-slate-100">

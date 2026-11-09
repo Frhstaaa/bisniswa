@@ -38,3 +38,16 @@ Thumbs.db
 **/caddy
 frankenphp
 frankenphp-worker.php
+
+# CyberPanel & Production Archives
+*.zip
+.env.*
+!.env.example
+!.env.production.example
+/public/uploads
+/public/db-fix.php
+/public/seed-admin.php
+
+# Local external assessment files
+Formulir_Security_Assessment*
+eviden_security_bpjs/

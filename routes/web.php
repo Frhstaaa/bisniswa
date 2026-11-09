@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 
 // Public Landing Page & Dedicated Feature Pages
 Route::get('/', [LandingController::class, 'index'])->name('home');
+Route::get('/sitemap.xml', [LandingController::class, 'sitemap'])->name('sitemap');
 Route::get('/cara-pakai', [LandingController::class, 'howItWorks'])->name('landing.cara-pakai');
 Route::get('/dual-engine', [LandingController::class, 'dualEngine'])->name('landing.dual-engine');
 Route::get('/rest-api', [LandingController::class, 'restApi'])->name('landing.rest-api');
@@ -52,6 +53,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/devices', [DeviceController::class, 'index'])->name('devices.index');
     Route::post('/devices', [DeviceController::class, 'store'])->name('devices.store');
     Route::get('/devices/{id}/status', [DeviceController::class, 'status'])->name('devices.status');
+    Route::post('/devices/{id}/rescan', [DeviceController::class, 'rescanQr'])->name('devices.rescan');
     Route::put('/devices/{id}', [DeviceController::class, 'update'])->name('devices.update');
     Route::post('/devices/{id}/connect', [DeviceController::class, 'simulateConnect'])->name('devices.connect');
     Route::delete('/devices/{id}', [DeviceController::class, 'destroy'])->name('devices.destroy');

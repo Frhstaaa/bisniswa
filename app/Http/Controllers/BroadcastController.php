@@ -88,6 +88,7 @@ class BroadcastController extends Controller
             ],
             'recipients_raw' => 'nullable|string',
             'media_url' => ['nullable', 'url', 'max:500', new SafePublicUrlRule],
+            'media_file' => 'nullable|file|mimes:jpeg,png,jpg,webp,gif,pdf,doc,docx,xls,xlsx|max:25600',
             'min_delay' => 'required|integer|min:3|max:60',
             'max_delay' => 'required|integer|gte:min_delay|max:120',
             'schedule_option' => 'required|in:now,scheduled',
@@ -138,6 +139,37 @@ class BroadcastController extends Controller
             return redirect()->back()->withErrors(['recipients_raw' => "Sisa kuota pesan ({$subscription->remaining_message_quota}) tidak mencukupi untuk broadcast ({$totalRecipients} nomor)."]);
         }
 
+        // Handle Unggah Media (Foto / Dokumen PDF) atau URL Eksternal
+        $mediaUrl = $validated['media_url'] ?? null;
+        $mediaFilename = null;
+
+        if ($request->hasFile('media_file')) {
+            $file = $request->file('media_file');
+            $mediaFilename = $file->getClientOriginalName();
+            $extension = strtolower($file->getClientOriginalExtension() ?: 'bin');
+            $safeName = Str::slug(pathinfo($mediaFilename, PATHINFO_FILENAME)).'-'.Str::random(8).'.'.$extension;
+
+            $uploadDir = public_path('uploads/broadcasts');
+            if (! file_exists($uploadDir)) {
+                @mkdir($uploadDir, 0755, true);
+            }
+
+            $file->move($uploadDir, $safeName);
+
+            $root = rtrim($request->root() ?: config('app.url', 'https://mardirawa.frahesta.com'), '/');
+            $mediaUrl = $root.'/uploads/broadcasts/'.$safeName;
+        } elseif (! empty($mediaUrl)) {
+            $mediaFilename = basename(parse_url($mediaUrl, PHP_URL_PATH) ?? 'lampiran');
+        }
+
+        $isDoc = ! empty($mediaUrl) && (
+            str_ends_with(strtolower($mediaUrl), '.pdf') ||
+            str_ends_with(strtolower($mediaUrl), '.doc') ||
+            str_ends_with(strtolower($mediaUrl), '.docx') ||
+            str_ends_with(strtolower($mediaUrl), '.xls') ||
+            str_ends_with(strtolower($mediaUrl), '.xlsx')
+        );
+
         $isScheduled = ($validated['schedule_option'] === 'scheduled' && ! empty($validated['scheduled_at']));
         $scheduleTime = $isScheduled ? Carbon::parse($validated['scheduled_at']) : Carbon::now();
 
@@ -146,16 +178,20 @@ class BroadcastController extends Controller
             'device_id' => $validated['device_id'],
             'name' => $validated['name'],
             'message' => $validated['message'],
-            'media_url' => $validated['media_url'] ?? null,
+            'media_url' => $mediaUrl,
             'total_recipients' => $totalRecipients,
-            'sent_count' => $isScheduled ? 0 : $totalRecipients,
+            'sent_count' => 0,
             'failed_count' => 0,
             'min_delay_seconds' => $validated['min_delay'],
             'max_delay_seconds' => $validated['max_delay'],
-            'status' => $isScheduled ? 'scheduled' : 'completed',
+            'status' => $isScheduled ? 'scheduled' : 'processing',
             'scheduled_at' => $scheduleTime,
-            'completed_at' => $isScheduled ? null : Carbon::now(),
+            'completed_at' => null,
         ]);
+
+        $sentCount = 0;
+        $failedCount = 0;
+        $lastError = null;
 
         // Create individual queued/delivered messages with spintax randomized
         foreach ($recipients as $recipient) {
@@ -169,10 +205,24 @@ class BroadcastController extends Controller
 
             $device = Device::where('workspace_id', $workspace->id)->find($validated['device_id']);
             $dispatchStatus = $isScheduled ? 'queued' : 'delivered';
+            $errorMessage = null;
 
             if (! $isScheduled && $device) {
-                $dispatch = $this->gatewayService->sendMessage($device, $recipient['phone'], $personalized, $validated['media_url'] ?? null);
+                $dispatch = $this->gatewayService->sendMessage(
+                    $device,
+                    $recipient['phone'],
+                    $personalized,
+                    $mediaUrl,
+                    ['media_filename' => $mediaFilename]
+                );
                 $dispatchStatus = $dispatch['status'] ?? 'delivered';
+                if ($dispatchStatus === 'failed') {
+                    $failedCount++;
+                    $errorMessage = $dispatch['error'] ?? 'Pengiriman gagal dari server WhatsApp.';
+                    $lastError = $errorMessage;
+                } else {
+                    $sentCount++;
+                }
             }
 
             Message::create([
@@ -181,24 +231,50 @@ class BroadcastController extends Controller
                 'campaign_id' => $campaign->id,
                 'direction' => 'outbound',
                 'receiver_number' => $recipient['phone'],
-                'message_type' => ! empty($validated['media_url']) ? 'media' : 'text',
+                'message_type' => ! empty($mediaUrl) ? ($isDoc ? 'document' : 'media') : 'text',
                 'content' => $personalized,
-                'media_url' => $validated['media_url'] ?? null,
+                'media_url' => $mediaUrl,
                 'status' => $dispatchStatus,
+                'error_message' => $errorMessage,
                 'scheduled_at' => $isScheduled ? $scheduleTime : null,
-                'sent_at' => $isScheduled ? null : Carbon::now(),
+                'sent_at' => ($isScheduled || $dispatchStatus === 'failed') ? null : Carbon::now(),
             ]);
         }
 
-        if (! $isScheduled && $subscription) {
-            $subscription->decrement('remaining_message_quota', $totalRecipients);
+        if ($isScheduled) {
+            $campaign->update([
+                'status' => 'scheduled',
+                'sent_count' => 0,
+                'failed_count' => 0,
+            ]);
+
+            return redirect()->back()->with('success', "Kampanye broadcast '{$campaign->name}' dijadwalkan untuk dikirim pada {$scheduleTime->format('d M Y, H:i')} WIB.");
         }
 
-        $statusText = $isScheduled
-            ? 'dijadwalkan untuk dikirim pada '.$scheduleTime->format('d M Y, H:i').' WIB'
-            : "berhasil diproses dan dikirim ke {$totalRecipients} nomor";
+        $campaignStatus = ($failedCount === $totalRecipients)
+            ? 'failed'
+            : (($failedCount > 0) ? 'partially_delivered' : 'completed');
 
-        return redirect()->back()->with('success', "Kampanye broadcast '{$campaign->name}' {$statusText}.");
+        $campaign->update([
+            'status' => $campaignStatus,
+            'sent_count' => $sentCount,
+            'failed_count' => $failedCount,
+            'completed_at' => Carbon::now(),
+        ]);
+
+        if ($subscription && $sentCount > 0) {
+            $subscription->decrement('remaining_message_quota', $sentCount);
+        }
+
+        if ($failedCount === $totalRecipients) {
+            return redirect()->back()->with('error', "Pesan broadcast tidak terkirim ({$failedCount} gagal). Alasan: {$lastError}. Pastikan perangkat WhatsApp telah dipindai QR dan service Gateway (Port 3001) aktif.");
+        }
+
+        if ($failedCount > 0) {
+            return redirect()->back()->with('warning', "Kampanye broadcast selesai sebagian: {$sentCount} terkirim, {$failedCount} gagal. Kendala: {$lastError}");
+        }
+
+        return redirect()->back()->with('success', "Kampanye broadcast '{$campaign->name}' berhasil diproses dan dikirim ke {$sentCount} nomor.");
     }
 
     public function togglePause(Request $request, int $id): RedirectResponse

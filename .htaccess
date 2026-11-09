@@ -1,0 +1,10 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Keamanan: Blokir akses langsung ke file sensitif
+    RewriteRule ^(\.env|\.git|composer\.|package\.|storage\/|bootstrap\/) - [F,L,NC]
+
+    # Arahkan seluruh request ke folder public
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>

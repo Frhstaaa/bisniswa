@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\AutoReply;
+use App\Models\Campaign;
 use App\Models\Contact;
 use App\Models\ContactGroup;
 use App\Models\Device;
@@ -14,6 +15,8 @@ use App\Models\SystemSetting;
 use App\Models\User;
 use App\Models\Workspace;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -52,7 +55,7 @@ class EnterpriseFeaturesTest extends TestCase
             'name' => 'Enterprise Pro',
             'slug' => 'enterprise-pro',
             'price_monthly' => 299000,
-            'price_annually' => 2890000,
+            'price_annually' => 2990000,
             'limits' => [
                 'max_devices' => 5,
                 'monthly_message_quota' => 50000,
@@ -412,5 +415,85 @@ class EnterpriseFeaturesTest extends TestCase
 
         $res = $this->get("/subscriptions/invoice/{$payment->invoice_number}");
         $res->assertStatus(200);
+    }
+
+    public function test_broadcast_with_direct_pdf_upload(): void
+    {
+        $this->actingAs($this->user);
+        Http::fake([
+            '*/messages/send' => Http::response(['success' => true, 'status' => 'delivered', 'message_id' => 'MSG_TEST_PDF'], 200),
+        ]);
+
+        $pdf = UploadedFile::fake()->create('jadwal-kuliah.pdf', 500, 'application/pdf');
+
+        $response = $this->from('/broadcast')->post('/broadcast', [
+            'name' => 'Broadcast Brosur PDF',
+            'device_id' => $this->device->id,
+            'message' => 'Halo Kak {{nama}}, berikut dokumen pengumuman.',
+            'target_type' => 'manual',
+            'recipients_raw' => '+6281234567890',
+            'media_file' => $pdf,
+            'min_delay' => 8,
+            'max_delay' => 18,
+            'schedule_option' => 'now',
+        ]);
+
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect('/broadcast');
+
+        $campaign = Campaign::where('name', 'Broadcast Brosur PDF')->first();
+        $this->assertNotNull($campaign);
+        $this->assertStringContainsString('.pdf', $campaign->media_url);
+
+        $message = Message::where('campaign_id', $campaign->id)->first();
+        $this->assertNotNull($message);
+        $this->assertEquals('document', $message->message_type);
+        $this->assertStringContainsString('.pdf', $message->media_url);
+    }
+
+    public function test_broadcast_with_direct_image_upload(): void
+    {
+        $this->actingAs($this->user);
+        Http::fake([
+            '*/messages/send' => Http::response(['success' => true, 'status' => 'delivered', 'message_id' => 'MSG_TEST_IMG'], 200),
+        ]);
+
+        $image = UploadedFile::fake()->image('promo-banner.jpg', 600, 400);
+
+        $response = $this->from('/broadcast')->post('/broadcast', [
+            'name' => 'Broadcast Banner Promo',
+            'device_id' => $this->device->id,
+            'message' => 'Halo Kak {{nama}}, lihat promo menarik kami!',
+            'target_type' => 'manual',
+            'recipients_raw' => '+6281234567891',
+            'media_file' => $image,
+            'min_delay' => 8,
+            'max_delay' => 18,
+            'schedule_option' => 'now',
+        ]);
+
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect('/broadcast');
+
+        $campaign = Campaign::where('name', 'Broadcast Banner Promo')->first();
+        $this->assertNotNull($campaign);
+        $this->assertStringContainsString('.jpg', $campaign->media_url);
+
+        $message = Message::where('campaign_id', $campaign->id)->first();
+        $this->assertNotNull($message);
+        $this->assertEquals('media', $message->message_type);
+    }
+
+    public function test_device_rescan_qr_endpoint(): void
+    {
+        $this->actingAs($this->user);
+
+        $response = $this->from('/devices')->post("/devices/{$this->device->id}/rescan");
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect('/devices');
+
+        $this->device->refresh();
+        $this->assertEquals('qr_ready', $this->device->status);
+        $this->assertNotNull($this->device->qr_code);
     }
 }

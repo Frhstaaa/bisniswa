@@ -21,9 +21,15 @@ import { Badge } from '../../../Components/ui/badge';
 import { Button } from '../../../Components/ui/button';
 import { Separator } from '../../../Components/ui/separator';
 
-export default function ClientShow({ client }) {
-    const sub = client.subscription || {};
+export default function ClientShow({ client = {} }) {
+    const sub = client?.subscription || {};
     const plan = sub.plan || {};
+    const devicesList = Array.isArray(client?.devices)
+        ? client.devices
+        : (Array.isArray(client?.devices?.data) ? client.devices.data : Object.values(client?.devices || {}));
+    const usersList = Array.isArray(client?.users)
+        ? client.users
+        : (Array.isArray(client?.users?.data) ? client.users.data : Object.values(client?.users || {}));
 
     const handleToggleStatus = () => {
         const action = client.is_active ? 'menonaktifkan (suspend)' : 'mengaktifkan kembali';
@@ -40,7 +46,7 @@ export default function ClientShow({ client }) {
                 {/* 1. STANDARDIZED TOP HEADER */}
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-200/80">
                     <div className="flex items-center gap-3">
-                        <Link href="/admin/clients">
+                        <Link href="/admin/clients" prefetch>
                             <Button variant="outline" size="sm" className="h-9 w-9 p-0 rounded-lg border-slate-200 hover:bg-slate-50 cursor-pointer">
                                 <ArrowLeft className="w-4 h-4 text-slate-600" />
                             </Button>
@@ -116,7 +122,7 @@ export default function ClientShow({ client }) {
                                     Anggota / Staff Pengelola:
                                 </span>
                                 <div className="space-y-2">
-                                    {client.users?.map((u) => (
+                                    {usersList.map((u) => (
                                         <div key={u.id} className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/80">
                                             <div className="font-bold text-slate-900">{u.name}</div>
                                             <div className="text-[11px] text-slate-500">{u.email}</div>
@@ -181,7 +187,7 @@ export default function ClientShow({ client }) {
 
                             <Separator />
 
-                            <Link href="/admin/subscriptions">
+                            <Link href="/admin/subscriptions" prefetch>
                                 <Button variant="outline" size="sm" className="w-full text-xs font-semibold h-9 rounded-lg border-slate-200 hover:bg-slate-50 cursor-pointer">
                                     <Calendar className="w-3.5 h-3.5 mr-1.5 text-emerald-600" />
                                     <span>Sesuaikan Durasi & Kuota di Modul Langganan</span>
@@ -199,10 +205,10 @@ export default function ClientShow({ client }) {
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-3 text-xs p-5">
-                            {(!client.devices || client.devices.length === 0) ? (
+                            {devicesList.length === 0 ? (
                                 <p className="text-slate-400 py-6 text-center">Belum ada perangkat WhatsApp yang ditautkan.</p>
                             ) : (
-                                client.devices.map((device) => {
+                                devicesList.map((device) => {
                                     const serverLabel = 'UltraSync Engine';
 
                                     return (

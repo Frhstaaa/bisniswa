@@ -76,12 +76,15 @@ class ApiController extends Controller
             ],
         ];
 
+        $baseUrl = rtrim($request->root() ?: config('app.url', 'https://mardirawa.frahesta.com'), '/').'/api/v1';
+
         return Inertia::render('Api/Index', [
             'workspace' => $workspace,
             'apiKeys' => $apiKeys,
             'webhooks' => $webhooks,
             'devices' => $devices,
             'apiLogs' => $apiLogs,
+            'baseUrl' => $baseUrl,
         ]);
     }
 
@@ -169,8 +172,10 @@ class ApiController extends Controller
         ]);
     }
 
-    public function downloadPostmanCollection(): StreamedResponse
+    public function downloadPostmanCollection(Request $request): StreamedResponse
     {
+        $baseUrl = rtrim($request->root() ?: config('app.url', 'https://mardirawa.frahesta.com'), '/');
+
         $collection = [
             'info' => [
                 'name' => 'MARDIRA WA Gateway & Broadcast Enterprise API',
@@ -191,7 +196,7 @@ class ApiController extends Controller
             'variable' => [
                 [
                     'key' => 'baseUrl',
-                    'value' => 'http://127.0.0.1:8001',
+                    'value' => $baseUrl,
                     'type' => 'string',
                 ],
                 [
@@ -282,10 +287,11 @@ class ApiController extends Controller
         ]);
     }
 
-    public function downloadDocs(): StreamedResponse
+    public function downloadDocs(Request $request): StreamedResponse
     {
         $filename = 'MARDIRA_WA_Dokumentasi_Bridging_API.md';
-        $content = $this->getBridgingDocsMarkdown();
+        $baseUrl = rtrim($request->root() ?: config('app.url', 'https://mardirawa.frahesta.com'), '/');
+        $content = $this->getBridgingDocsMarkdown($baseUrl);
 
         return response()->streamDownload(function () use ($content) {
             echo $content;
@@ -295,9 +301,9 @@ class ApiController extends Controller
         ]);
     }
 
-    protected function getBridgingDocsMarkdown(): string
+    protected function getBridgingDocsMarkdown(?string $baseUrl = null): string
     {
-        $baseUrl = config('app.url', 'http://127.0.0.1:8001');
+        $baseUrl = $baseUrl ?: rtrim(config('app.url', 'https://mardirawa.frahesta.com'), '/');
 
         return <<<MD
 # DOKUMENTASI RESMI BRIDGING WHATSAPP GATEWAY API

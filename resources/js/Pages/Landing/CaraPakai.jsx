@@ -138,8 +138,31 @@ export default function CaraPakai({ plans = [], stats = {} }) {
         },
     ];
 
+    const howToSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'HowTo',
+        name: 'Cara Menghubungkan & Menggunakan MARDIRA WA Gateway',
+        description: 'Panduan lengkap langkah demi langkah registrasi akun, scan QR WhatsApp, kirim pesan broadcast massal anti-ban, dan integrasi REST API.',
+        image: 'https://mardirawa.frahesta.com/images/logo.png',
+        totalTime: 'PT5M',
+        step: steps.map((s, idx) => ({
+            '@type': 'HowToStep',
+            position: idx + 1,
+            name: s.title,
+            text: s.description,
+        })),
+    };
+
     return (
-        <PublicLayout title="Cara Pakai & Alur Integrasi" plans={safePlans} activeMenu="cara-pakai">
+        <PublicLayout
+            title="Panduan Lengkap Cara Pakai WhatsApp Gateway & Broadcast API"
+            description="Panduan step-by-step menghubungkan nomor WhatsApp, import kontak CSV, kirim broadcast massal dengan proteksi anti-ban, dan integrasi API dalam hitungan menit."
+            keywords="cara pakai whatsapp gateway, tutorial wa gateway, hubungkan whatsapp api, broadcast whatsapp massal, panduan mardira wa"
+            canonicalUrl="https://mardirawa.frahesta.com/cara-pakai"
+            schema={howToSchema}
+            plans={safePlans}
+            activeMenu="cara-pakai"
+        >
             <div className="space-y-16 lg:space-y-24">
                 {/* ================= HERO HEADER ================= */}
                 <section className="relative overflow-hidden bg-white bg-grid-pattern text-slate-900 pt-32 sm:pt-40 pb-20 sm:pb-28 px-4 sm:px-6 lg:px-10 border-b border-slate-100">

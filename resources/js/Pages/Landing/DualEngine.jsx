@@ -156,8 +156,36 @@ export default function DualEngine({ plans = [], stats = {} }) {
         },
     ];
 
+    const techSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'TechArticle',
+        headline: 'Arsitektur BisnisWA UltraSync Engine & Proteksi Anti-Banned WhatsApp',
+        description: 'Detail arsitektur backend Laravel Octane FrankenPHP dan engine WhatsApp Web JS terisolasi untuk transmisi pesan broadcast instan tanpa delay dan proteksi anti-ban.',
+        image: 'https://mardirawa.frahesta.com/images/logo.png',
+        author: {
+            '@type': 'Organization',
+            name: 'MARDIRA WA',
+        },
+        publisher: {
+            '@type': 'Organization',
+            name: 'MARDIRA WA',
+            logo: {
+                '@type': 'ImageObject',
+                url: 'https://mardirawa.frahesta.com/images/logo.png',
+            },
+        },
+    };
+
     return (
-        <PublicLayout title="Teknologi BisnisWA UltraSync Engine & FrankenPHP" plans={safePlans} activeMenu="dual-engine">
+        <PublicLayout
+            title="Arsitektur BisnisWA UltraSync Engine & Proteksi Anti-Ban"
+            description="Pelajari arsitektur BisnisWA UltraSync Engine dan 4 lapis keamanan anti-banned WhatsApp resmi MARDIRA WA dengan latensi pengiriman 42ms."
+            keywords="teknologi whatsapp gateway, anti ban whatsapp, ultrasync engine, frankenphp laravel, gateway wa cepat, mardira wa"
+            canonicalUrl="https://mardirawa.frahesta.com/dual-engine"
+            schema={techSchema}
+            plans={safePlans}
+            activeMenu="dual-engine"
+        >
             <div className="space-y-16 lg:space-y-24">
                 {/* ================= HERO HEADER ================= */}
                 <section className="relative overflow-hidden bg-white bg-grid-pattern text-slate-900 pt-32 sm:pt-40 pb-20 sm:pb-28 px-4 sm:px-6 lg:px-10 border-b border-slate-100">

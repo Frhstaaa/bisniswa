@@ -29,7 +29,8 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../..
 import { Badge } from '../../../Components/ui/badge';
 import { Button } from '../../../Components/ui/button';
 
-export default function AdminPlansIndex({ plans, metrics, filters }) {
+export default function AdminPlansIndex({ plans, metrics = {}, filters = {} }) {
+    const plansList = Array.isArray(plans) ? plans : (Array.isArray(plans?.data) ? plans.data : Object.values(plans || {}));
     const [search, setSearch] = useState(filters?.search || '');
     const [statusFilter, setStatusFilter] = useState(filters?.status || 'all');
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -284,7 +285,7 @@ export default function AdminPlansIndex({ plans, metrics, filters }) {
 
                 {/* 4. PLANS LIST TABLE / CARDS */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                    {plans.map((plan) => {
+                    {plansList.map((plan) => {
                         const limits = plan.limits || {};
                         const features = plan.features || {};
 
@@ -443,7 +444,7 @@ export default function AdminPlansIndex({ plans, metrics, filters }) {
                     })}
                 </div>
 
-                {plans.length === 0 && (
+                {plansList.length === 0 && (
                     <Card className="border-dashed border-slate-300 p-12 text-center">
                         <Package className="w-10 h-10 text-slate-300 mx-auto mb-2" />
                         <h3 className="font-bold text-slate-700 text-sm">Tidak ada paket yang ditemukan</h3>

@@ -39,6 +39,16 @@ class SecurityHeadersMiddleware
             ], 400);
         }
 
+        // Handle CORS Preflight for Client API Bridging
+        if ($request->is('api/*') && $request->isMethod('OPTIONS')) {
+            return response('', 200, [
+                'Access-Control-Allow-Origin' => '*',
+                'Access-Control-Allow-Methods' => 'GET, POST, PUT, DELETE, OPTIONS',
+                'Access-Control-Allow-Headers' => 'Authorization, Content-Type, Accept, X-Requested-With, Origin, X-Internal-Secret',
+                'Access-Control-Max-Age' => '86400',
+            ]);
+        }
+
         /** @var Response $response */
         $response = $next($request);
 
@@ -63,9 +73,16 @@ class SecurityHeadersMiddleware
             'camera=(), microphone=(), geolocation=(), payment=(), usb=()'
         );
 
-        // Cross-Origin Isolation
-        $response->headers->set('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
-        $response->headers->set('Cross-Origin-Resource-Policy', 'same-origin');
+        // Apply CORS headers to API routes
+        if ($request->is('api/*')) {
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+            $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+            $response->headers->set('Access-Control-Allow-Headers', 'Authorization, Content-Type, Accept, X-Requested-With, Origin, X-Internal-Secret');
+            $response->headers->set('Cross-Origin-Resource-Policy', 'cross-origin');
+        } else {
+            $response->headers->set('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+            $response->headers->set('Cross-Origin-Resource-Policy', 'same-origin');
+        }
 
         // Content Security Policy (CSP) tailored for Inertia + Vite + Google Fonts + Lucide + WebSockets
         $scriptSrc = "'self' 'unsafe-inline' 'unsafe-eval'";

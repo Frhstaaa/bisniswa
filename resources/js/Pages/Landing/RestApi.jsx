@@ -57,9 +57,11 @@ export default function RestApi({ plans = [], stats = {} }) {
     const [activeEndpointType, setActiveEndpointType] = useState('text'); // 'text' | 'media'
     const [activeWebhookLang, setActiveWebhookLang] = useState('php');
 
+    const baseUrl = typeof window !== 'undefined' && window.location.origin ? `${window.location.origin}/api/v1` : 'https://mardirawa.frahesta.com/api/v1';
+
     // Code Snippets Data - Text Message
     const textSnippets = {
-        curl: `curl -X POST https://wa.mardira.ac.id/api/v1/messages/send \\
+        curl: `curl -X POST ${baseUrl}/messages/send \\
   -H "Authorization: Bearer bk_live_your_api_key_here" \\
   -H "Content-Type: application/json" \\
   -H "Accept: application/json" \\
@@ -71,7 +73,7 @@ export default function RestApi({ plans = [], stats = {} }) {
 
 $response = Http::withToken('bk_live_your_api_key_here')
     ->acceptJson()
-    ->post('https://wa.mardira.ac.id/api/v1/messages/send', [
+    ->post('${baseUrl}/messages/send', [
         'phone' => '08386012467',
         'message' => "Halo Kak Budi,\\n\\nTagihan semester #INV-2026-081 telah terbit dan siap dibayar.\\nTerima kasih!",
     ]);
@@ -89,7 +91,7 @@ $payload = json_encode([
     'message' => 'Pesanan #INV-290 telah kami proses dan segera dikirim ke alamat Anda.',
 ]);
 
-$ch = curl_init('https://wa.mardira.ac.id/api/v1/messages/send');
+$ch = curl_init('${baseUrl}/messages/send');
 curl_setopt_array($ch, [
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_POST           => true,
@@ -112,7 +114,7 @@ echo "Status: " . $result['status'];`,
 async function sendWhatsAppAlert() {
   try {
     const response = await axios.post(
-      'https://wa.mardira.ac.id/api/v1/messages/send',
+      '${baseUrl}/messages/send',
       {
         phone: '08386012467',
         message: 'Halo! Pendaftaran akun Anda telah diverifikasi oleh sistem MARDIRA WA.',
@@ -135,7 +137,7 @@ async function sendWhatsAppAlert() {
 sendWhatsAppAlert();`,
         python: `import requests
 
-url = "https://wa.mardira.ac.id/api/v1/messages/send"
+url = "${baseUrl}/messages/send"
 headers = {
     "Authorization": "Bearer bk_live_your_api_key_here",
     "Content-Type": "application/json",
@@ -165,7 +167,7 @@ func main() {
 		"message": "Halo dari microservice Golang! Pesan otomatis terkirim.",
 	})
 
-	req, _ := http.NewRequest("POST", "https://wa.mardira.ac.id/api/v1/messages/send", bytes.NewBuffer(payload))
+	req, _ := http.NewRequest("POST", "${baseUrl}/messages/send", bytes.NewBuffer(payload))
 	req.Header.Set("Authorization", "Bearer bk_live_your_api_key_here")
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")
@@ -184,7 +186,7 @@ func main() {
 
     // Code Snippets Data - Media Message
     const mediaSnippets = {
-        curl: `curl -X POST https://wa.mardira.ac.id/api/v1/messages/send \\
+        curl: `curl -X POST ${baseUrl}/messages/send-media \\
   -H "Authorization: Bearer bk_live_your_api_key_here" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -196,7 +198,7 @@ func main() {
 
 $response = Http::withToken('bk_live_your_api_key_here')
     ->acceptJson()
-    ->post('https://wa.mardira.ac.id/api/v1/messages/send', [
+    ->post('${baseUrl}/messages/send-media', [
         'phone' => '08386012467',
         'media_url' => 'https://storage.kampus.ac.id/invoices/INV-2026-001.pdf',
         'message' => 'Faktur Tagihan Resmi Politeknik Mardira Indonesia #INV-2026-001 terlampir.',
@@ -210,7 +212,7 @@ $payload = json_encode([
     'message'   => 'Faktur Resmi Pembayaran #INV-2026-001 terlampir.',
 ]);
 
-$ch = curl_init('https://wa.mardira.ac.id/api/v1/messages/send');
+$ch = curl_init('${baseUrl}/messages/send-media');
 curl_setopt_array($ch, [
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_POST           => true,
@@ -227,7 +229,7 @@ echo $res;`,
         nodejs: `import axios from 'axios';
 
 await axios.post(
-  'https://wa.mardira.ac.id/api/v1/messages/send',
+  '${baseUrl}/messages/send-media',
   {
     phone: '08386012467',
     media_url: 'https://storage.kampus.ac.id/invoices/INV-2026-001.pdf',
@@ -243,7 +245,7 @@ await axios.post(
         python: `import requests
 
 response = requests.post(
-    "https://wa.mardira.ac.id/api/v1/messages/send",
+    "${baseUrl}/messages/send-media",
     headers={"Authorization": "Bearer bk_live_your_api_key_here"},
     json={
         "phone": "08386012467",
@@ -358,8 +360,36 @@ app.post('/webhook/whatsapp', (req, res) => {
 app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
     };
 
+    const apiSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'TechArticle',
+        headline: 'Dokumentasi REST API & Webhook WhatsApp Gateway Indonesia',
+        description: 'Panduan integrasi API resmi untuk kirim pesan WhatsApp teks, dokumen PDF, notifikasi OTP, dan webhook callback dengan enkripsi Bearer Token.',
+        image: 'https://mardirawa.frahesta.com/images/logo.png',
+        author: {
+            '@type': 'Organization',
+            name: 'MARDIRA WA',
+        },
+        publisher: {
+            '@type': 'Organization',
+            name: 'MARDIRA WA',
+            logo: {
+                '@type': 'ImageObject',
+                url: 'https://mardirawa.frahesta.com/images/logo.png',
+            },
+        },
+    };
+
     return (
-        <PublicLayout title="Dokumentasi REST API & Panduan Bridging" plans={safePlans} activeMenu="rest-api">
+        <PublicLayout
+            title="Dokumentasi REST API & Webhook WhatsApp Gateway Indonesia"
+            description="Dokumentasi developer resmi untuk kirim pesan teks, OTP, media dokumen PDF via HTTP REST API berstandar JSON, webhook callback real-time, dan Postman collection."
+            keywords="rest api whatsapp, api wa gateway indonesia, kirim wa via api, webhook whatsapp, dokumentasi api wa, mardira wa"
+            canonicalUrl="https://mardirawa.frahesta.com/rest-api"
+            schema={apiSchema}
+            plans={safePlans}
+            activeMenu="rest-api"
+        >
             <div className="space-y-16 lg:space-y-24">
                 {/* ================= HERO HEADER ================= */}
                 <section className="relative overflow-hidden bg-white bg-grid-pattern text-slate-900 pt-32 sm:pt-40 pb-20 sm:pb-28 px-4 sm:px-6 lg:px-10 border-b border-slate-100">

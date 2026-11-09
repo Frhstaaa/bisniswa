@@ -220,6 +220,7 @@ class WhatsAppGatewayService
             'to' => $normalizedPhone,
             'message' => $text,
             'media_url' => $mediaUrl,
+            'media_filename' => $options['media_filename'] ?? null,
             'list_sections' => $options['list_sections'] ?? null,
             'list_button' => $options['list_button'] ?? null,
             'list_title' => $options['list_title'] ?? null,
