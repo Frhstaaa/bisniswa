@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -60,6 +61,16 @@ class Admin extends Authenticatable
         ];
     }
 
+    /**
+     * Get the dynamic RBAC role definition for this admin.
+     *
+     * @return BelongsTo<AdminRole, $this>
+     */
+    public function adminRole(): BelongsTo
+    {
+        return $this->belongsTo(AdminRole::class, 'role', 'slug');
+    }
+
     public function isSuperAdmin(): bool
     {
         return $this->role === 'superadmin';
@@ -67,41 +78,63 @@ class Admin extends Authenticatable
 
     public function isSaaSStaff(): bool
     {
-        return in_array($this->role, ['superadmin', 'admin', 'marketing', 'support'], true);
+        return ! empty($this->role);
+    }
+
+    /**
+     * Dynamically check if this admin has permission for a specific page/module.
+     */
+    public function hasPermission(string $permission): bool
+    {
+        if ($this->isSuperAdmin()) {
+            return true;
+        }
+
+        if (! $this->is_active) {
+            return false;
+        }
+
+        $roleModel = AdminRole::where('slug', $this->role)->first();
+
+        if ($roleModel) {
+            return $roleModel->hasPermission($permission);
+        }
+
+        return false;
     }
 
     public function canManageStaff(): bool
     {
-        return in_array($this->role, ['superadmin', 'admin'], true);
+        return $this->hasPermission('manage_staff');
     }
 
     public function canManageSettings(): bool
     {
-        return $this->isSuperAdmin();
+        return $this->hasPermission('manage_settings');
     }
 
     public function canManagePlans(): bool
     {
-        return in_array($this->role, ['superadmin', 'admin', 'marketing'], true);
+        return $this->hasPermission('manage_plans');
     }
 
     public function canManagePayments(): bool
     {
-        return in_array($this->role, ['superadmin', 'admin', 'marketing'], true);
+        return $this->hasPermission('manage_payments');
     }
 
     public function canManageGateways(): bool
     {
-        return in_array($this->role, ['superadmin', 'admin', 'support'], true);
+        return $this->hasPermission('manage_gateways');
     }
 
     public function canManageClients(): bool
     {
-        return in_array($this->role, ['superadmin', 'admin', 'support'], true);
+        return $this->hasPermission('manage_clients');
     }
 
     public function canManageSubscriptions(): bool
     {
-        return in_array($this->role, ['superadmin', 'admin'], true);
+        return $this->hasPermission('manage_subscriptions');
     }
 }

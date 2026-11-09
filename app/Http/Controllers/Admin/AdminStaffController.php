@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
+use App\Models\AdminRole;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -25,7 +26,7 @@ class AdminStaffController extends Controller
         $search = $request->query('search', '');
         $roleFilter = $request->query('role', 'all');
 
-        $query = Admin::whereIn('role', ['superadmin', 'admin', 'marketing', 'support']);
+        $query = Admin::with('adminRole');
 
         // Explicit security rule: Subordinate staff (Admin, Marketing, Support) cannot see Superadmin
         if (! $isSuperAdmin) {
@@ -45,47 +46,48 @@ class AdminStaffController extends Controller
             if ($roleFilter === 'superadmin' && ! $isSuperAdmin) {
                 // Non-superadmin filtering for superadmin gets empty result
                 $query->whereRaw('1 = 0');
-            } elseif (in_array($roleFilter, ['superadmin', 'admin', 'marketing', 'support'], true)) {
+            } else {
                 $query->where('role', $roleFilter);
             }
         }
 
-        $staff = $query->orderByRaw("CASE WHEN role = 'superadmin' THEN 1 WHEN role = 'admin' THEN 2 WHEN role = 'marketing' THEN 3 ELSE 4 END")
+        $staff = $query->orderByRaw("CASE WHEN role = 'superadmin' THEN 1 WHEN role = 'admin' THEN 2 ELSE 3 END")
+            ->orderBy('name', 'asc')
+            ->get();
+
+        $allRoles = AdminRole::withCount('admins')
+            ->orderBy('is_system', 'desc')
             ->orderBy('name', 'asc')
             ->get();
 
         $metrics = [
-            'total_staff' => $isSuperAdmin
-                ? Admin::whereIn('role', ['superadmin', 'admin', 'marketing', 'support'])->count()
-                : Admin::whereIn('role', ['admin', 'marketing', 'support'])->count(),
+            'total_staff' => $isSuperAdmin ? Admin::count() : Admin::where('role', '!=', 'superadmin')->count(),
             'superadmin_count' => $isSuperAdmin ? Admin::where('role', 'superadmin')->count() : 0,
+            'roles_count' => $allRoles->count(),
             'admin_count' => Admin::where('role', 'admin')->count(),
             'marketing_count' => Admin::where('role', 'marketing')->count(),
             'support_count' => Admin::where('role', 'support')->count(),
         ];
 
         // Roles available to be assigned based on who is logged in
-        $availableRoles = [];
-        if ($isSuperAdmin) {
-            $availableRoles[] = [
-                'value' => 'admin',
-                'label' => 'Admin Operasional',
-                'description' => 'Akses kelola klien, langganan, verifikasi pembayaran, paket layanan, dan monitoring gateway.',
-                'color' => 'emerald',
+        $availableRoles = $allRoles->filter(function ($r) use ($isSuperAdmin) {
+            if ($r->slug === 'superadmin') {
+                return false;
+            }
+            if (! $isSuperAdmin && $r->slug === 'admin') {
+                return false;
+            }
+
+            return true;
+        })->map(function ($r) {
+            return [
+                'value' => $r->slug,
+                'label' => $r->name,
+                'description' => $r->description ?? '',
+                'color' => $r->badge_color ?? 'emerald',
+                'permissions' => $r->permissions ?? [],
             ];
-        }
-        $availableRoles[] = [
-            'value' => 'marketing',
-            'label' => 'Marketing & Billing',
-            'description' => 'Akses kelola paket langganan, lihat transaksi pembayaran, dan laporan pendapatan SaaS.',
-            'color' => 'blue',
-        ];
-        $availableRoles[] = [
-            'value' => 'support',
-            'label' => 'Customer Support',
-            'description' => 'Akses bantuan klien, pemecahan masalah perangkat, dan monitoring sesi WhatsApp.',
-            'color' => 'purple',
-        ];
+        })->values()->toArray();
 
         return Inertia::render('Admin/Staff/Index', [
             'staff' => $staff,
@@ -96,6 +98,8 @@ class AdminStaffController extends Controller
                 'role' => $roleFilter,
             ],
             'availableRoles' => $availableRoles,
+            'roles' => $allRoles,
+            'availablePermissions' => array_values(AdminRole::availablePermissions()),
         ]);
     }
 
@@ -112,16 +116,20 @@ class AdminStaffController extends Controller
         }
 
         $currentUser = $request->user('admin') ?? $request->user();
-        $allowedRoles = $currentUser->isSuperAdmin() ? 'admin,marketing,support' : 'marketing,support';
+        $allowedRolesQuery = AdminRole::where('slug', '!=', 'superadmin');
+        if (! $currentUser->isSuperAdmin()) {
+            $allowedRolesQuery->where('slug', '!=', 'admin');
+        }
+        $allowedRoles = $allowedRolesQuery->pluck('slug')->toArray();
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:admins,email',
             'phone' => 'nullable|string|max:30',
             'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|string|in:'.$allowedRoles,
+            'role' => 'required|string|in:'.implode(',', $allowedRoles),
         ], [
-            'role.in' => 'Pilihan role staff tidak valid.',
+            'role.in' => 'Pilihan grup peran staff tidak valid.',
             'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
             'password.min' => 'Kata sandi minimal 8 karakter.',
             'email.unique' => 'Email ini sudah terdaftar di sistem.',
@@ -188,16 +196,20 @@ class AdminStaffController extends Controller
             ]);
         }
 
-        $allowedRoles = $currentUser->isSuperAdmin() ? 'admin,marketing,support' : 'marketing,support';
+        $allowedRolesQuery = AdminRole::where('slug', '!=', 'superadmin');
+        if (! $currentUser->isSuperAdmin()) {
+            $allowedRolesQuery->where('slug', '!=', 'admin');
+        }
+        $allowedRoles = $allowedRolesQuery->pluck('slug')->toArray();
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:admins,email,'.$admin->id,
             'phone' => 'nullable|string|max:30',
             'password' => 'nullable|string|min:8|confirmed',
-            'role' => 'required|string|in:'.$allowedRoles,
+            'role' => 'required|string|in:'.implode(',', $allowedRoles),
         ], [
-            'role.in' => 'Pilihan role staff tidak valid.',
+            'role.in' => 'Pilihan grup peran staff tidak valid.',
             'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
             'email.unique' => 'Email ini sudah digunakan oleh akun lain.',
         ]);

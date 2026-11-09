@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Admin;
+use App\Models\AdminRole;
 use App\Models\ApiKey;
 use App\Models\Device;
 use App\Models\Message;
@@ -28,6 +29,39 @@ class DatabaseSeeder extends Seeder
             'name' => 'PT Digital Sukses Mandiri',
             'phone' => '+6281298430911',
             'is_active' => true,
+        ]);
+
+        // 1.1 Create Default Admin Roles & Permissions
+        AdminRole::firstOrCreate(['slug' => 'superadmin'], [
+            'name' => 'Super Administrator',
+            'description' => 'Root Master — Akses penuh ke seluruh modul dan konfigurasi sistem tanpa batasan.',
+            'badge_color' => 'amber',
+            'permissions' => ['*'],
+            'is_system' => true,
+        ]);
+
+        AdminRole::firstOrCreate(['slug' => 'admin'], [
+            'name' => 'Admin Operasional',
+            'description' => 'Manajemen harian klien, langganan, verifikasi pembayaran, paket layanan, dan monitoring gateway.',
+            'badge_color' => 'emerald',
+            'permissions' => ['manage_clients', 'manage_subscriptions', 'manage_payments', 'manage_plans', 'manage_gateways', 'manage_staff'],
+            'is_system' => true,
+        ]);
+
+        AdminRole::firstOrCreate(['slug' => 'marketing'], [
+            'name' => 'Marketing & Billing',
+            'description' => 'Pengelolaan paket langganan, peninjauan tagihan invoice pembayaran, dan data klien.',
+            'badge_color' => 'blue',
+            'permissions' => ['manage_plans', 'manage_payments'],
+            'is_system' => false,
+        ]);
+
+        AdminRole::firstOrCreate(['slug' => 'support'], [
+            'name' => 'Customer Support',
+            'description' => 'Bantuan klien, pemecahan masalah sesi gateway WhatsApp, dan monitoring perangkat.',
+            'badge_color' => 'purple',
+            'permissions' => ['manage_clients', 'manage_gateways'],
+            'is_system' => false,
         ]);
 
         // 2. Create Super Admin (in admins table) & Workspace Client Owner (in users table)

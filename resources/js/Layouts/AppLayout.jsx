@@ -42,12 +42,12 @@ export default function AppLayout({ children, title }) {
     const auth = props.auth || {};
     const user = auth.user || {};
     const isSuperAdmin = user.role === 'superadmin';
-    const isSaaSStaff = Boolean(user.is_saas_staff || ['superadmin', 'admin', 'marketing', 'support'].includes(user.role));
+    const isSaaSStaff = Boolean(user.is_saas_staff || auth.admin || ['superadmin', 'admin', 'marketing', 'support'].includes(user.role));
     const isAdminRoute = url.startsWith('/admin');
     const logoutHref = isAdminRoute ? '/admin/logout' : '/logout';
 
     const perms = user.permissions || {
-        can_manage_staff: isSuperAdmin,
+        can_manage_staff: isSuperAdmin || user.role === 'admin',
         can_manage_settings: isSuperAdmin,
         can_manage_plans: isSuperAdmin || ['admin', 'marketing'].includes(user.role),
         can_manage_payments: isSuperAdmin || ['admin', 'marketing'].includes(user.role),

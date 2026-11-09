@@ -68,6 +68,8 @@ class HandleInertiaRequests extends Middleware
                     'name' => $adminUser->name,
                     'email' => $adminUser->email,
                     'role' => $adminUser->role,
+                    'role_name' => $adminUser->adminRole?->name ?? ucfirst($adminUser->role),
+                    'role_color' => $adminUser->adminRole?->badge_color ?? 'emerald',
                     'phone' => $adminUser->phone,
                     'is_active' => (bool) $adminUser->is_active,
                     'is_superadmin' => $adminUser->isSuperAdmin(),

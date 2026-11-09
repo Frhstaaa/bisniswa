@@ -34,8 +34,15 @@ class EnsureSuperAdmin
         }
 
         if ($permission) {
-            $method = 'can'.str_replace('_', '', ucwords($permission, '_'));
-            if (method_exists($user, $method) && ! $user->{$method}()) {
+            $hasPermission = false;
+            if (method_exists($user, 'hasPermission')) {
+                $hasPermission = $user->hasPermission($permission);
+            } else {
+                $method = 'can'.str_replace('_', '', ucwords($permission, '_'));
+                $hasPermission = method_exists($user, $method) && $user->{$method}();
+            }
+
+            if (! $hasPermission) {
                 abort(403, 'Akses ditolak. Peran Anda ('.ucfirst($user->role).') tidak memiliki izin untuk mengakses modul ini.');
             }
         }

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Admin;
+use App\Models\AdminRole;
 use App\Models\Payment;
 use App\Models\Plan;
 use App\Models\Subscription;
@@ -463,5 +464,127 @@ class AdminPlanAndStaffRbacTest extends TestCase
         $this->assertNotNull($sub);
         $this->assertTrue($sub->ends_at->isFuture());
         $this->assertEquals(72000, $sub->remaining_message_quota);
+    }
+
+    // ==========================================
+    // 3. Dynamic RBAC Roles & Per-Page Permissions Tests
+    // ==========================================
+
+    public function test_superadmin_can_create_new_dynamic_role_with_specific_permissions(): void
+    {
+        $response = $this->actingAs($this->superAdmin, 'admin')->post('/admin/roles', [
+            'name' => 'Staff Keuangan & Pajak',
+            'slug' => 'finance_tax',
+            'description' => 'Akses kelola transaksi dan tagihan pembayaran',
+            'badge_color' => 'indigo',
+            'permissions' => ['manage_payments', 'manage_plans'],
+        ]);
+
+        $response->assertRedirect();
+        $response->assertSessionHas('success');
+
+        $this->assertDatabaseHas('admin_roles', [
+            'slug' => 'finance_tax',
+            'name' => 'Staff Keuangan & Pajak',
+            'badge_color' => 'indigo',
+        ]);
+    }
+
+    public function test_staff_with_new_dynamic_role_has_exact_granted_permissions(): void
+    {
+        $role = AdminRole::create([
+            'name' => 'Auditor Pembayaran',
+            'slug' => 'auditor_payments',
+            'description' => 'Hanya verifikasi pembayaran',
+            'badge_color' => 'blue',
+            'permissions' => ['manage_payments'],
+            'is_system' => false,
+        ]);
+
+        $auditorStaff = Admin::create([
+            'name' => 'Auditor Staff',
+            'email' => 'auditor@kirimwa.pro',
+            'password' => bcrypt('password'),
+            'role' => $role->slug,
+            'is_active' => true,
+        ]);
+
+        // Granted page: payments
+        $this->actingAs($auditorStaff, 'admin')->get('/admin/payments')->assertStatus(200);
+
+        // Disallowed page: gateways, staff, plans
+        $this->actingAs($auditorStaff, 'admin')->get('/admin/gateways')->assertStatus(403);
+        $this->actingAs($auditorStaff, 'admin')->get('/admin/staff')->assertStatus(403);
+        $this->actingAs($auditorStaff, 'admin')->get('/admin/plans')->assertStatus(403);
+    }
+
+    public function test_superadmin_can_edit_permissions_of_existing_role_and_staff_access_updates_immediately(): void
+    {
+        // Initially, marketing cannot access gateways
+        $this->actingAs($this->marketingStaff, 'admin')->get('/admin/gateways')->assertStatus(403);
+
+        $marketingRole = AdminRole::where('slug', 'marketing')->first();
+        $this->assertNotNull($marketingRole);
+
+        // Superadmin edits marketing role to include manage_gateways
+        $response = $this->actingAs($this->superAdmin, 'admin')->put("/admin/roles/{$marketingRole->id}", [
+            'name' => 'Marketing & Gateway Monitor',
+            'description' => 'Diperluas dengan akses monitoring gateway',
+            'badge_color' => 'cyan',
+            'permissions' => ['manage_plans', 'manage_payments', 'manage_gateways'],
+        ]);
+
+        $response->assertRedirect();
+        $response->assertSessionHas('success');
+
+        // Immediately, marketing staff can now access gateways!
+        $this->actingAs($this->marketingStaff, 'admin')->get('/admin/gateways')->assertStatus(200);
+    }
+
+    public function test_superadmin_can_delete_unused_custom_role(): void
+    {
+        $role = AdminRole::create([
+            'name' => 'Temporary Role',
+            'slug' => 'temp_role',
+            'badge_color' => 'slate',
+            'permissions' => ['manage_clients'],
+            'is_system' => false,
+        ]);
+
+        $response = $this->actingAs($this->superAdmin, 'admin')->delete("/admin/roles/{$role->id}");
+        $response->assertRedirect();
+        $response->assertSessionHas('success');
+
+        $this->assertDatabaseMissing('admin_roles', ['id' => $role->id]);
+    }
+
+    public function test_superadmin_cannot_delete_role_still_in_use_by_staff(): void
+    {
+        $supportRole = AdminRole::where('slug', 'support')->first();
+        $this->assertNotNull($supportRole);
+
+        // Support staff currently exists with role 'support'
+        $response = $this->actingAs($this->superAdmin, 'admin')->delete("/admin/roles/{$supportRole->id}");
+        $response->assertRedirect();
+        $response->assertSessionHas('error');
+
+        $this->assertDatabaseHas('admin_roles', ['id' => $supportRole->id]);
+    }
+
+    public function test_subordinate_staff_cannot_create_or_modify_roles(): void
+    {
+        $createResponse = $this->actingAs($this->adminStaff, 'admin')->post('/admin/roles', [
+            'name' => 'Hacker Role',
+            'slug' => 'hacker',
+            'permissions' => ['manage_settings'],
+        ]);
+        $createResponse->assertStatus(403);
+
+        $supportRole = AdminRole::where('slug', 'support')->first();
+        $updateResponse = $this->actingAs($this->supportStaff, 'admin')->put("/admin/roles/{$supportRole->id}", [
+            'name' => 'Elevated Support',
+            'permissions' => ['manage_settings'],
+        ]);
+        $updateResponse->assertStatus(403);
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminGatewayController;
 use App\Http\Controllers\Admin\AdminPaymentController;
 use App\Http\Controllers\Admin\AdminPlanController;
+use App\Http\Controllers\Admin\AdminRoleController;
 use App\Http\Controllers\Admin\AdminSettingController;
 use App\Http\Controllers\Admin\AdminStaffController;
 use App\Http\Controllers\Admin\AdminSubscriptionController;
@@ -185,6 +186,11 @@ Route::middleware(['auth:admin', 'superadmin'])->prefix('admin')->name('admin.')
         Route::put('/staff/{id}', [AdminStaffController::class, 'update'])->name('staff.update');
         Route::post('/staff/{id}/toggle-status', [AdminStaffController::class, 'toggleStatus'])->name('staff.toggle-status');
         Route::delete('/staff/{id}', [AdminStaffController::class, 'destroy'])->name('staff.destroy');
+
+        // Dynamic Role & Permission RBAC Management
+        Route::post('/roles', [AdminRoleController::class, 'store'])->name('roles.store');
+        Route::put('/roles/{id}', [AdminRoleController::class, 'update'])->name('roles.update');
+        Route::delete('/roles/{id}', [AdminRoleController::class, 'destroy'])->name('roles.destroy');
     });
 
     // Production Readiness Settings (Superadmin Only)
