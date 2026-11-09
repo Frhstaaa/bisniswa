@@ -3,6 +3,7 @@ import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { Mail, ArrowLeft, ArrowRight, CheckCircle2, AlertCircle, ShieldCheck, Zap, Copy, Check, MessageSquare } from 'lucide-react';
 import { Button } from '../../Components/ui/button';
+import { Alert, AlertTitle, AlertDescription } from '../../Components/ui/alert';
 
 export default function ForgotPassword() {
     const { flash = {} } = usePage().props;
@@ -101,23 +102,17 @@ export default function ForgotPassword() {
             <div className="mt-6 w-full max-w-md mx-auto">
                 <div className="bg-white border border-slate-200/80 py-6 px-5 sm:py-8 sm:px-8 shadow-card rounded-2xl space-y-5">
                     {flash.error && (
-                        <div className="p-3.5 bg-red-50 border border-red-200 rounded-xl text-xs text-red-900 flex items-start gap-2.5 animate-fade-in">
-                            <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
-                            <div>
-                                <p className="font-semibold text-red-950">Gagal Mengirim Tautan</p>
-                                <p className="text-[11px] text-red-800 mt-0.5">{flash.error}</p>
-                            </div>
-                        </div>
+                        <Alert variant="destructive" className="animate-fade-in">
+                            <AlertTitle>Gagal Mengirim Tautan</AlertTitle>
+                            <AlertDescription>{flash.error}</AlertDescription>
+                        </Alert>
                     )}
 
                     {flash.status && (
-                        <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-900 flex items-start gap-2.5 animate-fade-in">
-                            <CheckCircle2 className="w-4 h-4 text-[#1e50ff] shrink-0 mt-0.5" />
-                            <div>
-                                <p className="font-semibold text-emerald-950">Email Instruksi Dikirim</p>
-                                <p className="text-[11px] text-emerald-800 mt-0.5">{flash.status}</p>
-                            </div>
-                        </div>
+                        <Alert variant="success" className="animate-fade-in">
+                            <AlertTitle>Email Instruksi Dikirim</AlertTitle>
+                            <AlertDescription>{flash.status}</AlertDescription>
+                        </Alert>
                     )}
 
                     {flash.wa_sent && (

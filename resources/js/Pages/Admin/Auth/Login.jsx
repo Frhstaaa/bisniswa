@@ -2,6 +2,7 @@ import React from 'react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { Lock, Mail, ArrowRight, CheckCircle2, AlertCircle, Shield, ShieldCheck, KeyRound } from 'lucide-react';
+import { Alert, AlertTitle, AlertDescription } from '../../../Components/ui/alert';
 
 export default function AdminLogin() {
     const { flash = {} } = usePage().props;
@@ -57,23 +58,17 @@ export default function AdminLogin() {
             <div className="mt-6 sm:mt-8 w-full max-w-md mx-auto z-10">
                 <div className="bg-slate-900/90 backdrop-blur-xl border border-slate-800 py-6 px-4 sm:py-8 sm:px-8 shadow-2xl rounded-2xl space-y-5">
                     {flash.success && (
-                        <div className="p-3.5 bg-emerald-950/60 border border-emerald-800/80 rounded-xl text-xs text-emerald-200 flex items-start gap-2.5 animate-fade-in">
-                            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                            <div>
-                                <p className="font-semibold text-emerald-100">Berhasil</p>
-                                <p className="text-[11px] text-emerald-300 mt-0.5">{flash.success}</p>
-                            </div>
-                        </div>
+                        <Alert variant="success" className="animate-fade-in">
+                            <AlertTitle>Berhasil</AlertTitle>
+                            <AlertDescription>{flash.success}</AlertDescription>
+                        </Alert>
                     )}
 
                     {flash.error && (
-                        <div className="p-3.5 bg-rose-950/60 border border-rose-800/80 rounded-xl text-xs text-rose-200 flex items-start gap-2.5 animate-fade-in">
-                            <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
-                            <div>
-                                <p className="font-semibold text-rose-100">Akses Ditolak</p>
-                                <p className="text-[11px] text-rose-300 mt-0.5">{flash.error}</p>
-                            </div>
-                        </div>
+                        <Alert variant="destructive" className="animate-fade-in">
+                            <AlertTitle>Akses Ditolak</AlertTitle>
+                            <AlertDescription>{flash.error}</AlertDescription>
+                        </Alert>
                     )}
 
                     <form onSubmit={handleSubmit} className="space-y-4 text-xs">

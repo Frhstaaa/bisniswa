@@ -2,6 +2,7 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import AuthModal from '../Components/AuthModal';
+import Toast from '../Components/ui/toast';
 import PageTransition from '../Components/PageTransition';
 import { useGsapReveal } from '../hooks/useGsapReveal';
 import {
@@ -321,6 +322,7 @@ export default function PublicLayout({
 
                 {/* ================= MAIN CONTENT BODY ================= */}
                 <main ref={mainRef} className="flex-1">
+                    <Toast />
                     <PageTransition routeKey={url}>
                         {children}
                     </PageTransition>

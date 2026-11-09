@@ -4,6 +4,7 @@ import { X, QrCode, Smartphone, Cpu, CheckCircle2, RefreshCw, Zap, ShieldCheck, 
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import ModalPortal from './ui/ModalPortal';
+import { Alert, AlertDescription } from './ui/alert';
 
 export default function QrScanModal({
     isOpen,
@@ -112,6 +113,7 @@ export default function QrScanModal({
     const [processing, setProcessing] = useState(false);
     const [connectedPhone, setConnectedPhone] = useState(null);
     const [isConnectingSuccess, setIsConnectingSuccess] = useState(false);
+    const [formError, setFormError] = useState(null);
 
     // Auto-polling for real-time QR scan detection
     useEffect(() => {
@@ -147,6 +149,7 @@ export default function QrScanModal({
     const handleCreateDevice = (e) => {
         e.preventDefault();
         setProcessing(true);
+        setFormError(null);
 
         router.post(
             '/devices',
@@ -166,7 +169,15 @@ export default function QrScanModal({
                     setStep('qr');
                 },
                 onError: (errors) => {
-                    alert(Object.values(errors).flat().join('\n') || 'Gagal mendaftarkan perangkat.');
+                    const errorMsg = Object.values(errors).flat().join('\n') || 'Gagal mendaftarkan perangkat.';
+                    setFormError(errorMsg);
+                    if (typeof window !== 'undefined' && window.showToast) {
+                        window.showToast({
+                            type: 'error',
+                            title: 'Pendaftaran Perangkat Gagal',
+                            message: errorMsg,
+                        });
+                    }
                 },
                 onFinish: () => {
                     setProcessing(false);
@@ -235,6 +246,11 @@ export default function QrScanModal({
 
                 {step === 'form' ? (
                     <form onSubmit={handleCreateDevice} className="space-y-4 text-xs">
+                        {formError && (
+                            <Alert variant="destructive" onClose={() => setFormError(null)}>
+                                <AlertDescription>{formError}</AlertDescription>
+                            </Alert>
+                        )}
                         <div>
                             <label className="block font-medium text-slate-700 mb-1.5">Nama Perangkat / Label Gateway</label>
                             <input

@@ -3,6 +3,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { Lock, Mail, ArrowRight, ShieldCheck, CheckCircle2, AlertCircle } from 'lucide-react';
 import { Button } from '../../Components/ui/button';
+import { Alert, AlertTitle, AlertDescription } from '../../Components/ui/alert';
 
 export default function ResetPassword({ token, email }) {
     const { data, setData, post, processing, errors } = useForm({
@@ -54,18 +55,17 @@ export default function ResetPassword({ token, email }) {
             <div className="mt-6 w-full max-w-md mx-auto">
                 <div className="bg-white border border-slate-200/80 py-6 px-5 sm:py-8 sm:px-8 shadow-card rounded-2xl space-y-5">
                     {(errors.email || errors.token) && (
-                        <div className="p-3.5 bg-red-50 border border-red-200 rounded-xl text-xs text-red-900 flex items-start gap-2.5 animate-fade-in">
-                            <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
-                            <div>
-                                <p className="font-semibold text-red-950">Gagal Mengatur Kata Sandi</p>
-                                <p className="text-[11px] text-red-800 mt-0.5">{errors.email || errors.token}</p>
+                        <Alert variant="destructive" className="animate-fade-in">
+                            <AlertTitle>Gagal Mengatur Kata Sandi</AlertTitle>
+                            <AlertDescription>
+                                <p>{errors.email || errors.token}</p>
                                 <div className="mt-2">
-                                    <Link href="/forgot-password" className="text-[11px] font-bold text-red-700 underline hover:text-red-900">
+                                    <Link href="/forgot-password" className="text-[11px] font-bold text-rose-700 dark:text-rose-400 underline hover:opacity-80">
                                         Minta tautan reset baru →
                                     </Link>
                                 </div>
-                            </div>
-                        </div>
+                            </AlertDescription>
+                        </Alert>
                     )}
 
                     <form onSubmit={handleSubmit} className="space-y-4 text-xs">

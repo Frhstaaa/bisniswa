@@ -30,6 +30,7 @@ import {
     ShieldCheck,
 } from 'lucide-react';
 import Toast from '../Components/ui/toast';
+import { Alert, AlertTitle, AlertDescription } from '../Components/ui/alert';
 import OnboardingGuideModal from '../Components/OnboardingGuideModal';
 import PageTransition from '../Components/PageTransition';
 import { Button } from '../Components/ui/button';
@@ -59,6 +60,11 @@ export default function AppLayout({ children, title }) {
     const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
     const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const [dismissedFlash, setDismissedFlash] = useState(false);
+
+    useEffect(() => {
+        setDismissedFlash(false);
+    }, [flash]);
 
     // Curated 5-item quick mobile bottom dock
     const clientMobileDockItems = [
@@ -416,34 +422,26 @@ export default function AppLayout({ children, title }) {
 
                 {/* MAIN PAGE BODY */}
                 <main className="flex-1 p-4 sm:p-6 lg:p-8 space-y-6 pb-24 lg:pb-8">
-                    {/* Flash Success Notification */}
-                    {flash.success && (
-                        <div className="p-3 rounded-lg border border-emerald-200 bg-emerald-50/70 text-emerald-900 text-xs font-medium flex items-center justify-between shadow-2xs animate-fade-in-up">
-                            <div className="flex items-center gap-2">
-                                <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
-                                <span>{flash.success}</span>
-                            </div>
-                        </div>
+                    {/* Themed In-Page Flash Alerts */}
+                    {!dismissedFlash && flash.success && (
+                        <Alert variant="success" onClose={() => setDismissedFlash(true)} className="animate-fade-in-up">
+                            <AlertTitle>Berhasil Dilakukan</AlertTitle>
+                            <AlertDescription>{flash.success}</AlertDescription>
+                        </Alert>
                     )}
 
-                    {/* Flash Warning Notification */}
-                    {flash.warning && (
-                        <div className="p-3 rounded-lg border border-amber-200 bg-amber-50 text-amber-900 text-xs font-medium flex items-center justify-between shadow-2xs animate-fade-in-up">
-                            <div className="flex items-center gap-2">
-                                <AlertCircle className="w-4 h-4 shrink-0 text-amber-600" />
-                                <span>{flash.warning}</span>
-                            </div>
-                        </div>
+                    {!dismissedFlash && flash.warning && (
+                        <Alert variant="warning" onClose={() => setDismissedFlash(true)} className="animate-fade-in-up">
+                            <AlertTitle>Perhatian</AlertTitle>
+                            <AlertDescription>{flash.warning}</AlertDescription>
+                        </Alert>
                     )}
 
-                    {/* Flash Error Notification */}
-                    {flash.error && (
-                        <div className="p-3 rounded-lg border border-red-200 bg-red-50 text-red-800 text-xs font-medium flex items-center justify-between shadow-2xs animate-fade-in-up">
-                            <div className="flex items-center gap-2">
-                                <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
-                                <span>{flash.error}</span>
-                            </div>
-                        </div>
+                    {!dismissedFlash && flash.error && (
+                        <Alert variant="destructive" onClose={() => setDismissedFlash(true)} className="animate-fade-in-up">
+                            <AlertTitle>Terjadi Kesalahan</AlertTitle>
+                            <AlertDescription>{flash.error}</AlertDescription>
+                        </Alert>
                     )}
 
                     {/* Floating Toast Notification */}
