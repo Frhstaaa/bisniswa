@@ -21,6 +21,66 @@ class AutoReplyService
     ) {}
 
     /**
+     * Check if workspace is currently within business operating hours.
+     */
+    public function checkBusinessHours(int $workspaceId): array
+    {
+        $enabled = (bool) SystemSetting::get("auto_reply_schedule_enabled_{$workspaceId}", false);
+        if (! $enabled) {
+            return [
+                'enabled' => false,
+                'is_outside' => false,
+                'start' => '08:00',
+                'end' => '17:00',
+                'days' => [1, 2, 3, 4, 5, 6],
+                'away_message' => '',
+                'away_mode' => 'fallback_only',
+                'operating_text' => '24/7 (Non-stop)',
+            ];
+        }
+
+        $tz = 'Asia/Jakarta';
+        $now = Carbon::now($tz);
+        $currentDay = (int) $now->dayOfWeekIso; // 1 = Monday ... 7 = Sunday
+        $currentTime = $now->format('H:i');
+
+        $rawDays = SystemSetting::get("auto_reply_schedule_days_{$workspaceId}");
+        $activeDays = ! empty($rawDays) ? (is_array($rawDays) ? $rawDays : json_decode($rawDays, true)) : [1, 2, 3, 4, 5, 6];
+        if (! is_array($activeDays)) {
+            $activeDays = [1, 2, 3, 4, 5, 6];
+        }
+
+        $startTime = SystemSetting::get("auto_reply_schedule_start_{$workspaceId}", '08:00');
+        $endTime = SystemSetting::get("auto_reply_schedule_end_{$workspaceId}", '17:00');
+        $awayMode = SystemSetting::get("auto_reply_away_mode_{$workspaceId}", 'fallback_only');
+        $awayMessage = SystemSetting::get(
+            "auto_reply_away_message_{$workspaceId}",
+            "Halo Kak {nama}! 👋\n\nTerima kasih telah menghubungi {workspace}. Saat ini tim kami sedang berada di *LUAR JAM OPERASIONAL* (Buka: Senin - Sabtu, {jam_operasional}).\n\nPesan Anda telah kami simpan dan akan segera dibalas oleh Customer Service kami saat jam kerja dimulai kembali.\n\n💡 Ketik *MENU* untuk melihat informasi mandiri 24/7."
+        );
+
+        $isDayActive = in_array($currentDay, array_map('intval', $activeDays), true);
+        $isTimeActive = ($currentTime >= $startTime && $currentTime <= $endTime);
+        $isOutside = ! ($isDayActive && $isTimeActive);
+
+        $dayNames = [
+            1 => 'Senin', 2 => 'Selasa', 3 => 'Rabu', 4 => 'Kamis', 5 => 'Jumat', 6 => 'Sabtu', 7 => 'Minggu',
+        ];
+        $activeDayLabels = array_map(fn ($d) => $dayNames[$d] ?? '', $activeDays);
+        $operatingText = implode(', ', array_filter($activeDayLabels))." ({$startTime} - {$endTime} WIB)";
+
+        return [
+            'enabled' => true,
+            'is_outside' => $isOutside,
+            'start' => $startTime,
+            'end' => $endTime,
+            'days' => $activeDays,
+            'away_message' => $awayMessage,
+            'away_mode' => $awayMode,
+            'operating_text' => $operatingText,
+        ];
+    }
+
+    /**
      * Process inbound WhatsApp message: evaluate keyword rules, fallback to Gemini AI,
      * and automatically dispatch the response back to the customer on WhatsApp.
      */
@@ -46,6 +106,12 @@ class AutoReplyService
             return null;
         }
 
+        // Check Operating Hours & Schedule
+        $businessHours = $this->checkBusinessHours($workspaceId);
+        $isOutsideHours = $businessHours['is_outside'];
+        $operatingText = $businessHours['operating_text'];
+        $workspaceName = strtoupper($device->workspace?->name ?? 'Layanan');
+
         $customerName = $this->resolveCustomerName($senderName, $sender, $workspaceId);
 
         if ($workspaceId && strlen(preg_replace('/[^0-9]/', '', $sender)) >= 8) {
@@ -54,6 +120,16 @@ class AutoReplyService
                 ['workspace_id' => $workspaceId, 'phone' => $sender],
                 ['name' => $contactName]
             );
+        }
+
+        // Handle Strict "Always Away" Outside Hours Mode
+        if ($isOutsideHours && $businessHours['away_mode'] === 'always_away') {
+            $replyMessage = $this->replaceVariables($businessHours['away_message'], $customerName, $sender, $device->workspace?->name ?? 'Layanan', $operatingText);
+            $sourceType = 'away_schedule';
+            $ruleName = 'Respon Luar Jam Kerja (Away Message)';
+            Log::info("AutoReply: Sent Always-Away message for {$sender} outside operating hours ({$operatingText})");
+
+            return $this->dispatchOutboundReply($device, $sender, $replyMessage, null, [], $workspaceId, $sourceType, $ruleName);
         }
 
         // 1. Evaluate Workspace Keyword Rules for this destination device
@@ -78,13 +154,11 @@ class AutoReplyService
         $isMenuTrigger = $greetingEnabled && $isDeviceEligible && $this->isMenuRequest($incomingClean, $workspaceId) && $rules->isNotEmpty();
 
         if ($isMenuTrigger) {
-            $workspaceName = strtoupper($device->workspace?->name ?? 'Layanan');
             $replyMessage = $this->buildAutoMenuReply($rules, $workspaceName, $device, $workspaceId, $customerName);
             $sourceType = 'auto_menu';
             $ruleName = 'Daftar Menu Layanan';
 
             if ($device->isCloudApi()) {
-                // Official WhatsApp Business API: Use List Message if >3 items, Quick Reply if <= 3 items
                 if ($rules->count() <= 3) {
                     $quickButtons = [];
                     foreach ($rules->take(3) as $idx => $r) {
@@ -123,7 +197,6 @@ class AutoReplyService
                     ];
                 }
             } else {
-                // QR Web scan connection: clean & reliable text menu (no polling)
                 $replyOptions = [];
             }
             Log::info("AutoReply: Dispatched Auto Menu list for {$sender} ({$customerName}) on device {$device->name} ({$device->phone_number})");
@@ -133,7 +206,7 @@ class AutoReplyService
 
             if ($matchedRule) {
                 $matchedRule->increment('hit_count');
-                $replyMessage = $this->replaceVariables($matchedRule->reply_message, $customerName, $sender, $device->workspace?->name ?? 'Layanan');
+                $replyMessage = $this->replaceVariables($matchedRule->reply_message, $customerName, $sender, $device->workspace?->name ?? 'Layanan', $operatingText);
 
                 if ($device->isCloudApi()) {
                     if (! empty($matchedRule->cta_text) && ! empty($matchedRule->cta_url)) {
@@ -172,22 +245,36 @@ class AutoReplyService
                 $ruleName = $matchedRule->name;
                 Log::info("AutoReply: Matched rule '{$matchedRule->name}' (Keyword: '{$matchedRule->keyword}') for {$sender} on device {$device->name}");
             } else {
-                // 2. Evaluate Gemini AI Smart Fallback
-                $aiEnabled = (bool) SystemSetting::get("ai_gemini_enabled_{$workspaceId}", SystemSetting::get('ai_gemini_enabled', true));
-                if ($aiEnabled) {
-                    $promptContext = SystemSetting::get(
-                        "ai_gemini_prompt_context_{$workspaceId}",
-                        SystemSetting::get(
-                            'ai_gemini_prompt_context',
-                            'Anda adalah Asisten Virtual Cerdas resmi dari Politeknik Mardira Indonesia (PMI) dan Layanan WhatsApp Gateway Enterprise. Berikan jawaban yang ramah, sopan, ringkas, dan jelas dalam Bahasa Indonesia. Fokus pada informasi pendaftaran, layanan akademik, serta panduan integrasi API WhatsApp.'
-                        )
-                    );
-                    $apiKey = SystemSetting::get("ai_gemini_api_key_{$workspaceId}", config('services.gemini.key', env('GEMINI_API_KEY')));
+                // If Outside Operating Hours and mode is 'fallback_only':
+                // Check if user is asking for customer service or falling through
+                $isCsInquiry = (bool) preg_match('/(cs|admin|operator|manusia|staf|orang|tanya|hubungi|kendala|komplain)/i', $incomingClean);
+                if ($isOutsideHours && $businessHours['away_mode'] === 'fallback_only' && ($isCsInquiry || empty($rules))) {
+                    $replyMessage = $this->replaceVariables($businessHours['away_message'], $customerName, $sender, $device->workspace?->name ?? 'Layanan', $operatingText);
+                    $sourceType = 'away_schedule';
+                    $ruleName = 'Respon Luar Jam Kerja (Away Message)';
+                    Log::info("AutoReply: Sent Fallback-Away message for {$sender} outside operating hours ({$operatingText})");
+                } else {
+                    // 2. Evaluate Gemini AI Smart Fallback
+                    $aiEnabled = (bool) SystemSetting::get("ai_gemini_enabled_{$workspaceId}", SystemSetting::get('ai_gemini_enabled', true));
+                    if ($aiEnabled) {
+                        $promptContext = SystemSetting::get(
+                            "ai_gemini_prompt_context_{$workspaceId}",
+                            SystemSetting::get(
+                                'ai_gemini_prompt_context',
+                                'Anda adalah Asisten Virtual Cerdas resmi dari '.$workspaceName.'. Berikan jawaban yang ramah, sopan, ringkas, dan jelas dalam Bahasa Indonesia untuk membantu kebutuhan pelanggan.'
+                            )
+                        );
+                        $apiKey = SystemSetting::get("ai_gemini_api_key_{$workspaceId}", config('services.gemini.key', env('GEMINI_API_KEY')));
 
-                    $replyMessage = $this->generateGeminiResponse($incomingClean, $promptContext, $apiKey, $rules);
-                    $sourceType = 'ai_gemini';
-                    $ruleName = 'Asisten Cerdas AI Gemini';
-                    Log::info("AutoReply: Responding via Gemini AI Smart Fallback for {$sender}");
+                        $replyMessage = $this->generateGeminiResponse($incomingClean, $promptContext, $apiKey, $rules, $workspaceId);
+                        $sourceType = 'ai_gemini';
+                        $ruleName = 'Asisten Cerdas AI Gemini';
+                        Log::info("AutoReply: Responding via Gemini AI Smart Fallback for {$sender}");
+                    } elseif ($isOutsideHours) {
+                        $replyMessage = $this->replaceVariables($businessHours['away_message'], $customerName, $sender, $device->workspace?->name ?? 'Layanan', $operatingText);
+                        $sourceType = 'away_schedule';
+                        $ruleName = 'Respon Luar Jam Kerja (Away Message)';
+                    }
                 }
             }
         }
@@ -196,17 +283,31 @@ class AutoReplyService
             return null;
         }
 
-        // 3. Deduct from workspace message quota if available
+        // Apply 'always_prepend' outside hours header if configured
+        if ($isOutsideHours && $businessHours['away_mode'] === 'always_prepend' && $sourceType !== 'away_schedule') {
+            $prependNotice = "🌙 *[Luar Jam Operasional — Buka {$businessHours['start']} - {$businessHours['end']} WIB]*\n\n";
+            $replyMessage = $prependNotice.$replyMessage;
+        }
+
+        return $this->dispatchOutboundReply($device, $sender, $replyMessage, $mediaUrl, $replyOptions, $workspaceId, $sourceType, $ruleName);
+    }
+
+    /**
+     * Dispatch outbound WhatsApp message and track usage
+     */
+    protected function dispatchOutboundReply(Device $device, string $sender, string $replyMessage, ?string $mediaUrl, array $replyOptions, int $workspaceId, ?string $sourceType, ?string $ruleName): array
+    {
+        // Deduct from workspace message quota if available
         $subscription = Subscription::where('workspace_id', $workspaceId)->first();
         if ($subscription && $subscription->remaining_message_quota > 0) {
             $subscription->decrement('remaining_message_quota');
         }
 
-        // 4. Dispatch outbound reply via WhatsApp Gateway
+        // Dispatch outbound reply via WhatsApp Gateway
         $sendResult = $this->gatewayService->sendMessage($device, $sender, $replyMessage, $mediaUrl, $replyOptions);
         $status = ($sendResult['success'] ?? false) ? 'delivered' : ($sendResult['status'] ?? 'delivered');
 
-        // 5. Store outbound message into messages table (Live Chat & Analytics)
+        // Store outbound message into messages table (Live Chat & Analytics)
         $outbound = Message::create([
             'workspace_id' => $workspaceId,
             'device_id' => $device->id,
@@ -309,8 +410,6 @@ class AutoReplyService
         }
 
         // Priority 4: Positional Menu Selection Fallback
-        // If customer typed a number (e.g. 1, 2, 3), and no rule explicitly set that number as keyword,
-        // match the N-th active rule in the workspace list (1st rule = 1, 2nd rule = 2, etc.)!
         if ($selectedMenuNumber !== null && $selectedMenuNumber >= 1 && $selectedMenuNumber <= $rules->count()) {
             return $rules->values()->get($selectedMenuNumber - 1);
         }
@@ -320,7 +419,6 @@ class AutoReplyService
 
     /**
      * Check if the incoming message is a generic greeting, menu, or help inquiry.
-     * Recognizes triggers like 'hi', 'halo', 'info', 'menu', 'p', 'bantuan', etc.
      */
     public function isMenuRequest(string $incomingText, ?int $workspaceId = null): bool
     {
@@ -358,14 +456,14 @@ class AutoReplyService
             return true;
         }
 
-        // Normalize elongated/repeated characters common in informal chat (e.g. "hiii" -> "hi", "halooo" -> "halo", "pppp" -> "p")
+        // Normalize elongated/repeated characters
         $collapsed = preg_replace('/(.)\1+/u', '$1', $clean);
         $collapsedDouble = preg_replace('/(.)\1{2,}/u', '$1$1', $clean);
         if (in_array($collapsed, $defaultWords, true) || in_array($collapsedDouble, $defaultWords, true)) {
             return true;
         }
 
-        // Match if message consists purely of short greeting tokens (e.g. "halo kak", "hi admin", "selamat pagi min")
+        // Match short greeting tokens
         $tokens = preg_split('/\s+/', $clean, -1, PREG_SPLIT_NO_EMPTY);
         if (count($tokens) <= 3) {
             $allGreetingTokens = true;
@@ -388,7 +486,6 @@ class AutoReplyService
 
     /**
      * Automatically build a formatted WhatsApp menu list from active rules.
-     * Supports custom header, device phone context, and footer instructions.
      */
     public function buildAutoMenuReply($rules, string $workspaceName = 'Layanan', ?Device $device = null, ?int $workspaceId = null, string $customerName = 'Kak'): string
     {
@@ -471,7 +568,7 @@ class AutoReplyService
     /**
      * Simulate an incoming message for testing in the interactive WhatsApp bot simulator.
      */
-    public function simulateResponse(int $workspaceId, string $incomingText, ?int $deviceId = null): array
+    public function simulateResponse(int $workspaceId, string $incomingText, ?int $deviceId = null, bool $simulateOutsideHours = false): array
     {
         $incomingClean = trim($incomingText);
         if (empty($incomingClean)) {
@@ -498,6 +595,22 @@ class AutoReplyService
         }
         $rules = $query->get();
 
+        $businessHours = $this->checkBusinessHours($workspaceId);
+        $isOutsideHours = $simulateOutsideHours || ($businessHours['enabled'] && $businessHours['is_outside']);
+        $workspaceName = strtoupper($device?->workspace?->name ?? 'Layanan Bisnis');
+
+        // Check if strict Always Away Mode triggers
+        if ($isOutsideHours && $businessHours['away_mode'] === 'always_away') {
+            return [
+                'success' => true,
+                'source' => 'away_schedule',
+                'rule_name' => 'Respon Luar Jam Kerja (Away Message)',
+                'keyword' => 'AWAY / AFTER-HOURS',
+                'reply' => $this->replaceVariables($businessHours['away_message'], 'Kak Budi', '6281234567890', $workspaceName, $businessHours['operating_text']),
+                'media_url' => null,
+            ];
+        }
+
         $masterEnabled = (bool) SystemSetting::get("auto_reply_master_enabled_{$workspaceId}", true);
         $greetingEnabled = (bool) SystemSetting::get("greeting_menu_enabled_{$workspaceId}", true);
         $targetDeviceId = SystemSetting::get("greeting_menu_device_id_{$workspaceId}");
@@ -505,7 +618,6 @@ class AutoReplyService
 
         // Check if customer asked for greeting / menu
         if ($greetingEnabled && $isDeviceEligible && $this->isMenuRequest($incomingClean, $workspaceId) && $rules->isNotEmpty()) {
-            $workspaceName = strtoupper($device?->workspace?->name ?? 'Layanan');
             $menuStyle = $workspaceId ? SystemSetting::get("greeting_menu_style_{$workspaceId}", 'pandawa') : 'pandawa';
             $buttonText = $workspaceId ? SystemSetting::get("greeting_menu_button_text_{$workspaceId}", '📋 Buka Pilihan Layanan') : '📋 Buka Pilihan Layanan';
 
@@ -548,12 +660,10 @@ class AutoReplyService
                     ];
                 }
             }
-            if (empty($buttonsList)) {
-                $buttonsList = [
-                    ['label' => 'Administrasi', 'keyword' => 'administrasi'],
-                    ['label' => 'Info & Pengaduan', 'keyword' => 'pengaduan'],
-                    ['label' => 'Rehab', 'keyword' => 'rehab'],
-                ];
+
+            $menuReply = $this->buildAutoMenuReply($rules, $workspaceName, $device, $workspaceId);
+            if ($isOutsideHours && $businessHours['away_mode'] === 'always_prepend') {
+                $menuReply = "🌙 *[Luar Jam Operasional — Buka {$businessHours['start']} - {$businessHours['end']} WIB]*\n\n".$menuReply;
             }
 
             return [
@@ -561,7 +671,7 @@ class AutoReplyService
                 'source' => 'auto_menu',
                 'rule_name' => 'Menu Layanan Otomatis'.($device ? " ({$device->name})" : ''),
                 'keyword' => 'MENU / GREETING',
-                'reply' => $this->buildAutoMenuReply($rules, $workspaceName, $device, $workspaceId),
+                'reply' => $menuReply,
                 'menu_items' => $menuItems,
                 'buttons' => $buttonsList,
                 'menu_style' => $menuStyle,
@@ -576,16 +686,34 @@ class AutoReplyService
         if ($matchedRule) {
             $matchedRule->increment('hit_count');
 
+            $ruleReply = $this->replaceVariables($matchedRule->reply_message, 'Kak Budi', '6281234567890', $workspaceName, $businessHours['operating_text']);
+            if ($isOutsideHours && $businessHours['away_mode'] === 'always_prepend') {
+                $ruleReply = "🌙 *[Luar Jam Operasional — Buka {$businessHours['start']} - {$businessHours['end']} WIB]*\n\n".$ruleReply;
+            }
+
             return [
                 'success' => true,
                 'source' => 'keyword_rule',
                 'rule_name' => $matchedRule->name,
                 'keyword' => $matchedRule->keyword,
-                'reply' => $matchedRule->reply_message,
+                'reply' => $ruleReply,
                 'media_url' => $matchedRule->reply_media_url,
                 'cta_text' => $matchedRule->cta_text,
                 'cta_url' => $matchedRule->cta_url,
                 'action_buttons' => $matchedRule->action_buttons,
+            ];
+        }
+
+        // Check if Outside Hours Fallback Triggers for CS / Unmatched query
+        $isCsInquiry = (bool) preg_match('/(cs|admin|operator|manusia|staf|orang|tanya|hubungi|kendala|komplain)/i', $incomingClean);
+        if ($isOutsideHours && $businessHours['away_mode'] === 'fallback_only' && ($isCsInquiry || empty($rules))) {
+            return [
+                'success' => true,
+                'source' => 'away_schedule',
+                'rule_name' => 'Respon Luar Jam Kerja (Away Message)',
+                'keyword' => 'AWAY / AFTER-HOURS',
+                'reply' => $this->replaceVariables($businessHours['away_message'], 'Kak Budi', '6281234567890', $workspaceName, $businessHours['operating_text']),
+                'media_url' => null,
             ];
         }
 
@@ -596,12 +724,15 @@ class AutoReplyService
                 "ai_gemini_prompt_context_{$workspaceId}",
                 SystemSetting::get(
                     'ai_gemini_prompt_context',
-                    'Anda adalah Asisten Virtual Cerdas resmi dari Politeknik Mardira Indonesia (PMI) dan Layanan WhatsApp Gateway Enterprise. Berikan jawaban yang ramah, sopan, ringkas, dan jelas dalam Bahasa Indonesia. Fokus pada informasi pendaftaran, layanan akademik, serta panduan integrasi API WhatsApp.'
+                    'Anda adalah Asisten Virtual Cerdas resmi dari '.$workspaceName.'. Berikan jawaban yang ramah, sopan, ringkas, dan jelas dalam Bahasa Indonesia untuk membantu kebutuhan pelanggan.'
                 )
             );
             $apiKey = SystemSetting::get("ai_gemini_api_key_{$workspaceId}", config('services.gemini.key', env('GEMINI_API_KEY')));
 
-            $reply = $this->generateGeminiResponse($incomingClean, $promptContext, $apiKey, $rules);
+            $reply = $this->generateGeminiResponse($incomingClean, $promptContext, $apiKey, $rules, $workspaceId);
+            if ($isOutsideHours && $businessHours['away_mode'] === 'always_prepend') {
+                $reply = "🌙 *[Luar Jam Operasional — Buka {$businessHours['start']} - {$businessHours['end']} WIB]*\n\n".$reply;
+            }
 
             return [
                 'success' => true,
@@ -609,6 +740,17 @@ class AutoReplyService
                 'rule_name' => 'Asisten Cerdas AI Gemini',
                 'keyword' => 'AI Fallback',
                 'reply' => $reply,
+                'media_url' => null,
+            ];
+        }
+
+        if ($isOutsideHours) {
+            return [
+                'success' => true,
+                'source' => 'away_schedule',
+                'rule_name' => 'Respon Luar Jam Kerja (Away Message)',
+                'keyword' => 'AWAY / AFTER-HOURS',
+                'reply' => $this->replaceVariables($businessHours['away_message'], 'Kak Budi', '6281234567890', $workspaceName, $businessHours['operating_text']),
                 'media_url' => null,
             ];
         }
@@ -626,10 +768,11 @@ class AutoReplyService
     /**
      * Generate response via Google Gemini API if key exists, or contextual intelligence fallback.
      */
-    public function generateGeminiResponse(string $incomingText, string $promptContext, ?string $apiKey = null, $rules = null): string
+    public function generateGeminiResponse(string $incomingText, string $promptContext, ?string $apiKey = null, $rules = null, ?int $workspaceId = null): string
     {
-        // Enrich context with active AutoReply rules so AI knows user-configured menus
         $enrichedContext = $promptContext;
+
+        // Inject active AutoReply rules summary
         if ($rules && $rules->isNotEmpty()) {
             $menuSummary = $rules->map(function ($r, $idx) {
                 $num = $idx + 1;
@@ -641,11 +784,19 @@ class AutoReplyService
             $enrichedContext .= "\n\nDaftar Menu/Layanan Otomatis yang aktif di sistem saat ini:\n{$menuSummary}\nJika pengguna bertanya seputar pilihan menu atau layanan di atas, arahkan dan jawab sesuai data tersebut.";
         }
 
+        // Inject business knowledge base if present
+        if ($workspaceId) {
+            $knowledgeBase = SystemSetting::get("ai_gemini_knowledge_base_{$workspaceId}");
+            if (! empty($knowledgeBase)) {
+                $enrichedContext .= "\n\nINFORMASI & BASIS PENGETAHUAN BISNIS RESMI:\n{$knowledgeBase}\nUtamakan menjawab pertanyaan berdasarkan data bisnis di atas.";
+            }
+        }
+
         // 1. Try real Google Gemini API call if key is provided
         if (! empty($apiKey)) {
             try {
                 $endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$apiKey}";
-                $systemInstruction = "Petunjuk Sistem: {$enrichedContext}\nJawab pesan pengguna WhatsApp berikut dengan ringkas, sopan, dan relevan:";
+                $systemInstruction = "Petunjuk Sistem: {$enrichedContext}\nJawab pesan pengguna WhatsApp berikut dengan ringkas, ramah, dan solutif dalam Bahasa Indonesia:";
 
                 $response = Http::timeout(6)->post($endpoint, [
                     'contents' => [
@@ -679,7 +830,7 @@ class AutoReplyService
     }
 
     /**
-     * Intelligent contextual AI fallback that matches Indonesian inquiry intents.
+     * Intelligent contextual AI fallback that matches Indonesian business inquiry intents.
      */
     protected function generateContextualFallback(string $incomingText, string $promptContext, $rules = null): string
     {
@@ -690,25 +841,35 @@ class AutoReplyService
             if ($rules && $rules->isNotEmpty()) {
                 $quickList = $rules->take(4)->map(fn ($r, $idx) => ($idx + 1).". *{$r->name}*")->implode("\n");
 
-                return "Halo! Selamat datang di layanan WhatsApp kami.\n\nAda yang dapat kami bantu hari ini? Anda dapat memilih menu cepat berikut:\n{$quickList}\n\nKetik nomor pilihan Anda (contoh: *1*), ketik *MENU* untuk daftar lengkap, atau tulis langsung pertanyaan Anda.";
+                return "Halo! Selamat datang di layanan WhatsApp kami. 👋\n\nAda yang dapat kami bantu hari ini? Anda dapat memilih menu cepat berikut:\n{$quickList}\n\nKetik nomor pilihan Anda (contoh: *1*), ketik *MENU* untuk daftar lengkap, atau tulis langsung pertanyaan Anda.";
             }
 
-            return "Halo! Selamat datang di Layanan Otomasi WhatsApp resmi kami.\n\nAda yang dapat kami bantu hari ini? Silakan ketik *MENU* untuk melihat daftar layanan, atau ketik langsung pertanyaan Anda.";
+            return "Halo! Selamat datang di Layanan WhatsApp resmi kami. 👋\n\nAda yang dapat kami bantu hari ini? Silakan ketik *MENU* untuk melihat daftar layanan, atau ketik langsung pertanyaan Anda.";
         }
 
-        // Registration & Academic Information
-        if (preg_match('/(daftar|pendaftaran|kuliah|mahasiswa|syarat|jurusan|prodi|beasiswa|masuk|registrasi)/i', $lower)) {
-            return "Informasi Pendaftaran & Layanan:\n\n1. Pendaftaran saat ini sedang aktif dibuka.\n2. Jurusan/Program unggulan: Teknik Informatika, Sistem Informasi, dan Manajemen Bisnis Digital.\n3. Akses formulir pendaftaran: https://pmb.mardira.ac.id/form\n\nStaf kami siap membantu jika Anda memerlukan bantuan pengisian berkas persyaratan.";
+        // Price, Catalog & Products
+        if (preg_match('/(katalog|harga|pricelist|daftar harga|berapa|biaya|ongkir|produk|menu|varian)/i', $lower)) {
+            return "🛍️ *Informasi Produk & Harga*\n\nKami menyediakan berbagai produk & layanan berkualitas. Untuk melihat daftar lengkap beserta harga terkini, silakan balas *1* atau ketik *KATALOG*.\n\nStaf kami juga siap membantu jika Anda memerlukan rekomendasi produk terbaik!";
+        }
+
+        // Orders & Purchasing
+        if (preg_match('/(order|pesan|beli|cara pesan|cara beli|cara order|format order|checkout)/i', $lower)) {
+            return "📝 *Format Pemesanan Cepat*\n\nUntuk melakukan pemesanan, silakan kirimkan format berikut:\n• Nama Lengkap:\n• Nomor HP:\n• Alamat Pengiriman:\n• Produk & Jumlah:\n• Metode Bayar (Transfer / QRIS):\n\nTim kami akan segera memproses total pesanan Anda!";
+        }
+
+        // Tracking & Resi
+        if (preg_match('/(resi|lacak|paket|ekspedisi|posisi|status|pengiriman|jne|jnt|sicepat)/i', $lower)) {
+            return "📦 *Cek Status Resi & Pengiriman*\n\nNomor resi otomatis dibagikan setelah pesanan diproses oleh ekspedisi. Silakan kirimkan *Nomor Invoice* atau *Nama Penerima* Anda untuk bantuan pelacakan paket oleh CS kami.";
         }
 
         // Billing, SPP, Fees & Invoices
-        if (preg_match('/(bayar|tagihan|spp|biaya|invoice|rekening|va|virtual account|transfer|cicilan|lunas)/i', $lower)) {
-            return "Untuk konfirmasi atau rincian pembayaran biaya layanan:\n\n• Pembayaran resmi diproses melalui Virtual Account resmi atau transfer ke rekening institusi.\n• Sistem MARDIRA WA memverifikasi bukti bayar secara otomatis.\n\nJika sudah melakukan pembayaran, silakan kirimkan foto atau dokumen bukti transfer ke nomor ini.";
+        if (preg_match('/(bayar|tagihan|spp|biaya|invoice|rekening|va|virtual account|transfer|cicilan|lunas|qris|dana)/i', $lower)) {
+            return "💳 *Konfirmasi & Pembayaran Resmi*\n\nPembayaran resmi diproses melalui transfer rekening resmi atau scan QRIS atas nama institusi/bisnis kami.\n\nJika sudah melakukan pembayaran, silakan kirimkan foto bukti transfer ke nomor ini agar dapat diverifikasi otomatis.";
         }
 
         // Operating Hours & Address
-        if (preg_match('/(jam|buka|tutup|operasional|alamat|lokasi|kantor|gedung|tempat|dimana)/i', $lower)) {
-            return "Jam Pelayanan & Informasi Kantor:\n\n• Hari: Senin s/d Sabtu\n• Jam Operasional: 08.00 – 16.00 WIB\n• Alamat: Politeknik Mardira Indonesia, Jl. Soekarno Hatta No. 211, Bandung.\n\nPesan Anda di luar jam operasional tetap dilayani otomatis oleh bot ini 24/7.";
+        if (preg_match('/(jam|buka|tutup|operasional|alamat|lokasi|kantor|gedung|tempat|dimana|gmaps|peta)/i', $lower)) {
+            return "🏢 *Jam Pelayanan & Informasi Lokasi*\n\n• Jam Operasional: Senin s/d Sabtu (08.00 – 17.00 WIB)\n• Lokasi / Petunjuk Arah: Silakan ketik *LOKASI* untuk tautan Google Maps resmi kami.\n\nPesan Anda di luar jam kerja tetap kami simpan dan akan diprioritaskan saat jam kerja buka kembali.";
         }
 
         // WhatsApp Gateway & Developer APIs
@@ -718,7 +879,7 @@ class AutoReplyService
 
         // Help, Complaints & Customer Support
         if (preg_match('/(bantuan|help|tolong|cs|customer service|admin|operator|manusia|staf|orang|komplain|pengaduan|kendala|masalah|rusak|error)/i', $lower)) {
-            return "👩‍💼 *Pusat Bantuan & Layanan Customer Service*\n\nAda kendala atau hal yang ingin ditanyakan? Silakan jelaskan detail kendala Anda di sini, staf customer service kami akan segera merespon chat Anda pada jam operasional.\n\nKetik *menu* kapan saja untuk kembali ke pilihan otomatis.";
+            return "👩‍💼 *Pusat Bantuan & Layanan Customer Service*\n\nAda kendala atau hal yang ingin ditanyakan? Silakan jelaskan detail pertanyaan Anda di sini, staf customer service kami akan segera merespon chat Anda.\n\nKetik *menu* kapan saja untuk kembali ke pilihan otomatis.";
         }
 
         // Gratitude & Closing
@@ -726,11 +887,11 @@ class AutoReplyService
             return 'Sama-sama! Senang dapat membantu Anda. Jangan ragu untuk menghubungi kami kembali jika membutuhkan informasi lainnya. Semoga hari Anda menyenangkan! 🙏';
         }
 
-        // General AI contextual response
+        // General fallback with active rules
         if ($rules && $rules->isNotEmpty()) {
             $quickList = $rules->take(4)->map(fn ($r, $idx) => ($idx + 1).". *{$r->name}*")->implode("\n");
 
-            return "Terima kasih telah menghubungi kami. Pesan Anda mengenai '{$incomingText}' telah kami terima.\n\nStaf kami akan segera meninjau pertanyaan Anda. Untuk informasi instan, Anda juga dapat memilih layanan kami:\n{$quickList}\n\nBalas dengan nomor pilihan Anda (contoh: *1*) atau ketik *MENU* untuk melihat semua pilihan.";
+            return "Terima kasih telah menghubungi kami. Pesan Anda mengenai '{$incomingText}' telah kami terima.\n\nUntuk informasi instan, Anda juga dapat memilih layanan kami:\n{$quickList}\n\nBalas dengan nomor pilihan Anda (contoh: *1*) atau ketik *MENU* untuk melihat semua pilihan.";
         }
 
         return "Terima kasih telah menghubungi kami. Pesan Anda mengenai '{$incomingText}' telah kami terima.\n\nTim layanan kami siap membantu Anda. Untuk bantuan instan seputar informasi layanan, silakan ketik kata kunci *MENU* atau tunggu sebentar staf kami akan merespon.";
@@ -760,11 +921,12 @@ class AutoReplyService
     }
 
     /**
-     * Replace dynamic template variables in text
+     * Replace dynamic template variables in text with rich contextual data.
      */
-    public function replaceVariables(string $text, string $customerName, string $sender, string $workspaceName = 'Layanan'): string
+    public function replaceVariables(string $text, string $customerName, string $sender, string $workspaceName = 'Layanan', ?string $operatingHours = null): string
     {
-        $hour = (int) now()->timezone('Asia/Jakarta')->format('G');
+        $now = now()->timezone('Asia/Jakarta');
+        $hour = (int) $now->format('G');
         $timeGreeting = match (true) {
             $hour >= 4 && $hour < 11 => 'Pagi',
             $hour >= 11 && $hour < 15 => 'Siang',
@@ -772,23 +934,42 @@ class AutoReplyService
             default => 'Malam',
         };
 
-        $nameVal = $customerName !== 'Kak' ? $customerName : 'Kak';
-        $fullGreeting = $customerName !== 'Kak' ? "Kak {$customerName}" : 'Sahabat';
+        $dayNames = [
+            1 => 'Senin', 2 => 'Selasa', 3 => 'Rabu', 4 => 'Kamis', 5 => 'Jumat', 6 => 'Sabtu', 7 => 'Minggu',
+        ];
+        $monthNames = [
+            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April', 5 => 'Mei', 6 => 'Juni',
+            7 => 'Juli', 8 => 'Agustus', 9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember',
+        ];
+        $dayName = $dayNames[(int) $now->dayOfWeekIso] ?? 'Hari ini';
+        $formattedDate = $now->format('j').' '.$monthNames[(int) $now->format('n')].' '.$now->format('Y');
+        $formattedTime = $now->format('H:i').' WIB';
+
+        $nameVal = ($customerName !== 'Kak' && ! empty($customerName)) ? $customerName : 'Kak';
+        $fullGreeting = ($customerName !== 'Kak' && ! empty($customerName)) ? "Kak {$customerName}" : 'Sahabat';
 
         return str_replace(
             [
                 '{{name}}', '{{nama}}', '{name}', '{nama}',
                 '{{greeting_name}}', '{greeting_name}',
+                '{{salam}}', '{salam}', '{{greeting}}', '{greeting}',
+                '{{hari}}', '{hari}', '{{day}}', '{day}',
+                '{{tanggal}}', '{tanggal}', '{{date}}', '{date}',
+                '{{jam}}', '{jam}', '{{time}}', '{{waktu}}', '{time}', '{waktu}',
                 '{{phone}}', '{{nomor}}', '{phone}', '{nomor}',
-                '{{time}}', '{{waktu}}', '{time}', '{waktu}',
-                '{{workspace}}', '{workspace}',
+                '{{workspace}}', '{workspace}', '{{bisnis}}', '{bisnis}',
+                '{{jam_operasional}}', '{jam_operasional}',
             ],
             [
                 $nameVal, $nameVal, $nameVal, $nameVal,
                 $fullGreeting, $fullGreeting,
+                "Selamat {$timeGreeting}", "Selamat {$timeGreeting}", "Selamat {$timeGreeting}", "Selamat {$timeGreeting}",
+                $dayName, $dayName, $dayName, $dayName,
+                $formattedDate, $formattedDate, $formattedDate, $formattedDate,
+                $formattedTime, $formattedTime, $timeGreeting, $timeGreeting, $timeGreeting, $timeGreeting,
                 $sender, $sender, $sender, $sender,
-                $timeGreeting, $timeGreeting, $timeGreeting, $timeGreeting,
-                $workspaceName, $workspaceName,
+                $workspaceName, $workspaceName, $workspaceName, $workspaceName,
+                $operatingHours ?: '08:00 - 17:00 WIB', $operatingHours ?: '08:00 - 17:00 WIB',
             ],
             $text
         );

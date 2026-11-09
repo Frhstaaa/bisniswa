@@ -14,6 +14,7 @@ class AutoReply extends Model
         'workspace_id',
         'device_id',
         'name',
+        'category',
         'trigger_type',
         'keyword',
         'reply_message',

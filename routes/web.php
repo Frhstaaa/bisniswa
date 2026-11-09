@@ -84,6 +84,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/auto-reply/{id}/toggle', [AutoReplyController::class, 'toggle'])->name('auto-reply.toggle');
     Route::delete('/auto-reply/{id}', [AutoReplyController::class, 'destroy'])->name('auto-reply.destroy');
     Route::post('/auto-reply/menu-config', [AutoReplyController::class, 'updateMenuConfig'])->name('auto-reply.menu-config');
+    Route::post('/auto-reply/schedule-config', [AutoReplyController::class, 'updateScheduleConfig'])->name('auto-reply.schedule-config');
     Route::post('/auto-reply/seed-templates', [AutoReplyController::class, 'seedTemplateRules'])->name('auto-reply.seed-templates');
     Route::post('/auto-reply/ai-config', [AutoReplyController::class, 'updateAiConfig'])->name('auto-reply.ai-config');
     Route::post('/auto-reply/simulate', [AutoReplyController::class, 'simulate'])->name('auto-reply.simulate');
