@@ -96,7 +96,7 @@ class DeviceController extends Controller
             'meta_verify_token' => 'nullable|string|max:100',
         ]);
 
-        $engine = 'wwebjs';
+        $engine = 'baileys';
         $status = 'initializing';
 
         $device = Device::create([
@@ -123,11 +123,11 @@ class DeviceController extends Controller
         }
 
         return redirect()->back()
-            ->with('success', "Perangkat '{$device->name}' berhasil didaftarkan (BisnisWA UltraSync Engine).")
+            ->with('success', "Perangkat '{$device->name}' berhasil didaftarkan (Baileys WebSocket Native Engine).")
             ->with('created_device', [
                 'id' => $device->id,
                 'name' => $device->name,
-                'engine' => 'wwebjs',
+                'engine' => 'baileys',
                 'status' => $session['status'] ?? 'qr_ready',
                 'qr' => $session['qr'] ?? null,
             ]);

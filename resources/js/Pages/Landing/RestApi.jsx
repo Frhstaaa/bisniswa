@@ -265,11 +265,11 @@ payload, _ := json.Marshal(map[string]string{
     // Response Success Sample
     const successResponseSample = `{
   "status": true,
-  "message": "Pesan berhasil diproses dan dikirim via BisnisWA UltraSync Engine",
+  "message": "Pesan berhasil diproses dan dikirim via BisnisWA Baileys Engine",
   "data": {
     "message_id": 142,
     "device_id": 6,
-    "server": "wwebjs",
+    "server": "baileys",
     "recipient": "+628386012467",
     "status": "delivered",
     "created_at": "2026-10-26T14:20:00+07:00"

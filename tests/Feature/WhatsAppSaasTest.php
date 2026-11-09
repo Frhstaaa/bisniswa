@@ -148,7 +148,7 @@ class WhatsAppSaasTest extends TestCase
                 'status' => true,
                 'data' => [
                     'recipient' => '+6281234567890',
-                    'engine' => 'wwebjs',
+                    'engine' => 'baileys',
                 ],
             ]);
 
@@ -162,7 +162,7 @@ class WhatsAppSaasTest extends TestCase
     {
         $response = $this->postJson('/devices', [
             'name' => 'CS WhatsApp Live',
-            'engine' => 'wwebjs',
+            'engine' => 'baileys',
             'phone_number' => '+6281299998888',
         ]);
 
@@ -171,7 +171,7 @@ class WhatsAppSaasTest extends TestCase
                 'success' => true,
                 'device' => [
                     'name' => 'CS WhatsApp Live',
-                    'engine' => 'wwebjs',
+                    'engine' => 'baileys',
                 ],
             ]);
 

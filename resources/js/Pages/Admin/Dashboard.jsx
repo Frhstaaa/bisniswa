@@ -464,15 +464,15 @@ export default function AdminDashboard({
                             <CardContent className="space-y-3 p-5 text-xs">
                                 <div className="p-3.5 rounded-xl border border-blue-200/80 bg-blue-50/30 space-y-1.5">
                                     <div className="flex items-center justify-between">
-                                        <span className="font-bold text-slate-900">BisnisWA UltraSync Engine</span>
+                                        <span className="font-bold text-slate-900">BisnisWA Baileys Engine</span>
                                         <span className="font-mono text-[11px] text-[#1e50ff] font-bold">
-                                            {engineHealth.wwebjs?.active_instances ?? 0} instance aktif
+                                            {(engineHealth.baileys?.active_instances ?? engineHealth.wwebjs?.active_instances) ?? 0} instance aktif
                                         </span>
                                     </div>
-                                    <p className="text-[10px] text-slate-500">Official Enterprise Native Protocol (Zero Delay & Anti-Ban)</p>
+                                    <p className="text-[10px] text-slate-500">WebSocket Native Signal Protocol (Ringan, Responsif & Anti-Ban)</p>
                                     <div className="flex items-center justify-between text-[11px] pt-1.5 border-t border-blue-100 text-slate-600">
                                         <span>Estimasi Total RAM:</span>
-                                        <span className="font-mono font-bold text-[#1e50ff]">~{engineHealth.wwebjs?.estimated_ram_mb ?? 0} MB</span>
+                                        <span className="font-mono font-bold text-[#1e50ff]">~{(engineHealth.baileys?.estimated_ram_mb ?? engineHealth.wwebjs?.estimated_ram_mb) ?? 0} MB</span>
                                     </div>
                                 </div>
                             </CardContent>

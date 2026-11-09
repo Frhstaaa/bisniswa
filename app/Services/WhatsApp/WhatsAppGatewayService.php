@@ -50,7 +50,7 @@ class WhatsAppGatewayService
                 ->withHeaders(['X-Internal-Secret' => $this->gatewaySecret])
                 ->post("{$this->gatewayNodeUrl}/sessions/init", [
                     'device_id' => $device->id,
-                    'engine' => 'wwebjs',
+                    'engine' => 'baileys',
                 ]);
 
             if ($response->successful()) {

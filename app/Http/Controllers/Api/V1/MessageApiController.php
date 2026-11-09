@@ -65,12 +65,12 @@ class MessageApiController extends Controller
         $boundDeviceData = null;
         if ($apiKey->device) {
             $d = $apiKey->device;
-            $serverLabel = 'BisnisWA UltraSync Engine';
+            $serverLabel = 'BisnisWA Baileys Engine';
             $boundDeviceData = [
                 'id' => $d->id,
                 'name' => $d->name,
                 'phone_number' => $d->phone_number,
-                'server' => 'wwebjs',
+                'server' => 'baileys',
                 'server_label' => $serverLabel,
                 'status' => $d->status,
                 'is_connected' => $d->status === 'connected',
@@ -206,7 +206,7 @@ class MessageApiController extends Controller
                         'device_id' => $device->id,
                         'device_name' => $device->name,
                         'phone_number' => $device->phone_number,
-                        'server' => 'wwebjs',
+                        'server' => 'baileys',
                         'status' => $device->status,
                     ],
                 ], 422);
@@ -283,8 +283,8 @@ class MessageApiController extends Controller
         $usedQuota = max(0, $monthlyQuota - $remainingQuota);
 
         // Single Engine label
-        $serverLabel = 'BisnisWA UltraSync Engine';
-        $serverCode = 'wwebjs';
+        $serverLabel = 'BisnisWA Baileys Engine';
+        $serverCode = 'baileys';
 
         return response()->json([
             'status' => true,
@@ -292,7 +292,7 @@ class MessageApiController extends Controller
             'data' => [
                 'message_id' => $message->id,
                 'device_id' => $device->id,
-                'engine' => 'wwebjs',
+                'engine' => 'baileys',
                 'server' => $serverCode,
                 'recipient' => $message->receiver_number,
                 'status' => $message->status,

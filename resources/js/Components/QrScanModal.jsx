@@ -152,7 +152,7 @@ export default function QrScanModal({
             '/devices',
             {
                 name,
-                engine: 'wwebjs',
+                engine: 'baileys',
                 phone_number: phone,
             },
             {
@@ -264,11 +264,11 @@ export default function QrScanModal({
                             </div>
                             <div className="space-y-0.5 text-left">
                                 <div className="flex items-center gap-1.5 flex-wrap">
-                                    <span className="font-bold text-xs text-slate-900">BisnisWA UltraSync Engine</span>
-                                    <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded">Enterprise Native Web</span>
+                                    <span className="font-bold text-xs text-slate-900">BisnisWA Baileys Engine</span>
+                                    <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded">WebSocket Native</span>
                                 </div>
                                 <p className="text-[11px] text-slate-600 leading-tight">
-                                    Enkripsi native berkecepatan tinggi. Bebas masalah "Menunggu pesan ini", sesi stabil, dan anti-ban.
+                                    Enkripsi Signal native berkecepatan tinggi via WebSocket. Ringan, responsif, bebas masalah "Menunggu pesan ini", dan anti-ban.
                                 </p>
                             </div>
                         </div>

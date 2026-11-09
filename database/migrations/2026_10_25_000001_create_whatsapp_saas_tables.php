@@ -78,7 +78,7 @@ return new class extends Migration
             $table->foreignId('workspace_id')->constrained('workspaces')->cascadeOnDelete();
             $table->string('phone_number')->nullable();
             $table->string('name');
-            $table->string('engine')->default('wwebjs'); // wwebjs | baileys
+            $table->string('engine')->default('baileys'); // baileys | cloud_api
             $table->string('status')->default('disconnected'); // disconnected, qr_ready, connecting, connected
             $table->text('qr_code')->nullable();
             $table->integer('battery_level')->nullable();

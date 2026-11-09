@@ -135,13 +135,13 @@ class DatabaseSeeder extends Seeder
             'new_value' => ['remaining_message_quota' => 38450, 'added' => 10000],
         ]);
 
-        // 6. Create Connected Devices (wwebjs and baileys)
+        // 6. Create Connected Devices (Baileys)
         $device1 = Device::firstOrCreate([
             'workspace_id' => $workspace->id,
             'phone_number' => '+6281298430911',
         ], [
             'name' => 'CS Toko Online Utama',
-            'engine' => 'wwebjs',
+            'engine' => 'baileys',
             'status' => 'connected',
             'battery_level' => 88,
             'last_connected_at' => now()->subMinutes(12),
@@ -223,7 +223,7 @@ class DatabaseSeeder extends Seeder
         Device::firstOrCreate(['phone_number' => '+6282219800212'], [
             'workspace_id' => $client2->id,
             'name' => 'Server Siakad & Broadcast Mahasiswa',
-            'engine' => 'wwebjs',
+            'engine' => 'baileys',
             'status' => 'connected',
             'battery_level' => 95,
             'last_connected_at' => now()->subMinutes(8),
@@ -329,7 +329,7 @@ class DatabaseSeeder extends Seeder
 
             // WhatsApp Microservice & Cluster
             ['key' => 'whatsapp_gateway_endpoint', 'value' => 'http://127.0.0.1:3000', 'group' => 'whatsapp', 'description' => 'Endpoint REST/WebSocket Node.js Cluster.'],
-            ['key' => 'default_engine', 'value' => 'wwebjs', 'group' => 'whatsapp', 'description' => 'Engine bawaan default untuk sesi baru (BisnisWA UltraSync Engine).'],
+            ['key' => 'default_engine', 'value' => 'baileys', 'group' => 'whatsapp', 'description' => 'Engine bawaan default untuk sesi baru (BisnisWA Baileys Engine).'],
             ['key' => 'cluster_heartbeat_interval', 'value' => '15', 'group' => 'whatsapp', 'description' => 'Interval ping monitor socket gateway dalam detik.'],
             ['key' => 'max_sessions_per_node', 'value' => '50', 'group' => 'whatsapp', 'description' => 'Batas maksimal instance WhatsApp per node microservice.'],
 

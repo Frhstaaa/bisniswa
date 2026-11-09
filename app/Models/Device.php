@@ -26,6 +26,10 @@ class Device extends Model
         'last_connected_at',
     ];
 
+    protected $attributes = [
+        'engine' => 'baileys',
+    ];
+
     public function isCloudApi(): bool
     {
         return $this->engine === 'cloud_api';

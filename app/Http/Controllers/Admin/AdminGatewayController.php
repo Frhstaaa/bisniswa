@@ -18,7 +18,7 @@ class AdminGatewayController extends Controller
             ->latest()
             ->paginate(20);
 
-        $wwebjsDevices = Device::where('engine', 'wwebjs')->get();
+        $baileysDevices = Device::whereIn('engine', ['baileys', 'wwebjs'])->get();
 
         $clusterStatus = 'OFFLINE';
         $microserviceActive = 0;
@@ -36,9 +36,12 @@ class AdminGatewayController extends Controller
         $stats = [
             'total_devices' => Device::count(),
             'online_devices' => Device::where('status', 'connected')->count(),
-            'wwebjs_total' => $wwebjsDevices->count(),
-            'wwebjs_connected' => $wwebjsDevices->where('status', 'connected')->count(),
-            'wwebjs_ram_mb' => $wwebjsDevices->where('status', 'connected')->count() * 120,
+            'wwebjs_total' => $baileysDevices->count(),
+            'wwebjs_connected' => $baileysDevices->where('status', 'connected')->count(),
+            'wwebjs_ram_mb' => $baileysDevices->where('status', 'connected')->count() * 25,
+            'baileys_total' => $baileysDevices->count(),
+            'baileys_connected' => $baileysDevices->where('status', 'connected')->count(),
+            'baileys_ram_mb' => $baileysDevices->where('status', 'connected')->count() * 25,
             'cluster_status' => $clusterStatus,
             'cluster_endpoint' => $gatewayUrl,
             'microservice_sessions' => $microserviceActive,

@@ -49,11 +49,17 @@ class SuperAdminService
                     'messages_total' => $messagesTotal,
                 ],
                 'engine_health' => [
+                    'baileys' => [
+                        'active_instances' => $onlineDevices,
+                        'status' => 'operational',
+                        'estimated_ram_mb' => $onlineDevices * 25,
+                        'engine_version' => 'BisnisWA Baileys Engine (WebSocket Native)',
+                    ],
                     'wwebjs' => [
                         'active_instances' => $onlineDevices,
                         'status' => 'operational',
-                        'estimated_ram_mb' => $onlineDevices * 120,
-                        'engine_version' => 'BisnisWA UltraSync Engine v2.0 (Enterprise Native)',
+                        'estimated_ram_mb' => $onlineDevices * 25,
+                        'engine_version' => 'BisnisWA Baileys Engine (WebSocket Native)',
                     ],
                 ],
                 'recent_payments' => $this->paymentRepo->getRecentPayments(6)->values()->all(),

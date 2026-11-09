@@ -127,7 +127,7 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
     });
 
     const connectedCount = (devices || []).filter((d) => d.status === 'connected').length;
-    const wwebjsCount = (devices || []).filter((d) => d.engine === 'wwebjs').length;
+    const baileysCount = (devices || []).filter((d) => d.engine === 'baileys' || d.engine === 'wwebjs').length;
 
     return (
         <AppLayout title="Perangkat WhatsApp">
@@ -152,7 +152,7 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                             )}
                         </div>
                         <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                            Tautkan nomor WhatsApp bisnis Anda menggunakan engine resmi <strong className="text-[#1e50ff]">BisnisWA UltraSync</strong> (Enterprise Native Web).
+                            Tautkan nomor WhatsApp bisnis Anda menggunakan engine resmi <strong className="text-[#1e50ff]">BisnisWA Baileys</strong> (WebSocket Native - Ringan & Cepat).
                         </p>
                     </div>
 
@@ -242,7 +242,7 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                         <Card className="h-full border-slate-200 shadow-xs hover:shadow-md transition-all">
                             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                                 <CardTitle className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                                    BisnisWA UltraSync Engine
+                                    BisnisWA Baileys Engine
                                 </CardTitle>
                                 <div className="h-7 w-7 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
                                     <Zap className="h-3.5 w-3.5" />
@@ -253,7 +253,7 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                                     <CountUp to={connectedCount} /> Instance
                                 </div>
                                 <p className="text-[11px] text-slate-500 mt-1">
-                                    Engine Tunggal (Zero Delay & Anti-Ban)
+                                    Engine Tunggal (WebSocket Native & Anti-Ban)
                                 </p>
                             </CardContent>
                         </Card>

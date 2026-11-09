@@ -61,7 +61,7 @@ export default function GatewaysIndex({ devices = {}, stats = {} }) {
                         <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => handleRestartEngine('wwebjs')}
+                            onClick={() => handleRestartEngine('baileys')}
                             className="h-9 px-3.5 rounded-lg border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer"
                         >
                             <RotateCw className="w-3.5 h-3.5 text-emerald-600" />
@@ -93,22 +93,22 @@ export default function GatewaysIndex({ devices = {}, stats = {} }) {
                         </CardContent>
                     </Card>
 
-                    {/* BisnisWA UltraSync Engine */}
+                    {/* BisnisWA Baileys Engine */}
                     <Card className="border-slate-200/90 shadow-xs rounded-xl h-full border-emerald-200/80 bg-emerald-50/20">
                         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-4">
                             <CardTitle className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                                BisnisWA UltraSync Engine
+                                BisnisWA Baileys Engine
                             </CardTitle>
                             <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-100 text-emerald-900 border border-emerald-300">
-                                ENTERPRISE
+                                WEBSOCKET
                             </span>
                         </CardHeader>
                         <CardContent className="pt-0 px-4 pb-4 space-y-1">
                             <div className="text-2xl font-black text-slate-900">
-                                {stats.wwebjs_connected} <span className="text-xs font-normal text-slate-500">instance aktif</span>
+                                {stats.baileys_connected ?? stats.wwebjs_connected} <span className="text-xs font-normal text-slate-500">instance aktif</span>
                             </div>
                             <p className="text-[11px] text-slate-500">
-                                Estimasi RAM: <strong className="font-mono text-emerald-800">~{stats.wwebjs_ram_mb} MB</strong> • Mode: Enterprise Isolated Session
+                                Estimasi RAM: <strong className="font-mono text-emerald-800">~{stats.baileys_ram_mb ?? stats.wwebjs_ram_mb} MB</strong> • Mode: WebSocket Native (Ultra-Low Memory)
                             </p>
                         </CardContent>
                     </Card>
@@ -150,7 +150,7 @@ export default function GatewaysIndex({ devices = {}, stats = {} }) {
                                     </TableRow>
                                 ) : (
                                     devicesList.map((device) => {
-                                        const serverLabel = 'UltraSync Engine';
+                                        const serverLabel = device.engine === 'cloud_api' ? 'Meta Cloud API' : 'Baileys Engine';
 
                                         return (
                                             <TableRow key={device.id} className="hover:bg-slate-50/80 transition-colors">

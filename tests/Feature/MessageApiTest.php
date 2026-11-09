@@ -176,7 +176,7 @@ class MessageApiTest extends TestCase
             ->assertJson([
                 'status' => true,
                 'data' => [
-                    'server' => 'wwebjs',
+                    'server' => 'baileys',
                     'recipient' => '+6281234567890',
                     'status' => 'delivered',
                 ],

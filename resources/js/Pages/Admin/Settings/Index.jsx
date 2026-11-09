@@ -37,7 +37,7 @@ export default function SettingsIndex({ settings }) {
             maintenance_mode: general.maintenance_mode?.value === 'true',
 
             whatsapp_gateway_endpoint: whatsapp.whatsapp_gateway_endpoint?.value || 'http://127.0.0.1:3000',
-            default_engine: whatsapp.default_engine?.value || 'wwebjs',
+            default_engine: whatsapp.default_engine?.value || 'baileys',
             cluster_heartbeat_interval: whatsapp.cluster_heartbeat_interval?.value || '15',
             max_sessions_per_node: whatsapp.max_sessions_per_node?.value || '50',
 
@@ -263,11 +263,11 @@ export default function SettingsIndex({ settings }) {
                                                     Engine WhatsApp Utama
                                                 </label>
                                                 <select
-                                                    value="wwebjs"
+                                                    value="baileys"
                                                     disabled
                                                     className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-slate-700 font-medium"
                                                 >
-                                                    <option value="wwebjs">BisnisWA UltraSync Engine (Enterprise Native - Stabil & Zero Delay)</option>
+                                                    <option value="baileys">BisnisWA Baileys Engine (WebSocket Native - Ringan, Cepat & Zero Chromium)</option>
                                                 </select>
                                             </div>
                                         </div>
