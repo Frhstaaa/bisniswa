@@ -19,6 +19,8 @@ class AdminDashboardController extends Controller
 
         return Inertia::render('Admin/Dashboard', [
             'metrics' => $stats['metrics'],
+            'plansBreakdown' => $stats['plans_breakdown'] ?? [],
+            'revenueTrend' => $stats['revenue_trend'] ?? [],
             'engineHealth' => $stats['engine_health'],
             'recentPayments' => $stats['recent_payments'],
             'recentClients' => $stats['recent_clients'],
