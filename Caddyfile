@@ -1,0 +1,63 @@
+{
+	{$CADDY_GLOBAL_OPTIONS}
+
+	admin {$CADDY_SERVER_ADMIN_HOST:localhost}:{$CADDY_SERVER_ADMIN_PORT:2019}
+
+	frankenphp {
+		worker {
+			file "{$APP_PUBLIC_PATH}/frankenphp-worker.php"
+			{$CADDY_SERVER_WORKER_DIRECTIVE}
+			{$CADDY_SERVER_WATCH_DIRECTIVES}
+		}
+	}
+}
+
+{$CADDY_EXTRA_CONFIG}
+
+{$CADDY_SERVER_SERVER_NAME::8000} {
+	log {
+		level {$CADDY_SERVER_LOG_LEVEL:WARN}
+
+		format filter {
+			wrap {$CADDY_SERVER_LOGGER:json}
+			fields {
+				request>uri query {
+					replace authorization REDACTED
+				}
+			}
+		}
+	}
+
+	# Enterprise upload allowance for bulk WhatsApp media & campaigns (up to 100MB)
+	request_body {
+		max_size 100MB
+	}
+
+	# Compressing the Mercure stream costs memory per subscriber and enables BREACH-style attacks...
+	@compressible not path /.well-known/mercure
+
+	route {
+		root * "{$APP_PUBLIC_PATH}"
+
+		# Direct Caddy high-performance serving & caching for static assets
+		@static {
+			path /build/* /favicon.ico /robots.txt
+		}
+		header @static Cache-Control "public, max-age=31536000, immutable"
+
+		@uploads {
+			path /uploads/*
+		}
+		header @uploads Cache-Control "public, max-age=86400"
+
+		encode @compressible zstd br gzip
+
+		{$CADDY_SERVER_EXTRA_DIRECTIVES}
+
+		php_server {
+			index frankenphp-worker.php
+			try_files {path} frankenphp-worker.php
+			resolve_root_symlink
+		}
+	}
+}

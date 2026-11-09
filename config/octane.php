@@ -1,5 +1,13 @@
 <?php
 
+use App\Repositories\Contracts\DeviceRepositoryInterface;
+use App\Repositories\Contracts\MessageRepositoryInterface;
+use App\Services\AntiBanThrottleService;
+use App\Services\AutoReplyService;
+use App\Services\Billing\SubscriptionService;
+use App\Services\PaymentService;
+use App\Services\WhatsApp\MetaCloudApiService;
+use App\Services\WhatsApp\WhatsAppGatewayService;
 use Laravel\Octane\Contracts\OperationTerminated;
 use Laravel\Octane\Events\RequestHandled;
 use Laravel\Octane\Events\RequestReceived;
@@ -81,7 +89,7 @@ return [
         ],
 
         RequestTerminated::class => [
-            // FlushUploadedFiles::class,
+            FlushUploadedFiles::class,
         ],
 
         TaskReceived::class => [
@@ -105,8 +113,8 @@ return [
         OperationTerminated::class => [
             FlushOnce::class,
             FlushTemporaryContainerInstances::class,
-            // DisconnectFromDatabases::class,
-            // CollectGarbage::class,
+            CollectGarbage::class,
+            ...(env('OCTANE_DISCONNECT_DB', false) ? [DisconnectFromDatabases::class] : []),
         ],
 
         WorkerErrorOccurred::class => [
@@ -132,6 +140,14 @@ return [
 
     'warm' => [
         ...Octane::defaultServicesToWarm(),
+        WhatsAppGatewayService::class,
+        MetaCloudApiService::class,
+        AntiBanThrottleService::class,
+        AutoReplyService::class,
+        PaymentService::class,
+        SubscriptionService::class,
+        DeviceRepositoryInterface::class,
+        MessageRepositoryInterface::class,
     ],
 
     'flush' => [
@@ -206,7 +222,7 @@ return [
     |
     */
 
-    'garbage' => 50,
+    'garbage' => (int) env('OCTANE_GARBAGE_COLLECTION_THRESHOLD', 64),
 
     /*
     |--------------------------------------------------------------------------
@@ -219,7 +235,31 @@ return [
     |
     */
 
-    'max_execution_time' => 30,
+    'max_execution_time' => (int) env('OCTANE_MAX_EXECUTION_TIME', 60),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Worker Configuration & Lifecycle
+    |--------------------------------------------------------------------------
+    |
+    | Configure the worker count and max requests before workers are gracefully
+    | recycled. A max_requests of 1000 eliminates memory fragmentation while
+    | maintaining extremely high throughput.
+    |
+    */
+
+    'workers' => env('OCTANE_WORKERS', 'auto'),
+
+    'max_requests' => (int) env('OCTANE_MAX_REQUESTS', 1000),
+
+    'caddyfile' => env('OCTANE_CADDYFILE', base_path('Caddyfile')),
+
+    'caddy' => [
+        'env' => [
+            'CADDY_SERVER_WORKER_COUNT' => env('OCTANE_WORKERS', 'auto'),
+            'MAX_REQUESTS' => env('OCTANE_MAX_REQUESTS', 1000),
+        ],
+    ],
 
     /*
     |--------------------------------------------------------------------------

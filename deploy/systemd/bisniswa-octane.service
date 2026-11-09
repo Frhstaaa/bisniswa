@@ -1,0 +1,20 @@
+[Unit]
+Description=BisnisWA Laravel Octane (FrankenPHP Engine)
+After=network.target mysql.service redis.service
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/bisniswa
+ExecStart=/usr/bin/php artisan octane:start --server=frankenphp --caddyfile=Caddyfile --host=127.0.0.1 --port=8000 --admin-port=2019 --workers=auto --max-requests=1000
+ExecReload=/usr/bin/php artisan octane:reload
+Restart=always
+RestartSec=3s
+TimeoutStopSec=10s
+LimitNOFILE=65535
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
