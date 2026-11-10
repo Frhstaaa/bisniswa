@@ -836,8 +836,49 @@ class AutoReplyService
     {
         $lower = strtolower(trim($incomingText));
 
-        // Greetings & Salutations
-        if (preg_match('/(halo|hai|hey|hei|pagi|siang|sore|malam|assalamu|permisi|tes|test|mas|kak|min|gan|sis|bang|mbak|pak|bu)/i', $lower)) {
+        // 1. Specific Business Inquiries & Intents (Evaluated first to handle compound phrases like "Halo min, boleh minta daftar harga?")
+        // Price, Catalog & Products
+        if (preg_match('/\b(katalog|harga|pricelist|daftar harga|berapa|biaya|ongkir|produk|varian)\b/i', $lower)) {
+            return "🛍️ *Informasi Produk & Harga*\n\nKami menyediakan berbagai produk & layanan berkualitas. Untuk melihat daftar lengkap beserta harga terkini, silakan balas *1* atau ketik *KATALOG*.\n\nStaf kami juga siap membantu jika Anda memerlukan rekomendasi produk terbaik!";
+        }
+
+        // Orders & Purchasing
+        if (preg_match('/\b(order|pesan|beli|cara pesan|cara beli|cara order|format order|checkout)\b/i', $lower)) {
+            return "📝 *Format Pemesanan Cepat*\n\nUntuk melakukan pemesanan, silakan kirimkan format berikut:\n• Nama Lengkap:\n• Nomor HP:\n• Alamat Pengiriman:\n• Produk & Jumlah:\n• Metode Bayar (Transfer / QRIS):\n\nTim kami akan segera memproses total pesanan Anda!";
+        }
+
+        // Tracking & Resi
+        if (preg_match('/\b(resi|lacak|paket|ekspedisi|posisi|status pengiriman|jne|jnt|sicepat|tiki|pos)\b/i', $lower)) {
+            return "📦 *Cek Status Resi & Pengiriman*\n\nNomor resi otomatis dibagikan setelah pesanan diproses oleh ekspedisi. Silakan kirimkan *Nomor Invoice* atau *Nama Penerima* Anda untuk bantuan pelacakan paket oleh CS kami.";
+        }
+
+        // Billing, SPP, Fees & Invoices
+        if (preg_match('/\b(bayar|tagihan|spp|invoice|rekening|va|virtual account|transfer|cicilan|lunas|qris|dana)\b/i', $lower)) {
+            return "💳 *Konfirmasi & Pembayaran Resmi*\n\nPembayaran resmi diproses melalui transfer rekening resmi atau scan QRIS atas nama institusi/bisnis kami.\n\nJika sudah melakukan pembayaran, silakan kirimkan foto bukti transfer ke nomor ini agar dapat diverifikasi otomatis.";
+        }
+
+        // Operating Hours & Address
+        if (preg_match('/\b(jam buka|jam operasional|jam kerja|tutup|alamat|lokasi|kantor|gedung|tempat|dimana|gmaps|peta)\b/i', $lower)) {
+            return "🏢 *Jam Pelayanan & Informasi Lokasi*\n\n• Jam Operasional: Senin s/d Sabtu (08.00 – 17.00 WIB)\n• Lokasi / Petunjuk Arah: Silakan ketik *LOKASI* untuk tautan Google Maps resmi kami.\n\nPesan Anda di luar jam kerja tetap kami simpan dan akan diprioritaskan saat jam kerja buka kembali.";
+        }
+
+        // WhatsApp Gateway & Developer APIs
+        if (preg_match('/\b(api|webhook|token|gateway|server|dokumentasi|postman|integrasi)\b/i', $lower)) {
+            return "Layanan WhatsApp Gateway Enterprise MARDIRA:\n\n• Tersedia REST API v1 dan Webhook event real-time.\n• Server 1 WhatsApp (Jalur Cepat) & Server 2 WhatsApp (Jalur Stabil).\n• Kredensial API Key serta koleksi Postman dapat diunduh langsung melalui menu *Kredensial API & Webhook* di dashboard Anda.";
+        }
+
+        // Help, Complaints & Customer Support
+        if (preg_match('/\b(bantuan|help|tolong|cs|customer service|admin|operator|manusia|staf|orang|komplain|pengaduan|kendala|masalah|rusak|error)\b/i', $lower)) {
+            return "👩‍💼 *Pusat Bantuan & Layanan Customer Service*\n\nAda kendala atau hal yang ingin ditanyakan? Silakan jelaskan detail pertanyaan Anda di sini, staf customer service kami akan segera merespon chat Anda.\n\nKetik *menu* kapan saja untuk kembali ke pilihan otomatis.";
+        }
+
+        // Gratitude & Closing
+        if (preg_match('/\b(terima kasih|makasih|thanks|thank you|ok|oke|siap|baik|sip)\b/i', $lower)) {
+            return 'Sama-sama! Senang dapat membantu Anda. Jangan ragu untuk menghubungi kami kembali jika membutuhkan informasi lainnya. Semoga hari Anda menyenangkan! 🙏';
+        }
+
+        // 2. Greetings & Salutations (evaluated with strict word boundaries to avoid matching subwords like "minta", "informasi", etc.)
+        if (preg_match('/\b(halo|hai|hey|hei|pagi|siang|sore|malam|assalamu[\w]*|permisi|tes|test|ping|p|salam)\b|\b(mas|kak|min|gan|sis|bang|mbak|pak|bu)\b/i', $lower)) {
             if ($rules && $rules->isNotEmpty()) {
                 $quickList = $rules->take(4)->map(fn ($r, $idx) => ($idx + 1).". *{$r->name}*")->implode("\n");
 
@@ -847,47 +888,7 @@ class AutoReplyService
             return "Halo! Selamat datang di Layanan WhatsApp resmi kami. 👋\n\nAda yang dapat kami bantu hari ini? Silakan ketik *MENU* untuk melihat daftar layanan, atau ketik langsung pertanyaan Anda.";
         }
 
-        // Price, Catalog & Products
-        if (preg_match('/(katalog|harga|pricelist|daftar harga|berapa|biaya|ongkir|produk|menu|varian)/i', $lower)) {
-            return "🛍️ *Informasi Produk & Harga*\n\nKami menyediakan berbagai produk & layanan berkualitas. Untuk melihat daftar lengkap beserta harga terkini, silakan balas *1* atau ketik *KATALOG*.\n\nStaf kami juga siap membantu jika Anda memerlukan rekomendasi produk terbaik!";
-        }
-
-        // Orders & Purchasing
-        if (preg_match('/(order|pesan|beli|cara pesan|cara beli|cara order|format order|checkout)/i', $lower)) {
-            return "📝 *Format Pemesanan Cepat*\n\nUntuk melakukan pemesanan, silakan kirimkan format berikut:\n• Nama Lengkap:\n• Nomor HP:\n• Alamat Pengiriman:\n• Produk & Jumlah:\n• Metode Bayar (Transfer / QRIS):\n\nTim kami akan segera memproses total pesanan Anda!";
-        }
-
-        // Tracking & Resi
-        if (preg_match('/(resi|lacak|paket|ekspedisi|posisi|status|pengiriman|jne|jnt|sicepat)/i', $lower)) {
-            return "📦 *Cek Status Resi & Pengiriman*\n\nNomor resi otomatis dibagikan setelah pesanan diproses oleh ekspedisi. Silakan kirimkan *Nomor Invoice* atau *Nama Penerima* Anda untuk bantuan pelacakan paket oleh CS kami.";
-        }
-
-        // Billing, SPP, Fees & Invoices
-        if (preg_match('/(bayar|tagihan|spp|biaya|invoice|rekening|va|virtual account|transfer|cicilan|lunas|qris|dana)/i', $lower)) {
-            return "💳 *Konfirmasi & Pembayaran Resmi*\n\nPembayaran resmi diproses melalui transfer rekening resmi atau scan QRIS atas nama institusi/bisnis kami.\n\nJika sudah melakukan pembayaran, silakan kirimkan foto bukti transfer ke nomor ini agar dapat diverifikasi otomatis.";
-        }
-
-        // Operating Hours & Address
-        if (preg_match('/(jam|buka|tutup|operasional|alamat|lokasi|kantor|gedung|tempat|dimana|gmaps|peta)/i', $lower)) {
-            return "🏢 *Jam Pelayanan & Informasi Lokasi*\n\n• Jam Operasional: Senin s/d Sabtu (08.00 – 17.00 WIB)\n• Lokasi / Petunjuk Arah: Silakan ketik *LOKASI* untuk tautan Google Maps resmi kami.\n\nPesan Anda di luar jam kerja tetap kami simpan dan akan diprioritaskan saat jam kerja buka kembali.";
-        }
-
-        // WhatsApp Gateway & Developer APIs
-        if (preg_match('/(api|webhook|token|gateway|server|dokumentasi|postman|integrasi)/i', $lower)) {
-            return "Layanan WhatsApp Gateway Enterprise MARDIRA:\n\n• Tersedia REST API v1 dan Webhook event real-time.\n• Server 1 WhatsApp (Jalur Cepat) & Server 2 WhatsApp (Jalur Stabil).\n• Kredensial API Key serta koleksi Postman dapat diunduh langsung melalui menu *Kredensial API & Webhook* di dashboard Anda.";
-        }
-
-        // Help, Complaints & Customer Support
-        if (preg_match('/(bantuan|help|tolong|cs|customer service|admin|operator|manusia|staf|orang|komplain|pengaduan|kendala|masalah|rusak|error)/i', $lower)) {
-            return "👩‍💼 *Pusat Bantuan & Layanan Customer Service*\n\nAda kendala atau hal yang ingin ditanyakan? Silakan jelaskan detail pertanyaan Anda di sini, staf customer service kami akan segera merespon chat Anda.\n\nKetik *menu* kapan saja untuk kembali ke pilihan otomatis.";
-        }
-
-        // Gratitude & Closing
-        if (preg_match('/(terima kasih|makasih|thanks|thank you|ok|oke|siap|baik|sip)/i', $lower)) {
-            return 'Sama-sama! Senang dapat membantu Anda. Jangan ragu untuk menghubungi kami kembali jika membutuhkan informasi lainnya. Semoga hari Anda menyenangkan! 🙏';
-        }
-
-        // General fallback with active rules
+        // 3. General fallback with active rules
         if ($rules && $rules->isNotEmpty()) {
             $quickList = $rules->take(4)->map(fn ($r, $idx) => ($idx + 1).". *{$r->name}*")->implode("\n");
 
