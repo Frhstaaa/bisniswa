@@ -523,7 +523,7 @@ export default function ContactsIndex({ groups, contacts, filters, stats }) {
                                             </td>
                                             <td className="py-3 px-4">
                                                 {c.group ? (
-                                                    <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 text-[#595959] border border-[#e6ebf1]">
+                                                    <span className="text-xs font-medium text-[#595959]">
                                                         {c.group.name}
                                                     </span>
                                                 ) : (

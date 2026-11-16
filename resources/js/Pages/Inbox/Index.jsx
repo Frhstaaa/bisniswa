@@ -649,7 +649,7 @@ export default function InboxIndex({
                                                 >
                                                     {devices.map((d) => (
                                                         <option key={d.id} value={d.id}>
-                                                            {d.name} {d.phone_number ? `— ${d.phone_number}` : ''} {d.status === 'connected' ? '🟢' : '⚪'}
+                                                            {d.name} {d.phone_number ? `— ${d.phone_number}` : ''} ({d.status === 'connected' ? 'Terhubung' : 'Terputus'})
                                                         </option>
                                                     ))}
                                                 </select>
@@ -782,7 +782,7 @@ export default function InboxIndex({
                                             <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center font-bold text-xs shadow-2xs">
                                                 {currentContact ? (currentContact.name || 'P').charAt(0).toUpperCase() : 'U'}
                                             </div>
-                                            <span className="w-2.5 h-2.5 rounded-full bg-[#e6f4ff]0 border-2 border-white absolute bottom-0 right-0" />
+                                            <span className="w-2.5 h-2.5 rounded-full bg-[#52c41a] border-2 border-white absolute bottom-0 right-0" />
                                         </div>
 
                                         <div className="min-w-0">
@@ -825,7 +825,7 @@ export default function InboxIndex({
                                                 >
                                                     {devices.map((d) => (
                                                         <option key={d.id} value={d.id}>
-                                                            {d.name} {d.status === 'connected' ? '🟢' : '⚪'}
+                                                            {d.name} ({d.status === 'connected' ? 'Terhubung' : 'Terputus'})
                                                         </option>
                                                     ))}
                                                 </select>
@@ -1017,15 +1017,6 @@ export default function InboxIndex({
                                     )}
 
                                     <div className="flex items-center gap-2">
-                                        <button
-                                            type="button"
-                                            onClick={() => handleInsertCanned('😊')}
-                                            title="Sisipkan Emoji Sapaan"
-                                            className="p-2 text-[#54656f] hover:text-[#111b21] hover:bg-black/5 rounded-xl transition-colors shrink-0 cursor-pointer"
-                                        >
-                                            <Smile className="w-5 h-5" />
-                                        </button>
-
                                         <button
                                             type="button"
                                             onClick={() => setShowMediaInput(!showMediaInput)}

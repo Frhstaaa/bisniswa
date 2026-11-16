@@ -465,10 +465,10 @@ export default function AutoReplyIndex({
     // Order format generator templates
     const [selectedOrderFormType, setSelectedOrderFormType] = useState('olshop');
     const orderFormTemplates = {
-        olshop: "🛍️ *FORMAT ORDER CEPAT*\n\nNama Lengkap:\nNomor HP:\nAlamat Pengiriman (Jl, RT/RW, Kel, Kec, Kota, Kode Pos):\nNama Produk & Jumlah:\nEkspedisi (JNE / J&T / SiCepat):\nMetode Pembayaran (Transfer BCA / Mandiri / QRIS):",
-        fnb: "🍽️ *FORMAT PESANAN MAKANAN / TAKEAWAY*\n\nNama Pemesan:\nNomor HP:\nAlamat Antar / Jam Ambil:\nPesanan & Jumlah:\nCatatan Khusus (Level Pedas / Tanpa Bawang):\nMetode Pembayaran:",
-        booking: "📅 *FORMAT RESERVASI & JANJI TEMU*\n\nNama Tamu / Pasien:\nNomor WhatsApp:\nLayanan / Treatment yang Dipilih:\nHari & Tanggal Kunjungan:\nPilihan Jam (Pagi / Sore):\nKeluhan / Catatan Khusus:",
-        b2b: "💼 *FORMULIR KONSULTASI & DEMO B2B*\n\nNama Representatif:\nNama Perusahaan / Bisnis:\nEmail Bisnis:\nEstimasi Volume Chat / Bulan:\nJadwal Meeting Zoom yang Dikehendaki:\nKebutuhan Spesifik Integrasi:",
+        olshop: "*FORMAT ORDER CEPAT*\n\nNama Lengkap:\nNomor HP:\nAlamat Pengiriman (Jl, RT/RW, Kel, Kec, Kota, Kode Pos):\nNama Produk & Jumlah:\nEkspedisi (JNE / J&T / SiCepat):\nMetode Pembayaran (Transfer BCA / Mandiri / QRIS):",
+        fnb: "*FORMAT PESANAN MAKANAN / TAKEAWAY*\n\nNama Pemesan:\nNomor HP:\nAlamat Antar / Jam Ambil:\nPesanan & Jumlah:\nCatatan Khusus (Level Pedas / Tanpa Bawang):\nMetode Pembayaran:",
+        booking: "*FORMAT RESERVASI & JANJI TEMU*\n\nNama Tamu / Pasien:\nNomor WhatsApp:\nLayanan / Treatment yang Dipilih:\nHari & Tanggal Kunjungan:\nPilihan Jam (Pagi / Sore):\nKeluhan / Catatan Khusus:",
+        b2b: "*FORMULIR KONSULTASI & DEMO B2B*\n\nNama Representatif:\nNama Perusahaan / Bisnis:\nEmail Bisnis:\nEstimasi Volume Chat / Bulan:\nJadwal Meeting Zoom yang Dikehendaki:\nKebutuhan Spesifik Integrasi:",
     };
 
     const [copiedForm, setCopiedForm] = useState(false);
@@ -844,17 +844,15 @@ export default function AutoReplyIndex({
                             <Power className="w-5 h-5" />
                         </div>
                         <div>
-                            <div className="flex items-center gap-2 flex-wrap">
+                            <div className="flex items-center gap-3 flex-wrap">
                                 <span className="font-bold text-slate-900 text-sm sm:text-base tracking-tight">
-                                    Sakelar Utama Auto-Reply & Asisten Bot
+                                    Sakelar Utama Auto-Reply &amp; Asisten Bot
                                 </span>
-                                <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${
-                                    isMasterOn
-                                        ? 'bg-[#f6ffed] text-[#52c41a] border-[#b7eb8f]'
-                                        : 'bg-[#fffbe6] text-[#faad14] border-[#ffe58f]'
+                                <span className={`inline-flex items-center gap-1.5 text-xs font-medium ${
+                                    isMasterOn ? 'text-[#52c41a]' : 'text-[#faad14]'
                                 }`}>
-                                    <span className={`w-1.5 h-1.5 rounded-full ${isMasterOn ? 'bg-[#52c41a] animate-pulse' : 'bg-[#faad14]'}`} />
-                                    {isMasterOn ? 'STATUS: AKTIF MERESPON' : 'STATUS: NONAKTIF (MANUAL)'}
+                                    <span className={`size-1.5 rounded-full ${isMasterOn ? 'bg-[#52c41a]' : 'bg-[#faad14]'}`} />
+                                    {isMasterOn ? 'Aktif Merespon' : 'Nonaktif (Manual)'}
                                 </span>
                             </div>
                             <p className="text-xs text-slate-500 mt-1 max-w-2xl leading-relaxed">
@@ -893,9 +891,6 @@ export default function AutoReplyIndex({
                                     Total Aturan
                                 </span>
                             </div>
-                            <span className="text-[10px] font-semibold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200/70 font-mono">
-                                Rules
-                            </span>
                         </div>
                         <div className="text-2xl font-bold tracking-tight text-slate-900 font-mono tabular-nums mt-1">
                             {stats?.total_rules ?? safeAutoReplies.length}
@@ -920,9 +915,6 @@ export default function AutoReplyIndex({
                                     Aturan Aktif
                                 </span>
                             </div>
-                            <span className="text-[10px] font-semibold text-[#52c41a] bg-[#f6ffed] px-2 py-0.5 rounded-full border border-[#b7eb8f]">
-                                Ready
-                            </span>
                         </div>
                         <div className="text-2xl font-bold tracking-tight text-[#52c41a] font-mono tabular-nums mt-1">
                             {activeRulesCount}{' '}
@@ -953,9 +945,6 @@ export default function AutoReplyIndex({
                                     Pesan Terjawab
                                 </span>
                             </div>
-                            <span className="text-[10px] font-semibold text-[#1677ff] bg-[#e6f4ff] px-2 py-0.5 rounded-full border border-[#91caff]">
-                                Hits
-                            </span>
                         </div>
                         <div className="text-2xl font-bold tracking-tight text-slate-900 font-mono tabular-nums mt-1">
                             {(stats?.total_hits ?? safeAutoReplies.reduce((acc, r) => acc + (r.hit_count || 0), 0)).toLocaleString('id-ID')}{' '}
@@ -981,10 +970,10 @@ export default function AutoReplyIndex({
                                     Jam Operasional
                                 </span>
                             </div>
-                            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${
+                            <span className={`text-xs font-medium ${
                                 scheduleConfig.enabled
-                                    ? (scheduleConfig.is_currently_outside ? 'bg-[#fffbe6] text-[#faad14] border-[#ffe58f]' : 'bg-[#f6ffed] text-[#52c41a] border-[#b7eb8f]')
-                                    : 'bg-slate-100 text-slate-600 border-slate-200'
+                                    ? (scheduleConfig.is_currently_outside ? 'text-[#faad14]' : 'text-[#52c41a]')
+                                    : 'text-[#8c8c8c]'
                             }`}>
                                 {scheduleConfig.enabled ? (scheduleConfig.is_currently_outside ? 'Luar Jam' : 'Jam Buka') : '24/7 Aktif'}
                             </span>
@@ -1244,7 +1233,6 @@ export default function AutoReplyIndex({
                                                                         </span>
                                                                     ) : (
                                                                         <span className="text-[10px] text-slate-400 font-medium inline-flex items-center gap-1">
-                                                                            <span>🌐</span>
                                                                             <span>Semua Nomor (Global)</span>
                                                                         </span>
                                                                     )}
@@ -1316,7 +1304,6 @@ export default function AutoReplyIndex({
                                                                 )}
                                                                 {rule.reply_media_url && (
                                                                     <div className="text-[10px] text-[#1677ff] mt-1 font-mono truncate flex items-center gap-1">
-                                                                        <span>📎</span>
                                                                         <span className="truncate">{rule.reply_media_url}</span>
                                                                     </div>
                                                                 )}
@@ -1463,8 +1450,8 @@ export default function AutoReplyIndex({
                                                 }`}
                                             >
                                                 <div className="font-bold text-xs text-slate-900 flex items-center justify-between pb-1">
-                                                    <span>🔢 Format Bernomor (1, 2, 3)</span>
-                                                    {menuFormData.style === 'standard' && <span className="text-[#1677ff] font-bold">✓</span>}
+                                                    <span>Format Bernomor (1, 2, 3)</span>
+                                                    {menuFormData.style === 'standard' && <span className="text-[#1677ff] font-bold text-[11px]">Dipilih</span>}
                                                 </div>
                                                 <p className="text-[11px] text-slate-500">Tampilan teks bernomor natural, bersih dan sangat mudah dibaca.</p>
                                             </div>
@@ -1478,8 +1465,8 @@ export default function AutoReplyIndex({
                                                 }`}
                                             >
                                                 <div className="font-bold text-xs text-slate-900 flex items-center justify-between pb-1">
-                                                    <span>🔲 Format Kotak [ 1 ], [ 2 ]</span>
-                                                    {menuFormData.style === 'boxed' && <span className="text-[#1677ff] font-bold">✓</span>}
+                                                    <span>Format Kotak [ 1 ], [ 2 ]</span>
+                                                    {menuFormData.style === 'boxed' && <span className="text-[#1677ff] font-bold text-[11px]">Dipilih</span>}
                                                 </div>
                                                 <p className="text-[11px] text-slate-500">Pilihan nomor ditonjolkan dengan kurung kotak modern & terstruktur.</p>
                                             </div>

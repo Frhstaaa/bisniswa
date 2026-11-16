@@ -967,16 +967,9 @@ print(response.json())`,
                                                                         <span className="font-bold text-[#262626] text-xs">
                                                                             {device.phone_number || device.name}
                                                                         </span>
-                                                                        <Badge
-                                                                            variant="outline"
-                                                                            className={`text-[9px] px-1.5 py-0 font-medium ${
-                                                                                isConnected
-                                                                                    ? 'border-[#91caff] bg-emerald-100/80 text-[#1677ff]'
-                                                                                    : 'border-amber-300 bg-amber-100/80 text-amber-800'
-                                                                            }`}
-                                                                        >
-                                                                            {isConnected ? 'Terhubung' : 'Offline'}
-                                                                        </Badge>
+                                                                        <span className={`text-[11px] font-medium ${isConnected ? 'text-[#52c41a]' : 'text-[#faad14]'}`}>
+                                                                            ({isConnected ? 'Terhubung' : 'Offline'})
+                                                                        </span>
                                                                     </div>
                                                                     <div className="text-[11px] text-[#8c8c8c] flex items-center gap-2 mt-0.5">
                                                                         <span>{device.name}</span>

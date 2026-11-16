@@ -171,7 +171,7 @@ export default function Invoice({ payment, workspace }) {
                     {isPaid && (
                         <div className="border-2 border-[#52c41a] rounded-xl px-4 py-2 text-center bg-[#f6ffed] transform -rotate-2">
                             <div className="font-bold text-[#52c41a] tracking-widest text-sm uppercase">
-                                ★ LUNAS ★
+                                LUNAS
                             </div>
                             <div className="text-[9px] font-bold text-[#52c41a]/80 uppercase">
                                 SAPA ALERT SYSTEM

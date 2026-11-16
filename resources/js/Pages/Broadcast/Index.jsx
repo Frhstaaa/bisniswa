@@ -225,7 +225,7 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                         >
                                             {devices.map((d) => (
                                                 <option key={d.id} value={d.id}>
-                                                    {d.name} {d.phone_number ? `(${d.phone_number})` : ''} — {d.status === 'connected' ? '🟢 Terhubung' : '⚠️ Belum Scan / Terputus'}
+                                                    {d.name} {d.phone_number ? `(${d.phone_number})` : ''} — {d.status === 'connected' ? 'Terhubung' : 'Belum Scan / Terputus'}
                                                 </option>
                                             ))}
                                         </select>
@@ -340,7 +340,7 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                                         : 'text-[#8c8c8c] hover:text-[#262626]'
                                                 }`}
                                             >
-                                                📁 Upload File
+                                                Upload File
                                             </button>
                                             <button
                                                 type="button"
@@ -351,7 +351,7 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                                         : 'text-[#8c8c8c] hover:text-[#262626]'
                                                 }`}
                                             >
-                                                🔗 Link URL
+                                                Link URL
                                             </button>
                                         </div>
                                     </div>
@@ -454,7 +454,7 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                                     : 'border-[#d9d9d9] text-[#595959] hover:bg-[#fafafb]'
                                             }`}
                                         >
-                                            ⚡ Kirim Sekarang
+                                            Kirim Sekarang
                                         </button>
                                         <button
                                             type="button"
@@ -465,7 +465,7 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                                     : 'border-[#d9d9d9] text-[#595959] hover:bg-[#fafafb]'
                                             }`}
                                         >
-                                            📅 Jadwalkan Nanti
+                                            Jadwalkan Nanti
                                         </button>
                                     </div>
 
@@ -621,7 +621,7 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                         disabled={processing}
                                         className="w-full h-10 rounded-lg bg-[#1677ff] hover:bg-[#0958d9] text-white text-xs font-semibold shadow-[0_2px_0_rgba(0,0,0,0.043)] transition-colors cursor-pointer"
                                     >
-                                        <span>{processing ? 'Memproses Kampanye...' : scheduleOption === 'scheduled' ? 'Jadwalkan Kampanye Broadcast 📅' : 'Mulai Pengiriman Broadcast Massal'}</span>
+                                        <span>{processing ? 'Memproses Kampanye...' : scheduleOption === 'scheduled' ? 'Jadwalkan Kampanye Broadcast' : 'Mulai Pengiriman Broadcast Massal'}</span>
                                         <Send className="size-3.5 ml-2 text-white" />
                                     </Button>
                                 </motion.div>

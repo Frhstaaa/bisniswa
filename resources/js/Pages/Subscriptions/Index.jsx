@@ -389,7 +389,7 @@ export default function SubscriptionsIndex({ workspace, subscription, plans = []
                                     audits.map((a) => (
                                         <tr key={a.id} className="hover:bg-[#fafafb] transition-colors">
                                             <td className="py-3.5 px-4">
-                                                <span className="inline-flex px-2 py-0.5 rounded text-[10.5px] font-bold font-mono bg-[#e6f4ff] text-[#1677ff] border border-[#91caff]">
+                                                <span className="font-mono text-xs font-semibold text-[#1677ff]">
                                                     {a.action}
                                                 </span>
                                             </td>
