@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -44,6 +45,14 @@ class HandleInertiaRequests extends Middleware
         // In admin routes, use adminUser (or webUser if none).
         // In tenant and public routes, only use webUser so admin sessions do not leak into client views.
         $activeUser = $isAdminRequest ? ($adminUser ?: $webUser) : $webUser;
+
+        if ($activeUser instanceof User && ! $activeUser->relationLoaded('workspace')) {
+            $activeUser->load('workspace');
+        }
+
+        if ($adminUser instanceof Admin && ! $adminUser->relationLoaded('adminRole')) {
+            $adminUser->load('adminRole');
+        }
 
         return [
             ...parent::share($request),

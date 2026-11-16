@@ -8,6 +8,7 @@ use App\Models\Subscription;
 use App\Models\Workspace;
 use App\Traits\HasWorkspaceContext;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -31,15 +32,25 @@ class DashboardController extends Controller
         $monthlyQuota = $subscription?->monthly_message_quota ?? 5000;
         $remainingQuota = $subscription?->remaining_message_quota ?? $monthlyQuota;
 
-        $workspaceMessages = Message::where('workspace_id', $workspace->id);
-        $totalMessagesCount = (clone $workspaceMessages)->count();
-        $sentToday = (clone $workspaceMessages)->whereDate('created_at', today())->count();
-        $deliveredCount = (clone $workspaceMessages)->where('status', '!=', 'failed')->count();
+        $msgMetrics = Message::where('workspace_id', $workspace->id)
+            ->selectRaw('
+                COUNT(*) as total_count,
+                COUNT(CASE WHEN created_at >= ? THEN 1 END) as sent_today,
+                COUNT(CASE WHEN status != ? THEN 1 END) as delivered_count
+            ', [today()->startOfDay(), 'failed'])
+            ->first();
+
+        $totalMessagesCount = (int) ($msgMetrics->total_count ?? 0);
+        $sentToday = (int) ($msgMetrics->sent_today ?? 0);
+        $deliveredCount = (int) ($msgMetrics->delivered_count ?? 0);
         $deliveryRate = $totalMessagesCount > 0 ? round(($deliveredCount / $totalMessagesCount) * 100, 1) : 100.0;
 
-        // Determine actual peak hour of activity for this workspace (database-agnostic)
-        $busyHourRow = (clone $workspaceMessages)->latest('id')->take(200)->get()
-            ->groupBy(fn ($m) => $m->created_at?->format('H'))
+        // Determine actual peak hour of activity for this workspace (database-agnostic, using pluck to avoid heavy model hydration)
+        $busyHourRow = Message::where('workspace_id', $workspace->id)
+            ->latest('id')
+            ->limit(100)
+            ->pluck('created_at')
+            ->groupBy(fn ($dt) => $dt?->format('H'))
             ->sortByDesc(fn ($group) => $group->count())
             ->keys()
             ->first();
@@ -78,15 +89,17 @@ class DashboardController extends Controller
      */
     protected function computeRealtimeChartData(int $workspaceId): array
     {
-        $messages = Message::where('workspace_id', $workspaceId)
-            ->where('created_at', '>=', now()->subDays(30)->startOfDay())
-            ->get(['id', 'direction', 'campaign_id', 'status', 'created_at']);
+        return Cache::remember("dashboard_chart_{$workspaceId}", 60, function () use ($workspaceId) {
+            $messages = Message::where('workspace_id', $workspaceId)
+                ->where('created_at', '>=', now()->subDays(30)->startOfDay())
+                ->get(['id', 'direction', 'campaign_id', 'status', 'created_at']);
 
-        return [
-            '24h' => $this->compute24hData($messages),
-            '7d' => $this->compute7dData($messages),
-            '30d' => $this->compute30dData($messages),
-        ];
+            return [
+                '24h' => $this->compute24hData($messages),
+                '7d' => $this->compute7dData($messages),
+                '30d' => $this->compute30dData($messages),
+            ];
+        });
     }
 
     /**

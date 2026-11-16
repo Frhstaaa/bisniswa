@@ -62,38 +62,86 @@ class InboxController extends Controller
      */
     protected function getConversations(Workspace $workspace): array
     {
-        return Message::where('workspace_id', $workspace->id)
+        $convRows = Message::where('workspace_id', $workspace->id)
             ->selectRaw('receiver_number, MAX(created_at) as last_activity, COUNT(id) as total_messages')
             ->groupBy('receiver_number')
             ->orderByDesc('last_activity')
             ->limit(50)
+            ->get();
+
+        if ($convRows->isEmpty()) {
+            return [];
+        }
+
+        $phoneNumbers = $convRows->pluck('receiver_number')->all();
+
+        // 1. Fetch latest message IDs in one fast grouped query (O(1) bulk fetch)
+        $latestMessageIds = Message::where('workspace_id', $workspace->id)
+            ->whereIn('receiver_number', $phoneNumbers)
+            ->selectRaw('MAX(id) as id')
+            ->groupBy('receiver_number')
+            ->pluck('id');
+
+        $latestMessages = Message::whereIn('id', $latestMessageIds)
             ->get()
-            ->map(function ($conv) use ($workspace) {
-                $lastMsg = Message::where('workspace_id', $workspace->id)
-                    ->where('receiver_number', $conv->receiver_number)
-                    ->latest('id')
-                    ->first();
+            ->keyBy('receiver_number');
 
-                $variants = $this->normalizePhoneVariants($conv->receiver_number);
-                $contact = Contact::where('workspace_id', $workspace->id)
-                    ->whereIn('phone', $variants)
-                    ->first();
+        // 2. Fetch all phone variants in bulk
+        $allVariants = [];
+        $phoneToVariants = [];
+        foreach ($phoneNumbers as $phone) {
+            $vars = $this->normalizePhoneVariants($phone);
+            $phoneToVariants[$phone] = $vars;
+            foreach ($vars as $v) {
+                $allVariants[$v] = true;
+            }
+        }
+        $uniqueVariants = array_keys($allVariants);
 
-                $knownUser = User::where('workspace_id', $workspace->id)->whereIn('phone', $variants)->first();
-                $displayName = $contact ? $contact->name : ($knownUser ? $knownUser->name : 'Pelanggan '.substr($conv->receiver_number, -4));
+        // 3. Bulk fetch contacts & users in 2 single queries instead of 100 queries
+        $contacts = Contact::where('workspace_id', $workspace->id)
+            ->whereIn('phone', $uniqueVariants)
+            ->get()
+            ->keyBy('phone');
 
-                return [
-                    'phone' => $conv->receiver_number,
-                    'name' => $displayName,
-                    'last_message' => $lastMsg ? $lastMsg->content : '',
-                    'last_direction' => $lastMsg ? $lastMsg->direction : 'outbound',
-                    'last_time' => $lastMsg ? $lastMsg->created_at->diffForHumans(null, true) : '',
-                    'timestamp' => $lastMsg ? $lastMsg->created_at->format('H.i') : '',
-                    'status' => $lastMsg ? $lastMsg->status : 'delivered',
-                ];
-            })
-            ->values()
-            ->all();
+        $knownUsers = User::where('workspace_id', $workspace->id)
+            ->whereIn('phone', $uniqueVariants)
+            ->get()
+            ->keyBy('phone');
+
+        return $convRows->map(function ($conv) use ($latestMessages, $phoneToVariants, $contacts, $knownUsers) {
+            $lastMsg = $latestMessages->get($conv->receiver_number);
+            $variants = $phoneToVariants[$conv->receiver_number] ?? [$conv->receiver_number];
+
+            $contact = null;
+            $knownUser = null;
+            foreach ($variants as $v) {
+                if ($contacts->has($v)) {
+                    $contact = $contacts->get($v);
+                    break;
+                }
+            }
+            if (! $contact) {
+                foreach ($variants as $v) {
+                    if ($knownUsers->has($v)) {
+                        $knownUser = $knownUsers->get($v);
+                        break;
+                    }
+                }
+            }
+
+            $displayName = $contact ? $contact->name : ($knownUser ? $knownUser->name : 'Pelanggan '.substr($conv->receiver_number, -4));
+
+            return [
+                'phone' => $conv->receiver_number,
+                'name' => $displayName,
+                'last_message' => $lastMsg ? $lastMsg->content : '',
+                'last_direction' => $lastMsg ? $lastMsg->direction : 'outbound',
+                'last_time' => $lastMsg ? $lastMsg->created_at->diffForHumans(null, true) : '',
+                'timestamp' => $lastMsg ? $lastMsg->created_at->format('H.i') : '',
+                'status' => $lastMsg ? $lastMsg->status : 'delivered',
+            ];
+        })->values()->all();
     }
 
     public function index(Request $request): Response

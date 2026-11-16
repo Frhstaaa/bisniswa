@@ -12,11 +12,13 @@ use Inertia\Response;
 class LandingController extends Controller
 {
     /**
-     * Retrieve active subscription plans directly from storage.
+     * Retrieve active subscription plans directly from storage with cache.
      */
     protected function getCachedPlans(): array
     {
-        return Plan::where('is_active', true)->orderBy('price_monthly', 'asc')->get()->toArray();
+        return Cache::remember('public_active_plans', 3600, function () {
+            return Plan::where('is_active', true)->orderBy('price_monthly', 'asc')->get()->toArray();
+        });
     }
 
     /**
