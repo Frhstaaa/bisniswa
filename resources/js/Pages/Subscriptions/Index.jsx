@@ -125,14 +125,9 @@ export default function SubscriptionsIndex({ workspace, subscription, plans = []
                             <ChevronRight className="size-3 text-[#bfbfbf]" />
                             <span className="text-[#1677ff] font-semibold">Langganan &amp; Kuota</span>
                         </div>
-                        <div className="flex flex-wrap items-center gap-2.5">
-                            <h1 className="text-xl sm:text-2xl font-bold text-[#262626] tracking-tight">
-                                Paket Langganan &amp; Saldo Kuota
-                            </h1>
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-mono font-semibold bg-[#e6f4ff] text-[#1677ff] border border-[#91caff]">
-                                GRACE PERIOD 3 HARI
-                            </span>
-                        </div>
+                        <h1 className="text-xl sm:text-2xl font-bold text-[#262626] tracking-tight">
+                            Paket Langganan &amp; Saldo Kuota
+                        </h1>
                         <p className="text-xs text-[#8c8c8c] mt-1">
                             Kelola masa aktif kontrak WhatsApp Gateway, alokasi kuota pesan bulanan, dan pembayaran otomatis.
                         </p>
@@ -185,24 +180,19 @@ export default function SubscriptionsIndex({ workspace, subscription, plans = []
                 {/* ================= 2. MANTIS STATS OVERVIEW CARDS ================= */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                     {/* Card 1: Masa Aktif */}
-                    <motion.div
-                        whileHover={{ y: -3, transition: { duration: 0.15 } }}
-                        className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md transition-all relative overflow-hidden"
-                    >
+                    <div className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
                         <div className="flex items-center justify-between mb-3">
-                            <span className="text-xs font-semibold uppercase tracking-wider text-[#8c8c8c]">
+                            <span className="text-xs font-medium text-[#8c8c8c]">
                                 Sisa Masa Aktif
                             </span>
-                            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold ${
-                                subscription?.paused_at
-                                    ? 'bg-[#fffbe6] text-[#faad14] border border-[#ffe58f]'
-                                    : 'bg-[#f6ffed] text-[#52c41a] border border-[#b7eb8f]'
+                            <span className={`inline-flex items-center gap-1.5 text-xs font-semibold ${
+                                subscription?.paused_at ? 'text-[#faad14]' : 'text-[#52c41a]'
                             }`}>
-                                <Clock className="size-3" />
-                                <span>{subscription?.paused_at ? 'DIBEKUKAN' : `${daysRemaining} HARI TERSISA`}</span>
+                                <span className={`size-1.5 rounded-full ${subscription?.paused_at ? 'bg-[#faad14]' : 'bg-[#52c41a]'}`} />
+                                {subscription?.paused_at ? 'Dibekukan' : `${daysRemaining} Hari Tersisa`}
                             </span>
                         </div>
-                        <div className="text-xl sm:text-2xl font-bold text-[#262626] tracking-tight mb-2">
+                        <div className="text-xl sm:text-2xl font-bold text-[#262626] tracking-tight mb-2.5">
                             {subscription ? new Date(subscription.ends_at).toLocaleDateString('id-ID', {
                                 day: 'numeric',
                                 month: 'long',
@@ -219,28 +209,23 @@ export default function SubscriptionsIndex({ workspace, subscription, plans = []
                                 {subscription ? new Date(subscription.ends_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '30 Nov 2026'}
                             </span>
                         </div>
-                        <div className="absolute -bottom-6 -right-6 size-24 rounded-full bg-emerald-50/60 pointer-events-none" />
-                    </motion.div>
+                    </div>
 
                     {/* Card 2: Saldo Kuota Pesan */}
-                    <motion.div
-                        whileHover={{ y: -3, transition: { duration: 0.15 } }}
-                        className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md transition-all relative overflow-hidden"
-                    >
+                    <div className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
                         <div className="flex items-center justify-between mb-3">
-                            <span className="text-xs font-semibold uppercase tracking-wider text-[#8c8c8c]">
+                            <span className="text-xs font-medium text-[#8c8c8c]">
                                 Sisa Kuota Pesan
                             </span>
                             <button
                                 type="button"
                                 onClick={() => (isSuperAdmin ? setIsTopupModalOpen(true) : setIsCheckoutModalOpen(true))}
-                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#e6f4ff] text-[#1677ff] border border-[#91caff] hover:bg-[#bae0ff] transition-colors cursor-pointer"
+                                className="text-xs font-semibold text-[#1677ff] hover:underline cursor-pointer"
                             >
-                                <Plus className="size-3" />
-                                <span>{isSuperAdmin ? 'Top Up (Admin)' : 'Tambah Kuota'}</span>
+                                + {isSuperAdmin ? 'Top Up (Admin)' : 'Tambah Kuota'}
                             </button>
                         </div>
-                        <div className="text-2xl sm:text-3xl font-bold text-[#1677ff] tracking-tight font-mono mb-2">
+                        <div className="text-2xl sm:text-3xl font-bold text-[#1677ff] tracking-tight font-mono mb-2.5">
                             {subscription?.remaining_message_quota?.toLocaleString('id-ID') ?? '50.000'}
                             <span className="text-sm font-normal text-[#8c8c8c] font-sans ml-1.5">pesan</span>
                         </div>
@@ -253,22 +238,15 @@ export default function SubscriptionsIndex({ workspace, subscription, plans = []
                                 {subscription?.monthly_message_quota?.toLocaleString('id-ID') ?? '50.000'} kuota
                             </span>
                         </div>
-                        <div className="absolute -bottom-6 -right-6 size-24 rounded-full bg-blue-50/60 pointer-events-none" />
-                    </motion.div>
+                    </div>
 
                     {/* Card 3: Status Paket */}
-                    <motion.div
-                        whileHover={{ y: -3, transition: { duration: 0.15 } }}
-                        className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md transition-all relative overflow-hidden"
-                    >
+                    <div className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
                         <div className="flex items-center justify-between mb-3">
-                            <span className="text-xs font-semibold uppercase tracking-wider text-[#8c8c8c]">
+                            <span className="text-xs font-medium text-[#8c8c8c]">
                                 Paket Aktif
                             </span>
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#fffbe6] text-[#faad14] border border-[#ffe58f]">
-                                <Zap className="size-3" />
-                                <span>REKOMENDASI</span>
-                            </span>
+                            <Zap className="size-4 text-[#faad14]" />
                         </div>
                         <div className="text-xl sm:text-2xl font-bold text-[#262626] tracking-tight mb-3">
                             {subscription?.plan?.name ?? 'Enterprise Pro'}
@@ -287,8 +265,7 @@ export default function SubscriptionsIndex({ workspace, subscription, plans = []
                                 <span className="font-semibold text-[#52c41a]">Aktif Otomatis</span>
                             </div>
                         </div>
-                        <div className="absolute -bottom-6 -right-6 size-24 rounded-full bg-amber-50/60 pointer-events-none" />
-                    </motion.div>
+                    </div>
                 </div>
 
                 {/* ================= 3. PAYMENT & INVOICE HISTORY TABLE ================= */}
@@ -348,13 +325,11 @@ export default function SubscriptionsIndex({ workspace, subscription, plans = []
                                                     {p.payment_method === 'qris' ? 'QRIS Instan' : p.payment_method === 'bca_va' ? 'BCA Virtual Account' : 'Transfer Bank'}
                                                 </td>
                                                 <td className="py-3.5 px-4">
-                                                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10.5px] font-semibold ${
-                                                        isPaid
-                                                            ? 'bg-[#f6ffed] text-[#52c41a] border border-[#b7eb8f]'
-                                                            : 'bg-[#fffbe6] text-[#faad14] border border-[#ffe58f]'
+                                                    <span className={`inline-flex items-center gap-1.5 text-xs font-medium ${
+                                                        isPaid ? 'text-[#52c41a]' : 'text-[#faad14]'
                                                     }`}>
-                                                        <CheckCircle2 className="size-3" />
-                                                        {isPaid ? 'LUNAS (AKTIF)' : 'PENDING'}
+                                                        <span className={`size-1.5 rounded-full ${isPaid ? 'bg-[#52c41a]' : 'bg-[#faad14]'}`} />
+                                                        {isPaid ? 'Lunas' : 'Pending'}
                                                     </span>
                                                 </td>
                                                 <td className="py-3.5 px-4 text-[#8c8c8c]">

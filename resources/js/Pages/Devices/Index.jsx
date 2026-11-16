@@ -141,19 +141,13 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                             <ChevronRight className="size-3 text-[#bfbfbf]" />
                             <span className="text-[#1677ff] font-semibold">Perangkat WhatsApp</span>
                         </div>
-                        <div className="flex flex-wrap items-center gap-2.5">
+                        <div className="flex flex-wrap items-center gap-3">
                             <h1 className="text-xl sm:text-2xl font-bold text-[#262626] tracking-tight">
                                 Manajemen Perangkat WhatsApp
                             </h1>
-                            {isLimitReached ? (
-                                <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#fffbe6] text-[#faad14] border border-[#ffe58f]">
-                                    KUOTA PENUH ({devices?.length || 0}/{maxAllowed})
-                                </span>
-                            ) : (
-                                <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#f6ffed] text-[#52c41a] border border-[#b7eb8f]">
-                                    {devices?.length || 0} / {maxAllowed} PERANGKAT
-                                </span>
-                            )}
+                            <span className="text-xs font-medium text-[#8c8c8c]">
+                                {devices?.length || 0} / {maxAllowed} Slot
+                            </span>
                         </div>
                         <p className="text-xs text-[#8c8c8c] mt-1">
                             Tautkan nomor WhatsApp bisnis Anda menggunakan engine resmi <strong className="text-[#1677ff]">SAPA Baileys UltraSync</strong> (WebSocket Native - Ringan &amp; Cepat).
@@ -211,18 +205,12 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
 
                 {/* ================= 2. MANTIS KPI STAT CARDS ================= */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                    <motion.div
-                        whileHover={{ y: -3, transition: { duration: 0.15 } }}
-                        className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md transition-all relative overflow-hidden"
-                    >
+                    <div className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
                         <div className="flex items-center justify-between mb-3">
-                            <span className="text-xs font-semibold uppercase tracking-wider text-[#8c8c8c]">
+                            <span className="text-xs font-medium text-[#8c8c8c]">
                                 Sesi Terhubung Aktif
                             </span>
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#e6f4ff] text-[#1677ff] border border-[#91caff]">
-                                <Smartphone className="size-3 text-[#1677ff]" />
-                                <span>Online</span>
-                            </span>
+                            <Smartphone className="size-4 text-[#1677ff]" />
                         </div>
                         <div className="text-2xl sm:text-3xl font-bold text-[#262626] tracking-tight font-mono mb-2">
                             <CountUp to={connectedCount} /> <span className="text-sm font-normal text-[#8c8c8c] font-sans">/ {devices?.length || 0} Perangkat</span>
@@ -230,21 +218,14 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                         <p className="text-xs text-[#8c8c8c]">
                             Siap memproses broadcast &amp; pengiriman API
                         </p>
-                        <div className="absolute -bottom-6 -right-6 size-24 rounded-full bg-blue-50/60 pointer-events-none" />
-                    </motion.div>
+                    </div>
 
-                    <motion.div
-                        whileHover={{ y: -3, transition: { duration: 0.15 } }}
-                        className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md transition-all relative overflow-hidden"
-                    >
+                    <div className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
                         <div className="flex items-center justify-between mb-3">
-                            <span className="text-xs font-semibold uppercase tracking-wider text-[#8c8c8c]">
+                            <span className="text-xs font-medium text-[#8c8c8c]">
                                 SAPA Baileys Engine
                             </span>
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#f6ffed] text-[#52c41a] border border-[#b7eb8f]">
-                                <Zap className="size-3 text-[#52c41a]" />
-                                <span>Ready</span>
-                            </span>
+                            <Zap className="size-4 text-[#52c41a]" />
                         </div>
                         <div className="text-2xl sm:text-3xl font-bold text-[#1677ff] tracking-tight font-mono mb-2">
                             <CountUp to={connectedCount} /> <span className="text-sm font-normal text-[#8c8c8c] font-sans">Instance</span>
@@ -252,21 +233,14 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                         <p className="text-xs text-[#8c8c8c]">
                             Engine Tunggal (WebSocket Native &amp; Anti-Ban)
                         </p>
-                        <div className="absolute -bottom-6 -right-6 size-24 rounded-full bg-emerald-50/60 pointer-events-none" />
-                    </motion.div>
+                    </div>
 
-                    <motion.div
-                        whileHover={{ y: -3, transition: { duration: 0.15 } }}
-                        className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md transition-all relative overflow-hidden"
-                    >
+                    <div className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
                         <div className="flex items-center justify-between mb-3">
-                            <span className="text-xs font-semibold uppercase tracking-wider text-[#8c8c8c]">
+                            <span className="text-xs font-medium text-[#8c8c8c]">
                                 Keamanan Enkripsi
                             </span>
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#f9f0ff] text-[#722ed1] border border-[#d3adf7]">
-                                <ShieldCheck className="size-3 text-[#722ed1]" />
-                                <span>Signal</span>
-                            </span>
+                            <ShieldCheck className="size-4 text-[#722ed1]" />
                         </div>
                         <div className="text-2xl sm:text-3xl font-bold text-[#52c41a] tracking-tight font-mono mb-2">
                             100% E2EE
@@ -274,8 +248,7 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                         <p className="text-xs text-[#8c8c8c]">
                             Protokol Resmi UltraSync (Bebas Delay)
                         </p>
-                        <div className="absolute -bottom-6 -right-6 size-24 rounded-full bg-purple-50/60 pointer-events-none" />
-                    </motion.div>
+                    </div>
                 </div>
 
                 {/* ================= 3. TOOLBAR: SEARCH & STATUS ================= */}
@@ -331,22 +304,19 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                                     <div className="p-5 pb-3 space-y-3">
                                         <div className="flex items-center justify-between">
                                             {dev.status === 'connected' ? (
-                                                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#f6ffed] text-[#52c41a] text-[11px] font-bold border border-[#b7eb8f]">
-                                                    <span className="relative flex h-2 w-2">
-                                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#52c41a] opacity-75" />
-                                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#52c41a]" />
-                                                    </span>
-                                                    <span>ONLINE</span>
-                                                </div>
+                                                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#52c41a]">
+                                                    <span className="size-2 rounded-full bg-[#52c41a]" />
+                                                    <span>Online</span>
+                                                </span>
                                             ) : (
-                                                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#fffbe6] text-[#faad14] text-[11px] font-bold border border-[#ffe58f]">
-                                                    <Clock className="size-3 text-[#faad14] animate-spin [animation-duration:3s]" />
-                                                    <span>WAITING QR</span>
-                                                </div>
+                                                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#faad14]">
+                                                    <Clock className="size-3.5 text-[#faad14] animate-spin [animation-duration:3s]" />
+                                                    <span>Menunggu QR</span>
+                                                </span>
                                             )}
 
-                                            <span className="font-mono text-[10px] font-semibold uppercase text-[#1677ff] bg-[#e6f4ff] border border-[#91caff] px-2 py-0.5 rounded">
-                                                UltraSync Engine
+                                            <span className="text-[11px] font-mono text-[#8c8c8c]">
+                                                UltraSync
                                             </span>
                                         </div>
 

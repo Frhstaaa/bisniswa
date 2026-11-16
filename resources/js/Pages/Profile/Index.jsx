@@ -57,14 +57,9 @@ export default function ProfileIndex({ user, workspace }) {
                             <ChevronRight className="size-3 text-[#bfbfbf]" />
                             <span className="text-[#1677ff] font-semibold">Profil & Keamanan</span>
                         </div>
-                        <div className="flex flex-wrap items-center gap-2.5">
-                            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#262626]">
-                                Pengaturan Profil Akun & Keamanan
-                            </h1>
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#e6f4ff] text-[#1677ff] border border-[#91caff]">
-                                WORKSPACE #{workspace.id}
-                            </span>
-                        </div>
+                        <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#262626]">
+                            Pengaturan Profil Akun &amp; Keamanan
+                        </h1>
                         <p className="text-xs text-[#8c8c8c] mt-1">
                             Kelola identitas penanggung jawab, informasi workspace bisnis, dan kredensial keamanan akun Anda.
                         </p>
@@ -264,8 +259,8 @@ export default function ProfileIndex({ user, workspace }) {
                                 <div className="min-w-0">
                                     <h3 className="font-bold text-sm text-[#262626] truncate">{user.name}</h3>
                                     <p className="text-xs text-[#8c8c8c] truncate">{user.email}</p>
-                                    <span className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-[#f6ffed] text-[#52c41a] border border-[#b7eb8f]">
-                                        {user.role === 'superadmin' ? 'SUPERADMIN' : 'CLIENT OWNER'}
+                                    <span className="text-[11px] font-semibold text-[#52c41a] mt-0.5 block">
+                                        {user.role === 'superadmin' ? 'Superadmin' : 'Client Owner'}
                                     </span>
                                 </div>
                             </div>

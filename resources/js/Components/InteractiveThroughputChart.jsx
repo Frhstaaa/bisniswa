@@ -202,12 +202,8 @@ export default function InteractiveThroughputChart({
                         <div>
                             <div className="flex items-center gap-2 flex-wrap">
                                 <CardTitle className="text-sm sm:text-base font-bold text-[#262626] tracking-tight">
-                                    Throughput & Volume Pesan Realtime
+                                    Throughput &amp; Volume Pesan Realtime
                                 </CardTitle>
-                                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold bg-[#f6ffed] text-[#52c41a] border border-[#b7eb8f]">
-                                    <span className="size-1.5 rounded-full bg-[#52c41a] animate-pulse" />
-                                    <span>LIVE DATABASE</span>
-                                </span>
                             </div>
                             <CardDescription className="text-xs text-[#8c8c8c] mt-0.5">
                                 Terhubung langsung ke database pesan WhatsApp workspace Anda (Auto-refresh tiap 12 detik)
@@ -321,10 +317,10 @@ export default function InteractiveThroughputChart({
                     ))}
                 </div>
 
-                {/* Realtime Delivery Rate Pill */}
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#f6ffed] border border-[#b7eb8f] text-[#52c41a] text-[11px] font-semibold">
-                    <TrendingUp className="size-3.5 text-[#52c41a]" />
-                    <span>Tingkat Sukses: <strong>{stats.delivery_rate || '96.2%'}</strong></span>
+                {/* Realtime Delivery Rate */}
+                <div className="inline-flex items-center gap-1.5 text-xs text-[#595959]">
+                    <span className="size-1.5 rounded-full bg-[#52c41a]" />
+                    <span>Tingkat Sukses: <strong className="text-[#262626] font-mono">{stats.delivery_rate || '96.2%'}</strong></span>
                 </div>
             </div>
 

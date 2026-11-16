@@ -245,16 +245,10 @@ print(response.json())`,
                             <ChevronRight className="size-3 text-[#bfbfbf]" />
                             <span className="text-[#1677ff] font-semibold">API &amp; Webhooks</span>
                         </div>
-                        <div className="flex items-center gap-2.5 flex-wrap">
-                            <h1 className="text-xl sm:text-2xl font-bold text-[#262626] tracking-tight flex items-center gap-2">
-                                <Code2 className="w-5 h-5 sm:w-6 sm:h-6 text-[#1677ff] shrink-0" />
-                                <span>Integrasi REST API &amp; Webhooks</span>
-                            </h1>
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[10px] sm:text-[11px] font-mono font-semibold bg-[#e6f4ff] text-[#1677ff] border border-[#91caff]">
-                                <span className="size-1.5 rounded-full bg-[#1677ff] animate-pulse" />
-                                SHA-256 BEARER
-                            </span>
-                        </div>
+                        <h1 className="text-xl sm:text-2xl font-bold text-[#262626] tracking-tight flex items-center gap-2">
+                            <Code2 className="w-5 h-5 sm:w-6 sm:h-6 text-[#1677ff] shrink-0" />
+                            <span>Integrasi REST API &amp; Webhooks</span>
+                        </h1>
                         <p className="text-xs text-[#8c8c8c] max-w-2xl">
                             Hubungkan sistem backend, toko online, ERP, atau aplikasi Anda ke gateway WhatsApp via protokol REST JSON standar.
                         </p>

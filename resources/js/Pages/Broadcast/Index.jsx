@@ -145,28 +145,19 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                             <ChevronRight className="size-3 text-[#bfbfbf]" />
                             <span className="text-[#1677ff] font-semibold">Broadcast Massal</span>
                         </div>
-                        <div className="flex flex-wrap items-center gap-2.5">
-                            <h1 className="text-xl sm:text-2xl font-bold text-[#262626] tracking-tight">
-                                Broadcast Massal &amp; Anti-Ban Engine
-                            </h1>
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#e6f4ff] text-[#1677ff] border border-[#91caff]">
-                                Anti-Ban Multi-Gateway
-                            </span>
-                        </div>
+                        <h1 className="text-xl sm:text-2xl font-bold text-[#262626] tracking-tight">
+                            Broadcast Massal &amp; Anti-Ban Engine
+                        </h1>
                         <p className="text-xs text-[#8c8c8c] mt-1">
                             Kirim pesan broadcast ribuan nomor dengan proteksi spintax dinamis, segmentasi buku kontak, dan penjadwalan masa depan.
                         </p>
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2">
-                        <div className="px-3 py-1.5 rounded-lg border border-[#d9d9d9] bg-white text-xs font-medium text-[#595959] shadow-[0_2px_0_rgba(0,0,0,0.02)] flex items-center gap-1.5">
-                            <Shield className="size-3.5 text-[#1677ff]" />
-                            <span>Anti-Ban Throttle Aktif</span>
-                        </div>
                         {subscription && (
-                            <div className="px-3 py-1.5 rounded-lg border border-[#91caff] bg-[#e6f4ff] text-xs font-semibold text-[#1677ff] shadow-[0_2px_0_rgba(0,0,0,0.02)] flex items-center gap-1.5">
+                            <div className="px-3 py-1.5 rounded-lg border border-[#e6ebf1] bg-white text-xs font-medium text-[#595959] flex items-center gap-2">
                                 <span className="size-1.5 rounded-full bg-[#1677ff]" />
-                                <span>Sisa Kuota: <strong className="font-mono"><CountUp to={subscription.remaining_message_quota} /></strong> Pesan</span>
+                                <span>Sisa Kuota: <strong className="font-mono text-[#262626]"><CountUp to={subscription.remaining_message_quota} /></strong> Pesan</span>
                             </div>
                         )}
                     </div>
@@ -723,16 +714,16 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                             </td>
                                             <td className="py-3.5 px-4">
                                                 <span
-                                                    className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10.5px] font-semibold border ${
+                                                    className={`inline-flex items-center gap-1.5 text-xs font-medium ${
                                                         c.status === 'completed'
-                                                            ? 'border-[#b7eb8f] bg-[#f6ffed] text-[#52c41a]'
+                                                            ? 'text-[#52c41a]'
                                                             : c.status === 'scheduled'
-                                                            ? 'border-[#91caff] bg-[#e6f4ff] text-[#1677ff]'
+                                                            ? 'text-[#1677ff]'
                                                             : c.status === 'paused' || c.status === 'partially_delivered'
-                                                            ? 'border-[#ffe58f] bg-[#fffbe6] text-[#faad14]'
+                                                            ? 'text-[#faad14]'
                                                             : c.status === 'failed'
-                                                            ? 'border-[#ffccc7] bg-[#fff1f0] text-[#ff4d4f]'
-                                                            : 'border-[#d9d9d9] bg-[#fafafb] text-[#595959]'
+                                                            ? 'text-[#ff4d4f]'
+                                                            : 'text-[#595959]'
                                                     }`}
                                                 >
                                                     <span className={`size-1.5 rounded-full ${
@@ -741,7 +732,7 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                                         : c.status === 'failed' ? 'bg-[#ff4d4f]'
                                                         : 'bg-[#faad14]'
                                                     }`} />
-                                                    {c.status === 'failed' ? 'GAGAL' : c.status === 'partially_delivered' ? 'SEBAGIAN' : c.status.toUpperCase()}
+                                                    {c.status === 'failed' ? 'Gagal' : c.status === 'partially_delivered' ? 'Sebagian' : c.status === 'completed' ? 'Selesai' : c.status}
                                                 </span>
                                             </td>
                                             <td className="py-3.5 px-4 text-right">

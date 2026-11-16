@@ -762,19 +762,16 @@ export default function AutoReplyIndex({
                             <ChevronRight className="size-3 text-[#bfbfbf]" />
                             <span className="text-[#1677ff] font-semibold">Auto-Reply &amp; AI Bot</span>
                         </div>
-                        <div className="flex items-center gap-2.5 flex-wrap">
+                        <div className="flex items-center gap-3 flex-wrap">
                             <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#262626] flex items-center gap-2">
                                 <Bot className="w-5 h-5 sm:w-6 sm:h-6 text-[#1677ff] shrink-0" />
                                 <span>Auto-Reply &amp; Asisten AI Cerdas</span>
                             </h1>
-                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[10px] sm:text-xs font-semibold border transition-colors ${
-                                isMasterOn
-                                    ? 'bg-[#f6ffed] text-[#52c41a] border-[#b7eb8f]'
-                                    : 'bg-[#fffbe6] text-[#faad14] border-[#ffe58f]'
+                            <span className={`inline-flex items-center gap-1.5 text-xs font-medium ${
+                                isMasterOn ? 'text-[#52c41a]' : 'text-[#faad14]'
                             }`}>
-                                <span className={`w-1.5 h-1.5 rounded-full ${isMasterOn ? 'bg-[#52c41a] animate-pulse' : 'bg-[#faad14]'}`} />
-                                <span className="hidden sm:inline">{isMasterOn ? 'Smart Responder 24/7 (Aktif)' : 'Mode Nonaktif (Manual)'}</span>
-                                <span className="sm:hidden">{isMasterOn ? 'Aktif' : 'Nonaktif'}</span>
+                                <span className={`size-1.5 rounded-full ${isMasterOn ? 'bg-[#52c41a]' : 'bg-[#faad14]'}`} />
+                                <span>{isMasterOn ? 'Aktif' : 'Nonaktif'}</span>
                             </span>
                         </div>
                         <p className="text-xs text-[#8c8c8c] mt-1 max-w-2xl">

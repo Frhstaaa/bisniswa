@@ -425,15 +425,9 @@ export default function InboxIndex({
                             <ChevronRight className="size-3 text-[#bfbfbf]" />
                             <span className="text-[#1677ff] font-semibold">Kotak Masuk</span>
                         </div>
-                        <div className="flex flex-wrap items-center gap-2.5">
-                            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#262626]">
-                                Kotak Masuk WhatsApp
-                            </h1>
-                            <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[10px] font-bold bg-[#e6f4ff] text-[#1677ff] border border-[#91caff]">
-                                <span className="size-1.5 rounded-full bg-[#1677ff] animate-pulse" />
-                                <span>LIVE CHAT REALTIME</span>
-                            </span>
-                        </div>
+                        <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#262626]">
+                            Kotak Masuk WhatsApp
+                        </h1>
                         <p className="text-xs text-[#8c8c8c] mt-0.5">
                             Percakapan WhatsApp langsung dengan pelanggan secara real-time tanpa refresh halaman.
                         </p>

@@ -188,17 +188,12 @@ export default function Dashboard({
                             <ChevronRight className="size-3 text-[#bfbfbf]" />
                             <span className="text-[#1677ff] font-semibold">{workspace?.name || 'Overview'}</span>
                         </div>
-                        <div className="flex flex-wrap items-center gap-2.5">
+                        <div className="flex flex-wrap items-center gap-3">
                             <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#262626]">
-                                {workspace?.name || 'Workspace'} Statistics
+                                {workspace?.name || 'Workspace'} Overview
                             </h1>
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#e6f4ff] text-[#1677ff] border border-[#91caff]">
-                                <Sparkles className="size-2.5 text-[#1677ff]" />
-                                <span>{stats?.plan_name || 'Starter Lite'}</span>
-                            </span>
-                            <span className="hidden sm:inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#f6ffed] text-[#52c41a] border border-[#b7eb8f]">
-                                <span className="size-1.5 rounded-full bg-[#52c41a] animate-pulse" />
-                                <span>Dual-Server Aktif</span>
+                            <span className="text-xs text-[#8c8c8c] font-medium">
+                                Paket {stats?.plan_name || 'Starter Lite'}
                             </span>
                         </div>
                     </div>
@@ -277,21 +272,17 @@ export default function Dashboard({
                 {/* ================= 2. MANTIS ANALYTIC E-COMMERCE CARDS (ROW 1) ================= */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                     {/* CARD 1: Total Messages Sent (Pesan Hari Ini) */}
-                    <motion.div
-                        whileHover={{ y: -3, transition: { duration: 0.15 } }}
-                        className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md transition-all relative overflow-hidden"
-                    >
+                    <div className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
                         <div className="flex items-center justify-between mb-3">
-                            <span className="text-xs font-semibold uppercase tracking-wider text-[#8c8c8c]">
+                            <span className="text-xs font-medium text-[#8c8c8c]">
                                 Pesan Hari Ini
                             </span>
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#f6ffed] text-[#52c41a] border border-[#b7eb8f]">
-                                <TrendingUp className="size-3 text-[#52c41a]" />
-                                <span>+18.4%</span>
+                            <span className="text-xs font-semibold text-[#52c41a] font-mono">
+                                +18.4%
                             </span>
                         </div>
-                        <div className="text-2xl sm:text-3xl font-bold text-[#262626] tracking-tight font-mono mb-2">
-                            <CountUp to={stats?.sent_today || 0} /> <span className="text-sm font-normal text-[#8c8c8c] font-sans">Pesan</span>
+                        <div className="text-2xl sm:text-3xl font-bold text-[#262626] tracking-tight font-mono mb-2.5">
+                            <CountUp to={stats?.sent_today || 0} />
                         </div>
                         <div className="w-full bg-[#f5f5f5] h-1.5 rounded-full overflow-hidden mb-2.5">
                             <div
@@ -300,26 +291,21 @@ export default function Dashboard({
                             />
                         </div>
                         <p className="text-xs text-[#8c8c8c] leading-relaxed">
-                            Tingkat sukses <span className="font-semibold text-[#1677ff]">{stats?.delivery_rate || '100%'}</span> ({stats?.busiest_hour || '10:00 – 15:00 WIB'})
+                            Tingkat sukses <span className="font-semibold text-[#262626]">{stats?.delivery_rate || '100%'}</span> ({stats?.busiest_hour || '10:00 – 15:00 WIB'})
                         </p>
-                        <div className="absolute -bottom-6 -right-6 size-24 rounded-full bg-blue-50/60 pointer-events-none" />
-                    </motion.div>
+                    </div>
 
                     {/* CARD 2: Slot Gateway WhatsApp */}
-                    <motion.div
-                        whileHover={{ y: -3, transition: { duration: 0.15 } }}
-                        className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md transition-all relative overflow-hidden"
-                    >
+                    <div className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
                         <div className="flex items-center justify-between mb-3">
-                            <span className="text-xs font-semibold uppercase tracking-wider text-[#8c8c8c]">
+                            <span className="text-xs font-medium text-[#8c8c8c]">
                                 Slot Nomor WA
                             </span>
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#e6f4ff] text-[#1677ff] border border-[#91caff]">
-                                <Smartphone className="size-3 text-[#1677ff]" />
-                                <span>{devicePercent}% Slot</span>
+                            <span className="text-xs font-semibold text-[#1677ff] font-mono">
+                                {devicePercent}%
                             </span>
                         </div>
-                        <div className="text-2xl sm:text-3xl font-bold text-[#262626] tracking-tight font-mono mb-2">
+                        <div className="text-2xl sm:text-3xl font-bold text-[#262626] tracking-tight font-mono mb-2.5">
                             <CountUp to={stats?.connected_devices || 0} /> <span className="text-sm font-normal text-[#8c8c8c] font-sans">/ {maxAllowedDevices} Slot</span>
                         </div>
                         <div className="w-full bg-[#f5f5f5] h-1.5 rounded-full overflow-hidden mb-2.5">
@@ -329,27 +315,22 @@ export default function Dashboard({
                             />
                         </div>
                         <p className="text-xs text-[#8c8c8c] leading-relaxed">
-                            Status node: <span className="font-semibold text-[#52c41a]">{(stats?.connected_devices || 0) > 0 ? 'Online & Siap' : 'Perlu Scan QR'}</span> (Dual Server)
+                            Status node: <span className={`font-semibold ${(stats?.connected_devices || 0) > 0 ? 'text-[#52c41a]' : 'text-[#faad14]'}`}>{(stats?.connected_devices || 0) > 0 ? 'Online & Siap' : 'Perlu Scan QR'}</span>
                         </p>
-                        <div className="absolute -bottom-6 -right-6 size-24 rounded-full bg-emerald-50/60 pointer-events-none" />
-                    </motion.div>
+                    </div>
 
                     {/* CARD 3: Sisa Kuota Pesan */}
-                    <motion.div
-                        whileHover={{ y: -3, transition: { duration: 0.15 } }}
-                        className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md transition-all relative overflow-hidden"
-                    >
+                    <div className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
                         <div className="flex items-center justify-between mb-3">
-                            <span className="text-xs font-semibold uppercase tracking-wider text-[#8c8c8c]">
+                            <span className="text-xs font-medium text-[#8c8c8c]">
                                 Sisa Kuota Pesan
                             </span>
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#fffbe6] text-[#faad14] border border-[#ffe58f]">
-                                <Zap className="size-3 text-[#faad14]" />
-                                <span>{quotaPercent}% Sisa</span>
+                            <span className="text-xs font-semibold text-[#595959] font-mono">
+                                {quotaPercent}% Sisa
                             </span>
                         </div>
-                        <div className="text-2xl sm:text-3xl font-bold text-[#262626] tracking-tight font-mono mb-2">
-                            <CountUp to={stats?.remaining_quota || 0} /> <span className="text-sm font-normal text-[#8c8c8c] font-sans">Pesan</span>
+                        <div className="text-2xl sm:text-3xl font-bold text-[#262626] tracking-tight font-mono mb-2.5">
+                            <CountUp to={stats?.remaining_quota || 0} />
                         </div>
                         <div className="w-full bg-[#f5f5f5] h-1.5 rounded-full overflow-hidden mb-2.5">
                             <div
@@ -360,29 +341,23 @@ export default function Dashboard({
                         <p className="text-xs text-[#8c8c8c] leading-relaxed">
                             Terpakai <span className="font-semibold text-[#262626]">{quotaUsed.toLocaleString('id-ID')}</span> dari {(stats?.monthly_quota || 5000).toLocaleString('id-ID')} /bln
                         </p>
-                        <div className="absolute -bottom-6 -right-6 size-24 rounded-full bg-amber-50/60 pointer-events-none" />
-                    </motion.div>
+                    </div>
 
                     {/* CARD 4: Sisa Masa Aktif Langganan */}
-                    <motion.div
-                        whileHover={{ y: -3, transition: { duration: 0.15 } }}
-                        className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md transition-all relative overflow-hidden"
-                    >
+                    <div className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
                         <div className="flex items-center justify-between mb-3">
-                            <span className="text-xs font-semibold uppercase tracking-wider text-[#8c8c8c]">
+                            <span className="text-xs font-medium text-[#8c8c8c]">
                                 Masa Aktif
                             </span>
-                            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold ${
-                                (stats?.days_remaining || 0) > 5
-                                    ? 'bg-[#f6ffed] text-[#52c41a] border border-[#b7eb8f]'
-                                    : 'bg-[#fff1f0] text-[#ff4d4f] border border-[#ffccc7]'
+                            <span className={`inline-flex items-center gap-1.5 text-xs font-semibold ${
+                                (stats?.days_remaining || 0) > 5 ? 'text-[#52c41a]' : 'text-[#ff4d4f]'
                             }`}>
-                                <Clock className="size-3" />
-                                <span>{(stats?.days_remaining || 0) > 0 ? 'AKTIF' : 'EXPIRED'}</span>
+                                <span className={`size-1.5 rounded-full ${(stats?.days_remaining || 0) > 5 ? 'bg-[#52c41a]' : 'bg-[#ff4d4f]'}`} />
+                                {(stats?.days_remaining || 0) > 0 ? 'Aktif' : 'Expired'}
                             </span>
                         </div>
-                        <div className="text-2xl sm:text-3xl font-bold text-[#262626] tracking-tight font-mono mb-2">
-                            {stats?.days_remaining || 0} <span className="text-sm font-normal text-[#8c8c8c] font-sans">Hari Tersisa</span>
+                        <div className="text-2xl sm:text-3xl font-bold text-[#262626] tracking-tight font-mono mb-2.5">
+                            {stats?.days_remaining || 0} <span className="text-sm font-normal text-[#8c8c8c] font-sans">Hari</span>
                         </div>
                         <div className="w-full bg-[#f5f5f5] h-1.5 rounded-full overflow-hidden mb-2.5">
                             <div
@@ -393,10 +368,9 @@ export default function Dashboard({
                             />
                         </div>
                         <p className="text-xs text-[#8c8c8c] leading-relaxed">
-                            Paket <span className="font-semibold text-[#1677ff]">{stats?.plan_name || 'Starter Lite'}</span> (Toleransi 3 hari grace period)
+                            Paket <span className="font-semibold text-[#262626]">{stats?.plan_name || 'Starter Lite'}</span> (Grace period 3 hari)
                         </p>
-                        <div className="absolute -bottom-6 -right-6 size-24 rounded-full bg-purple-50/60 pointer-events-none" />
-                    </motion.div>
+                    </div>
                 </div>
 
                 {/* ================= 3. MANTIS ROUND ICON STATS (ROW 2) ================= */}
@@ -563,20 +537,24 @@ export default function Dashboard({
                                                     </div>
                                                     <div className="flex flex-col items-end shrink-0 space-y-1">
                                                         {msg.status === 'read' ? (
-                                                            <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[10px] font-bold bg-[#f6ffed] text-[#52c41a] border border-[#b7eb8f]">
-                                                                READ
+                                                            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#52c41a]">
+                                                                <span className="size-1.5 rounded-full bg-[#52c41a]" />
+                                                                Read
                                                             </span>
                                                         ) : msg.status === 'delivered' ? (
-                                                            <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[10px] font-bold bg-[#e6f4ff] text-[#1677ff] border border-[#91caff]">
-                                                                DELIVERED
+                                                            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#1677ff]">
+                                                                <span className="size-1.5 rounded-full bg-[#1677ff]" />
+                                                                Delivered
                                                             </span>
                                                         ) : msg.status === 'failed' ? (
-                                                            <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[10px] font-bold bg-[#fff1f0] text-[#ff4d4f] border border-[#ffccc7]">
-                                                                FAILED
+                                                            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#ff4d4f]">
+                                                                <span className="size-1.5 rounded-full bg-[#ff4d4f]" />
+                                                                Failed
                                                             </span>
                                                         ) : (
-                                                            <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[10px] font-semibold bg-[#fafafb] text-[#595959] border border-[#d9d9d9] uppercase">
-                                                                {msg.status || 'SENT'}
+                                                            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#595959] capitalize">
+                                                                <span className="size-1.5 rounded-full bg-[#8c8c8c]" />
+                                                                {msg.status || 'Sent'}
                                                             </span>
                                                         )}
                                                         <span className="text-[10px] font-mono text-[#8c8c8c] tabular-nums">
@@ -600,14 +578,9 @@ export default function Dashboard({
                         <div className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.03)] overflow-hidden">
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-5 border-b border-[#f0f0f0]">
                                 <div>
-                                    <div className="flex items-center gap-2">
-                                        <h3 className="text-sm font-bold text-[#262626]">
-                                            Log Riwayat Pengiriman Pesan
-                                        </h3>
-                                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#1677ff] bg-[#e6f4ff] px-2 py-0.2 rounded border border-[#91caff]">
-                                            REALTIME
-                                        </span>
-                                    </div>
+                                    <h3 className="text-sm font-bold text-[#262626]">
+                                        Log Riwayat Pengiriman Pesan
+                                    </h3>
                                     <p className="text-xs text-[#8c8c8c] mt-0.5">
                                         Log realtime pesan keluar dan status konfirmasi penerimaan WhatsApp gateway
                                     </p>
@@ -737,22 +710,22 @@ export default function Dashboard({
                                             </p>
                                         </div>
                                     </div>
-                                    <span className="inline-flex items-center gap-1 text-[10.5px] font-bold text-[#52c41a] bg-[#f6ffed] px-2 py-0.5 rounded border border-[#b7eb8f]">
-                                        <span className="size-1.5 rounded-full bg-[#52c41a] animate-pulse" />
-                                        NORMAL
+                                    <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#52c41a]">
+                                        <span className="size-1.5 rounded-full bg-[#52c41a]" />
+                                        Normal
                                     </span>
                                 </div>
 
                                 <div className="p-3.5 rounded-lg border border-[#e6ebf1] bg-[#fafafb] space-y-2">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
-                                            <span className="size-2 rounded-full bg-[#52c41a] animate-pulse" />
+                                            <span className="size-2 rounded-full bg-[#52c41a]" />
                                             <span className="font-bold text-xs text-[#262626]">
                                                 SAPA UltraSync Engine
                                             </span>
                                         </div>
-                                        <span className="text-[10px] font-bold text-[#1677ff] bg-[#e6f4ff] px-2 py-0.2 rounded border border-[#91caff]">
-                                            OPERASIONAL
+                                        <span className="text-[11px] font-medium text-[#1677ff]">
+                                            Operasional
                                         </span>
                                     </div>
                                     <p className="text-[11px] text-[#8c8c8c] leading-relaxed">
@@ -844,13 +817,13 @@ export default function Dashboard({
                             <div className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.03)] p-5 space-y-4">
                                 <div className="flex items-center justify-between pb-3 border-b border-[#f0f0f0]">
                                     <div className="flex items-center gap-2">
-                                        <span className="size-2 rounded-full bg-[#52c41a] animate-pulse" />
+                                        <span className="size-2 rounded-full bg-[#52c41a]" />
                                         <h3 className="text-sm font-bold text-[#262626]">
                                             SAPA UltraSync Engine
                                         </h3>
                                     </div>
-                                    <span className="text-[10px] font-bold text-[#1677ff] bg-[#e6f4ff] px-2 py-0.2 rounded border border-[#91caff]">
-                                        OPERASIONAL
+                                    <span className="text-xs font-medium text-[#52c41a]">
+                                        Operasional
                                     </span>
                                 </div>
                                 <div className="space-y-3">
@@ -874,13 +847,13 @@ export default function Dashboard({
                             <div className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.03)] p-5 space-y-4">
                                 <div className="flex items-center justify-between pb-3 border-b border-[#f0f0f0]">
                                     <div className="flex items-center gap-2">
-                                        <span className="size-2 rounded-full bg-[#1677ff] animate-pulse" />
+                                        <span className="size-2 rounded-full bg-[#1677ff]" />
                                         <h3 className="text-sm font-bold text-[#262626]">
-                                            Laravel Octane & FrankenPHP
+                                            Laravel Octane &amp; FrankenPHP
                                         </h3>
                                     </div>
-                                    <span className="text-[10px] font-bold text-[#52c41a] bg-[#f6ffed] px-2 py-0.2 rounded border border-[#b7eb8f]">
-                                        TUNED UP
+                                    <span className="text-xs font-medium text-[#1677ff]">
+                                        Aktif
                                     </span>
                                 </div>
                                 <div className="space-y-3">
@@ -990,14 +963,9 @@ export default function Dashboard({
                         <div className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.03)] overflow-hidden">
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-5 border-b border-[#f0f0f0]">
                                 <div>
-                                    <div className="flex items-center gap-2">
-                                        <h3 className="text-sm font-bold text-[#262626]">
-                                            Log Pengiriman Pesan Terkini
-                                        </h3>
-                                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#1677ff] bg-[#e6f4ff] px-2 py-0.2 rounded border border-[#91caff]">
-                                            REALTIME
-                                        </span>
-                                    </div>
+                                    <h3 className="text-sm font-bold text-[#262626]">
+                                        Log Pengiriman Pesan Terkini
+                                    </h3>
                                     <p className="text-xs text-[#8c8c8c] mt-0.5">
                                         Log realtime pesan keluar dan status konfirmasi penerimaan WhatsApp gateway
                                     </p>
