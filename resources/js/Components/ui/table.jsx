@@ -9,7 +9,7 @@ const Table = React.forwardRef(({ className, ...props }, ref) => (
 Table.displayName = 'Table';
 
 const TableHeader = React.forwardRef(({ className, ...props }, ref) => (
-    <thead ref={ref} className={cn('[&_tr]:border-b border-slate-200 bg-slate-50/70', className)} {...props} />
+    <thead ref={ref} className={cn('[&_tr]:border-b border-[#f0f0f0] bg-[#fafafb]', className)} {...props} />
 ));
 TableHeader.displayName = 'TableHeader';
 
@@ -19,7 +19,7 @@ const TableBody = React.forwardRef(({ className, ...props }, ref) => (
 TableBody.displayName = 'TableBody';
 
 const TableFooter = React.forwardRef(({ className, ...props }, ref) => (
-    <tfoot ref={ref} className={cn('border-t bg-slate-100/50 font-medium [&>tr]:last:border-b-0', className)} {...props} />
+    <tfoot ref={ref} className={cn('border-t bg-[#fafafb] font-medium [&>tr]:last:border-b-0', className)} {...props} />
 ));
 TableFooter.displayName = 'TableFooter';
 
@@ -27,7 +27,7 @@ const TableRow = React.forwardRef(({ className, ...props }, ref) => (
     <tr
         ref={ref}
         className={cn(
-            'border-b border-slate-100 transition-colors hover:bg-slate-50/80 data-[state=selected]:bg-slate-100',
+            'border-b border-[#f0f0f0] transition-colors hover:bg-[#fafafb] data-[state=selected]:bg-[#f5f5f5]',
             className
         )}
         {...props}
@@ -39,7 +39,7 @@ const TableHead = React.forwardRef(({ className, ...props }, ref) => (
     <th
         ref={ref}
         className={cn(
-            'h-10 px-4 text-left align-middle text-xs font-semibold text-slate-500 [&:has([role=checkbox])]:pr-0',
+            'h-10 px-4 text-left align-middle text-[11px] font-semibold uppercase tracking-wider text-[#595959] [&:has([role=checkbox])]:pr-0',
             className
         )}
         {...props}

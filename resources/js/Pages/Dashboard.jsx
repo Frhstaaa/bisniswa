@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Head, Link, usePage, router } from '@inertiajs/react';
-import { motion } from 'framer-motion';
 import AppLayout from '../Layouts/AppLayout';
 import QrScanModal from '../Components/QrScanModal';
 import DurationAdjustModal from '../Components/DurationAdjustModal';
@@ -12,12 +11,9 @@ import {
     Zap,
     Clock,
     Plus,
-    Activity,
     ArrowRight,
     Server,
     Calendar,
-    TrendingUp,
-    TrendingDown,
     CreditCard,
     QrCode,
     Code2,
@@ -27,16 +23,8 @@ import {
     Lightbulb,
     ChevronRight,
     RefreshCw,
-    ShieldCheck,
-    CheckCheck,
-    Check,
-    AlertCircle,
-    CheckCircle2,
-    Cpu,
-    ExternalLink,
 } from 'lucide-react';
 import { Button } from '../Components/ui/button';
-import { Badge } from '../Components/ui/badge';
 import CountUp from '../Components/ui/CountUp';
 import {
     Card,
@@ -60,6 +48,8 @@ import {
     TableRow,
     TableCell,
 } from '../Components/ui/table';
+import { Progress } from '../Components/ui/progress';
+import { Separator } from '../Components/ui/separator';
 import { Avatar, AvatarFallback } from '../Components/ui/avatar';
 import { cn } from '../lib/utils';
 
@@ -88,7 +78,6 @@ export default function Dashboard({
             : Object.values(devices || {}));
 
     const maxAllowedDevices = stats?.max_devices ?? (subscription?.plan?.limits?.max_devices ?? 1);
-    const connectedCount = stats?.connected_devices ?? devicesList.filter((d) => d.status === 'connected').length;
     const isDeviceLimitReached = (devicesList?.length || 0) >= maxAllowedDevices;
 
     const [isQrModalOpen, setIsQrModalOpen] = useState(false);
@@ -115,7 +104,7 @@ export default function Dashboard({
     useEffect(() => {
         const timer = setInterval(() => {
             refreshDashboard();
-        }, 12000); // 12-second live polling
+        }, 12000);
         return () => clearInterval(timer);
     }, []);
 
@@ -170,16 +159,128 @@ export default function Dashboard({
     const devicePercent = Math.min(100, Math.round(((stats?.connected_devices || 0) / Math.max(1, maxAllowedDevices)) * 100));
     const cyclePercent = Math.min(100, Math.max(0, Math.round(((stats?.days_remaining || 0) / 30) * 100)));
 
+    const renderMessageStatus = (status) => {
+        if (status === 'read') {
+            return (
+                <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#52c41a]">
+                    <span className="size-1.5 rounded-full bg-[#52c41a]" />
+                    Read
+                </span>
+            );
+        }
+        if (status === 'delivered') {
+            return (
+                <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#1677ff]">
+                    <span className="size-1.5 rounded-full bg-[#1677ff]" />
+                    Delivered
+                </span>
+            );
+        }
+        if (status === 'failed') {
+            return (
+                <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#ff4d4f]">
+                    <span className="size-1.5 rounded-full bg-[#ff4d4f]" />
+                    Failed
+                </span>
+            );
+        }
+        return (
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#595959] capitalize">
+                <span className="size-1.5 rounded-full bg-[#8c8c8c]" />
+                {status || 'Sent'}
+            </span>
+        );
+    };
+
+    const renderMessagesTable = (emptyAction = false) => (
+        <Table className="min-w-[620px]">
+            <TableHeader>
+                <TableRow className="hover:bg-[#fafafb]">
+                    <TableHead className="pl-5">Penerima &amp; Nomor</TableHead>
+                    <TableHead>Isi Ringkasan</TableHead>
+                    <TableHead className="hidden md:table-cell">Perangkat</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right pr-5">Waktu</TableHead>
+                </TableRow>
+            </TableHeader>
+            <TableBody>
+                {messagesList.length === 0 ? (
+                    <TableRow className="hover:bg-transparent">
+                        <TableCell colSpan={5} className="py-10 text-center text-[#8c8c8c]">
+                            <div className="flex flex-col items-center justify-center gap-2">
+                                <div className="size-10 rounded-full bg-[#fafafb] border border-[#f0f0f0] flex items-center justify-center text-[#bfbfbf]">
+                                    <MessageSquare className="size-5" />
+                                </div>
+                                <p className="text-xs font-semibold text-[#262626]">
+                                    Belum Ada Riwayat Pesan
+                                </p>
+                                <p className="text-[11px] text-[#8c8c8c] max-w-sm">
+                                    Pesan yang dikirim melalui REST API, broadcast massal, atau inbox akan muncul secara realtime di sini.
+                                </p>
+                                {emptyAction && (
+                                    <Link href="/broadcast" className="pt-1">
+                                        <Button
+                                            size="sm"
+                                            variant="outline"
+                                            className="border-[#91caff] text-[#1677ff] hover:bg-[#e6f4ff] cursor-pointer"
+                                        >
+                                            Mulai Broadcast Baru
+                                        </Button>
+                                    </Link>
+                                )}
+                            </div>
+                        </TableCell>
+                    </TableRow>
+                ) : (
+                    messagesList.map((msg) => (
+                        <TableRow key={msg.id}>
+                            <TableCell className="pl-5 py-3.5">
+                                <div className="flex items-center gap-2.5">
+                                    <div className="size-8 rounded-lg bg-[#e6f4ff] text-[#1677ff] flex items-center justify-center shrink-0 border border-[#91caff]">
+                                        <Send className="size-3.5" />
+                                    </div>
+                                    <div className="min-w-0">
+                                        <div className="font-mono text-xs font-semibold text-[#262626] truncate tabular-nums">
+                                            {msg.receiver_number}
+                                        </div>
+                                        <div className="text-[11px] text-[#8c8c8c] capitalize truncate">
+                                            {msg.message_type || 'Teks'}
+                                        </div>
+                                    </div>
+                                </div>
+                            </TableCell>
+                            <TableCell className="py-3.5 text-[#595959]">
+                                <div className="truncate max-w-[200px] xl:max-w-[320px]" title={msg.content}>
+                                    {msg.content || 'Pesan terkirim'}
+                                </div>
+                            </TableCell>
+                            <TableCell className="py-3.5 hidden md:table-cell">
+                                <span className="font-medium text-[#262626] truncate block max-w-[140px]" title={msg.device?.name || 'Gateway Node'}>
+                                    {msg.device?.name || 'Gateway Node'}
+                                </span>
+                            </TableCell>
+                            <TableCell className="py-3.5">
+                                {renderMessageStatus(msg.status)}
+                            </TableCell>
+                            <TableCell className="py-3.5 text-[#8c8c8c] text-right font-mono pr-5 tabular-nums">
+                                {msg.sent_at ? new Date(msg.sent_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : '-'}
+                            </TableCell>
+                        </TableRow>
+                    ))
+                )}
+            </TableBody>
+        </Table>
+    );
+
     return (
         <AppLayout title="Ikhtisar Workspace">
-            <Head title="Mantis Workspace Dashboard — SAPA BisnisWA" />
+            <Head title="Workspace Overview — SAPA BisnisWA" />
 
-            <div className="space-y-6 pb-12 font-sans antialiased text-[#1f1f1f]">
-                {/* ================= 1. MANTIS BREADCRUMB & HEADER ================= */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#e6ebf1]">
-                    <div>
-                        {/* Breadcrumbs */}
-                        <div className="flex items-center gap-1.5 text-xs text-[#8c8c8c] mb-1 font-medium">
+            <div className="flex flex-col gap-6 pb-12 font-sans antialiased text-[#1f1f1f]">
+                {/* ================= 1. BREADCRUMB & HEADER ================= */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-[#e6ebf1]">
+                    <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-1.5 text-xs text-[#8c8c8c] font-medium">
                             <Link href="/dashboard" className="hover:text-[#1677ff] transition-colors">
                                 Dashboard
                             </Link>
@@ -198,59 +299,55 @@ export default function Dashboard({
                         </div>
                     </div>
 
-                    {/* Integrated Mantis Action Cluster */}
-                    <div className="flex flex-wrap items-center gap-2.5">
+                    <div className="flex flex-wrap items-center gap-2">
                         {/* Live Sync Pill */}
-                        <div className="inline-flex items-center rounded-lg border border-[#d9d9d9] bg-white px-3 py-1.5 shadow-[0_2px_0_rgba(0,0,0,0.02)] text-xs text-[#595959] gap-2">
+                        <div className="inline-flex items-center rounded-lg border border-[#d9d9d9] bg-white px-3 h-9 text-xs text-[#595959] gap-2">
                             <span className="relative flex size-2">
-                                <span className="animate-ping absolute inline-flex size-full rounded-full bg-blue-400 opacity-75" />
+                                <span className="animate-ping absolute inline-flex size-full rounded-full bg-[#1677ff] opacity-75" />
                                 <span className="relative inline-flex size-2 rounded-full bg-[#1677ff]" />
                             </span>
-                            <span className="text-[#8c8c8c] font-normal hidden sm:inline">Sync:</span>
-                            <span className="font-mono font-bold text-[#262626] tabular-nums">
+                            <span className="text-[#8c8c8c] hidden sm:inline">Sync:</span>
+                            <span className="font-mono font-semibold text-[#262626] tabular-nums">
                                 {lastUpdated.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                             </span>
                             <button
                                 type="button"
                                 onClick={refreshDashboard}
                                 disabled={isRefreshing}
-                                className="p-1 rounded hover:bg-slate-100 text-[#8c8c8c] hover:text-[#1677ff] transition-colors disabled:opacity-50 cursor-pointer"
+                                className="p-1 rounded hover:bg-[#f5f5f5] text-[#8c8c8c] hover:text-[#1677ff] transition-colors disabled:opacity-50 cursor-pointer"
                                 title="Segarkan data realtime sekarang"
                             >
-                                <RefreshCw className={cn('size-3 text-[#1677ff]', isRefreshing && 'animate-spin')} />
+                                <RefreshCw className={cn('size-3.5 text-[#1677ff]', isRefreshing && 'animate-spin')} />
                             </button>
                         </div>
 
-                        {/* Panduan Button */}
                         <Button
                             variant="outline"
                             size="sm"
                             onClick={() => setIsGuideModalOpen(true)}
-                            className="h-9 px-3.5 text-xs font-semibold border-[#d9d9d9] bg-white hover:bg-slate-50 text-[#595959] rounded-lg shadow-[0_2px_0_rgba(0,0,0,0.02)] transition-all flex items-center gap-1.5 cursor-pointer"
+                            className="h-9 px-3.5 text-xs font-semibold border-[#d9d9d9] bg-white hover:bg-slate-50 text-[#595959] rounded-lg cursor-pointer flex items-center gap-1.5"
                         >
-                            <Lightbulb className="size-3.5 text-amber-500" />
+                            <Lightbulb className="size-3.5 text-[#faad14]" />
                             <span>Panduan</span>
                         </Button>
 
-                        {/* SuperAdmin Duration Modal Trigger */}
                         {isSuperAdmin && (
                             <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => setIsDurationModalOpen(true)}
-                                className="h-9 px-3.5 text-xs font-semibold border-[#d9d9d9] bg-white hover:bg-slate-50 text-[#595959] rounded-lg shadow-[0_2px_0_rgba(0,0,0,0.02)] transition-all flex items-center gap-1.5 cursor-pointer"
+                                className="h-9 px-3.5 text-xs font-semibold border-[#d9d9d9] bg-white hover:bg-slate-50 text-[#595959] rounded-lg cursor-pointer flex items-center gap-1.5"
                             >
                                 <Calendar className="size-3.5 text-[#8c8c8c]" />
                                 <span>Kelola Durasi</span>
                             </Button>
                         )}
 
-                        {/* Primary Action Button */}
                         {isDeviceLimitReached ? (
                             <Link href="/subscriptions">
                                 <Button
                                     size="sm"
-                                    className="h-9 px-3.5 text-xs font-semibold bg-[#1677ff] hover:bg-[#0958d9] text-white rounded-lg shadow-[0_2px_0_rgba(0,0,0,0.043)] transition-all flex items-center gap-1.5 cursor-pointer"
+                                    className="h-9 px-3.5 text-xs font-semibold bg-[#1677ff] hover:bg-[#0958d9] text-white rounded-lg cursor-pointer flex items-center gap-1.5"
                                 >
                                     <Sparkles className="size-3.5" />
                                     <span>Upgrade Slot ({devicesList?.length || 0}/{maxAllowedDevices})</span>
@@ -260,7 +357,7 @@ export default function Dashboard({
                             <Button
                                 size="sm"
                                 onClick={() => setIsQrModalOpen(true)}
-                                className="h-9 px-3.5 text-xs font-semibold bg-[#1677ff] hover:bg-[#0958d9] text-white rounded-lg shadow-[0_2px_0_rgba(0,0,0,0.043)] transition-all flex items-center gap-1.5 cursor-pointer"
+                                className="h-9 px-3.5 text-xs font-semibold bg-[#1677ff] hover:bg-[#0958d9] text-white rounded-lg cursor-pointer flex items-center gap-1.5"
                             >
                                 <Plus className="size-3.5" />
                                 <span>Tautkan Perangkat WA</span>
@@ -269,175 +366,180 @@ export default function Dashboard({
                     </div>
                 </div>
 
-                {/* ================= 2. MANTIS ANALYTIC E-COMMERCE CARDS (ROW 1) ================= */}
+                {/* ================= 2. SHADCN KPI STAT CARDS (ROW 1) ================= */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                    {/* CARD 1: Total Messages Sent (Pesan Hari Ini) */}
-                    <div className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
-                        <div className="flex items-center justify-between mb-3">
-                            <span className="text-xs font-medium text-[#8c8c8c]">
-                                Pesan Hari Ini
-                            </span>
-                            <span className="text-xs font-semibold text-[#52c41a] font-mono">
-                                +18.4%
-                            </span>
-                        </div>
-                        <div className="text-2xl sm:text-3xl font-bold text-[#262626] tracking-tight font-mono mb-2.5">
-                            <CountUp to={stats?.sent_today || 0} />
-                        </div>
-                        <div className="w-full bg-[#f5f5f5] h-1.5 rounded-full overflow-hidden mb-2.5">
-                            <div
-                                style={{ width: `${Math.min(100, parseFloat(stats?.delivery_rate || '100'))}%` }}
-                                className="h-full bg-[#1677ff] rounded-full transition-all duration-500"
+                    {/* Card 1 */}
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <div className="flex items-center justify-between">
+                                <CardDescription className="font-medium">Pesan Hari Ini</CardDescription>
+                                <span className="text-xs font-semibold text-[#52c41a] font-mono">+18.4%</span>
+                            </div>
+                            <CardTitle className="text-2xl sm:text-3xl font-bold font-mono tracking-tight pt-1">
+                                <CountUp to={stats?.sent_today || 0} />
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="flex flex-col gap-2.5 pb-4">
+                            <Progress
+                                value={parseFloat(stats?.delivery_rate || '100')}
+                                indicatorClassName="bg-[#1677ff]"
                             />
-                        </div>
-                        <p className="text-xs text-[#8c8c8c] leading-relaxed">
-                            Tingkat sukses <span className="font-semibold text-[#262626]">{stats?.delivery_rate || '100%'}</span> ({stats?.busiest_hour || '10:00 – 15:00 WIB'})
-                        </p>
-                    </div>
+                        </CardContent>
+                        <CardFooter className="pt-0 text-xs text-[#8c8c8c]">
+                            Sukses <strong className="text-[#262626] mx-1">{stats?.delivery_rate || '100%'}</strong> ({stats?.busiest_hour || '10:00 – 15:00 WIB'})
+                        </CardFooter>
+                    </Card>
 
-                    {/* CARD 2: Slot Gateway WhatsApp */}
-                    <div className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
-                        <div className="flex items-center justify-between mb-3">
-                            <span className="text-xs font-medium text-[#8c8c8c]">
-                                Slot Nomor WA
-                            </span>
-                            <span className="text-xs font-semibold text-[#1677ff] font-mono">
-                                {devicePercent}%
-                            </span>
-                        </div>
-                        <div className="text-2xl sm:text-3xl font-bold text-[#262626] tracking-tight font-mono mb-2.5">
-                            <CountUp to={stats?.connected_devices || 0} /> <span className="text-sm font-normal text-[#8c8c8c] font-sans">/ {maxAllowedDevices} Slot</span>
-                        </div>
-                        <div className="w-full bg-[#f5f5f5] h-1.5 rounded-full overflow-hidden mb-2.5">
-                            <div
-                                style={{ width: `${devicePercent}%` }}
-                                className="h-full bg-[#52c41a] rounded-full transition-all duration-500"
+                    {/* Card 2 */}
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <div className="flex items-center justify-between">
+                                <CardDescription className="font-medium">Slot Nomor WA</CardDescription>
+                                <span className="text-xs font-semibold text-[#1677ff] font-mono">{devicePercent}%</span>
+                            </div>
+                            <CardTitle className="text-2xl sm:text-3xl font-bold font-mono tracking-tight pt-1">
+                                <CountUp to={stats?.connected_devices || 0} />{' '}
+                                <span className="text-sm font-normal text-[#8c8c8c] font-sans">/ {maxAllowedDevices} Slot</span>
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="flex flex-col gap-2.5 pb-4">
+                            <Progress
+                                value={devicePercent}
+                                indicatorClassName="bg-[#52c41a]"
                             />
-                        </div>
-                        <p className="text-xs text-[#8c8c8c] leading-relaxed">
-                            Status node: <span className={`font-semibold ${(stats?.connected_devices || 0) > 0 ? 'text-[#52c41a]' : 'text-[#faad14]'}`}>{(stats?.connected_devices || 0) > 0 ? 'Online & Siap' : 'Perlu Scan QR'}</span>
-                        </p>
-                    </div>
+                        </CardContent>
+                        <CardFooter className="pt-0 text-xs text-[#8c8c8c]">
+                            Status node:{' '}
+                            <span className={cn('font-semibold ml-1', (stats?.connected_devices || 0) > 0 ? 'text-[#52c41a]' : 'text-[#faad14]')}>
+                                {(stats?.connected_devices || 0) > 0 ? 'Online & Siap' : 'Perlu Scan QR'}
+                            </span>
+                        </CardFooter>
+                    </Card>
 
-                    {/* CARD 3: Sisa Kuota Pesan */}
-                    <div className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
-                        <div className="flex items-center justify-between mb-3">
-                            <span className="text-xs font-medium text-[#8c8c8c]">
-                                Sisa Kuota Pesan
-                            </span>
-                            <span className="text-xs font-semibold text-[#595959] font-mono">
-                                {quotaPercent}% Sisa
-                            </span>
-                        </div>
-                        <div className="text-2xl sm:text-3xl font-bold text-[#262626] tracking-tight font-mono mb-2.5">
-                            <CountUp to={stats?.remaining_quota || 0} />
-                        </div>
-                        <div className="w-full bg-[#f5f5f5] h-1.5 rounded-full overflow-hidden mb-2.5">
-                            <div
-                                style={{ width: `${quotaPercent}%` }}
-                                className="h-full bg-[#faad14] rounded-full transition-all duration-500"
+                    {/* Card 3 */}
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <div className="flex items-center justify-between">
+                                <CardDescription className="font-medium">Sisa Kuota Pesan</CardDescription>
+                                <span className="text-xs font-semibold text-[#595959] font-mono">{quotaPercent}% Sisa</span>
+                            </div>
+                            <CardTitle className="text-2xl sm:text-3xl font-bold font-mono tracking-tight pt-1">
+                                <CountUp to={stats?.remaining_quota || 0} />
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="flex flex-col gap-2.5 pb-4">
+                            <Progress
+                                value={quotaPercent}
+                                indicatorClassName="bg-[#faad14]"
                             />
-                        </div>
-                        <p className="text-xs text-[#8c8c8c] leading-relaxed">
-                            Terpakai <span className="font-semibold text-[#262626]">{quotaUsed.toLocaleString('id-ID')}</span> dari {(stats?.monthly_quota || 5000).toLocaleString('id-ID')} /bln
-                        </p>
-                    </div>
+                        </CardContent>
+                        <CardFooter className="pt-0 text-xs text-[#8c8c8c]">
+                            Terpakai <strong className="text-[#262626] mx-1">{quotaUsed.toLocaleString('id-ID')}</strong> dari {(stats?.monthly_quota || 5000).toLocaleString('id-ID')} /bln
+                        </CardFooter>
+                    </Card>
 
-                    {/* CARD 4: Sisa Masa Aktif Langganan */}
-                    <div className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
-                        <div className="flex items-center justify-between mb-3">
-                            <span className="text-xs font-medium text-[#8c8c8c]">
-                                Masa Aktif
-                            </span>
-                            <span className={`inline-flex items-center gap-1.5 text-xs font-semibold ${
-                                (stats?.days_remaining || 0) > 5 ? 'text-[#52c41a]' : 'text-[#ff4d4f]'
-                            }`}>
-                                <span className={`size-1.5 rounded-full ${(stats?.days_remaining || 0) > 5 ? 'bg-[#52c41a]' : 'bg-[#ff4d4f]'}`} />
-                                {(stats?.days_remaining || 0) > 0 ? 'Aktif' : 'Expired'}
-                            </span>
-                        </div>
-                        <div className="text-2xl sm:text-3xl font-bold text-[#262626] tracking-tight font-mono mb-2.5">
-                            {stats?.days_remaining || 0} <span className="text-sm font-normal text-[#8c8c8c] font-sans">Hari</span>
-                        </div>
-                        <div className="w-full bg-[#f5f5f5] h-1.5 rounded-full overflow-hidden mb-2.5">
-                            <div
-                                style={{ width: `${cyclePercent}%` }}
-                                className={`h-full rounded-full transition-all duration-500 ${
-                                    (stats?.days_remaining || 0) > 5 ? 'bg-[#52c41a]' : 'bg-[#faad14]'
-                                }`}
+                    {/* Card 4 */}
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <div className="flex items-center justify-between">
+                                <CardDescription className="font-medium">Masa Aktif</CardDescription>
+                                <span className={cn(
+                                    'inline-flex items-center gap-1.5 text-xs font-semibold',
+                                    (stats?.days_remaining || 0) > 5 ? 'text-[#52c41a]' : 'text-[#ff4d4f]'
+                                )}>
+                                    <span className={cn(
+                                        'size-1.5 rounded-full',
+                                        (stats?.days_remaining || 0) > 5 ? 'bg-[#52c41a]' : 'bg-[#ff4d4f]'
+                                    )} />
+                                    {(stats?.days_remaining || 0) > 0 ? 'Aktif' : 'Expired'}
+                                </span>
+                            </div>
+                            <CardTitle className="text-2xl sm:text-3xl font-bold font-mono tracking-tight pt-1">
+                                {stats?.days_remaining || 0}{' '}
+                                <span className="text-sm font-normal text-[#8c8c8c] font-sans">Hari</span>
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="flex flex-col gap-2.5 pb-4">
+                            <Progress
+                                value={cyclePercent}
+                                indicatorClassName={(stats?.days_remaining || 0) > 5 ? 'bg-[#52c41a]' : 'bg-[#faad14]'}
                             />
-                        </div>
-                        <p className="text-xs text-[#8c8c8c] leading-relaxed">
-                            Paket <span className="font-semibold text-[#262626]">{stats?.plan_name || 'Starter Lite'}</span> (Grace period 3 hari)
-                        </p>
-                    </div>
+                        </CardContent>
+                        <CardFooter className="pt-0 text-xs text-[#8c8c8c]">
+                            Paket <strong className="text-[#262626] mx-1">{stats?.plan_name || 'Starter Lite'}</strong> (Grace 3 hari)
+                        </CardFooter>
+                    </Card>
                 </div>
 
-                {/* ================= 3. MANTIS ROUND ICON STATS (ROW 2) ================= */}
+                {/* ================= 3. SUMMARY ICON WIDGETS (ROW 2) ================= */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                    {/* Item 1: SLA Pengiriman */}
-                    <div className="bg-white rounded-xl border border-[#e6ebf1] p-4.5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex items-center gap-4">
-                        <div className="size-11 rounded-full bg-[#e6f4ff] text-[#1677ff] border border-[#91caff] flex items-center justify-center shrink-0">
-                            <Send className="size-5" />
-                        </div>
-                        <div className="min-w-0">
-                            <div className="text-base font-bold text-[#262626]">
-                                {stats?.delivery_rate || '99.4%'} Sukses
+                    <Card>
+                        <CardContent className="p-4.5 flex items-center gap-4">
+                            <div className="size-11 rounded-full bg-[#e6f4ff] text-[#1677ff] border border-[#91caff] flex items-center justify-center shrink-0">
+                                <Send className="size-5" />
                             </div>
-                            <div className="text-xs text-[#8c8c8c] truncate">
-                                UltraSync Delivery Rate SLA
+                            <div className="min-w-0">
+                                <div className="text-base font-bold text-[#262626]">
+                                    {stats?.delivery_rate || '99.4%'} Sukses
+                                </div>
+                                <div className="text-xs text-[#8c8c8c] truncate">
+                                    UltraSync Delivery Rate SLA
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                        </CardContent>
+                    </Card>
 
-                    {/* Item 2: Node Gateway Aktif */}
-                    <div className="bg-white rounded-xl border border-[#e6ebf1] p-4.5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex items-center gap-4">
-                        <div className="size-11 rounded-full bg-[#f6ffed] text-[#52c41a] border border-[#b7eb8f] flex items-center justify-center shrink-0">
-                            <Smartphone className="size-5" />
-                        </div>
-                        <div className="min-w-0">
-                            <div className="text-base font-bold text-[#262626]">
-                                {stats?.connected_devices || 0} / {maxAllowedDevices} Online
+                    <Card>
+                        <CardContent className="p-4.5 flex items-center gap-4">
+                            <div className="size-11 rounded-full bg-[#f6ffed] text-[#52c41a] border border-[#b7eb8f] flex items-center justify-center shrink-0">
+                                <Smartphone className="size-5" />
                             </div>
-                            <div className="text-xs text-[#8c8c8c] truncate">
-                                Baileys Gateway Cluster
+                            <div className="min-w-0">
+                                <div className="text-base font-bold text-[#262626]">
+                                    {stats?.connected_devices || 0} / {maxAllowedDevices} Online
+                                </div>
+                                <div className="text-xs text-[#8c8c8c] truncate">
+                                    Baileys Gateway Cluster
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                        </CardContent>
+                    </Card>
 
-                    {/* Item 3: Jam Sibuk Operasional */}
-                    <div className="bg-white rounded-xl border border-[#e6ebf1] p-4.5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex items-center gap-4">
-                        <div className="size-11 rounded-full bg-[#fffbe6] text-[#faad14] border border-[#ffe58f] flex items-center justify-center shrink-0">
-                            <Clock className="size-5" />
-                        </div>
-                        <div className="min-w-0">
-                            <div className="text-base font-bold text-[#262626] truncate">
-                                {stats?.busiest_hour || '10:00 – 15:00 WIB'}
+                    <Card>
+                        <CardContent className="p-4.5 flex items-center gap-4">
+                            <div className="size-11 rounded-full bg-[#fffbe6] text-[#faad14] border border-[#ffe58f] flex items-center justify-center shrink-0">
+                                <Clock className="size-5" />
                             </div>
-                            <div className="text-xs text-[#8c8c8c] truncate">
-                                Jam Sibuk Transmisi
+                            <div className="min-w-0">
+                                <div className="text-base font-bold text-[#262626] truncate">
+                                    {stats?.busiest_hour || '10:00 – 15:00 WIB'}
+                                </div>
+                                <div className="text-xs text-[#8c8c8c] truncate">
+                                    Jam Sibuk Transmisi
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                        </CardContent>
+                    </Card>
 
-                    {/* Item 4: Siklus Billing Langganan */}
-                    <div className="bg-white rounded-xl border border-[#e6ebf1] p-4.5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex items-center gap-4">
-                        <div className="size-11 rounded-full bg-[#f9f0ff] text-[#722ed1] border border-[#d3adf7] flex items-center justify-center shrink-0">
-                            <CreditCard className="size-5" />
-                        </div>
-                        <div className="min-w-0">
-                            <div className="text-base font-bold text-[#262626]">
-                                {stats?.days_remaining || 0} Hari Aktif
+                    <Card>
+                        <CardContent className="p-4.5 flex items-center gap-4">
+                            <div className="size-11 rounded-full bg-[#f9f0ff] text-[#722ed1] border border-[#d3adf7] flex items-center justify-center shrink-0">
+                                <CreditCard className="size-5" />
                             </div>
-                            <div className="text-xs text-[#8c8c8c] truncate">
-                                Paket {stats?.plan_name || 'Starter Lite'}
+                            <div className="min-w-0">
+                                <div className="text-base font-bold text-[#262626]">
+                                    {stats?.days_remaining || 0} Hari Aktif
+                                </div>
+                                <div className="text-xs text-[#8c8c8c] truncate">
+                                    Paket {stats?.plan_name || 'Starter Lite'}
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                        </CardContent>
+                    </Card>
                 </div>
 
-                {/* ================= 4. MANTIS SEGMENTED TABS ================= */}
-                <Tabs defaultValue="overview" className="space-y-6">
+                {/* ================= 4. SHADCN TABS NAVIGATION ================= */}
+                <Tabs defaultValue="overview" className="flex flex-col gap-6">
                     <div className="overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 pb-1">
                         <TabsList className="bg-[#f5f5f5] border border-[#e8e8e8] p-1 rounded-xl inline-flex min-w-full sm:min-w-0">
                             <TabsTrigger
@@ -450,13 +552,13 @@ export default function Dashboard({
                                 value="analytics"
                                 className="rounded-lg px-3.5 py-1.5 text-xs font-semibold whitespace-nowrap data-[state=active]:bg-white data-[state=active]:text-[#1677ff] data-[state=active]:shadow-xs text-[#595959] hover:text-[#262626] cursor-pointer"
                             >
-                                Throughput & Grafik
+                                Throughput &amp; Grafik
                             </TabsTrigger>
                             <TabsTrigger
                                 value="infrastructure"
                                 className="rounded-lg px-3.5 py-1.5 text-xs font-semibold whitespace-nowrap data-[state=active]:bg-white data-[state=active]:text-[#1677ff] data-[state=active]:shadow-xs text-[#595959] hover:text-[#262626] cursor-pointer"
                             >
-                                Dual Server & Gateway
+                                Dual Server &amp; Gateway
                             </TabsTrigger>
                             <TabsTrigger
                                 value="logs"
@@ -468,10 +570,9 @@ export default function Dashboard({
                     </div>
 
                     {/* ================= TAB 1: IKHTISAR UTAMA ================= */}
-                    <TabsContent value="overview" className="space-y-6">
+                    <TabsContent value="overview" className="flex flex-col gap-6 mt-0">
                         {/* ROW 3: THROUGHPUT CHART (8 cols) + RECENT MESSAGES (4 cols) */}
                         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                            {/* Left (8 cols): Interactive Realtime Throughput Chart */}
                             <div className="lg:col-span-8">
                                 <InteractiveThroughputChart
                                     stats={stats}
@@ -482,325 +583,198 @@ export default function Dashboard({
                                 />
                             </div>
 
-                            {/* Right (4 cols): Aktivitas Pesan Terkini (Mantis Styled Card) */}
-                            <div className="lg:col-span-4 bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.03)] p-5 flex flex-col justify-between">
-                                <div>
-                                    <div className="flex items-center justify-between pb-3 border-b border-[#f0f0f0] mb-3">
-                                        <div>
-                                            <h3 className="text-sm font-bold text-[#262626]">
-                                                Aktivitas Pesan Terkini
-                                            </h3>
-                                            <p className="text-xs text-[#8c8c8c] mt-0.5">
-                                                5 interaksi WhatsApp terbaru
+                            <Card className="lg:col-span-4 flex flex-col justify-between">
+                                <CardHeader className="flex flex-row items-center justify-between pb-3 border-b border-[#f0f0f0]">
+                                    <div className="flex flex-col gap-0.5">
+                                        <CardTitle className="text-sm font-bold">Aktivitas Pesan Terkini</CardTitle>
+                                        <CardDescription>5 interaksi WhatsApp terbaru</CardDescription>
+                                    </div>
+                                    <Link href="/inbox" prefetch>
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="text-xs text-[#1677ff] hover:text-[#0958d9] hover:bg-[#e6f4ff] font-semibold cursor-pointer rounded-lg h-8 gap-1"
+                                        >
+                                            <span>Inbox</span>
+                                            <ArrowRight className="size-3.5" />
+                                        </Button>
+                                    </Link>
+                                </CardHeader>
+
+                                <CardContent className="pt-4 flex-1 flex flex-col gap-3.5">
+                                    {messagesList.length === 0 ? (
+                                        <div className="flex flex-col items-center justify-center py-10 text-center text-[#8c8c8c] gap-2">
+                                            <div className="size-10 rounded-full bg-[#fafafb] border border-[#f0f0f0] flex items-center justify-center text-[#bfbfbf]">
+                                                <MessageSquare className="size-5" />
+                                            </div>
+                                            <p className="text-xs font-semibold text-[#262626]">Belum Ada Aktivitas Pesan</p>
+                                            <p className="text-[11px] text-[#8c8c8c] max-w-[200px]">
+                                                Pesan masuk &amp; keluar akan muncul secara realtime di sini.
                                             </p>
                                         </div>
-                                        <Link href="/inbox" prefetch>
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className="text-xs text-[#1677ff] hover:text-[#0958d9] hover:bg-[#e6f4ff] font-semibold cursor-pointer rounded-lg flex items-center gap-1 h-8"
-                                            >
-                                                <span>Inbox</span>
-                                                <ArrowRight className="size-3.5" />
-                                            </Button>
-                                        </Link>
-                                    </div>
-
-                                    <div className="space-y-3.5">
-                                        {messagesList.length === 0 ? (
-                                            <div className="flex flex-col items-center justify-center py-10 text-center text-[#8c8c8c] space-y-2">
-                                                <div className="size-10 rounded-full bg-[#fafafb] border border-[#f0f0f0] flex items-center justify-center text-[#bfbfbf]">
-                                                    <MessageSquare className="size-5" />
+                                    ) : (
+                                        messagesList.slice(0, 5).map((msg) => (
+                                            <div key={msg.id} className="flex items-center justify-between gap-3 text-xs">
+                                                <div className="flex items-center gap-3 min-w-0">
+                                                    <Avatar className="size-9 bg-[#e6f4ff] border border-[#91caff] shrink-0">
+                                                        <AvatarFallback className="bg-[#e6f4ff] text-[#1677ff] font-bold text-xs">
+                                                            {msg.receiver_number ? msg.receiver_number.slice(-2) : 'WA'}
+                                                        </AvatarFallback>
+                                                    </Avatar>
+                                                    <div className="min-w-0 flex flex-col gap-0.5">
+                                                        <p className="text-xs font-bold text-[#262626] truncate font-mono tabular-nums">
+                                                            {msg.receiver_number}
+                                                        </p>
+                                                        <p className="text-[11px] text-[#8c8c8c] truncate max-w-[140px] sm:max-w-[170px]">
+                                                            {msg.content || 'Pesan teks terkirim'}
+                                                        </p>
+                                                    </div>
                                                 </div>
-                                                <p className="text-xs font-semibold text-[#262626]">Belum Ada Aktivitas Pesan</p>
-                                                <p className="text-[11px] text-[#8c8c8c] max-w-[200px]">
-                                                    Pesan masuk & keluar akan muncul secara realtime di sini.
-                                                </p>
+                                                <div className="flex flex-col items-end shrink-0 gap-1">
+                                                    {renderMessageStatus(msg.status)}
+                                                    <span className="text-[10px] font-mono text-[#8c8c8c] tabular-nums">
+                                                        {msg.sent_at ? new Date(msg.sent_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : '-'}
+                                                    </span>
+                                                </div>
                                             </div>
-                                        ) : (
-                                            messagesList.slice(0, 5).map((msg) => (
-                                                <div key={msg.id} className="flex items-center justify-between gap-3 text-xs">
-                                                    <div className="flex items-center gap-3 min-w-0">
-                                                        <Avatar className="size-9 bg-[#e6f4ff] border border-[#91caff] shrink-0">
-                                                            <AvatarFallback className="bg-[#e6f4ff] text-[#1677ff] font-bold text-xs">
-                                                                {msg.receiver_number ? msg.receiver_number.slice(-2) : 'WA'}
-                                                            </AvatarFallback>
-                                                        </Avatar>
-                                                        <div className="min-w-0 space-y-0.5">
-                                                            <p className="text-xs font-bold text-[#262626] truncate font-mono tabular-nums">
-                                                                {msg.receiver_number}
-                                                            </p>
-                                                            <p className="text-[11px] text-[#8c8c8c] truncate max-w-[140px] sm:max-w-[170px]">
-                                                                {msg.content || 'Pesan teks terkirim'}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex flex-col items-end shrink-0 space-y-1">
-                                                        {msg.status === 'read' ? (
-                                                            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#52c41a]">
-                                                                <span className="size-1.5 rounded-full bg-[#52c41a]" />
-                                                                Read
-                                                            </span>
-                                                        ) : msg.status === 'delivered' ? (
-                                                            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#1677ff]">
-                                                                <span className="size-1.5 rounded-full bg-[#1677ff]" />
-                                                                Delivered
-                                                            </span>
-                                                        ) : msg.status === 'failed' ? (
-                                                            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#ff4d4f]">
-                                                                <span className="size-1.5 rounded-full bg-[#ff4d4f]" />
-                                                                Failed
-                                                            </span>
-                                                        ) : (
-                                                            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#595959] capitalize">
-                                                                <span className="size-1.5 rounded-full bg-[#8c8c8c]" />
-                                                                {msg.status || 'Sent'}
-                                                            </span>
-                                                        )}
-                                                        <span className="text-[10px] font-mono text-[#8c8c8c] tabular-nums">
-                                                            {msg.sent_at ? new Date(msg.sent_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : '-'}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            ))
-                                        )}
-                                    </div>
-                                </div>
+                                        ))
+                                    )}
+                                </CardContent>
 
-                                <div className="pt-3 border-t border-[#f0f0f0] flex items-center justify-between text-xs text-[#8c8c8c] mt-4">
+                                <CardFooter className="pt-3 border-t border-[#f0f0f0] flex items-center justify-between text-xs text-[#8c8c8c]">
                                     <span>Total Terkirim Hari Ini:</span>
                                     <strong className="font-mono font-bold text-[#1677ff]">{stats?.sent_today || 0} pesan</strong>
-                                </div>
-                            </div>
+                                </CardFooter>
+                            </Card>
                         </div>
 
                         {/* ROW 4: LOG RIWAYAT PENGIRIMAN PESAN TABLE */}
-                        <div className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.03)] overflow-hidden">
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-5 border-b border-[#f0f0f0]">
-                                <div>
-                                    <h3 className="text-sm font-bold text-[#262626]">
-                                        Log Riwayat Pengiriman Pesan
-                                    </h3>
-                                    <p className="text-xs text-[#8c8c8c] mt-0.5">
+                        <Card className="overflow-hidden">
+                            <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#f0f0f0]">
+                                <div className="flex flex-col gap-1">
+                                    <CardTitle className="text-sm font-bold">Log Riwayat Pengiriman Pesan</CardTitle>
+                                    <CardDescription>
                                         Log realtime pesan keluar dan status konfirmasi penerimaan WhatsApp gateway
-                                    </p>
+                                    </CardDescription>
                                 </div>
                                 <Link href="/broadcast" prefetch>
                                     <Button
                                         variant="outline"
                                         size="sm"
-                                        className="h-8 px-3 text-xs font-semibold border-[#d9d9d9] bg-white hover:bg-slate-50 text-[#595959] rounded-lg shadow-[0_2px_0_rgba(0,0,0,0.02)] transition-all flex items-center gap-1.5 cursor-pointer"
+                                        className="h-8 px-3 text-xs font-semibold border-[#d9d9d9] bg-white hover:bg-slate-50 text-[#595959] rounded-lg cursor-pointer flex items-center gap-1.5"
                                     >
                                         <span>Lihat Riwayat Broadcast</span>
                                         <ArrowRight className="size-3.5 text-[#8c8c8c]" />
                                     </Button>
                                 </Link>
-                            </div>
+                            </CardHeader>
+                            <CardContent className="p-0">
+                                {renderMessagesTable(true)}
+                            </CardContent>
+                        </Card>
 
-                            <div className="overflow-x-auto no-scrollbar">
-                                <table className="w-full text-left text-xs border-collapse min-w-[620px]">
-                                    <thead>
-                                        <tr className="bg-[#fafafb] text-[#595959] font-semibold border-b border-[#f0f0f0]">
-                                            <th className="py-3 px-4 uppercase text-[11px] tracking-wider">Penerima & Nomor</th>
-                                            <th className="py-3 px-4 uppercase text-[11px] tracking-wider">Isi Ringkasan</th>
-                                            <th className="py-3 px-4 uppercase text-[11px] tracking-wider hidden md:table-cell">Perangkat</th>
-                                            <th className="py-3 px-4 uppercase text-[11px] tracking-wider">Status</th>
-                                            <th className="py-3 px-4 uppercase text-[11px] tracking-wider text-right">Waktu</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-[#f0f0f0]">
-                                        {messagesList.length === 0 ? (
-                                            <tr>
-                                                <td colSpan={5} className="py-10 text-center text-xs text-[#8c8c8c]">
-                                                    <div className="flex flex-col items-center justify-center space-y-2">
-                                                        <div className="size-10 rounded-full bg-[#fafafb] border border-[#f0f0f0] flex items-center justify-center text-[#bfbfbf]">
-                                                            <MessageSquare className="size-5" />
-                                                        </div>
-                                                        <p className="text-xs font-semibold text-[#262626]">
-                                                            Belum Ada Riwayat Pesan
-                                                        </p>
-                                                        <p className="text-[11px] text-[#8c8c8c] max-w-sm">
-                                                            Pesan yang dikirim melalui REST API, broadcast massal, atau inbox akan muncul secara realtime di sini.
-                                                        </p>
-                                                        <Link href="/broadcast" className="pt-2">
-                                                            <Button size="sm" variant="outline" className="h-8 text-xs font-semibold rounded-lg border-[#91caff] text-[#1677ff] hover:bg-[#e6f4ff]">
-                                                                Mulai Broadcast Baru
-                                                            </Button>
-                                                        </Link>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ) : (
-                                            messagesList.map((msg) => (
-                                                <tr key={msg.id} className="hover:bg-[#fafafb] transition-colors">
-                                                    <td className="py-3.5 px-4">
-                                                        <div className="flex items-center gap-2.5">
-                                                            <div className="size-8 rounded-lg bg-[#e6f4ff] text-[#1677ff] flex items-center justify-center text-xs font-semibold shrink-0 border border-[#91caff]">
-                                                                <Send className="size-3.5" />
-                                                            </div>
-                                                            <div className="min-w-0">
-                                                                <div className="font-mono text-xs font-bold text-[#262626] truncate tabular-nums">
-                                                                    {msg.receiver_number}
-                                                                </div>
-                                                                <div className="text-[10px] text-[#8c8c8c] capitalize truncate">
-                                                                    Tipe: {msg.message_type || 'Teks'}
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td className="py-3.5 px-4 text-xs text-[#595959]">
-                                                        <div className="truncate max-w-[200px] xl:max-w-[320px]" title={msg.content}>
-                                                            {msg.content || 'Pesan terkirim'}
-                                                        </div>
-                                                    </td>
-                                                    <td className="py-3.5 px-4 hidden md:table-cell text-xs">
-                                                        <span className="font-medium text-[#262626] truncate block max-w-[130px]" title={msg.device?.name || 'Gateway Node'}>
-                                                            {msg.device?.name || 'Gateway Node'}
-                                                        </span>
-                                                    </td>
-                                                    <td className="py-3.5 px-4">
-                                                        {msg.status === 'read' ? (
-                                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10.5px] font-semibold bg-[#f6ffed] text-[#52c41a] border border-[#b7eb8f]">
-                                                                <CheckCheck className="size-3 text-[#52c41a]" />
-                                                                READ
-                                                            </span>
-                                                        ) : msg.status === 'delivered' ? (
-                                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10.5px] font-semibold bg-[#e6f4ff] text-[#1677ff] border border-[#91caff]">
-                                                                <CheckCheck className="size-3 text-[#1677ff]" />
-                                                                DELIVERED
-                                                            </span>
-                                                        ) : msg.status === 'failed' ? (
-                                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10.5px] font-semibold bg-[#fff1f0] text-[#ff4d4f] border border-[#ffccc7]">
-                                                                <AlertCircle className="size-3 text-[#ff4d4f]" />
-                                                                FAILED
-                                                            </span>
-                                                        ) : (
-                                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10.5px] font-semibold bg-[#fafafb] text-[#595959] border border-[#d9d9d9] uppercase">
-                                                                <Check className="size-3 text-[#8c8c8c]" />
-                                                                {msg.status || 'SENT'}
-                                                            </span>
-                                                        )}
-                                                    </td>
-                                                    <td className="py-3.5 px-4 text-xs text-[#8c8c8c] text-right font-mono tabular-nums">
-                                                        {msg.sent_at ? new Date(msg.sent_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : '-'}
-                                                    </td>
-                                                </tr>
-                                            ))
-                                        )}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        {/* ROW 5: QUICK ACTIONS (LAUNCHPAD) & DUAL SERVER INFRASTRUCTURE */}
+                        {/* ROW 5: DUAL SERVER INFRASTRUCTURE & QUICK ACTIONS */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {/* WIDGET 1: Dual Server Architecture Status */}
-                            <div className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.03)] p-5 space-y-4">
-                                <div className="flex items-center justify-between pb-3 border-b border-[#f0f0f0]">
+                            {/* Widget 1: Dual Server Status */}
+                            <Card>
+                                <CardHeader className="flex flex-row items-center justify-between pb-3 border-b border-[#f0f0f0]">
                                     <div className="flex items-center gap-2.5">
                                         <div className="size-9 rounded-lg bg-[#e6f4ff] text-[#1677ff] flex items-center justify-center border border-[#91caff]">
-                                            <Server className="size-4.5 text-[#1677ff]" />
+                                            <Server className="size-4.5" />
                                         </div>
-                                        <div>
-                                            <h3 className="text-sm font-bold text-[#262626]">
-                                                Status Dual Server WA
-                                            </h3>
-                                            <p className="text-[11px] text-[#8c8c8c]">
-                                                Redundansi otomatis tanpa downtime
-                                            </p>
+                                        <div className="flex flex-col gap-0.5">
+                                            <CardTitle className="text-sm font-bold">Status Dual Server WA</CardTitle>
+                                            <CardDescription className="text-[11px]">Redundansi otomatis tanpa downtime</CardDescription>
                                         </div>
                                     </div>
                                     <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#52c41a]">
                                         <span className="size-1.5 rounded-full bg-[#52c41a]" />
                                         Normal
                                     </span>
-                                </div>
+                                </CardHeader>
 
-                                <div className="p-3.5 rounded-lg border border-[#e6ebf1] bg-[#fafafb] space-y-2">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-2">
-                                            <span className="size-2 rounded-full bg-[#52c41a]" />
-                                            <span className="font-bold text-xs text-[#262626]">
-                                                SAPA UltraSync Engine
+                                <CardContent className="pt-4">
+                                    <div className="p-3.5 rounded-lg border border-[#e6ebf1] bg-[#fafafb] flex flex-col gap-2.5">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-2">
+                                                <span className="size-2 rounded-full bg-[#52c41a]" />
+                                                <span className="font-bold text-xs text-[#262626]">
+                                                    SAPA UltraSync Engine
+                                                </span>
+                                            </div>
+                                            <span className="text-[11px] font-medium text-[#1677ff]">
+                                                Operasional
                                             </span>
                                         </div>
-                                        <span className="text-[11px] font-medium text-[#1677ff]">
-                                            Operasional
-                                        </span>
-                                    </div>
-                                    <p className="text-[11px] text-[#8c8c8c] leading-relaxed">
-                                        Engine enterprise berkinerja tinggi dengan enkripsi native instan & bebas kendala "Menunggu pesan ini".
-                                    </p>
-                                    <div className="grid grid-cols-2 gap-2 text-[11px] pt-2 border-t border-[#f0f0f0] text-[#595959]">
-                                        <div>
-                                            <span className="text-[#8c8c8c] block text-[10px]">Runtime:</span>
-                                            <span className="font-semibold text-[#262626]">FrankenPHP + Octane</span>
-                                        </div>
-                                        <div className="text-right">
-                                            <span className="text-[#8c8c8c] block text-[10px]">Stabilitas:</span>
-                                            <span className="font-mono font-bold text-[#1677ff]">99.9% Uptime</span>
+                                        <p className="text-[11px] text-[#8c8c8c] leading-relaxed">
+                                            Engine enterprise berkinerja tinggi dengan enkripsi native instan &amp; bebas kendala &quot;Menunggu pesan ini&quot;.
+                                        </p>
+                                        <Separator className="bg-[#f0f0f0]" />
+                                        <div className="grid grid-cols-2 gap-2 text-[11px] text-[#595959]">
+                                            <div>
+                                                <span className="text-[#8c8c8c] block text-[10px]">Runtime:</span>
+                                                <span className="font-semibold text-[#262626]">FrankenPHP + Octane</span>
+                                            </div>
+                                            <div className="text-right">
+                                                <span className="text-[#8c8c8c] block text-[10px]">Stabilitas:</span>
+                                                <span className="font-mono font-bold text-[#1677ff]">99.9% Uptime</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                                </CardContent>
+                            </Card>
 
-                            {/* WIDGET 2: Quick Action Launchpad */}
-                            <div className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.03)] p-5 flex flex-col justify-between">
-                                <div>
-                                    <div className="flex items-center gap-2.5 pb-3 border-b border-[#f0f0f0]">
-                                        <div className="size-9 rounded-lg bg-[#e6f4ff] text-[#1677ff] flex items-center justify-center border border-[#91caff]">
-                                            <Zap className="size-4.5 text-[#1677ff]" />
-                                        </div>
-                                        <div>
-                                            <h3 className="text-sm font-bold text-[#262626]">
-                                                Pintasan Operasional
-                                            </h3>
-                                            <p className="text-[11px] text-[#8c8c8c]">
-                                                Akses cepat ke seluruh fitur utama gateway
-                                            </p>
-                                        </div>
+                            {/* Widget 2: Quick Action Launchpad */}
+                            <Card>
+                                <CardHeader className="flex flex-row items-center gap-2.5 pb-3 border-b border-[#f0f0f0]">
+                                    <div className="size-9 rounded-lg bg-[#e6f4ff] text-[#1677ff] flex items-center justify-center border border-[#91caff]">
+                                        <Zap className="size-4.5" />
                                     </div>
+                                    <div className="flex flex-col gap-0.5">
+                                        <CardTitle className="text-sm font-bold">Pintasan Operasional</CardTitle>
+                                        <CardDescription className="text-[11px]">Akses cepat ke seluruh fitur utama gateway</CardDescription>
+                                    </div>
+                                </CardHeader>
 
-                                    <div className="space-y-2 pt-3">
-                                        {quickActions.slice(0, 4).map((action, idx) => {
-                                            const ActionIcon = action.icon;
-                                            const content = (
-                                                <div className="group flex items-center justify-between p-2.5 rounded-lg border border-[#f0f0f0] bg-[#fafafb] hover:bg-[#e6f4ff]/40 hover:border-[#91caff] transition-all cursor-pointer">
-                                                    <div className="flex items-center gap-2.5 min-w-0">
-                                                        <div className="size-8 rounded-lg bg-white text-[#595959] group-hover:bg-[#1677ff] group-hover:text-white border border-[#e6ebf1] flex items-center justify-center shrink-0 transition-colors shadow-2xs">
-                                                            <ActionIcon className="size-4" />
+                                <CardContent className="pt-4 flex flex-col gap-2">
+                                    {quickActions.slice(0, 4).map((action, idx) => {
+                                        const ActionIcon = action.icon;
+                                        const itemContent = (
+                                            <div className="group flex items-center justify-between p-2.5 rounded-lg border border-[#f0f0f0] bg-[#fafafb] hover:bg-[#e6f4ff]/40 hover:border-[#91caff] transition-all cursor-pointer">
+                                                <div className="flex items-center gap-2.5 min-w-0">
+                                                    <div className="size-8 rounded-lg bg-white text-[#595959] group-hover:bg-[#1677ff] group-hover:text-white border border-[#e6ebf1] flex items-center justify-center shrink-0 transition-colors">
+                                                        <ActionIcon className="size-4" />
+                                                    </div>
+                                                    <div className="min-w-0">
+                                                        <div className="text-xs font-semibold text-[#262626] truncate group-hover:text-[#1677ff] transition-colors">
+                                                            {action.title}
                                                         </div>
-                                                        <div className="min-w-0">
-                                                            <div className="text-xs font-semibold text-[#262626] truncate group-hover:text-[#1677ff] transition-colors">
-                                                                {action.title}
-                                                            </div>
-                                                            <div className="text-[11px] text-[#8c8c8c] truncate">
-                                                                {action.subtitle}
-                                                            </div>
+                                                        <div className="text-[11px] text-[#8c8c8c] truncate">
+                                                            {action.subtitle}
                                                         </div>
                                                     </div>
-                                                    <ChevronRight className="size-3.5 text-[#bfbfbf] group-hover:text-[#1677ff] group-hover:translate-x-0.5 transition-all shrink-0 ml-2" />
                                                 </div>
-                                            );
+                                                <ChevronRight className="size-3.5 text-[#bfbfbf] group-hover:text-[#1677ff] group-hover:translate-x-0.5 transition-all shrink-0 ml-2" />
+                                            </div>
+                                        );
 
-                                            return action.href ? (
-                                                <Link key={idx} href={action.href} className="block">
-                                                    {content}
-                                                </Link>
-                                            ) : (
-                                                <div key={idx} onClick={action.onClick}>
-                                                    {content}
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-                            </div>
+                                        return action.href ? (
+                                            <Link key={idx} href={action.href} className="block">
+                                                {itemContent}
+                                            </Link>
+                                        ) : (
+                                            <div key={idx} onClick={action.onClick}>
+                                                {itemContent}
+                                            </div>
+                                        );
+                                    })}
+                                </CardContent>
+                            </Card>
                         </div>
                     </TabsContent>
 
                     {/* ================= TAB 2: THROUGHPUT & GRAFIK ================= */}
-                    <TabsContent value="analytics" className="space-y-6">
+                    <TabsContent value="analytics" className="mt-0">
                         <InteractiveThroughputChart
                             stats={stats}
                             realtimeDatasets={chartData}
@@ -811,26 +785,21 @@ export default function Dashboard({
                     </TabsContent>
 
                     {/* ================= TAB 3: DUAL SERVER & GATEWAY ================= */}
-                    <TabsContent value="infrastructure" className="space-y-6">
+                    <TabsContent value="infrastructure" className="flex flex-col gap-6 mt-0">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {/* SAPA UltraSync Engine Card */}
-                            <div className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.03)] p-5 space-y-4">
-                                <div className="flex items-center justify-between pb-3 border-b border-[#f0f0f0]">
+                            <Card>
+                                <CardHeader className="flex flex-row items-center justify-between pb-3 border-b border-[#f0f0f0]">
                                     <div className="flex items-center gap-2">
                                         <span className="size-2 rounded-full bg-[#52c41a]" />
-                                        <h3 className="text-sm font-bold text-[#262626]">
-                                            SAPA UltraSync Engine
-                                        </h3>
+                                        <CardTitle className="text-sm font-bold">SAPA UltraSync Engine</CardTitle>
                                     </div>
-                                    <span className="text-xs font-medium text-[#52c41a]">
-                                        Operasional
-                                    </span>
-                                </div>
-                                <div className="space-y-3">
+                                    <span className="text-xs font-medium text-[#52c41a]">Operasional</span>
+                                </CardHeader>
+                                <CardContent className="pt-4 flex flex-col gap-3">
                                     <p className="text-xs text-[#595959] leading-relaxed">
-                                        Engine tunggal berkinerja tinggi dengan protokol enkripsi Signal native. Menjamin pesan terbuka instan tanpa status "Menunggu pesan ini".
+                                        Engine tunggal berkinerja tinggi dengan protokol enkripsi Signal native. Menjamin pesan terbuka instan tanpa status &quot;Menunggu pesan ini&quot;.
                                     </p>
-                                    <div className="grid grid-cols-2 gap-3 pt-1 text-xs">
+                                    <div className="grid grid-cols-2 gap-3 text-xs">
                                         <div className="p-3 bg-[#fafafb] rounded-lg border border-[#f0f0f0]">
                                             <span className="text-[#8c8c8c] block text-[11px]">Enkripsi E2EE</span>
                                             <span className="font-mono font-bold text-[#1677ff] text-sm">Resmi Meta</span>
@@ -840,27 +809,22 @@ export default function Dashboard({
                                             <span className="font-mono font-bold text-[#262626] text-sm">Anti-Ban Sesi</span>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                                </CardContent>
+                            </Card>
 
-                            {/* Laravel Octane + FrankenPHP Card */}
-                            <div className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.03)] p-5 space-y-4">
-                                <div className="flex items-center justify-between pb-3 border-b border-[#f0f0f0]">
+                            <Card>
+                                <CardHeader className="flex flex-row items-center justify-between pb-3 border-b border-[#f0f0f0]">
                                     <div className="flex items-center gap-2">
                                         <span className="size-2 rounded-full bg-[#1677ff]" />
-                                        <h3 className="text-sm font-bold text-[#262626]">
-                                            Laravel Octane &amp; FrankenPHP
-                                        </h3>
+                                        <CardTitle className="text-sm font-bold">Laravel Octane &amp; FrankenPHP</CardTitle>
                                     </div>
-                                    <span className="text-xs font-medium text-[#1677ff]">
-                                        Aktif
-                                    </span>
-                                </div>
-                                <div className="space-y-3">
+                                    <span className="text-xs font-medium text-[#1677ff]">Aktif</span>
+                                </CardHeader>
+                                <CardContent className="pt-4 flex flex-col gap-3">
                                     <p className="text-xs text-[#595959] leading-relaxed">
                                         Aplikasi berjalan dalam persistent memory worker pool dengan waktu respon sub-milidetik, efisiensi CPU maksimal, dan auto-reload.
                                     </p>
-                                    <div className="grid grid-cols-2 gap-3 pt-1 text-xs">
+                                    <div className="grid grid-cols-2 gap-3 text-xs">
                                         <div className="p-3 bg-[#fafafb] rounded-lg border border-[#f0f0f0]">
                                             <span className="text-[#8c8c8c] block text-[11px]">Server Engine</span>
                                             <span className="font-mono font-bold text-[#1677ff] text-sm">FrankenPHP Caddy</span>
@@ -870,75 +834,71 @@ export default function Dashboard({
                                             <span className="font-mono font-bold text-[#262626] text-sm">Multi-Worker</span>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                                </CardContent>
+                            </Card>
                         </div>
 
-                        {/* Connected Devices Table (Mantis Styled Table) */}
-                        <div className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.03)] overflow-hidden">
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-5 border-b border-[#f0f0f0]">
-                                <div>
-                                    <h3 className="text-sm font-bold text-[#262626]">
-                                        Daftar Perangkat Terhubung
-                                    </h3>
-                                    <p className="text-xs text-[#8c8c8c] mt-0.5">
+                        <Card className="overflow-hidden">
+                            <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#f0f0f0]">
+                                <div className="flex flex-col gap-1">
+                                    <CardTitle className="text-sm font-bold">Daftar Perangkat Terhubung</CardTitle>
+                                    <CardDescription>
                                         {devicesList?.length || 0} dari {maxAllowedDevices} slot perangkat aktif digunakan
-                                    </p>
+                                    </CardDescription>
                                 </div>
                                 <Button
                                     size="sm"
                                     onClick={() => setIsQrModalOpen(true)}
                                     disabled={isDeviceLimitReached}
-                                    className="h-9 px-3.5 text-xs font-semibold bg-[#1677ff] hover:bg-[#0958d9] text-white rounded-lg shadow-[0_2px_0_rgba(0,0,0,0.043)] transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                                    className="h-9 px-3.5 text-xs font-semibold bg-[#1677ff] hover:bg-[#0958d9] text-white rounded-lg cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
                                 >
                                     <Plus className="size-3.5" />
                                     <span>Tautkan Perangkat Baru</span>
                                 </Button>
-                            </div>
-
-                            <div className="overflow-x-auto no-scrollbar">
-                                <table className="w-full text-left text-xs border-collapse min-w-[560px]">
-                                    <thead>
-                                        <tr className="bg-[#fafafb] text-[#595959] font-semibold border-b border-[#f0f0f0]">
-                                            <th className="py-3 px-4 uppercase text-[11px] tracking-wider">Nama Perangkat</th>
-                                            <th className="py-3 px-4 uppercase text-[11px] tracking-wider">Nomor WhatsApp</th>
-                                            <th className="py-3 px-4 uppercase text-[11px] tracking-wider">Engine</th>
-                                            <th className="py-3 px-4 uppercase text-[11px] tracking-wider">Status</th>
-                                            <th className="py-3 px-4 uppercase text-[11px] tracking-wider text-right">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-[#f0f0f0]">
+                            </CardHeader>
+                            <CardContent className="p-0">
+                                <Table className="min-w-[560px]">
+                                    <TableHeader>
+                                        <TableRow className="hover:bg-[#fafafb]">
+                                            <TableHead className="pl-5">Nama Perangkat</TableHead>
+                                            <TableHead>Nomor WhatsApp</TableHead>
+                                            <TableHead>Engine</TableHead>
+                                            <TableHead>Status</TableHead>
+                                            <TableHead className="text-right pr-5">Aksi</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
                                         {devicesList?.length === 0 ? (
-                                            <tr>
-                                                <td colSpan={5} className="py-8 text-center text-xs text-[#8c8c8c]">
+                                            <TableRow className="hover:bg-transparent">
+                                                <TableCell colSpan={5} className="py-8 text-center text-[#8c8c8c]">
                                                     Belum ada nomor WhatsApp yang ditautkan ke gateway ini.
-                                                </td>
-                                            </tr>
+                                                </TableCell>
+                                            </TableRow>
                                         ) : (
                                             devicesList.map((device) => (
-                                                <tr key={device.id} className="hover:bg-[#fafafb] transition-colors">
-                                                    <td className="py-3.5 px-4 font-semibold text-[#262626]">
+                                                <TableRow key={device.id}>
+                                                    <TableCell className="pl-5 py-3.5 font-semibold text-[#262626]">
                                                         {device.name}
-                                                    </td>
-                                                    <td className="py-3.5 px-4 font-mono text-[#595959]">
+                                                    </TableCell>
+                                                    <TableCell className="py-3.5 font-mono text-[#595959]">
                                                         {device.phone_number || '-'}
-                                                    </td>
-                                                    <td className="py-3.5 px-4 text-xs uppercase font-mono text-[#8c8c8c]">
+                                                    </TableCell>
+                                                    <TableCell className="py-3.5 uppercase font-mono text-[#8c8c8c]">
                                                         UltraSync Engine
-                                                    </td>
-                                                    <td className="py-3.5 px-4">
-                                                        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10.5px] font-semibold ${
-                                                            device.status === 'connected'
-                                                                ? 'bg-[#f6ffed] text-[#52c41a] border border-[#b7eb8f]'
-                                                                : 'bg-[#fafafb] text-[#8c8c8c] border border-[#d9d9d9]'
-                                                        }`}>
-                                                            <span className={`size-1.5 rounded-full ${
+                                                    </TableCell>
+                                                    <TableCell className="py-3.5">
+                                                        <span className={cn(
+                                                            'inline-flex items-center gap-1.5 text-xs font-medium',
+                                                            device.status === 'connected' ? 'text-[#52c41a]' : 'text-[#8c8c8c]'
+                                                        )}>
+                                                            <span className={cn(
+                                                                'size-1.5 rounded-full',
                                                                 device.status === 'connected' ? 'bg-[#52c41a]' : 'bg-[#8c8c8c]'
-                                                            }`} />
-                                                            {device.status === 'connected' ? 'CONNECTED' : (device.status || 'OFFLINE').toUpperCase()}
+                                                            )} />
+                                                            {device.status === 'connected' ? 'Connected' : (device.status || 'Offline')}
                                                         </span>
-                                                    </td>
-                                                    <td className="py-3.5 px-4 text-right">
+                                                    </TableCell>
+                                                    <TableCell className="py-3.5 text-right pr-5">
                                                         <Link href="/devices" prefetch>
                                                             <Button
                                                                 variant="ghost"
@@ -948,129 +908,41 @@ export default function Dashboard({
                                                                 Kelola
                                                             </Button>
                                                         </Link>
-                                                    </td>
-                                                </tr>
+                                                    </TableCell>
+                                                </TableRow>
                                             ))
                                         )}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                                    </TableBody>
+                                </Table>
+                            </CardContent>
+                        </Card>
                     </TabsContent>
 
                     {/* ================= TAB 4: LOG RIWAYAT PESAN ================= */}
-                    <TabsContent value="logs" className="space-y-6">
-                        <div className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.03)] overflow-hidden">
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-5 border-b border-[#f0f0f0]">
-                                <div>
-                                    <h3 className="text-sm font-bold text-[#262626]">
-                                        Log Pengiriman Pesan Terkini
-                                    </h3>
-                                    <p className="text-xs text-[#8c8c8c] mt-0.5">
+                    <TabsContent value="logs" className="mt-0">
+                        <Card className="overflow-hidden">
+                            <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#f0f0f0]">
+                                <div className="flex flex-col gap-1">
+                                    <CardTitle className="text-sm font-bold">Log Pengiriman Pesan Terkini</CardTitle>
+                                    <CardDescription>
                                         Log realtime pesan keluar dan status konfirmasi penerimaan WhatsApp gateway
-                                    </p>
+                                    </CardDescription>
                                 </div>
                                 <Link href="/broadcast" prefetch>
                                     <Button
                                         variant="outline"
                                         size="sm"
-                                        className="h-8 px-3 text-xs font-semibold border-[#d9d9d9] bg-white hover:bg-slate-50 text-[#595959] rounded-lg shadow-[0_2px_0_rgba(0,0,0,0.02)] transition-all flex items-center gap-1.5 cursor-pointer"
+                                        className="h-8 px-3 text-xs font-semibold border-[#d9d9d9] bg-white hover:bg-slate-50 text-[#595959] rounded-lg cursor-pointer flex items-center gap-1.5"
                                     >
                                         <span>Buka Modul Broadcast</span>
                                         <ArrowRight className="size-3.5 text-[#8c8c8c]" />
                                     </Button>
                                 </Link>
-                            </div>
-
-                            <div className="overflow-x-auto no-scrollbar">
-                                <table className="w-full text-left text-xs border-collapse min-w-[620px]">
-                                    <thead>
-                                        <tr className="bg-[#fafafb] text-[#595959] font-semibold border-b border-[#f0f0f0]">
-                                            <th className="py-3 px-4 uppercase text-[11px] tracking-wider">Penerima & Nomor</th>
-                                            <th className="py-3 px-4 uppercase text-[11px] tracking-wider">Isi Ringkasan</th>
-                                            <th className="py-3 px-4 uppercase text-[11px] tracking-wider hidden md:table-cell">Perangkat</th>
-                                            <th className="py-3 px-4 uppercase text-[11px] tracking-wider">Status</th>
-                                            <th className="py-3 px-4 uppercase text-[11px] tracking-wider text-right">Waktu</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-[#f0f0f0]">
-                                        {messagesList.length === 0 ? (
-                                            <tr>
-                                                <td colSpan={5} className="py-10 text-center text-xs text-[#8c8c8c]">
-                                                    <div className="flex flex-col items-center justify-center space-y-2">
-                                                        <div className="size-10 rounded-full bg-[#fafafb] border border-[#f0f0f0] flex items-center justify-center text-[#bfbfbf]">
-                                                            <MessageSquare className="size-5" />
-                                                        </div>
-                                                        <p className="text-xs font-semibold text-[#262626]">
-                                                            Belum Ada Riwayat Pesan
-                                                        </p>
-                                                        <p className="text-[11px] text-[#8c8c8c] max-w-sm">
-                                                            Pesan yang dikirim melalui REST API, broadcast massal, atau inbox akan muncul secara realtime di sini.
-                                                        </p>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ) : (
-                                            messagesList.map((msg) => (
-                                                <tr key={msg.id} className="hover:bg-[#fafafb] transition-colors">
-                                                    <td className="py-3.5 px-4">
-                                                        <div className="flex items-center gap-2.5">
-                                                            <div className="size-8 rounded-lg bg-[#e6f4ff] text-[#1677ff] flex items-center justify-center text-xs font-semibold shrink-0 border border-[#91caff]">
-                                                                <Send className="size-3.5" />
-                                                            </div>
-                                                            <div className="min-w-0">
-                                                                <div className="font-mono text-xs font-bold text-[#262626] truncate tabular-nums">
-                                                                    {msg.receiver_number}
-                                                                </div>
-                                                                <div className="text-[10px] text-[#8c8c8c] capitalize truncate">
-                                                                    Tipe: {msg.message_type || 'Teks'}
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td className="py-3.5 px-4 text-xs text-[#595959]">
-                                                        <div className="truncate max-w-[200px] xl:max-w-[320px]" title={msg.content}>
-                                                            {msg.content || 'Pesan terkirim'}
-                                                        </div>
-                                                    </td>
-                                                    <td className="py-3.5 px-4 hidden md:table-cell text-xs">
-                                                        <span className="font-medium text-[#262626] truncate block max-w-[130px]" title={msg.device?.name || 'Gateway Node'}>
-                                                            {msg.device?.name || 'Gateway Node'}
-                                                        </span>
-                                                    </td>
-                                                    <td className="py-3.5 px-4">
-                                                        {msg.status === 'read' ? (
-                                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10.5px] font-semibold bg-[#f6ffed] text-[#52c41a] border border-[#b7eb8f]">
-                                                                <CheckCheck className="size-3 text-[#52c41a]" />
-                                                                READ
-                                                            </span>
-                                                        ) : msg.status === 'delivered' ? (
-                                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10.5px] font-semibold bg-[#e6f4ff] text-[#1677ff] border border-[#91caff]">
-                                                                <CheckCheck className="size-3 text-[#1677ff]" />
-                                                                DELIVERED
-                                                            </span>
-                                                        ) : msg.status === 'failed' ? (
-                                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10.5px] font-semibold bg-[#fff1f0] text-[#ff4d4f] border border-[#ffccc7]">
-                                                                <AlertCircle className="size-3 text-[#ff4d4f]" />
-                                                                FAILED
-                                                            </span>
-                                                        ) : (
-                                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10.5px] font-semibold bg-[#fafafb] text-[#595959] border border-[#d9d9d9] uppercase">
-                                                                <Check className="size-3 text-[#8c8c8c]" />
-                                                                {msg.status || 'SENT'}
-                                                            </span>
-                                                        )}
-                                                    </td>
-                                                    <td className="py-3.5 px-4 text-xs text-[#8c8c8c] text-right font-mono tabular-nums">
-                                                        {msg.sent_at ? new Date(msg.sent_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : '-'}
-                                                    </td>
-                                                </tr>
-                                            ))
-                                        )}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                            </CardHeader>
+                            <CardContent className="p-0">
+                                {renderMessagesTable(false)}
+                            </CardContent>
+                        </Card>
                     </TabsContent>
                 </Tabs>
             </div>
