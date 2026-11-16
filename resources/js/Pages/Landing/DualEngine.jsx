@@ -50,20 +50,20 @@ export default function DualEngine({ plans = [], stats = {} }) {
 
     // Spintax Live Demo Generator
     const [spintaxSentence, setSpintaxSentence] = useState(
-        'Halo Kak Budi, tagihan semester Anda #INV-290 telah terbit dan siap dibayar. Salam hangat dari Politeknik Mardira Indonesia!'
+        'Halo Kak Budi, pesanan Anda #INV-290 telah diproses dan siap dikirim. Salam hangat dari SAPA Alert Engine!'
     );
 
     const randomizeSpintax = () => {
         const greetings = ['Halo', 'Hai', 'Selamat siang', 'Salam hangat', 'Selamat pagi'];
-        const targets = ['Kak Budi', 'Rekan Mahasiswa', 'Bapak/Ibu Wali', 'Siswa/i Terdaftar'];
+        const targets = ['Kak Budi', 'Rekan Bisnis', 'Bapak/Ibu Pelanggan', 'Klien Terdaftar'];
         const notices = [
-            'tagihan semester Anda #INV-290 telah terbit dan siap dibayar.',
-            'informasi jadwal perkuliahan terbaru telah diperbarui di sistem SIAKAD.',
-            'pendaftaran workshop teknologi kampus telah resmi dibuka hari ini.',
-            'kartu ujian Anda telah disetujui dan dapat diunduh di dashboard.',
+            'pesanan Anda #INV-290 telah diproses dan siap dikirim.',
+            'informasi verifikasi akun terbaru telah diperbarui di sistem.',
+            'pemberitahuan jadwal webinar telah resmi diumumkan hari ini.',
+            'faktur pembayaran Anda telah disetujui dan dapat diunduh di dashboard.',
         ];
         const closings = [
-            'Salam hangat dari Politeknik Mardira Indonesia!',
+            'Salam hangat dari SAPA Alert Engine!',
             'Terima kasih atas perhatian Anda.',
             'Semoga harimu menyenangkan!',
             'Hubungi kami jika ada pertanyaan.',
@@ -163,11 +163,11 @@ export default function DualEngine({ plans = [], stats = {} }) {
         image: 'https://mardirawa.frahesta.com/images/logo.png',
         author: {
             '@type': 'Organization',
-            name: 'MARDIRA WA',
+            name: 'SAPA — Sistem Automasi Pesan & Alert',
         },
         publisher: {
             '@type': 'Organization',
-            name: 'MARDIRA WA',
+            name: 'SAPA — Sistem Automasi Pesan & Alert',
             logo: {
                 '@type': 'ImageObject',
                 url: 'https://mardirawa.frahesta.com/images/logo.png',
@@ -177,9 +177,9 @@ export default function DualEngine({ plans = [], stats = {} }) {
 
     return (
         <PublicLayout
-            title="Arsitektur BisnisWA UltraSync Engine & Proteksi Anti-Ban"
-            description="Pelajari arsitektur BisnisWA UltraSync Engine dan 4 lapis keamanan anti-banned WhatsApp resmi MARDIRA WA dengan latensi pengiriman 42ms."
-            keywords="teknologi whatsapp gateway, anti ban whatsapp, ultrasync engine, frankenphp laravel, gateway wa cepat, mardira wa"
+            title="Arsitektur SAPA Alert Automation Engine & Proteksi Anti-Ban"
+            description="Pelajari arsitektur SAPA Alert Automation Engine dan 4 lapis keamanan anti-banned WhatsApp resmi SAPA dengan latensi pengiriman 42ms."
+            keywords="teknologi whatsapp gateway, anti ban whatsapp, sapa alert engine, sapa wa, frankenphp laravel, gateway wa cepat"
             canonicalUrl="https://mardirawa.frahesta.com/dual-engine"
             schema={techSchema}
             plans={safePlans}

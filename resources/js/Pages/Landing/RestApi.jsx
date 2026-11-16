@@ -116,7 +116,7 @@ async function sendWhatsAppAlert() {
       '${baseUrl}/messages/send',
       {
         phone: '08386012467',
-        message: 'Halo! Pendaftaran akun Anda telah diverifikasi oleh sistem MARDIRA WA.',
+        message: 'Halo! Pendaftaran akun Anda telah diverifikasi oleh sistem SAPA.',
       },
       {
         headers: {
@@ -200,7 +200,7 @@ $response = Http::withToken('bk_live_your_api_key_here')
     ->post('${baseUrl}/messages/send-media', [
         'phone' => '08386012467',
         'media_url' => 'https://storage.kampus.ac.id/invoices/INV-2026-001.pdf',
-        'message' => 'Faktur Tagihan Resmi Politeknik Mardira Indonesia #INV-2026-001 terlampir.',
+        'message' => 'Faktur Tagihan Resmi SAPA Alert System #INV-2026-001 terlampir.',
     ]);
 
 return $response->json();`,
@@ -232,7 +232,7 @@ await axios.post(
   {
     phone: '08386012467',
     media_url: 'https://storage.kampus.ac.id/invoices/INV-2026-001.pdf',
-    message: 'Faktur Tagihan Resmi Politeknik Mardira Indonesia #INV-2026-001 terlampir.',
+    message: 'Faktur Tagihan Resmi SAPA Alert System #INV-2026-001 terlampir.',
   },
   {
     headers: {
@@ -367,11 +367,11 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
         image: 'https://mardirawa.frahesta.com/images/logo.png',
         author: {
             '@type': 'Organization',
-            name: 'MARDIRA WA',
+            name: 'SAPA — Sistem Automasi Pesan & Alert',
         },
         publisher: {
             '@type': 'Organization',
-            name: 'MARDIRA WA',
+            name: 'SAPA — Sistem Automasi Pesan & Alert',
             logo: {
                 '@type': 'ImageObject',
                 url: 'https://mardirawa.frahesta.com/images/logo.png',
@@ -383,7 +383,7 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
         <PublicLayout
             title="Dokumentasi REST API & Webhook WhatsApp Gateway Indonesia"
             description="Dokumentasi developer resmi untuk kirim pesan teks, OTP, media dokumen PDF via HTTP REST API berstandar JSON, webhook callback real-time, dan Postman collection."
-            keywords="rest api whatsapp, api wa gateway indonesia, kirim wa via api, webhook whatsapp, dokumentasi api wa, mardira wa"
+            keywords="rest api whatsapp, api wa gateway indonesia, kirim wa via api, webhook whatsapp, dokumentasi api wa, sapa wa, sapa alert"
             canonicalUrl="https://mardirawa.frahesta.com/rest-api"
             schema={apiSchema}
             plans={safePlans}
@@ -409,7 +409,7 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                             variants={heroItemVariants}
                             className="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed"
                         >
-                            Panduan integrasi resmi untuk menghubungkan aplikasi Anda (SIAKAD, ERP, CRM, POS, E-Commerce) ke WhatsApp Gateway MARDIRA WA melalui HTTP JSON Bearer Token dengan mudah, aman, dan cepat.
+                            Panduan integrasi resmi untuk menghubungkan aplikasi Anda (SIAKAD, ERP, CRM, POS, E-Commerce) ke WhatsApp Gateway SAPA melalui HTTP JSON Bearer Token dengan mudah, aman, dan cepat.
                         </motion.p>
 
                         <motion.div variants={heroItemVariants} className="pt-4 flex flex-wrap items-center justify-center gap-3">
@@ -699,7 +699,7 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                                 <span>Tabel Kode Respon & Penanganan Error</span>
                             </h3>
                             <p className="text-xs text-slate-500">
-                                Standar HTTP status code yang dipancarkan oleh MARDIRA WA API untuk mempermudah error handling pada aplikasi client Anda.
+                                Standar HTTP status code yang dipancarkan oleh SAPA API untuk mempermudah error handling pada aplikasi client Anda.
                             </p>
                         </div>
 
@@ -953,7 +953,7 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                                     <span>Contoh Kode Webhook Receiver di Server Anda</span>
                                 </h3>
                                 <p className="text-xs text-slate-500 mt-0.5">
-                                    Tangkap payload HTTP POST dari gateway MARDIRA WA dan dispatch event secara otomatis ke aplikasi Anda.
+                                    Tangkap payload HTTP POST dari gateway SAPA dan dispatch event secara otomatis ke aplikasi Anda.
                                 </p>
                             </div>
 

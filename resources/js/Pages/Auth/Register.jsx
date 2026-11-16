@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { ShieldCheck, Lock, Mail, Building, Phone, User, Check, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
+import SapaLogo from '../../Components/SapaLogo';
 
 export default function Register({ plans, selectedPlanSlug }) {
     const selectedPlan = plans?.find((p) => p.slug === selectedPlanSlug) || plans?.[1] || plans?.[0];
@@ -77,23 +78,15 @@ export default function Register({ plans, selectedPlanSlug }) {
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
             className="min-h-screen bg-white bg-grid-pattern flex flex-col justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8 font-sans antialiased"
         >
-            <Head title="Daftar Akun & Langganan — Mardira WA Gateway" />
+            <Head title="Daftar Akun & Langganan — SAPA" />
 
             <div className="w-full max-w-xl mx-auto text-center space-y-3">
                 <Link href="/" className="inline-flex items-center gap-3 group">
-                    <img
-                        src="/images/logo.png"
-                        alt="Politeknik Mardira Indonesia"
-                        className="h-11 sm:h-12 w-auto object-contain shrink-0 transition-transform group-hover:scale-105"
-                    />
-                    <div className="text-left">
-                        <span className="text-xl font-black tracking-tight text-slate-900">MARDIRA<span className="text-[#1e50ff]">WA</span></span>
-                        <p className="text-[10px] font-bold text-[#64748b] tracking-wider uppercase">Politeknik Mardira Indonesia</p>
-                    </div>
+                    <SapaLogo variant="full" size="lg" />
                 </Link>
                 <h2 className="text-xl sm:text-3xl font-black text-slate-900 tracking-tight">Pendaftaran Akun & <span className="font-editorial-italic font-normal">Langganan Gateway</span></h2>
                 <p className="text-xs text-[#64748b] px-4">
-                    Dapatkan akses instan ke REST API Key dan BisnisWA UltraSync Engine setelah pendaftaran
+                    Dapatkan akses instan ke REST API Key dan SAPA Alert Engine setelah pendaftaran
                 </p>
             </div>
 

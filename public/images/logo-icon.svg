@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 88 88" width="100%" height="100%" fill="none">
+  <defs>
+    <linearGradient id="sapa-icon-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1677ff" />
+      <stop offset="60%" stop-color="#0958d9" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+    <filter id="sapa-icon-shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#1677ff" flood-opacity="0.3" />
+    </filter>
+  </defs>
+
+  <g filter="url(#sapa-icon-shadow)">
+    <!-- Base App Squircle -->
+    <rect x="4" y="4" width="80" height="80" rx="22" fill="url(#sapa-icon-grad)" />
+    <rect x="4.5" y="4.5" width="79" height="79" rx="21.5" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1" />
+
+    <!-- Chat Message Bubble Shape -->
+    <path d="M 26 32 C 26 27 30 23 35 23 L 53 23 C 58 23 62 27 62 32 L 62 47 C 62 52 58 56 53 56 L 39 56 L 30 63 L 31 56 L 35 56 C 30 56 26 52 26 47 Z" 
+          fill="#ffffff" 
+          fill-opacity="0.95" />
+
+    <!-- Alert Bell Silhouette Inside -->
+    <path d="M 44 31 C 41 31 38.5 33.5 38.5 36.5 L 38.5 42.5 L 36 45 L 52 45 L 49.5 42.5 L 49.5 36.5 C 49.5 33.5 47 31 44 31 Z" 
+          fill="#1677ff" />
+    <circle cx="44" cy="47.5" r="1.5" fill="#1677ff" />
+
+    <!-- Emerald Alert Signal Beacon Dot -->
+    <circle cx="62" cy="26" r="7.5" fill="#10b981" stroke="#ffffff" stroke-width="2.5" />
+    <circle cx="62" cy="26" r="3" fill="#ffffff" />
+
+    <!-- Automation Signal Waves -->
+    <path d="M 52 35 C 54 37 54 41 52 43" stroke="#10b981" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.9" />
+  </g>
+</svg>
+

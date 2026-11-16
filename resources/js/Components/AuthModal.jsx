@@ -21,6 +21,7 @@ import {
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import ModalPortal from './ui/ModalPortal';
+import SapaLogo from './SapaLogo';
 
 const DEFAULT_FALLBACK_PLANS = [
     {
@@ -211,22 +212,8 @@ export default function AuthModal({
                 >
 
                 {/* Modal Top Header Bar */}
-                <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/70 shrink-0">
-                    <div className="flex items-center gap-2.5">
-                        <img
-                            src="/images/logo.png"
-                            alt="Politeknik Mardira Indonesia"
-                            className="h-8 w-auto object-contain shrink-0"
-                        />
-                        <div>
-                            <span className="font-extrabold text-xs tracking-tight text-slate-900">
-                                MARDIRA<span className="text-[#1e50ff]">WA</span>
-                            </span>
-                            <span className="text-[10px] text-slate-500 font-medium block leading-none">
-                                Politeknik Mardira Indonesia
-                            </span>
-                        </div>
-                    </div>
+                <div className="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between bg-slate-50/70 shrink-0">
+                    <SapaLogo variant="full" size="md" />
 
                     <button
                         onClick={onClose}
@@ -292,7 +279,7 @@ export default function AuthModal({
                                             type="email"
                                             value={loginForm.data.email}
                                             onChange={(e) => loginForm.setData('email', e.target.value)}
-                                            placeholder="nama@mardira.ac.id / bisnis.com"
+                                            placeholder="nama@email.com / bisnis.com"
                                             className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:border-[#1e50ff] focus:outline-none focus:ring-1 focus:ring-blue-600 shadow-2xs"
                                             required
                                         />
@@ -545,7 +532,7 @@ export default function AuthModal({
                                                 type="text"
                                                 value={registerForm.data.workspace_name}
                                                 onChange={(e) => registerForm.setData('workspace_name', e.target.value)}
-                                                placeholder="Prodi TI Mardira"
+                                                placeholder="Nama Tim / Bisnis Anda"
                                                 className="w-full pl-8 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:border-[#1e50ff] focus:outline-none shadow-2xs"
                                                 required
                                             />
@@ -680,7 +667,7 @@ export default function AuthModal({
                                             type="email"
                                             value={forgotForm.data.email}
                                             onChange={(e) => forgotForm.setData('email', e.target.value)}
-                                            placeholder="nama@mardira.ac.id"
+                                            placeholder="nama@email.com"
                                             className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:border-[#1e50ff] focus:outline-none shadow-2xs"
                                             required
                                         />
@@ -808,7 +795,7 @@ export default function AuthModal({
                         <ShieldCheck className="w-3 h-3 text-[#1e50ff]" />
                         <span>Enkripsi TLS 256-Bit</span>
                     </span>
-                    <span>Politeknik Mardira Indonesia</span>
+                    <span>SAPA Enterprise Engine</span>
                 </div>
             </div>
         </div>

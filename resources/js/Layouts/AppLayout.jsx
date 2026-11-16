@@ -38,6 +38,7 @@ import OnboardingGuideModal from '../Components/OnboardingGuideModal';
 import PageTransition from '../Components/PageTransition';
 import { Button } from '../Components/ui/button';
 import { Badge } from '../Components/ui/badge';
+import SapaLogo from '../Components/SapaLogo';
 import { Card } from '../Components/ui/card';
 
 export default function AppLayout({ children, title }) {
@@ -223,34 +224,13 @@ export default function AppLayout({ children, title }) {
                     <Link
                         href={isAdminRoute ? '/admin/dashboard' : '/dashboard'}
                         prefetch
-                        className="flex items-center gap-3 overflow-hidden group"
-                        title="MARDIRA WA"
+                        className="flex items-center overflow-hidden group"
+                        title="SAPA — Sistem Automasi Pesan & Alert"
                     >
-                        <img
-                            src="/images/logo.png"
-                            alt="Politeknik Mardira Indonesia"
-                            className="h-8 w-auto object-contain shrink-0 transition-transform duration-200 group-hover:scale-105"
-                        />
-                        {!isCollapsed && (
-                            <div className="overflow-hidden">
-                                <div className="flex items-center gap-1.5">
-                                    <span className="font-black text-sm tracking-tight text-slate-900">
-                                        MARDIRA<span className="text-[#1677ff]">WA</span>
-                                    </span>
-                                    {isAdminRoute ? (
-                                        <span className="text-[9px] font-bold font-mono px-1.5 py-0.5 rounded bg-[#e6f4ff] text-[#1677ff] border border-[#91caff]/40">
-                                            {isSuperAdmin ? 'SUPER' : 'STAFF'}
-                                        </span>
-                                    ) : (
-                                        <span className="text-[9px] font-bold font-mono px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-600 border border-emerald-200/50">
-                                            SAAS
-                                        </span>
-                                    )}
-                                </div>
-                                <div className="text-[10px] font-medium text-slate-400 truncate max-w-[125px]" title={user.workspace_name || user.name}>
-                                    {isAdminRoute ? 'Admin Control Center' : (user.workspace_name || user.name || 'Tenant Workspace')}
-                                </div>
-                            </div>
+                        {isCollapsed ? (
+                            <SapaLogo variant="icon" size="md" />
+                        ) : (
+                            <SapaLogo variant="full" size="md" />
                         )}
                     </Link>
 
@@ -258,7 +238,7 @@ export default function AppLayout({ children, title }) {
                         <button
                             type="button"
                             onClick={toggleSidebar}
-                            className="h-7 w-7 rounded-lg border border-[#e6ebf1] bg-slate-50 hover:bg-slate-100 flex items-center justify-center text-slate-400 hover:text-[#1677ff] transition-colors cursor-pointer shrink-0"
+                            className="h-7 w-7 rounded-lg border border-[#e6ebf1] bg-slate-50 hover:bg-slate-100 flex items-center justify-center text-slate-400 hover:text-[#1677ff] transition-colors cursor-pointer shrink-0 ml-2"
                             title="Perkecil Sidebar"
                             aria-label="Perkecil Sidebar"
                         >
@@ -457,15 +437,8 @@ export default function AppLayout({ children, title }) {
                         </button>
 
                         {/* Mobile Brand Logo */}
-                        <Link href="/" className="lg:hidden flex items-center gap-2 shrink-0">
-                            <img
-                                src="/images/logo.png"
-                                alt="Politeknik Mardira Indonesia"
-                                className="h-7 w-auto object-contain shrink-0"
-                            />
-                            <span className="font-black text-xs tracking-tight text-slate-900 block leading-none">
-                                MARDIRA<span className="text-[#1677ff]">WA</span>
-                            </span>
+                        <Link href="/" className="lg:hidden flex items-center shrink-0" title="SAPA — Sistem Automasi Pesan & Alert">
+                            <SapaLogo variant="full" size="sm" showTagline={false} />
                         </Link>
 
                         {/* Mantis Breadcrumb Hierarchy */}
@@ -602,21 +575,7 @@ export default function AppLayout({ children, title }) {
                     <div className="relative flex-1 flex flex-col max-w-xs w-full bg-white text-slate-800 border-r border-[#e6ebf1] z-10 shadow-2xl">
                         {/* Drawer Header */}
                         <div className="h-16 px-5 flex items-center justify-between border-b border-[#e6ebf1] bg-white">
-                            <div className="flex items-center gap-2.5">
-                                <img
-                                    src="/images/logo.png"
-                                    alt="Politeknik Mardira Indonesia"
-                                    className="h-8 w-auto object-contain shrink-0"
-                                />
-                                <div>
-                                    <span className="font-black text-sm tracking-tight text-slate-900">
-                                        MARDIRA<span className="text-[#1677ff]">WA</span>
-                                    </span>
-                                    <p className="text-[10px] text-slate-400">
-                                        {isAdminRoute ? 'Super Admin' : 'Tenant Workspace'}
-                                    </p>
-                                </div>
-                            </div>
+                            <SapaLogo variant="full" size="md" />
                             <button
                                 type="button"
                                 onClick={() => setIsMobileDrawerOpen(false)}

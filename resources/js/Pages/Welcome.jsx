@@ -274,7 +274,7 @@ print(res.json())`,
         const closings = [
             'Semoga harimu menyenangkan!',
             'Terima kasih atas kerjasamanya.',
-            'Layanan resmi Politeknik Mardira Indonesia.',
+            'Layanan resmi SAPA (Sistem Automasi Pesan & Alert).',
             'Hubungi kami jika ada pertanyaan.',
         ];
 
@@ -293,8 +293,8 @@ print(res.json())`,
             a: 'Masa aktif dihitung otomatis sesuai siklus yang dipilih (bulanan/tahunan) dengan toleransi grace period 3 hari setelah jatuh tempo. Administrator dapat menyesuaikan tanggal mulai, tanggal selesai, serta memberikan bonus kuota melalui antarmuka Super Admin dengan audit log lengkap.',
         },
         {
-            q: 'Mengapa MARDIRA WA menggunakan BisnisWA UltraSync Engine?',
-            a: 'BisnisWA UltraSync Engine menjalankan protokol web enterprise resmi secara terisolasi. Ini menjamin bahwa setiap pesan dienkripsi dengan standar Signal Protocol resmi tanpa resiko ratchet desync (bebas dari error "Menunggu pesan ini"), pesan terkirim instan, dan sesi sangat tahan lama serta aman dari pemblokiran.',
+            q: 'Mengapa SAPA menggunakan Alert Automation Engine?',
+            a: 'SAPA Alert Automation Engine menjalankan protokol enterprise resmi secara terisolasi. Ini menjamin bahwa setiap pesan dienkripsi dengan standar Signal Protocol resmi tanpa resiko ratchet desync (bebas dari error "Menunggu pesan ini"), pesan terkirim instan, dan sesi sangat tahan lama serta aman dari pemblokiran.',
         },
         {
             q: 'Bagaimana sistem melindungi nomor dari resiko Banned WhatsApp?',
@@ -361,28 +361,28 @@ print(res.json())`,
             {
                 '@type': 'Organization',
                 '@id': 'https://mardirawa.frahesta.com/#organization',
-                name: 'MARDIRA WA',
+                name: 'SAPA — Sistem Automasi Pesan & Alert',
                 url: 'https://mardirawa.frahesta.com',
                 logo: {
                     '@type': 'ImageObject',
                     url: 'https://mardirawa.frahesta.com/images/logo.png',
                 },
-                description: 'Portal Enterprise WhatsApp Gateway & Broadcast API resmi di Indonesia dengan arsitektur UltraSync Engine berkecepatan tinggi.',
+                description: 'Portal Enterprise WhatsApp Gateway & Broadcast Alerting resmi di Indonesia dengan arsitektur Alert Automation Engine berkecepatan tinggi.',
             },
             {
                 '@type': 'WebSite',
                 '@id': 'https://mardirawa.frahesta.com/#website',
                 url: 'https://mardirawa.frahesta.com',
-                name: 'MARDIRA WA',
+                name: 'SAPA',
                 publisher: {
                     '@id': 'https://mardirawa.frahesta.com/#organization',
                 },
-                description: 'Layanan WhatsApp Gateway & Broadcast API Anti-Banned nomor 1 di Indonesia.',
+                description: 'Layanan WhatsApp Gateway & Broadcast Alerting Anti-Banned nomor 1 di Indonesia.',
             },
             {
                 '@type': 'SoftwareApplication',
                 '@id': 'https://mardirawa.frahesta.com/#software',
-                name: 'MARDIRA WA Gateway & Broadcast Platform',
+                name: 'SAPA — Sistem Automasi Pesan & Alert Platform',
                 operatingSystem: 'Cloud / Web Based',
                 applicationCategory: 'BusinessApplication',
                 offers: {
@@ -416,9 +416,9 @@ print(res.json())`,
 
     return (
         <PublicLayout
-            title="Portal Enterprise WhatsApp Gateway & Broadcast API"
-            description="Platform Enterprise WhatsApp Gateway & Broadcast API resmi di Indonesia. Kirim pesan massal anti-banned, auto-reply bot pintar, integrasi REST API real-time, dan multi-CS."
-            keywords="whatsapp gateway, whatsapp gateway indonesia, api whatsapp resmi, broadcast whatsapp massal, auto reply wa bot, wa gateway murah, rest api whatsapp, mardira wa"
+            title="SAPA — Sistem Automasi Pesan & Alert | WhatsApp Gateway Enterprise"
+            description="SAPA (Sistem Automasi Pesan & Alert) — Platform Enterprise WhatsApp Gateway & Broadcast API resmi di Indonesia. Kirim pesan massal anti-banned, auto-reply bot pintar, integrasi REST API real-time, dan multi-CS."
+            keywords="sapa, sapa wa, sistem automasi pesan dan alert, whatsapp gateway indonesia, api whatsapp resmi, broadcast whatsapp massal, auto reply wa bot, alert whatsapp, wa gateway murah, rest api whatsapp"
             canonicalUrl="https://mardirawa.frahesta.com"
             schema={homeSchema}
             plans={safePlans}
@@ -523,7 +523,7 @@ print(res.json())`,
                                     <div>
                                         <div className="flex items-center gap-1.5">
                                             <span className="text-xs sm:text-sm font-black text-slate-900">
-                                                MARDIRA WA Gateway
+                                                SAPA Alert Gateway
                                             </span>
                                             <span className="w-3.5 h-3.5 rounded-full bg-emerald-500 flex items-center justify-center text-white text-[9px] font-black">
                                                 ✓
@@ -666,7 +666,7 @@ print(res.json())`,
                             </div>
                             <div className="flex items-center gap-2 font-bold text-xs sm:text-sm text-slate-800">
                                 <Mail className="w-4 h-4 text-[#1e50ff]" />
-                                <span>helpdesk@mardira.ac.id</span>
+                                <span>support@sapa.id</span>
                             </div>
                         </div>
                     </motion.div>

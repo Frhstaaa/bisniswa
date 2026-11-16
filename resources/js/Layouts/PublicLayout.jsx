@@ -5,6 +5,7 @@ import AuthModal from '../Components/AuthModal';
 import Toast from '../Components/ui/toast';
 import PageTransition from '../Components/PageTransition';
 import { useGsapReveal } from '../hooks/useGsapReveal';
+import SapaLogo from '../Components/SapaLogo';
 import {
     Zap,
     LogIn,
@@ -61,9 +62,9 @@ export default function PublicLayout({
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const mainRef = useGsapReveal([url]);
 
-    const pageTitle = title ? `${title} — MARDIRA WA` : 'MARDIRA WA — Portal Enterprise WhatsApp Gateway & Broadcast API';
-    const pageDesc = description || 'Platform Enterprise WhatsApp Gateway & Broadcast API resmi di Indonesia. Kirim pesan massal anti-banned, auto-reply bot AI pintar, integrasi REST API real-time, dan multi-CS.';
-    const pageKeywords = keywords || 'whatsapp gateway, whatsapp api indonesia, broadcast whatsapp massal, wa gateway murah, kirim wa massal, auto reply wa bot, rest api whatsapp, mardira wa';
+    const pageTitle = title ? `${title} — SAPA` : 'SAPA — Sistem Automasi Pesan & Alert';
+    const pageDesc = description || 'SAPA (Sistem Automasi Pesan & Alert) — Platform Enterprise WhatsApp Gateway & Broadcast API resmi. Otomasi pesan instan, broadcast notifikasi massal, chatbot AI cerdas, dan integrasi REST API real-time.';
+    const pageKeywords = keywords || 'sapa, sapa wa, sistem automasi pesan dan alert, whatsapp gateway indonesia, api whatsapp resmi, broadcast whatsapp massal, auto reply wa bot, alert whatsapp, rest api whatsapp';
     const cleanPath = (url || '/').split('?')[0];
     const pageCanonical = canonicalUrl || `https://mardirawa.frahesta.com${cleanPath === '/' ? '' : cleanPath}`;
 
@@ -133,7 +134,7 @@ export default function PublicLayout({
                     <meta property="og:title" content={pageTitle} head-key="og:title" />
                     <meta property="og:description" content={pageDesc} head-key="og:description" />
                     <meta property="og:url" content={pageCanonical} head-key="og:url" />
-                    <meta property="og:site_name" content="MARDIRA WA" head-key="og:site_name" />
+                    <meta property="og:site_name" content="SAPA — Sistem Automasi Pesan & Alert" head-key="og:site_name" />
                     <meta property="og:locale" content="id_ID" head-key="og:locale" />
 
                     <meta name="twitter:card" content="summary_large_image" head-key="twitter:card" />
@@ -150,23 +151,9 @@ export default function PublicLayout({
                 {/* ================= TOP NAVBAR ================= */}
                 <header className="fixed inset-x-0 top-0 z-50 transition-all duration-300 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-2xs">
                     <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 py-3 flex-nowrap gap-4">
-                        {/* Brand Logo (Naked / Telanjang) */}
-                        <Link href="/" prefetch className="flex items-center gap-2.5 sm:gap-3 group shrink-0">
-                            <motion.img
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                src="/images/logo.png"
-                                alt="Politeknik Mardira Indonesia"
-                                className="h-9 sm:h-10 w-auto object-contain shrink-0"
-                            />
-                            <div className="shrink-0">
-                                <span className="text-sm sm:text-base font-black tracking-tight text-slate-900 block leading-none whitespace-nowrap">
-                                    MARDIRA<span className="text-[#1e50ff]">WA</span>
-                                </span>
-                                <span className="hidden sm:block text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wider mt-0.5 whitespace-nowrap">
-                                    POLITEKNIK MARDIRA INDONESIA
-                                </span>
-                            </div>
+                        {/* Brand Logo */}
+                        <Link href="/" prefetch className="flex items-center group shrink-0" title="SAPA — Sistem Automasi Pesan & Alert">
+                            <SapaLogo variant="full" size="lg" />
                         </Link>
 
                         {/* Desktop Navigation Links (Single Line, Never Wraps) */}
@@ -417,32 +404,20 @@ export default function PublicLayout({
                             {/* Col 1 & 2: Branding & Overview */}
                             <div className="space-y-4 lg:col-span-2">
                                 <div className="flex items-center gap-3">
-                                    <img
-                                        src="/images/logo.png"
-                                        alt="Politeknik Mardira Indonesia"
-                                        className="h-10 w-auto object-contain shrink-0"
-                                    />
-                                    <div>
-                                        <span className="font-black text-lg tracking-tight text-white block">
-                                            MARDIRA<span className="text-[#1e50ff]">WA</span>
-                                        </span>
-                                        <span className="text-[10px] text-blue-300/80 font-bold uppercase tracking-wider block">
-                                            Politeknik Mardira Indonesia
-                                        </span>
-                                    </div>
+                                    <SapaLogo variant="full" size="lg" theme="dark" />
                                 </div>
                                 <p className="text-slate-300 text-xs leading-relaxed max-w-sm">
-                                    Platform Resmi WhatsApp Gateway & Messaging Engine Terpadu Politeknik Mardira Indonesia. Menghubungkan otomasi layanan akademik, notifikasi transaksi kampus, serta integrasi digital enterprise dengan reliabilitas tinggi.
+                                    Platform Resmi SAPA (Sistem Automasi Pesan & Alert). Menghubungkan otomasi pesan WhatsApp multi-device, transmisi alert darurat & notifikasi sistem, serta integrasi digital enterprise dengan reliabilitas tinggi.
                                 </p>
                                 <div className="flex flex-wrap items-center gap-3 pt-1 text-xs text-slate-400">
                                     <span className="inline-flex items-center gap-1.5 text-slate-300">
-                                        <Shield className="w-3.5 h-3.5 text-[#1e50ff]" />
+                                        <Shield className="w-3.5 h-3.5 text-[#1677ff]" />
                                         <span>Enkripsi TLS 256-Bit</span>
                                     </span>
                                     <span>•</span>
                                     <span className="inline-flex items-center gap-1.5 text-slate-300">
-                                        <Server className="w-3.5 h-3.5 text-[#1e50ff]" />
-                                        <span>UltraSync Engine 99.9% SLA</span>
+                                        <Server className="w-3.5 h-3.5 text-[#1677ff]" />
+                                        <span>Alert Automation Engine 99.9% SLA</span>
                                     </span>
                                 </div>
                             </div>
@@ -528,11 +503,11 @@ export default function PublicLayout({
 
                         {/* Bottom Sub-Footer Bar */}
                         <div className="mt-10 pt-6 border-t border-blue-950/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-slate-400 text-[11px]">
-                            <p>© 2026 Politeknik Mardira Indonesia. Seluruh hak cipta dilindungi undang-undang.</p>
+                            <p>© 2026 SAPA (Sistem Automasi Pesan & Alert). Seluruh hak cipta dilindungi undang-undang.</p>
                             <div className="flex items-center gap-4 text-slate-400">
-                                <span>Platform Produksi Mandiri PMI</span>
+                                <span>Platform Otomasi Pesan & Alert Terpadu</span>
                                 <span>•</span>
-                                <span className="text-[#1e50ff] font-medium">Sistem Gateway Aktif</span>
+                                <span className="text-[#1677ff] font-medium">Sistem Gateway Aktif</span>
                             </div>
                         </div>
                     </div>

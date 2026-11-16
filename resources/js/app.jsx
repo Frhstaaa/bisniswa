@@ -4,7 +4,7 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 import { MotionConfig } from 'framer-motion';
 
-const appName = import.meta.env.VITE_APP_NAME || 'MARDIRA WA';
+const appName = import.meta.env.VITE_APP_NAME || 'SAPA';
 
 if (typeof window !== 'undefined') {
     // Scroll to top on every Inertia page transition
@@ -37,7 +37,7 @@ createInertiaApp({
         );
     },
     progress: {
-        color: '#10b981',
+        color: '#1677ff',
         showSpinner: false,
     },
 });

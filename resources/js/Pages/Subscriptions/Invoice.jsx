@@ -12,7 +12,7 @@ export default function Invoice({ payment, workspace }) {
 
     return (
         <div className="min-h-screen bg-slate-100 py-6 sm:py-10 px-4 font-sans text-slate-800 antialiased print:bg-white print:py-0 print:px-0">
-            <Head title={`Faktur Resmi ${payment.invoice_number} — Politeknik Mardira Indonesia`} />
+            <Head title={`Faktur Resmi ${payment.invoice_number} — SAPA Alert Engine`} />
 
             {/* Print Header Bar (Hidden in Print Mode) */}
             <div className="max-w-3xl mx-auto mb-6 flex items-center justify-between print:hidden">
@@ -42,23 +42,23 @@ export default function Invoice({ payment, workspace }) {
                 transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                 className="max-w-3xl mx-auto bg-white rounded-2xl border border-slate-200 shadow-xl p-8 sm:p-12 print:border-none print:shadow-none print:p-0 space-y-8"
             >
-                {/* Official Letterhead (Kop Kampus) */}
+                {/* Official Letterhead */}
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-emerald-600 pb-6">
                     <div className="flex items-center gap-3.5">
                         <img
-                            src="/images/logo.png"
-                            alt="Politeknik Mardira Indonesia"
-                            className="h-16 w-auto object-contain shrink-0"
+                            src="/images/logo-icon.png"
+                            alt="SAPA Icon"
+                            className="h-14 w-14 object-contain shrink-0"
                         />
                         <div>
-                            <h2 className="text-lg font-black text-emerald-700 tracking-tight uppercase">
-                                POLITEKNIK MARDIRA INDONESIA
+                            <h2 className="text-lg font-black text-slate-900 tracking-tight uppercase">
+                                SAPA — SISTEM AUTOMASI PESAN &amp; ALERT
                             </h2>
                             <p className="text-xs font-bold text-slate-600">
-                                Pusat Inovasi Teknologi & WhatsApp Gateway Enterprise
+                                Enterprise WhatsApp Gateway &amp; Real-time Alerting Platform
                             </p>
                             <p className="text-[11px] text-slate-500">
-                                Jl. Soekarno Hatta No. 211, Bandung | Telp: (022) 5202863 | https://pm.ac.id
+                                Email: billing@sapa.id | Web: https://sapa.id | Hotline: +62 838-6012-467
                             </p>
                         </div>
                     </div>
@@ -174,7 +174,7 @@ export default function Invoice({ payment, workspace }) {
                                 ★ LUNAS ★
                             </div>
                             <div className="text-[9px] font-bold text-emerald-700/80 uppercase">
-                                POLITEKNIK MARDIRA INDONESIA
+                                SAPA ALERT SYSTEM
                             </div>
                         </div>
                     )}
@@ -182,7 +182,7 @@ export default function Invoice({ payment, workspace }) {
 
                 {/* Footer Notes */}
                 <div className="text-center text-[10px] text-slate-400 pt-4 border-t border-slate-100">
-                    Terima kasih atas kepercayaan Anda menggunakan layanan WhatsApp Gateway Enterprise Politeknik Mardira Indonesia.
+                    Terima kasih atas kepercayaan Anda menggunakan layanan SAPA (Sistem Automasi Pesan &amp; Alert).
                 </div>
             </motion.div>
         </div>

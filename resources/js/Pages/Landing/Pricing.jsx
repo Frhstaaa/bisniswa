@@ -240,7 +240,7 @@ export default function Pricing({ plans = [], stats = {} }) {
         },
         {
             q: 'Apakah bisa menghubungkan nomor WhatsApp pribadi atau bisnis?',
-            a: 'Ya, MARDIRA WA mendukung semua jenis nomor WhatsApp biasa maupun WhatsApp Business tanpa memerlukan WhatsApp Cloud API berbayar dari Meta.',
+            a: 'Ya, SAPA mendukung semua jenis nomor WhatsApp biasa maupun WhatsApp Business tanpa memerlukan WhatsApp Cloud API berbayar dari Meta.',
         },
         {
             q: 'Bagaimana jika kuota pesan bulanan saya habis sebelum masa aktif berakhir?',
@@ -257,12 +257,12 @@ export default function Pricing({ plans = [], stats = {} }) {
         '@graph': [
             {
                 '@type': 'Product',
-                name: 'Layanan Berlangganan MARDIRA WA Gateway',
+                name: 'Layanan Berlangganan SAPA Alert Gateway',
                 image: 'https://mardirawa.frahesta.com/images/logo.png',
                 description: 'Paket langganan WhatsApp Gateway resmi dengan kuota pesan melimpah, multi-perangkat, arsitektur UltraSync Engine, dan integrasi REST API instan.',
                 brand: {
                     '@type': 'Brand',
-                    name: 'MARDIRA WA',
+                    name: 'SAPA',
                 },
                 offers: {
                     '@type': 'AggregateOffer',
@@ -298,8 +298,8 @@ export default function Pricing({ plans = [], stats = {} }) {
     return (
         <PublicLayout
             title="Paket & Harga Langganan WhatsApp Gateway Murah"
-            description="Daftar harga paket langganan WhatsApp Gateway & Broadcast resmi MARDIRA WA mulai Rp 99.000/bulan. Kuota pesan melimpah, multi-perangkat, REST API instan tanpa biaya tersembunyi."
-            keywords="harga whatsapp gateway, biaya wa gateway, paket wa gateway, whatsapp broadcast murah, whatsapp api indonesia, mardira wa"
+            description="Daftar harga paket langganan WhatsApp Gateway & Alert resmi SAPA mulai Rp 99.000/bulan. Kuota pesan melimpah, multi-perangkat, REST API instan tanpa biaya tersembunyi."
+            keywords="harga whatsapp gateway, biaya wa gateway, paket wa gateway, sapa wa, sapa alert, whatsapp broadcast murah, whatsapp api indonesia"
             canonicalUrl="https://mardirawa.frahesta.com/harga"
             schema={pricingSchema}
             plans={safePlans}

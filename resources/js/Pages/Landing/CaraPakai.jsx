@@ -73,7 +73,7 @@ export default function CaraPakai({ plans = [], stats = {} }) {
         },
         jadwal: {
             title: 'Pengumuman Jadwal Ujian',
-            content: (name) => `Yth. Mahasiswa/i ${name},\n\nJadwal Ujian Akhir Semester (UAS) Genap Politeknik Mardira Indonesia telah terbit. Silakan unduh Kartu Ujian di portal akademik.\n\nRuang: Lab Komputer 3\nWaktu: Senin, 08:30 WIB.`,
+            content: (name) => `Yth. Pelanggan ${name},\n\nPemberitahuan penting dari sistem SAPA (Sistem Automasi Pesan & Alert). Pesanan Anda #INV-2026 telah berhasil diverifikasi.\n\nStatus: Terjadwal Otomatis\nWaktu: Real-time Alert.`,
             badge: 'Akademik Kampus',
         },
         tagihan: {
@@ -125,7 +125,7 @@ export default function CaraPakai({ plans = [], stats = {} }) {
         },
         {
             title: 'Gunakan Jeda Acak (Random Jitter Delay)',
-            desc: 'Sistem MARDIRA WA secara otomatis menerapkan jeda 8 hingga 18 detik antar pengiriman pesan broadcast sehingga menyerupai pola ketikan manusia normal.',
+            desc: 'Sistem SAPA secara otomatis menerapkan jeda 8 hingga 18 detik antar pengiriman pesan broadcast sehingga menyerupai pola ketikan manusia normal.',
         },
         {
             title: 'Variasikan Kalimat dengan Spintax',
@@ -133,14 +133,14 @@ export default function CaraPakai({ plans = [], stats = {} }) {
         },
         {
             title: 'Hanya Kirim ke Kontak yang Opt-In',
-            desc: 'Pastikan penerima adalah mahasiswa, wali murid, atau pelanggan yang memang terdaftar di database resmi untuk menghindari tombol laporkan spam.',
+            desc: 'Pastikan penerima adalah pelanggan, klien, atau anggota yang memang terdaftar di database resmi untuk menghindari tombol laporkan spam.',
         },
     ];
 
     const howToSchema = {
         '@context': 'https://schema.org',
         '@type': 'HowTo',
-        name: 'Cara Menghubungkan & Menggunakan MARDIRA WA Gateway',
+        name: 'Cara Menghubungkan & Menggunakan SAPA Alert Gateway',
         description: 'Panduan lengkap langkah demi langkah registrasi akun, scan QR WhatsApp, kirim pesan broadcast massal anti-ban, dan integrasi REST API.',
         image: 'https://mardirawa.frahesta.com/images/logo.png',
         totalTime: 'PT5M',
@@ -156,7 +156,7 @@ export default function CaraPakai({ plans = [], stats = {} }) {
         <PublicLayout
             title="Panduan Lengkap Cara Pakai WhatsApp Gateway & Broadcast API"
             description="Panduan step-by-step menghubungkan nomor WhatsApp, import kontak CSV, kirim broadcast massal dengan proteksi anti-ban, dan integrasi API dalam hitungan menit."
-            keywords="cara pakai whatsapp gateway, tutorial wa gateway, hubungkan whatsapp api, broadcast whatsapp massal, panduan mardira wa"
+            keywords="cara pakai whatsapp gateway, tutorial wa gateway, hubungkan whatsapp api, broadcast whatsapp massal, panduan sapa wa, sapa alert"
             canonicalUrl="https://mardirawa.frahesta.com/cara-pakai"
             schema={howToSchema}
             plans={safePlans}
@@ -273,7 +273,7 @@ export default function CaraPakai({ plans = [], stats = {} }) {
                                         Simulasi Tampilan Pesan di <span className="font-editorial-italic font-normal">Ponsel Pelanggan</span>
                                     </h2>
                                     <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                                        Lihat bagaimana pesan otomatis dari sistem MARDIRA WA tampil dengan rapi di layar ponsel pelanggan atau mahasiswa Anda secara real-time.
+                                        Lihat bagaimana pesan otomatis dari sistem SAPA tampil dengan rapi di layar ponsel pelanggan atau klien Anda secara real-time.
                                     </p>
                                 </div>
 
@@ -286,7 +286,7 @@ export default function CaraPakai({ plans = [], stats = {} }) {
                                             type="text"
                                             value={simStudentName}
                                             onChange={(e) => setSimStudentName(e.target.value)}
-                                            placeholder="Nama Mahasiswa / Klien"
+                                            placeholder="Nama Pelanggan / Klien"
                                             className="w-full sm:w-80 px-3.5 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white text-xs placeholder:text-slate-400 focus:outline-none focus:border-amber-400"
                                         />
                                     </div>
@@ -325,7 +325,7 @@ export default function CaraPakai({ plans = [], stats = {} }) {
                                     <div className="p-4 rounded-xl bg-blue-950/80 border border-blue-700/40 text-blue-200 text-xs flex items-start gap-2.5">
                                         <ShieldCheck className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
                                         <span className="leading-relaxed">
-                                            Pesan dikirim melalui gateway terenkripsi resmi Politeknik Mardira Indonesia tanpa mencantumkan watermark pihak ketiga.
+                                            Pesan dikirim melalui SAPA Alert Engine terenkripsi resmi tanpa mencantumkan watermark pihak ketiga.
                                         </span>
                                     </div>
                                 </div>
@@ -339,11 +339,11 @@ export default function CaraPakai({ plans = [], stats = {} }) {
                                         {/* Mock WhatsApp Bar */}
                                         <div className="h-14 bg-[#075e54] text-white px-3 flex items-center gap-2.5 shrink-0 shadow-xs">
                                             <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-xs font-bold">
-                                                PM
+                                                SP
                                             </div>
                                             <div className="min-w-0 flex-1">
                                                 <h4 className="text-xs font-bold truncate leading-tight">
-                                                    Politeknik Mardira Indonesia
+                                                    SAPA Alert System
                                                 </h4>
                                                 <p className="text-[10px] text-emerald-200 truncate">
                                                     {isTyping ? 'sedang mengetik...' : 'Online • Akun Resmi'}

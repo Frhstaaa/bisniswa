@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instruksi Reset Kata Sandi - MARDIRA WA</title>
+    <title>Instruksi Reset Kata Sandi - SAPA</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #0f172a; line-height: 1.6;">
     <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f8fafc; padding: 40px 15px;">
@@ -12,12 +12,12 @@
                 <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 580px; background-color: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);">
                     <!-- Header -->
                     <tr>
-                        <td style="background-color: #064e3b; padding: 32px 36px; text-align: left;">
-                            <div style="font-size: 22px; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">
-                                MARDIRA<span style="color: #34d399;">WA</span>
+                        <td style="background-color: #0f172a; padding: 32px 36px; text-align: left;">
+                            <div style="font-size: 24px; font-weight: 900; color: #ffffff; letter-spacing: -0.5px;">
+                                SAPA<span style="color: #1677ff; font-size: 14px; margin-left: 6px; padding: 2px 6px; background-color: rgba(22, 119, 255, 0.2); border-radius: 4px;">ENGINE</span>
                             </div>
-                            <div style="font-size: 11px; font-weight: 600; color: #a7f3d0; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;">
-                                Politeknik Mardira Indonesia • Enterprise Gateway
+                            <div style="font-size: 11px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;">
+                                Sistem Automasi Pesan &amp; Alert
                             </div>
                         </td>
                     </tr>
@@ -32,7 +32,7 @@
                                 Yth. <strong>{{ $userName }}</strong>,
                             </p>
                             <p style="margin: 0 0 24px 0; font-size: 14px; color: #475569;">
-                                Kami menerima permintaan pengaturan ulang kata sandi untuk akun MARDIRA WA Anda. Untuk membuat kata sandi baru, silakan klik tombol di bawah ini:
+                                Kami menerima permintaan pengaturan ulang kata sandi untuk akun SAPA Anda. Untuk membuat kata sandi baru, silakan klik tombol di bawah ini:
                             </p>
 
                             <!-- Primary CTA Button -->
@@ -89,9 +89,9 @@
                     <!-- Footer -->
                     <tr>
                         <td style="background-color: #f8fafc; border-top: 1px solid #e2e8f0; padding: 24px 36px; text-align: center; font-size: 11px; color: #94a3b8; line-height: 1.5;">
-                            Email ini dikirim otomatis oleh Layanan Otentikasi Terenkripsi MARDIRA WA.<br>
-                            <strong>Politeknik Mardira Indonesia</strong> — Jl. Soekarno Hatta No. 211, Bandung, Jawa Barat.<br>
-                            &copy; {{ date('Y') }} Politeknik Mardira Indonesia. Seluruh hak cipta dilindungi.
+                            Email ini dikirim otomatis oleh Layanan Otentikasi Terenkripsi SAPA Engine.<br>
+                            <strong>SAPA — Sistem Automasi Pesan &amp; Alert</strong>.<br>
+                            &copy; {{ date('Y') }} SAPA. Seluruh hak cipta dilindungi.
                         </td>
                     </tr>
                 </table>

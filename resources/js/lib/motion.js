@@ -1,5 +1,5 @@
 /**
- * MARDIRA WA Motion Design Tokens & Variants
+ * SAPA Motion Design Tokens & Variants
  * Following GPU-accelerated guidelines (transform & opacity only)
  * Ultra-smooth physics with Framer Motion springs and custom cubic-beziers
  */

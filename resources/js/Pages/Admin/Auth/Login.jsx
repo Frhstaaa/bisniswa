@@ -3,6 +3,7 @@ import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { Lock, Mail, ArrowRight, CheckCircle2, AlertCircle, Shield, ShieldCheck, KeyRound } from 'lucide-react';
 import { Alert, AlertTitle, AlertDescription } from '../../../Components/ui/alert';
+import SapaLogo from '../../../Components/SapaLogo';
 
 export default function AdminLogin() {
     const { flash = {} } = usePage().props;
@@ -28,22 +29,11 @@ export default function AdminLogin() {
             <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute bottom-10 right-10 w-[350px] h-[250px] bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
 
-            <Head title="Portal Admin Sistem — MARDIRA WA" />
+            <Head title="Portal Admin Sistem — SAPA" />
 
-            <div className="w-full max-w-md mx-auto text-center space-y-3 z-10">
-                <Link href="/" className="inline-flex items-center gap-3 group">
-                    <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 p-2 shadow-lg shadow-blue-500/20 border border-blue-400/30 flex items-center justify-center">
-                        <ShieldCheck className="w-7 h-7 text-white" />
-                    </div>
-                    <div className="text-left">
-                        <span className="text-xl font-black tracking-tight text-white flex items-center gap-1.5">
-                            MARDIRA<span className="text-blue-400">WA</span>
-                            <span className="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-md bg-blue-500/20 text-blue-300 border border-blue-400/30">
-                                Admin Portal
-                            </span>
-                        </span>
-                        <p className="text-[10.5px] font-medium text-slate-400 tracking-wider uppercase">Politeknik Mardira Indonesia</p>
-                    </div>
+            <div className="w-full max-w-md mx-auto text-center space-y-3 z-10 flex flex-col items-center">
+                <Link href="/" className="inline-flex items-center group">
+                    <SapaLogo variant="full" size="xl" theme="dark" />
                 </Link>
 
                 <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight mt-2">
@@ -140,7 +130,7 @@ export default function AdminLogin() {
                 </div>
 
                 <div className="mt-6 text-center text-[10.5px] text-slate-600">
-                    Sistem Terproteksi Enkripsi Multi-Guard • Politeknik Mardira Indonesia
+                    Sistem Terproteksi Enkripsi Multi-Guard • SAPA Enterprise Alert Engine
                 </div>
             </div>
         </motion.div>

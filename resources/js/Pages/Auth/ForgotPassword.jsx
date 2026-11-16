@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Mail, ArrowLeft, ArrowRight, CheckCircle2, AlertCircle, ShieldCheck, Zap, Copy, Check, MessageSquare } from 'lucide-react';
 import { Button } from '../../Components/ui/button';
 import { Alert, AlertTitle, AlertDescription } from '../../Components/ui/alert';
+import SapaLogo from '../../Components/SapaLogo';
 
 export default function ForgotPassword() {
     const { flash = {} } = usePage().props;
@@ -72,23 +73,11 @@ export default function ForgotPassword() {
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
             className="min-h-screen bg-white bg-grid-pattern flex flex-col justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8 font-sans antialiased selection:bg-emerald-100 selection:text-emerald-900"
         >
-            <Head title="Lupa Kata Sandi — MARDIRA WA" />
+            <Head title="Lupa Kata Sandi — SAPA" />
 
             <div className="w-full max-w-md mx-auto text-center space-y-3">
                 <Link href="/" className="inline-flex items-center gap-3 group">
-                    <img
-                        src="/images/logo.png"
-                        alt="Politeknik Mardira Indonesia"
-                        className="h-11 sm:h-12 w-auto object-contain shrink-0 transition-transform group-hover:scale-105"
-                    />
-                    <div className="text-left">
-                        <span className="text-xl font-black tracking-tight text-slate-900">
-                            MARDIRA<span className="text-[#1e50ff]">WA</span>
-                        </span>
-                        <p className="text-[10px] font-bold text-[#64748b] tracking-wider uppercase">
-                            Politeknik Mardira Indonesia
-                        </p>
-                    </div>
+                    <SapaLogo variant="full" size="lg" />
                 </Link>
 
                 <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
@@ -243,8 +232,8 @@ export default function ForgotPassword() {
                 </div>
 
                 <div className="mt-4 text-center text-[11px] text-slate-400 flex items-center justify-center gap-1.5">
-                    <ShieldCheck className="w-3.5 h-3.5 text-[#1e50ff]" />
-                    <span>Layanan Otentikasi Terenkripsi MARDIRA WA</span>
+                    <ShieldCheck className="w-3.5 h-3.5 text-[#1677ff]" />
+                    <span>Layanan Otentikasi Terenkripsi SAPA Engine</span>
                 </div>
             </div>
         </motion.div>

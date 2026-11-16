@@ -122,7 +122,7 @@ export default function SubscriptionsIndex({ workspace, subscription, plans = []
 
     return (
         <AppLayout title="Kelola Langganan">
-            <Head title="Sistem Langganan & Saldo Kuota — MARDIRA WA" />
+            <Head title="Sistem Langganan & Saldo Kuota — SAPA" />
 
             <div className="space-y-6 animate-fade-in-up">
                 {/* 1. TOP HEADER */}
@@ -641,7 +641,7 @@ export default function SubscriptionsIndex({ workspace, subscription, plans = []
                                             <div className="font-mono text-base font-black text-emerald-700 tracking-widest">
                                                 8091 0812 9988 2341
                                             </div>
-                                            <div className="text-[10px] text-slate-400">Atas Nama: Politeknik Mardira Indonesia (WA SaaS)</div>
+                                            <div className="text-[10px] text-slate-400">Atas Nama: SAPA Alert Engine (WA SaaS)</div>
                                         </div>
                                     )}
 

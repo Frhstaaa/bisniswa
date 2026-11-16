@@ -70,18 +70,18 @@ export default function Faq({ plans = [], stats = {} }) {
     const faqList = [
         {
             category: 'akun',
-            q: 'Bagaimana cara mendaftar akun baru di MARDIRA WA?',
+            q: 'Bagaimana cara mendaftar akun baru di SAPA?',
             a: 'Anda dapat mendaftar dengan mengklik tombol "Daftar Sekarang" di pojok kanan atas. Cukup isi nama, email, nomor WhatsApp aktif, nama workspace, dan kata sandi. Workspace Anda akan langsung aktif secara instan dengan kuota uji coba gratis tanpa memerlukan kartu kredit.',
         },
         {
             category: 'server',
-            q: 'Mengapa BisnisWA menggunakan BisnisWA UltraSync Engine?',
-            a: 'BisnisWA UltraSync Engine menjalankan protokol web enterprise resmi secara terisolasi. Ini menjamin proses enkripsi End-to-End (E2EE) berstandar industri sehingga pesan langsung terkirim dan terbuka instan di HP penerima, sepenuhnya bebas dari masalah "Menunggu pesan ini", serta memiliki ketahanan sesi jangka panjang anti-ban.',
+            q: 'Mengapa SAPA menggunakan Alert Automation Engine?',
+            a: 'SAPA Alert Automation Engine menjalankan protokol enterprise resmi secara terisolasi. Ini menjamin proses enkripsi End-to-End (E2EE) berstandar industri sehingga pesan langsung terkirim dan terbuka instan di HP penerima, sepenuhnya bebas dari masalah "Menunggu pesan ini", serta memiliki ketahanan sesi jangka panjang anti-ban.',
         },
         {
             category: 'broadcast',
             q: 'Bagaimana sistem mencegah nomor saya diblokir (anti-banned)?',
-            a: 'MARDIRA WA dilengkapi dengan 4 pilar proteksi anti-ban: (1) Jeda manusiawi acak 8–18 detik antar pesan, (2) Fitur Spintax dinamis {Halo|Hai|Selamat siang} yang menghasilkan variasi teks unik di setiap nomor, (3) Rotasi multi-perangkat (device round-robin) untuk membagi beban pengiriman, dan (4) Panduan pemanasan nomor baru (warm-up protocol).',
+            a: 'SAPA dilengkapi dengan 4 pilar proteksi anti-ban: (1) Jeda manusiawi acak 8–18 detik antar pesan, (2) Fitur Spintax dinamis {Halo|Hai|Selamat siang} yang menghasilkan variasi teks unik di setiap nomor, (3) Rotasi multi-perangkat (device round-robin) untuk membagi beban pengiriman, dan (4) Panduan pemanasan nomor baru (warm-up protocol).',
         },
         {
             category: 'broadcast',
@@ -149,8 +149,8 @@ export default function Faq({ plans = [], stats = {} }) {
     return (
         <PublicLayout
             title="Tanya Jawab & Bantuan Teknis WhatsApp Gateway"
-            description="Pusat bantuan & FAQ resmi MARDIRA WA seputar cara aktivasi, keamanan anti-banned, integrasi REST API, multi-perangkat, dan tagihan langganan."
-            keywords="faq whatsapp gateway, bantuan wa gateway, panduan whatsapp api, tanya jawab wa gateway, mardira wa"
+            description="Pusat bantuan & FAQ resmi SAPA seputar cara aktivasi, keamanan anti-banned, integrasi REST API, multi-perangkat, dan tagihan langganan."
+            keywords="faq whatsapp gateway, bantuan wa gateway, panduan whatsapp api, tanya jawab wa gateway, sapa wa, sapa alert"
             canonicalUrl="https://mardirawa.frahesta.com/faq"
             schema={faqSchema}
             plans={safePlans}
@@ -323,7 +323,7 @@ export default function Faq({ plans = [], stats = {} }) {
                                 Masih Punya Pertanyaan atau Butuh Bantuan Khusus?
                             </h3>
                             <p className="text-xs text-emerald-800 max-w-md mx-auto">
-                                Tim teknis dan helpdesk Politeknik Mardira Indonesia siap membantu integrasi dan konsultasi nomor bisnis Anda.
+                                Tim teknis dan helpdesk SAPA siap membantu integrasi dan konsultasi nomor bisnis Anda.
                             </p>
                         </div>
 
@@ -353,10 +353,10 @@ export default function Faq({ plans = [], stats = {} }) {
                                 <Mail className="w-5 h-5 text-emerald-700 mx-auto" />
                                 <span className="font-bold text-slate-900 block">Email Helpdesk</span>
                                 <a
-                                    href="mailto:info@mardira.ac.id"
+                                    href="mailto:support@sapa.id"
                                     className="text-emerald-700 font-semibold hover:underline block text-[11px]"
                                 >
-                                    info@mardira.ac.id
+                                    support@sapa.id
                                 </a>
                             </motion.div>
 
@@ -385,7 +385,7 @@ export default function Faq({ plans = [], stats = {} }) {
                 >
                     <div className="rounded-3xl bg-gradient-to-r from-emerald-800 via-[#064e3b] to-slate-900 p-8 sm:p-10 text-white text-center space-y-4 shadow-xl">
                         <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
-                            Mulai Gunakan MARDIRA WA Sekarang
+                            Mulai Gunakan SAPA Sekarang
                         </h2>
                         <p className="text-xs sm:text-sm text-emerald-100 max-w-xl mx-auto">
                             Daftarkan akun gratis hari ini dan nikmati kemudahan otomasi pesan WhatsApp enterprise.

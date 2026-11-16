@@ -102,7 +102,7 @@ export default function OnboardingGuideModal({ isOpen, onClose }) {
                         </div>
                         <div>
                             <h3 className="text-sm font-bold text-slate-900">
-                                Panduan Interaktif MARDIRA WA
+                                Panduan Interaktif SAPA Engine
                             </h3>
                             <p className="text-[11px] text-slate-500">
                                 Langkah mudah mengoperasikan WhatsApp Gateway & CRM
