@@ -191,28 +191,25 @@ export default function InteractiveThroughputChart({
     };
 
     return (
-        <Card className="rounded-2xl border border-slate-200/80 bg-white shadow-xs transition-all">
+        <Card className="rounded-xl border border-[#e6ebf1] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md transition-all">
             {/* ================= 1. HEADER & CONTROLS ================= */}
-            <CardHeader className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+            <CardHeader className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-[#f0f0f0] pb-4">
                 <div>
                     <div className="flex items-center gap-2.5">
-                        <div className="size-8 rounded-lg bg-blue-50 text-[#1e50ff] flex items-center justify-center font-bold border border-blue-100 shadow-2xs">
-                            <Activity className="size-4 text-[#1e50ff] animate-pulse" />
+                        <div className="size-9 rounded-lg bg-[#e6f4ff] text-[#1677ff] flex items-center justify-center font-bold border border-[#91caff]">
+                            <Activity className="size-4.5 text-[#1677ff] animate-pulse" />
                         </div>
                         <div>
                             <div className="flex items-center gap-2 flex-wrap">
-                                <CardTitle className="text-sm sm:text-base font-bold text-slate-900 tracking-tight">
-                                    Throughput & Volume <span className="font-editorial-italic font-normal text-slate-800">Pesan Realtime</span>
+                                <CardTitle className="text-sm sm:text-base font-bold text-[#262626] tracking-tight">
+                                    Throughput & Volume Pesan Realtime
                                 </CardTitle>
-                                <Badge variant="outline" className="border-blue-200/80 bg-blue-50 text-[#1e50ff] text-[10px] font-bold gap-1.5 py-0 px-2">
-                                    <span className="relative flex h-2 w-2">
-                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#1e50ff]"></span>
-                                    </span>
+                                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold bg-[#f6ffed] text-[#52c41a] border border-[#b7eb8f]">
+                                    <span className="size-1.5 rounded-full bg-[#52c41a] animate-pulse" />
                                     <span>LIVE DATABASE</span>
-                                </Badge>
+                                </span>
                             </div>
-                            <CardDescription className="text-xs text-slate-500 mt-0.5">
+                            <CardDescription className="text-xs text-[#8c8c8c] mt-0.5">
                                 Terhubung langsung ke database pesan WhatsApp workspace Anda (Auto-refresh tiap 12 detik)
                             </CardDescription>
                         </div>
@@ -229,23 +226,23 @@ export default function InteractiveThroughputChart({
                             type="button"
                             onClick={onRefresh}
                             disabled={isRefreshing}
-                            className="h-8 gap-1.5 text-xs font-semibold text-slate-700 hover:text-[#1e50ff] hover:border-[#1e50ff] rounded-lg cursor-pointer disabled:opacity-50"
+                            className="h-8 gap-1.5 text-xs font-semibold border-[#d9d9d9] bg-white hover:bg-slate-50 text-[#595959] rounded-lg shadow-[0_2px_0_rgba(0,0,0,0.02)] cursor-pointer disabled:opacity-50"
                             title="Perbarui Data Sekarang"
                         >
-                            <RefreshCw className={`size-3.5 text-[#1e50ff] ${isRefreshing ? 'animate-spin' : ''}`} />
+                            <RefreshCw className={`size-3 text-[#1677ff] ${isRefreshing ? 'animate-spin' : ''}`} />
                             <span className="hidden sm:inline">{isRefreshing ? 'Memuat...' : 'Refresh'}</span>
                         </Button>
                     )}
 
                     {/* View Switcher: Area Spline vs Bar Stack */}
-                    <div className="inline-flex items-center bg-slate-100/90 p-1 rounded-xl border border-slate-200/70 shadow-2xs">
+                    <div className="inline-flex items-center bg-[#f5f5f5] p-0.5 rounded-lg border border-[#e8e8e8]">
                         <button
                             type="button"
                             onClick={() => setChartType('area')}
-                            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer ${
                                 chartType === 'area'
-                                    ? 'bg-white text-[#1e50ff] shadow-2xs'
-                                    : 'text-slate-600 hover:text-slate-900'
+                                    ? 'bg-white text-[#1677ff] shadow-xs font-bold'
+                                    : 'text-[#8c8c8c] hover:text-[#262626]'
                             }`}
                             title="Tampilan Kurva Spline"
                         >
@@ -255,10 +252,10 @@ export default function InteractiveThroughputChart({
                         <button
                             type="button"
                             onClick={() => setChartType('bar')}
-                            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer ${
                                 chartType === 'bar'
-                                    ? 'bg-white text-[#1e50ff] shadow-2xs'
-                                    : 'text-slate-600 hover:text-slate-900'
+                                    ? 'bg-white text-[#1677ff] shadow-xs font-bold'
+                                    : 'text-[#8c8c8c] hover:text-[#262626]'
                             }`}
                             title="Tampilan Grafik Batang"
                         >
@@ -268,7 +265,7 @@ export default function InteractiveThroughputChart({
                     </div>
 
                     {/* Timeframe Selector */}
-                    <div className="inline-flex items-center bg-slate-100/90 p-1 rounded-xl border border-slate-200/70 shadow-2xs">
+                    <div className="inline-flex items-center bg-[#f5f5f5] p-0.5 rounded-lg border border-[#e8e8e8]">
                         {[
                             { key: '24h', label: '24 Jam' },
                             { key: '7d', label: '7 Hari' },
@@ -281,10 +278,10 @@ export default function InteractiveThroughputChart({
                                     setTimeframe(t.key);
                                     setHoveredIndex(null);
                                 }}
-                                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                                className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer ${
                                     timeframe === t.key
-                                        ? 'bg-[#1e50ff] text-white shadow-2xs'
-                                        : 'text-slate-600 hover:text-slate-900'
+                                        ? 'bg-white text-[#1677ff] shadow-xs font-bold'
+                                        : 'text-[#8c8c8c] hover:text-[#262626]'
                                 }`}
                             >
                                 {t.label}
@@ -299,35 +296,35 @@ export default function InteractiveThroughputChart({
             {/* ================= 2. METRIC FILTER PILLS ================= */}
             <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
                 <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-slate-400 text-[11px] font-semibold uppercase tracking-wider mr-1">
+                    <span className="text-[#8c8c8c] text-[11px] font-semibold uppercase tracking-wider mr-1">
                         Kategori:
                     </span>
                     {[
-                        { key: 'all', label: 'Semua Pesan', color: 'bg-[#1e50ff]' },
-                        { key: 'broadcast', label: 'Broadcast Massal', color: 'bg-blue-500' },
-                        { key: 'transactional', label: 'Notifikasi & OTP', color: 'bg-sky-500' },
-                        { key: 'inbox', label: 'Live Chat CS', color: 'bg-amber-400' },
+                        { key: 'all', label: 'Semua Pesan', dotColor: 'bg-[#1677ff]' },
+                        { key: 'broadcast', label: 'Broadcast Massal', dotColor: 'bg-blue-500' },
+                        { key: 'transactional', label: 'Notifikasi & OTP', dotColor: 'bg-sky-500' },
+                        { key: 'inbox', label: 'Live Chat CS', dotColor: 'bg-amber-400' },
                     ].map((f) => (
                         <button
                             key={f.key}
                             type="button"
                             onClick={() => setActiveFilter(f.key)}
-                            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer border ${
+                            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition-all cursor-pointer border ${
                                 activeFilter === f.key
-                                    ? 'bg-[#08112c] text-white border-[#1e50ff] shadow-xs ring-1 ring-[#1e50ff]/40'
-                                    : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100 hover:text-slate-900'
+                                    ? 'bg-[#1677ff] text-white border-[#1677ff] shadow-xs font-semibold'
+                                    : 'bg-[#fafafb] text-[#595959] border-[#e6ebf1] hover:bg-[#f5f5f5] hover:text-[#262626]'
                             }`}
                         >
-                            <span className={`size-2 rounded-full ${f.color}`} />
+                            <span className={`size-1.5 rounded-full ${activeFilter === f.key ? 'bg-white' : f.dotColor}`} />
                             <span>{f.label}</span>
                         </button>
                     ))}
                 </div>
 
                 {/* Realtime Delivery Rate Pill */}
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-blue-50/80 border border-blue-200/80 text-[#1e50ff] text-[11px] font-bold">
-                    <TrendingUp className="size-3.5 text-[#1e50ff]" />
-                    <span>Tingkat Terkirim: <strong>{stats.delivery_rate || '96.2%'}</strong></span>
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#f6ffed] border border-[#b7eb8f] text-[#52c41a] text-[11px] font-semibold">
+                    <TrendingUp className="size-3.5 text-[#52c41a]" />
+                    <span>Tingkat Sukses: <strong>{stats.delivery_rate || '96.2%'}</strong></span>
                 </div>
             </div>
 
@@ -339,26 +336,26 @@ export default function InteractiveThroughputChart({
                 className="relative w-full h-64 sm:h-72 select-none cursor-crosshair group pt-2 pb-1"
             >
                 {/* Background Grid Lines & Y-Axis Labels */}
-                <div className="absolute inset-0 flex flex-col justify-between pointer-events-none text-[10px] text-slate-400 font-mono pl-1 pb-6">
-                    <div className="border-b border-dashed border-slate-200/80 w-full flex justify-between pr-2">
+                <div className="absolute inset-0 flex flex-col justify-between pointer-events-none text-[10px] text-[#8c8c8c] font-mono pl-1 pb-6">
+                    <div className="border-b border-dashed border-[#e6ebf1] w-full flex justify-between pr-2">
                         <span>{maxValue.toLocaleString('id-ID')}</span>
-                        <span className="text-[9px] uppercase tracking-wider text-slate-400">Puncak Skala</span>
+                        <span className="text-[9px] uppercase tracking-wider text-[#bfbfbf]">Puncak Skala</span>
                     </div>
-                    <div className="border-b border-dashed border-slate-200/80 w-full flex justify-between pr-2">
+                    <div className="border-b border-dashed border-[#e6ebf1] w-full flex justify-between pr-2">
                         <span>{Math.round(maxValue * 0.75).toLocaleString('id-ID')}</span>
-                        <span className="text-[9px] text-slate-300">75%</span>
+                        <span className="text-[9px] text-[#d9d9d9]">75%</span>
                     </div>
-                    <div className="border-b border-dashed border-slate-200/80 w-full flex justify-between pr-2">
+                    <div className="border-b border-dashed border-[#e6ebf1] w-full flex justify-between pr-2">
                         <span>{Math.round(maxValue * 0.5).toLocaleString('id-ID')}</span>
-                        <span className="text-[9px] text-slate-300">50%</span>
+                        <span className="text-[9px] text-[#d9d9d9]">50%</span>
                     </div>
-                    <div className="border-b border-dashed border-slate-200/80 w-full flex justify-between pr-2">
+                    <div className="border-b border-dashed border-[#e6ebf1] w-full flex justify-between pr-2">
                         <span>{Math.round(maxValue * 0.25).toLocaleString('id-ID')}</span>
-                        <span className="text-[9px] text-slate-300">25%</span>
+                        <span className="text-[9px] text-[#d9d9d9]">25%</span>
                     </div>
-                    <div className="border-b border-slate-200 w-full flex justify-between pr-2">
+                    <div className="border-b border-[#e6ebf1] w-full flex justify-between pr-2">
                         <span>0</span>
-                        <span className="text-[9px] text-slate-300">Nol</span>
+                        <span className="text-[9px] text-[#d9d9d9]">Nol</span>
                     </div>
                 </div>
 
@@ -372,9 +369,9 @@ export default function InteractiveThroughputChart({
                         <defs>
                             {/* Area Gradient Fill */}
                             <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stopColor="#1e50ff" stopOpacity="0.32" />
-                                <stop offset="60%" stopColor="#1e50ff" stopOpacity="0.08" />
-                                <stop offset="100%" stopColor="#1e50ff" stopOpacity="0.0" />
+                                <stop offset="0%" stopColor="#1677ff" stopOpacity="0.28" />
+                                <stop offset="60%" stopColor="#1677ff" stopOpacity="0.06" />
+                                <stop offset="100%" stopColor="#1677ff" stopOpacity="0.0" />
                             </linearGradient>
 
                             {/* Stroke Glow Filter */}
@@ -395,7 +392,7 @@ export default function InteractiveThroughputChart({
                         <path
                             d={splineCurve}
                             fill="none"
-                            stroke="#1e50ff"
+                            stroke="#1677ff"
                             strokeWidth="3"
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -410,7 +407,7 @@ export default function InteractiveThroughputChart({
                                 y1={paddingTop}
                                 x2={points[hoveredIndex].x}
                                 y2={paddingTop + graphHeight}
-                                stroke="#1e50ff"
+                                stroke="#1677ff"
                                 strokeWidth="1.5"
                                 strokeDasharray="3 3"
                                 className="transition-all duration-75"
@@ -429,7 +426,7 @@ export default function InteractiveThroughputChart({
                                             cx={p.x}
                                             cy={p.y}
                                             r="14"
-                                            fill="#1e50ff"
+                                            fill="#1677ff"
                                             fillOpacity="0.25"
                                             className="animate-ping"
                                         />
@@ -440,7 +437,7 @@ export default function InteractiveThroughputChart({
                                         cx={p.x}
                                         cy={p.y}
                                         r={isHovered ? '7' : isPeak ? '5.5' : '4'}
-                                        fill={isPeak ? '#f59e0b' : '#1e50ff'}
+                                        fill={isPeak ? '#faad14' : '#1677ff'}
                                         stroke="#ffffff"
                                         strokeWidth={isHovered ? '3' : '2'}
                                         className="transition-all duration-200 cursor-pointer drop-shadow-md"
@@ -472,32 +469,32 @@ export default function InteractiveThroughputChart({
                                 >
                                     <div
                                         style={{ height: `${heightPercent}%` }}
-                                        className={`w-full max-w-[48px] rounded-t-xl overflow-hidden flex flex-col-reverse transition-all duration-500 shadow-sm ${
+                                        className={`w-full max-w-[44px] rounded-t-lg overflow-hidden flex flex-col-reverse transition-all duration-500 shadow-xs ${
                                             isHovered
-                                                ? 'ring-2 ring-blue-500 scale-y-105 shadow-md'
+                                                ? 'ring-2 ring-[#1677ff] scale-y-105 shadow-md'
                                                 : item.peak && item.value > 0
-                                                ? 'ring-1 ring-amber-400'
+                                                ? 'ring-1 ring-[#faad14]'
                                                 : 'hover:brightness-105'
-                                        } ${item.value === 0 ? 'bg-slate-200/60' : ''}`}
+                                        } ${item.value === 0 ? 'bg-[#f5f5f5]' : ''}`}
                                     >
                                         {item.value > 0 && (
                                             <>
                                                 {/* Segment 1: Broadcast */}
                                                 <div
                                                     style={{ height: `${bcastPct}%` }}
-                                                    className="w-full bg-[#1e50ff] transition-all duration-300"
+                                                    className="w-full bg-[#1677ff] transition-all duration-300"
                                                     title="Broadcast"
                                                 />
                                                 {/* Segment 2: Transactional OTP */}
                                                 <div
                                                     style={{ height: `${transPct}%` }}
-                                                    className="w-full bg-sky-500 transition-all duration-300"
+                                                    className="w-full bg-[#69b1ff] transition-all duration-300"
                                                     title="Notifikasi & OTP"
                                                 />
                                                 {/* Segment 3: Live Chat */}
                                                 <div
                                                     style={{ height: `${inboxPct}%` }}
-                                                    className="w-full bg-amber-400 transition-all duration-300"
+                                                    className="w-full bg-[#faad14] transition-all duration-300"
                                                     title="Live Chat CS"
                                                 />
                                             </>
@@ -510,16 +507,16 @@ export default function InteractiveThroughputChart({
                 )}
 
                 {/* X-Axis Labels (Aligned with Data Points) */}
-                <div className="absolute inset-x-0 bottom-0 flex justify-between px-4 sm:px-8 text-[11px] font-semibold text-slate-500">
+                <div className="absolute inset-x-0 bottom-0 flex justify-between px-4 sm:px-8 text-[11px] font-medium text-[#8c8c8c]">
                     {chartData.map((item, idx) => (
                         <span
                             key={idx}
                             className={`transition-colors text-center ${
                                 hoveredIndex === idx
-                                    ? 'text-[#1e50ff] font-extrabold scale-110'
+                                    ? 'text-[#1677ff] font-bold scale-105'
                                     : item.current
-                                    ? 'text-[#1e50ff] font-bold'
-                                    : 'text-slate-500'
+                                    ? 'text-[#1677ff] font-semibold'
+                                    : 'text-[#8c8c8c]'
                             }`}
                         >
                             {item.time}
@@ -539,16 +536,16 @@ export default function InteractiveThroughputChart({
                         }}
                         className="absolute -translate-x-1/2 -translate-y-full pointer-events-none z-30 transition-all duration-150 ease-out"
                     >
-                        <div className="bg-[#08112c]/95 backdrop-blur-md text-white p-3.5 rounded-2xl shadow-2xl border border-slate-700/80 min-w-[210px] space-y-2 animate-fade-in">
+                        <div className="bg-[#262626] text-white p-3.5 rounded-xl shadow-xl border border-[#434343] min-w-[210px] space-y-2 animate-fade-in">
                             {/* Tooltip Header */}
-                            <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                                <div className="flex items-center gap-1.5 text-xs font-bold text-slate-200">
-                                    <Calendar className="w-3.5 h-3.5 text-amber-400" />
+                            <div className="flex items-center justify-between border-b border-[#434343] pb-2">
+                                <div className="flex items-center gap-1.5 text-xs font-semibold text-[#f0f0f0]">
+                                    <Calendar className="w-3.5 h-3.5 text-[#faad14]" />
                                     <span>{activePoint.label}</span>
                                 </div>
                                 {activePoint.peak && activePoint.value > 0 && (
-                                    <span className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[10px] font-black uppercase">
-                                        <Flame className="w-3 h-3 text-amber-400" />
+                                    <span className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-[#fffbe6]/20 text-[#faad14] text-[10px] font-bold uppercase">
+                                        <Flame className="w-3 h-3 text-[#faad14]" />
                                         <span>Puncak</span>
                                     </span>
                                 )}
@@ -556,18 +553,18 @@ export default function InteractiveThroughputChart({
 
                             {/* Total Throughput */}
                             <div className="flex items-baseline justify-between pt-0.5">
-                                <span className="text-[11px] text-slate-400">Total Transmisi:</span>
-                                <span className="text-base font-black font-mono text-white tabular-nums">
+                                <span className="text-[11px] text-[#8c8c8c]">Total Transmisi:</span>
+                                <span className="text-base font-bold font-mono text-white tabular-nums">
                                     {activePoint.value.toLocaleString('id-ID')}{' '}
-                                    <span className="text-xs font-normal text-blue-400">pesan</span>
+                                    <span className="text-xs font-normal text-[#91caff]">pesan</span>
                                 </span>
                             </div>
 
                             {/* Breakdown Rows */}
-                            <div className="space-y-1 pt-1 border-t border-slate-800/80 text-[11px]">
+                            <div className="space-y-1 pt-1 border-t border-[#434343] text-[11px]">
                                 <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-1.5 text-slate-300">
-                                        <span className="w-2 h-2 rounded-full bg-[#1e50ff]" />
+                                    <div className="flex items-center gap-1.5 text-[#d9d9d9]">
+                                        <span className="w-2 h-2 rounded-full bg-[#1677ff]" />
                                         <span>Broadcast:</span>
                                     </div>
                                     <span className="font-mono font-bold text-white tabular-nums">
@@ -575,8 +572,8 @@ export default function InteractiveThroughputChart({
                                     </span>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-1.5 text-slate-300">
-                                        <span className="w-2 h-2 rounded-full bg-sky-400" />
+                                    <div className="flex items-center gap-1.5 text-[#d9d9d9]">
+                                        <span className="w-2 h-2 rounded-full bg-[#69b1ff]" />
                                         <span>Notifikasi OTP:</span>
                                     </div>
                                     <span className="font-mono font-bold text-white tabular-nums">
@@ -584,8 +581,8 @@ export default function InteractiveThroughputChart({
                                     </span>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-1.5 text-slate-300">
-                                        <span className="w-2 h-2 rounded-full bg-amber-400" />
+                                    <div className="flex items-center gap-1.5 text-[#d9d9d9]">
+                                        <span className="w-2 h-2 rounded-full bg-[#faad14]" />
                                         <span>Live Chat CS:</span>
                                     </div>
                                     <span className="font-mono font-bold text-white tabular-nums">
@@ -595,9 +592,9 @@ export default function InteractiveThroughputChart({
                             </div>
 
                             {/* Delivery Quality Footer */}
-                            <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-[10px] text-slate-400">
+                            <div className="pt-2 border-t border-[#434343] flex items-center justify-between text-[10px] text-[#8c8c8c]">
                                 <span>Kualitas Pengiriman:</span>
-                                <span className="font-bold text-blue-400">
+                                <span className="font-bold text-[#91caff]">
                                     {activePoint.successRate || '100%'} Delivered
                                 </span>
                             </div>
@@ -607,63 +604,63 @@ export default function InteractiveThroughputChart({
             </div>
 
             {/* ================= 5. REALTIME STAT STRIP ================= */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-slate-100">
-                <div className="rounded-xl p-3 bg-slate-50 border border-slate-200/70 space-y-1">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-[#f0f0f0]">
+                <div className="rounded-lg p-3 bg-[#fafafb] border border-[#f0f0f0] space-y-1">
                     <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                        <span className="text-[10px] font-semibold uppercase tracking-wider text-[#8c8c8c]">
                             Total Periode Ini
                         </span>
-                        <Zap className="size-3.5 text-amber-500" />
+                        <Zap className="size-3.5 text-[#faad14]" />
                     </div>
-                    <div className="text-lg font-black text-slate-900 font-mono tabular-nums">
+                    <div className="text-lg font-bold text-[#262626] font-mono tabular-nums">
                         {totalVolume.toLocaleString('id-ID')}
                     </div>
-                    <p className="text-[10px] text-slate-500">
+                    <p className="text-[10px] text-[#8c8c8c]">
                         {timeframe === '24h' ? '24 Jam Terakhir' : timeframe === '7d' ? '7 Hari Terakhir' : '30 Hari Terakhir'}
                     </p>
                 </div>
 
-                <div className="rounded-xl p-3 bg-slate-50 border border-slate-200/70 space-y-1">
+                <div className="rounded-lg p-3 bg-[#fafafb] border border-[#f0f0f0] space-y-1">
                     <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                        <span className="text-[10px] font-semibold uppercase tracking-wider text-[#8c8c8c]">
                             Puncak Transmisi
                         </span>
-                        <Flame className="size-3.5 text-amber-500" />
+                        <Flame className="size-3.5 text-[#faad14]" />
                     </div>
-                    <div className="text-lg font-black text-[#1e50ff] font-mono tabular-nums">
+                    <div className="text-lg font-bold text-[#1677ff] font-mono tabular-nums">
                         {peakItem.value.toLocaleString('id-ID')}
                     </div>
-                    <p className="text-[10px] text-slate-500 truncate" title={peakItem.label}>
+                    <p className="text-[10px] text-[#8c8c8c] truncate" title={peakItem.label}>
                         {peakItem.label || '-'}
                     </p>
                 </div>
 
-                <div className="rounded-xl p-3 bg-slate-50 border border-slate-200/70 space-y-1">
+                <div className="rounded-lg p-3 bg-[#fafafb] border border-[#f0f0f0] space-y-1">
                     <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                        <span className="text-[10px] font-semibold uppercase tracking-wider text-[#8c8c8c]">
                             Rata-Rata Throughput
                         </span>
-                        <Clock className="size-3.5 text-[#1e50ff]" />
+                        <Clock className="size-3.5 text-[#1677ff]" />
                     </div>
-                    <div className="text-lg font-black text-slate-900 font-mono tabular-nums">
+                    <div className="text-lg font-bold text-[#262626] font-mono tabular-nums">
                         {Math.round(totalVolume / (chartData.length || 1)).toLocaleString('id-ID')}
                     </div>
-                    <p className="text-[10px] text-slate-500">
+                    <p className="text-[10px] text-[#8c8c8c]">
                         Pesan per {timeframe === '24h' ? 'jam' : 'hari'}
                     </p>
                 </div>
 
-                <div className="rounded-xl p-3 bg-slate-50 border border-slate-200/70 space-y-1">
+                <div className="rounded-lg p-3 bg-[#fafafb] border border-[#f0f0f0] space-y-1">
                     <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                        <span className="text-[10px] font-semibold uppercase tracking-wider text-[#8c8c8c]">
                             SLA Keandalan
                         </span>
-                        <CheckCircle2 className="size-3.5 text-emerald-600" />
+                        <CheckCircle2 className="size-3.5 text-[#52c41a]" />
                     </div>
-                    <div className="text-lg font-black text-[#1e50ff] font-mono tabular-nums">
+                    <div className="text-lg font-bold text-[#52c41a] font-mono tabular-nums">
                         {stats.delivery_rate || '99.8%'}
                     </div>
-                    <p className="text-[10px] text-emerald-700 font-semibold">
+                    <p className="text-[10px] text-[#52c41a] font-semibold">
                         38ms Rata-rata Latensi
                     </p>
                 </div>
