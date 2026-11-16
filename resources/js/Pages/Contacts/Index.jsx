@@ -342,11 +342,11 @@ export default function ContactsIndex({ groups, contacts, filters, stats }) {
                         <Card className="h-full p-4 sm:p-5 border-[#e6ebf1] bg-white shadow-xs hover:shadow-md transition-all space-y-1">
                             <div className="flex items-center justify-between">
                                 <span className="text-xs font-bold text-[#8c8c8c]">Total Nomor Kontak</span>
-                                <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
+                                <div className="w-8 h-8 rounded-lg bg-[#e6f4ff] text-[#1677ff] flex items-center justify-center">
                                     <Users className="w-4 h-4" />
                                 </div>
                             </div>
-                            <div className="text-2xl font-black text-[#262626]">{stats.total_contacts.toLocaleString('id-ID')}</div>
+                            <div className="text-2xl font-bold text-[#262626]">{stats.total_contacts.toLocaleString('id-ID')}</div>
                             <p className="text-[11px] text-[#8c8c8c]">Tersimpan dalam database workspace</p>
                         </Card>
                     </motion.div>
@@ -360,11 +360,11 @@ export default function ContactsIndex({ groups, contacts, filters, stats }) {
                         <Card className="h-full p-4 sm:p-5 border-[#e6ebf1] bg-white shadow-xs hover:shadow-md transition-all space-y-1">
                             <div className="flex items-center justify-between">
                                 <span className="text-xs font-bold text-[#8c8c8c]">Grup Audiens</span>
-                                <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
+                                <div className="w-8 h-8 rounded-lg bg-[#e6f4ff] text-[#1677ff] flex items-center justify-center">
                                     <Tag className="w-4 h-4" />
                                 </div>
                             </div>
-                            <div className="text-2xl font-black text-[#262626]">{stats.total_groups}</div>
+                            <div className="text-2xl font-bold text-[#262626]">{stats.total_groups}</div>
                             <p className="text-[11px] text-[#8c8c8c]">Segmentasi kategori broadcast</p>
                         </Card>
                     </motion.div>
@@ -378,11 +378,11 @@ export default function ContactsIndex({ groups, contacts, filters, stats }) {
                         <Card className="h-full p-4 sm:p-5 border-[#e6ebf1] bg-white shadow-xs hover:shadow-md transition-all space-y-1">
                             <div className="flex items-center justify-between">
                                 <span className="text-xs font-bold text-[#8c8c8c]">Format Validasi</span>
-                                <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
+                                <div className="w-8 h-8 rounded-lg bg-[#e6f4ff] text-[#1677ff] flex items-center justify-center">
                                     <CheckCircle2 className="w-4 h-4" />
                                 </div>
                             </div>
-                            <div className="text-2xl font-black text-emerald-700">Format 62+</div>
+                            <div className="text-2xl font-bold text-[#1677ff]">Format 62+</div>
                             <p className="text-[11px] text-[#8c8c8c]">Standar internasional WhatsApp</p>
                         </Card>
                     </motion.div>
@@ -402,7 +402,7 @@ export default function ContactsIndex({ groups, contacts, filters, stats }) {
                             />
                             <button
                                 type="submit"
-                                className="absolute right-1.5 top-1.5 px-2.5 py-1 bg-emerald-600 text-white rounded text-[11px] font-bold hover:bg-emerald-700 transition-colors"
+                                className="absolute right-1.5 top-1.5 px-2.5 py-1 bg-[#1677ff] text-white rounded text-[11px] font-bold hover:bg-[#0958d9] transition-colors"
                             >
                                 Cari
                             </button>
@@ -420,7 +420,7 @@ export default function ContactsIndex({ groups, contacts, filters, stats }) {
                             onClick={() => handleGroupFilter('')}
                             className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                                 !selectedGroup
-                                    ? 'bg-emerald-600 text-white shadow-xs'
+                                    ? 'bg-[#1677ff] text-white shadow-xs'
                                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                             }`}
                         >
@@ -448,7 +448,7 @@ export default function ContactsIndex({ groups, contacts, filters, stats }) {
                                     onClick={() => handleGroupFilter(group.id)}
                                     className={`px-3 py-1.5 rounded-l-lg text-xs font-bold transition-all ${
                                         selectedGroup == group.id
-                                            ? 'bg-emerald-600 text-white shadow-xs'
+                                            ? 'bg-[#1677ff] text-white shadow-xs'
                                             : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                                     }`}
                                 >
@@ -460,8 +460,8 @@ export default function ContactsIndex({ groups, contacts, filters, stats }) {
                                     title="Edit nama grup"
                                     className={`px-1.5 py-1.5 text-xs transition-colors ${
                                         selectedGroup == group.id
-                                            ? 'bg-emerald-700 text-emerald-100 hover:bg-emerald-800'
-                                            : 'bg-slate-200 hover:bg-emerald-100 hover:text-emerald-800 text-[#8c8c8c]'
+                                            ? 'bg-[#1677ff] text-white hover:bg-[#0958d9]'
+                                            : 'bg-slate-200 hover:bg-[#e6f4ff] hover:text-[#1677ff] text-[#8c8c8c]'
                                     }`}
                                 >
                                     <Pencil className="w-3 h-3" />
@@ -475,8 +475,8 @@ export default function ContactsIndex({ groups, contacts, filters, stats }) {
                                     title="Hapus grup"
                                     className={`px-1.5 py-1.5 rounded-r-lg text-xs transition-colors ${
                                         selectedGroup == group.id
-                                            ? 'bg-emerald-700 text-emerald-100 hover:bg-red-600 hover:text-white'
-                                            : 'bg-slate-200 hover:bg-red-100 hover:text-red-700 text-[#8c8c8c]'
+                                            ? 'bg-[#1677ff] text-white hover:bg-[#ff4d4f] hover:text-white'
+                                            : 'bg-slate-200 hover:bg-[#fff1f0] hover:text-[#ff4d4f] text-[#8c8c8c]'
                                     }`}
                                 >
                                     <X className="w-3 h-3" />
@@ -515,9 +515,9 @@ export default function ContactsIndex({ groups, contacts, filters, stats }) {
                                             <td className="py-3 px-4 font-bold text-[#262626]">
                                                 {c.name}
                                             </td>
-                                            <td className="py-3 px-4 font-mono font-medium text-[#595959]">
-                                                <span className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-md text-[11px] font-bold">
-                                                    <Phone className="w-3 h-3" />
+                                            <td className="py-3 px-4 font-mono font-medium text-[#262626]">
+                                                <span className="inline-flex items-center gap-1.5 text-xs">
+                                                    <Phone className="size-3 text-[#8c8c8c]" />
                                                     {c.phone}
                                                 </span>
                                             </td>
@@ -555,7 +555,7 @@ export default function ContactsIndex({ groups, contacts, filters, stats }) {
                                                     <button
                                                         type="button"
                                                         onClick={() => handleOpenEditModal(c)}
-                                                        className="p-1.5 text-[#8c8c8c] hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors border border-transparent hover:border-emerald-200"
+                                                        className="p-1.5 text-[#8c8c8c] hover:text-[#1677ff] hover:bg-[#e6f4ff] rounded-lg transition-colors border border-transparent hover:border-[#91caff]"
                                                         title="Edit Kontak"
                                                     >
                                                         <Pencil className="w-3.5 h-3.5" />
@@ -592,7 +592,7 @@ export default function ContactsIndex({ groups, contacts, filters, stats }) {
                                         dangerouslySetInnerHTML={{ __html: link.label }}
                                         className={`px-3 py-1 rounded text-xs font-semibold ${
                                             link.active
-                                                ? 'bg-emerald-600 text-white'
+                                                ? 'bg-[#1677ff] text-white'
                                                 : 'text-slate-600 hover:bg-slate-100 disabled:opacity-40'
                                         }`}
                                     />
@@ -616,7 +616,7 @@ export default function ContactsIndex({ groups, contacts, filters, stats }) {
                         >
                             <div className="flex items-center justify-between pb-3 border-b border-[#f0f0f0]">
                                 <div className="flex items-center gap-2.5">
-                                    <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
+                                    <div className="w-8 h-8 rounded-lg bg-[#e6f4ff] text-[#1677ff] flex items-center justify-center">
                                         <Pencil className="w-4 h-4" />
                                     </div>
                                     <div>
@@ -699,7 +699,7 @@ export default function ContactsIndex({ groups, contacts, filters, stats }) {
                                         variant="outline"
                                         size="sm"
                                         onClick={handleAddEditCustomFieldRow}
-                                        className="h-7 text-[11px] px-2 font-medium border-[#e6ebf1] hover:bg-[#fafafb] text-emerald-700"
+                                        className="h-7 text-[11px] px-2 font-medium border-[#e6ebf1] hover:bg-[#fafafb] text-[#1677ff]"
                                     >
                                         <Plus className="w-3 h-3 mr-1 text-emerald-600" />
                                         Tambah Variabel
@@ -778,7 +778,7 @@ export default function ContactsIndex({ groups, contacts, filters, stats }) {
                         >
                         <div className="flex items-center justify-between pb-3 border-b border-[#f0f0f0]">
                             <div className="flex items-center gap-2.5">
-                                <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
+                                <div className="w-8 h-8 rounded-lg bg-[#e6f4ff] text-[#1677ff] flex items-center justify-center">
                                     <UserPlus className="w-4 h-4" />
                                 </div>
                                 <div>
@@ -858,7 +858,7 @@ export default function ContactsIndex({ groups, contacts, filters, stats }) {
                                         variant="outline"
                                         size="sm"
                                         onClick={handleAddCustomFieldRow}
-                                        className="h-7 text-[11px] px-2 font-medium border-[#e6ebf1] hover:bg-[#fafafb] text-emerald-700"
+                                        className="h-7 text-[11px] px-2 font-medium border-[#e6ebf1] hover:bg-[#fafafb] text-[#1677ff]"
                                     >
                                         <Plus className="w-3 h-3 mr-1 text-emerald-600" />
                                         Tambah Variabel
@@ -937,7 +937,7 @@ export default function ContactsIndex({ groups, contacts, filters, stats }) {
                         >
                         <div className="flex items-center justify-between pb-3 border-b border-[#f0f0f0]">
                             <div className="flex items-center gap-2">
-                                <FileSpreadsheet className="w-5 h-5 text-emerald-700" />
+                                <FileSpreadsheet className="w-5 h-5 text-[#1677ff]" />
                                 <h3 className="font-bold text-base text-[#262626]">Impor Data Kontak (CSV)</h3>
                             </div>
                             <button

@@ -454,8 +454,8 @@ export default function InboxIndex({
                         )}
 
                         {devices.length > 0 ? (
-                            <span className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-800 border border-emerald-200/80 px-2.5 py-1 rounded-full text-xs font-medium">
-                                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                            <span className="inline-flex items-center gap-1.5 bg-[#e6f4ff] text-[#1677ff] border border-[#91caff] px-2.5 py-1 rounded-full text-xs font-medium">
+                                <span className="w-2 h-2 rounded-full bg-[#e6f4ff]0 animate-pulse" />
                                 <span>{devices.length} Gateway Aktif</span>
                             </span>
                         ) : (
@@ -490,7 +490,7 @@ export default function InboxIndex({
                         {/* Pinned Left Header */}
                         <div className="h-[60px] px-4 bg-[#f0f2f5] border-b border-[#e9edef] flex items-center justify-between shrink-0">
                             <div className="flex items-center gap-2.5">
-                                <div className="h-8 w-8 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shadow-2xs">
+                                <div className="h-8 w-8 rounded-full bg-[#1677ff] text-white flex items-center justify-center font-bold text-xs shadow-2xs">
                                     <MessageSquare className="w-4 h-4" />
                                 </div>
                                 <div>
@@ -504,7 +504,7 @@ export default function InboxIndex({
                                 variant="ghost"
                                 onClick={handleStartNewChat}
                                 title="Mulai Obrolan WhatsApp Baru"
-                                className="h-8 px-2.5 text-xs text-emerald-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-lg font-semibold flex items-center gap-1"
+                                className="h-8 px-2.5 text-xs text-[#1677ff] hover:text-[#0958d9] hover:bg-[#e6f4ff] rounded-lg font-semibold flex items-center gap-1"
                             >
                                 <Plus className="w-3.5 h-3.5" />
                                 <span>Baru</span>
@@ -608,7 +608,7 @@ export default function InboxIndex({
                                 <div className="space-y-5 max-w-xl mx-auto w-full">
                                     <div className="border-b border-[#e6ebf1] pb-3 flex items-center justify-between">
                                         <div className="flex items-center gap-2.5">
-                                            <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200/80 flex items-center justify-center">
+                                            <div className="w-9 h-9 rounded-xl bg-[#e6f4ff] text-[#1677ff] border border-[#91caff] flex items-center justify-center">
                                                 <MessageSquare className="w-5 h-5 text-emerald-600" />
                                             </div>
                                             <div>
@@ -671,7 +671,7 @@ export default function InboxIndex({
                                                 <button
                                                     type="button"
                                                     onClick={() => setNewPhone('+628386012467')}
-                                                    className="text-[11px] text-emerald-700 font-semibold hover:underline cursor-pointer"
+                                                    className="text-[11px] text-[#1677ff] font-semibold hover:underline cursor-pointer"
                                                 >
                                                     + Gunakan Nomor Uji (+628386012467)
                                                 </button>
@@ -711,7 +711,7 @@ export default function InboxIndex({
                                                         key={idx}
                                                         type="button"
                                                         onClick={() => handleInsertCanned(template)}
-                                                        className="px-2.5 py-1 bg-white hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-200 border border-[#e6ebf1] rounded-lg text-[11px] text-slate-600 transition-colors text-left shadow-2xs cursor-pointer"
+                                                        className="px-2.5 py-1 bg-white hover:bg-[#e6f4ff] hover:text-[#0958d9] hover:border-[#91caff] border border-[#e6ebf1] rounded-lg text-[11px] text-slate-600 transition-colors text-left shadow-2xs cursor-pointer"
                                                     >
                                                         {template.length > 40 ? `${template.slice(0, 40)}...` : template}
                                                     </button>
@@ -782,7 +782,7 @@ export default function InboxIndex({
                                             <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center font-bold text-xs shadow-2xs">
                                                 {currentContact ? (currentContact.name || 'P').charAt(0).toUpperCase() : 'U'}
                                             </div>
-                                            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white absolute bottom-0 right-0" />
+                                            <span className="w-2.5 h-2.5 rounded-full bg-[#e6f4ff]0 border-2 border-white absolute bottom-0 right-0" />
                                         </div>
 
                                         <div className="min-w-0">
@@ -806,7 +806,7 @@ export default function InboxIndex({
                                             <p className="text-[11px] font-mono text-[#667781] flex items-center gap-1.5 mt-0.5 truncate">
                                                 <span className="truncate">{currentPhone}</span>
                                                 <span>•</span>
-                                                <span className="text-emerald-700 font-medium font-sans shrink-0">
+                                                <span className="text-[#1677ff] font-medium font-sans shrink-0">
                                                     via {selectedDevice?.name || 'Gateway'}
                                                 </span>
                                             </p>
@@ -857,7 +857,7 @@ export default function InboxIndex({
 
                                     {messages.length === 0 ? (
                                         <div className="h-48 flex flex-col items-center justify-center text-[#54656f] text-xs">
-                                            <MessageSquare className="w-8 h-8 mb-2 opacity-30 text-emerald-700" />
+                                            <MessageSquare className="w-8 h-8 mb-2 opacity-30 text-[#1677ff]" />
                                             <span>Belum ada riwayat pesan. Kirim pesan di bawah untuk memulai.</span>
                                         </div>
                                     ) : (
@@ -874,7 +874,7 @@ export default function InboxIndex({
                                                     <div
                                                         className={`max-w-[85%] sm:max-w-[70%] rounded-xl px-3.5 py-2 shadow-[0_1px_0.5px_rgba(11,20,26,0.13)] text-[13px] leading-relaxed relative ${
                                                             isOutbound
-                                                                ? 'bg-[#d9fdd3] text-[#111b21] rounded-tr-xs border border-emerald-200/50'
+                                                                ? 'bg-[#d9fdd3] text-[#111b21] rounded-tr-xs border border-[#91caff]/50'
                                                                 : 'bg-white text-[#111b21] rounded-tl-xs border border-[#e6ebf1]/60'
                                                         } ${isFailed ? 'border-rose-300 bg-rose-50/90' : ''}`}
                                                     >
@@ -886,12 +886,12 @@ export default function InboxIndex({
                                                         {/* Optional Media Link Card */}
                                                         {msg.media_url && (
                                                             <div className="mt-2 p-2 bg-black/5 rounded-xl text-[11px] font-mono flex items-center gap-2 border border-black/5">
-                                                                <FileText className="w-4 h-4 text-emerald-700 shrink-0" />
+                                                                <FileText className="w-4 h-4 text-[#1677ff] shrink-0" />
                                                                 <a
                                                                     href={msg.media_url}
                                                                     target="_blank"
                                                                     rel="noopener noreferrer"
-                                                                    className="underline hover:text-emerald-800 truncate text-[#111b21] font-medium"
+                                                                    className="underline hover:text-[#0958d9] truncate text-[#111b21] font-medium"
                                                                 >
                                                                     {msg.media_url}
                                                                 </a>
@@ -953,7 +953,7 @@ export default function InboxIndex({
                                             key={idx}
                                             type="button"
                                             onClick={() => handleInsertCanned(template)}
-                                            className="shrink-0 px-2.5 py-1 bg-white hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-200 border border-[#e6ebf1] rounded-lg text-[11px] text-[#54656f] transition-colors whitespace-nowrap shadow-2xs cursor-pointer active:scale-95"
+                                            className="shrink-0 px-2.5 py-1 bg-white hover:bg-[#e6f4ff] hover:text-[#0958d9] hover:border-[#91caff] border border-[#e6ebf1] rounded-lg text-[11px] text-[#54656f] transition-colors whitespace-nowrap shadow-2xs cursor-pointer active:scale-95"
                                         >
                                             {template.length > 32 ? `${template.slice(0, 32)}...` : template}
                                         </button>
@@ -1030,7 +1030,7 @@ export default function InboxIndex({
                                             type="button"
                                             onClick={() => setShowMediaInput(!showMediaInput)}
                                             className={`p-2 rounded-xl transition-colors shrink-0 cursor-pointer ${
-                                                showMediaInput ? 'bg-emerald-600 text-white' : 'text-[#54656f] hover:text-[#111b21] hover:bg-black/5'
+                                                showMediaInput ? 'bg-[#1677ff] text-white' : 'text-[#54656f] hover:text-[#111b21] hover:bg-black/5'
                                             }`}
                                             title="Lampirkan Dokumen / Gambar"
                                         >
@@ -1069,7 +1069,7 @@ export default function InboxIndex({
                         ) : (
                             <div className="h-full flex flex-col items-center justify-center p-8 text-center text-[#54656f]">
                                 <div className="w-16 h-16 rounded-full bg-slate-200/60 flex items-center justify-center mb-3">
-                                    <Phone className="w-8 h-8 opacity-40 text-emerald-800" />
+                                    <Phone className="w-8 h-8 opacity-40 text-[#1677ff]" />
                                 </div>
                                 <h3 className="font-bold text-base text-[#262626]">Pilih Kontak Obrolan</h3>
                                 <p className="text-xs text-[#8c8c8c] max-w-xs mt-1 leading-relaxed">

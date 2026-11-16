@@ -811,8 +811,8 @@ export default function AutoReplyIndex({
                             onClick={() => setIsSimulatorOpen(!isSimulatorOpen)}
                             className={`h-9 px-3 text-xs font-semibold rounded-xl transition-all cursor-pointer flex items-center gap-1.5 shadow-[0_1px_2px_rgba(0,0,0,0.02)] border ${
                                 isSimulatorOpen
-                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-300 hover:bg-emerald-100'
-                                    : 'border-[#e6ebf1] text-slate-700 hover:text-emerald-700 hover:bg-emerald-50/50'
+                                    ? 'bg-[#e6f4ff] text-[#1677ff] border-[#91caff] hover:bg-emerald-100'
+                                    : 'border-[#e6ebf1] text-slate-700 hover:text-[#1677ff] hover:bg-[#e6f4ff]/50'
                             }`}
                             title="Buka simulator WhatsApp untuk menguji balasan bot secara langsung"
                         >
@@ -1978,7 +1978,7 @@ export default function AutoReplyIndex({
                     >
                         <span className="relative flex h-2.5 w-2.5">
                             <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isMasterOn ? 'bg-emerald-400' : 'bg-amber-400'}`}></span>
-                            <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${isMasterOn ? 'bg-emerald-500' : 'bg-amber-500'}`}></span>
+                            <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${isMasterOn ? 'bg-[#e6f4ff]0' : 'bg-amber-500'}`}></span>
                         </span>
                         <Smartphone className="w-3.5 h-3.5 text-emerald-400" />
                         <span>Uji Simulator Bot</span>
