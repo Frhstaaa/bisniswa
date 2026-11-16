@@ -8,11 +8,9 @@ import {
     Smartphone,
     Plus,
     Battery,
-    Activity,
     Trash2,
     RefreshCw,
     QrCode,
-    Cpu,
     Search,
     Shield,
     ShieldCheck,
@@ -24,11 +22,9 @@ import {
     Settings2,
     X,
     Sparkles,
+    ChevronRight,
 } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../../Components/ui/card';
 import { Button } from '../../Components/ui/button';
-import { Badge } from '../../Components/ui/badge';
-import { Separator } from '../../Components/ui/separator';
 import CountUp from '../../Components/ui/CountUp';
 
 export default function DevicesIndex({ workspace, devices = [], subscription, plan, maxDevices = 1, canAddDevice = true }) {
@@ -127,32 +123,40 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
     });
 
     const connectedCount = (devices || []).filter((d) => d.status === 'connected').length;
-    const baileysCount = (devices || []).filter((d) => d.engine === 'baileys' || d.engine === 'wwebjs').length;
 
     return (
         <AppLayout title="Perangkat WhatsApp">
-            <Head title="Manajemen Perangkat WhatsApp — MARDIRA WA" />
+            <Head title="Manajemen Perangkat WhatsApp — SAPA BisnisWA" />
 
-            <div className="space-y-6 animate-fade-in-up">
-                {/* 1. TOP HEADER */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-6 pb-12 font-sans antialiased text-[#1f1f1f]">
+                {/* ================= 1. MANTIS BREADCRUMB & HEADER ================= */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-[#e6ebf1]">
                     <div>
-                        <div className="flex flex-wrap items-center gap-2">
-                            <h1 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight">
+                        <div className="flex items-center gap-1.5 text-xs text-[#8c8c8c] mb-1 font-medium">
+                            <Link href="/dashboard" className="hover:text-[#1677ff] transition-colors">
+                                Dashboard
+                            </Link>
+                            <ChevronRight className="size-3 text-[#bfbfbf]" />
+                            <span className="text-[#262626]">Workspace</span>
+                            <ChevronRight className="size-3 text-[#bfbfbf]" />
+                            <span className="text-[#1677ff] font-semibold">Perangkat WhatsApp</span>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-2.5">
+                            <h1 className="text-xl sm:text-2xl font-bold text-[#262626] tracking-tight">
                                 Manajemen Perangkat WhatsApp
                             </h1>
                             {isLimitReached ? (
-                                <Badge variant="amber" className="text-[9.5px] sm:text-[10px] px-2 py-0.5 font-bold">
+                                <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#fffbe6] text-[#faad14] border border-[#ffe58f]">
                                     KUOTA PENUH ({devices?.length || 0}/{maxAllowed})
-                                </Badge>
+                                </span>
                             ) : (
-                                <Badge variant="emerald" className="text-[9.5px] sm:text-[10px] px-2 py-0.5 font-bold">
+                                <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#f6ffed] text-[#52c41a] border border-[#b7eb8f]">
                                     {devices?.length || 0} / {maxAllowed} PERANGKAT
-                                </Badge>
+                                </span>
                             )}
                         </div>
-                        <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                            Tautkan nomor WhatsApp bisnis Anda menggunakan engine resmi <strong className="text-[#1e50ff]">BisnisWA Baileys</strong> (WebSocket Native - Ringan & Cepat).
+                        <p className="text-xs text-[#8c8c8c] mt-1">
+                            Tautkan nomor WhatsApp bisnis Anda menggunakan engine resmi <strong className="text-[#1677ff]">SAPA Baileys UltraSync</strong> (WebSocket Native - Ringan &amp; Cepat).
                         </p>
                     </div>
 
@@ -162,9 +166,9 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                                 variant="outline"
                                 size="sm"
                                 onClick={() => setIsQrModalOpen(true)}
-                                className="border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-900 text-xs font-semibold h-9 rounded-lg shadow-2xs gap-1.5 transition-colors cursor-pointer"
+                                className="h-9 px-3.5 border-[#ffe58f] bg-[#fffbe6] hover:bg-amber-100/70 text-[#d48806] text-xs font-semibold rounded-lg shadow-[0_2px_0_rgba(0,0,0,0.02)] gap-1.5 transition-colors cursor-pointer"
                             >
-                                <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                                <Sparkles className="size-3.5 text-[#faad14]" />
                                 <span>Batas Tercapai ({devices?.length || 0}/{maxAllowed}) — Upgrade</span>
                             </Button>
                         ) : (
@@ -172,9 +176,9 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                                 variant="default"
                                 size="sm"
                                 onClick={() => setIsQrModalOpen(true)}
-                                className="bg-[#1e50ff] hover:bg-[#153ec7] text-white text-xs font-semibold shadow-xs h-9 rounded-lg cursor-pointer"
+                                className="h-9 px-3.5 bg-[#1677ff] hover:bg-[#0958d9] text-white text-xs font-semibold shadow-[0_2px_0_rgba(0,0,0,0.043)] rounded-lg cursor-pointer flex items-center gap-1.5"
                             >
-                                <Plus className="w-3.5 h-3.5 mr-1 text-white" />
+                                <Plus className="size-3.5 text-white" />
                                 <span>Pindai QR Perangkat Baru</span>
                             </Button>
                         )}
@@ -183,145 +187,133 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
 
                 {/* LIMIT REACHED INFORMATIVE BANNER */}
                 {isLimitReached && (
-                    <div className="p-4 bg-amber-50/90 border border-amber-200/90 rounded-2xl text-xs text-amber-950 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs animate-fade-in">
+                    <div className="p-4 bg-[#fffbe6] border border-[#ffe58f] rounded-xl text-xs text-[#262626] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
                         <div className="flex items-start gap-3">
-                            <div className="p-2 rounded-xl bg-amber-100/80 text-amber-800 border border-amber-300/40 shrink-0 mt-0.5">
-                                <Shield className="w-4 h-4 text-amber-700" />
+                            <div className="p-2 rounded-lg bg-white text-[#faad14] border border-[#ffe58f] shrink-0 mt-0.5">
+                                <Shield className="size-4" />
                             </div>
                             <div>
-                                <p className="font-bold text-slate-900">
+                                <p className="font-bold text-[#262626]">
                                     Batas Maksimal Perangkat Tercapai ({devices?.length || 0} dari {maxAllowed} Perangkat)
                                 </p>
-                                <p className="text-slate-600 text-[11px] mt-0.5 leading-relaxed">
-                                    Paket langganan Anda saat ini (<strong>{plan?.name || 'Starter Lite'}</strong>) memiliki batas maksimal <strong>{maxAllowed} perangkat WhatsApp</strong>. Untuk menghubungkan nomor baru, silakan putuskan perangkat yang lama atau tingkatkan paket langganan Anda ke <strong>Enterprise Pro</strong> (hingga 5 nomor).
+                                <p className="text-[#595959] text-[11px] mt-0.5 leading-relaxed">
+                                    Paket langganan Anda saat ini (<strong>{plan?.name || 'Starter Lite'}</strong>) memiliki batas maksimal <strong>{maxAllowed} perangkat WhatsApp</strong>. Untuk menghubungkan nomor baru, silakan putuskan perangkat yang lama atau tingkatkan paket langganan Anda.
                                 </p>
                             </div>
                         </div>
                         <Link href="/subscriptions" className="shrink-0">
-                            <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold h-8 rounded-lg shadow-2xs">
+                            <Button size="sm" className="bg-[#1677ff] hover:bg-[#0958d9] text-white text-xs font-semibold h-8 px-3.5 rounded-lg shadow-[0_2px_0_rgba(0,0,0,0.043)] cursor-pointer">
                                 <span>Upgrade Paket →</span>
                             </Button>
                         </Link>
                     </div>
                 )}
 
-                {/* 2. THREE SUMMARY KPI STAT CARDS */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {/* ================= 2. MANTIS KPI STAT CARDS ================= */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                     <motion.div
-                        initial={{ opacity: 0, y: 12 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.18, delay: 0.02 }}
-                        whileHover={{ y: -3, transition: { duration: 0.12 } }}
+                        whileHover={{ y: -3, transition: { duration: 0.15 } }}
+                        className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md transition-all relative overflow-hidden"
                     >
-                        <Card className="h-full border-slate-200 shadow-xs hover:shadow-md transition-all">
-                            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                                <CardTitle className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                                    Sesi Terhubung Aktif
-                                </CardTitle>
-                                <div className="h-7 w-7 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
-                                    <Smartphone className="h-3.5 w-3.5" />
-                                </div>
-                            </CardHeader>
-                            <CardContent className="pt-0">
-                                <div className="text-2xl font-black text-slate-900 tracking-tight">
-                                    <CountUp to={connectedCount} /> <span className="text-xs font-normal text-slate-500">/ {devices?.length || 0} Perangkat</span>
-                                </div>
-                                <p className="text-[11px] text-slate-500 mt-1">
-                                    Siap memproses broadcast & pengiriman API
-                                </p>
-                            </CardContent>
-                        </Card>
+                        <div className="flex items-center justify-between mb-3">
+                            <span className="text-xs font-semibold uppercase tracking-wider text-[#8c8c8c]">
+                                Sesi Terhubung Aktif
+                            </span>
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#e6f4ff] text-[#1677ff] border border-[#91caff]">
+                                <Smartphone className="size-3 text-[#1677ff]" />
+                                <span>Online</span>
+                            </span>
+                        </div>
+                        <div className="text-2xl sm:text-3xl font-bold text-[#262626] tracking-tight font-mono mb-2">
+                            <CountUp to={connectedCount} /> <span className="text-sm font-normal text-[#8c8c8c] font-sans">/ {devices?.length || 0} Perangkat</span>
+                        </div>
+                        <p className="text-xs text-[#8c8c8c]">
+                            Siap memproses broadcast &amp; pengiriman API
+                        </p>
+                        <div className="absolute -bottom-6 -right-6 size-24 rounded-full bg-blue-50/60 pointer-events-none" />
                     </motion.div>
 
                     <motion.div
-                        initial={{ opacity: 0, y: 12 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.18, delay: 0.06 }}
-                        whileHover={{ y: -3, transition: { duration: 0.12 } }}
+                        whileHover={{ y: -3, transition: { duration: 0.15 } }}
+                        className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md transition-all relative overflow-hidden"
                     >
-                        <Card className="h-full border-slate-200 shadow-xs hover:shadow-md transition-all">
-                            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                                <CardTitle className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                                    BisnisWA Baileys Engine
-                                </CardTitle>
-                                <div className="h-7 w-7 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
-                                    <Zap className="h-3.5 w-3.5" />
-                                </div>
-                            </CardHeader>
-                            <CardContent className="pt-0">
-                                <div className="text-2xl font-black text-emerald-700 tracking-tight">
-                                    <CountUp to={connectedCount} /> Instance
-                                </div>
-                                <p className="text-[11px] text-slate-500 mt-1">
-                                    Engine Tunggal (WebSocket Native & Anti-Ban)
-                                </p>
-                            </CardContent>
-                        </Card>
+                        <div className="flex items-center justify-between mb-3">
+                            <span className="text-xs font-semibold uppercase tracking-wider text-[#8c8c8c]">
+                                SAPA Baileys Engine
+                            </span>
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#f6ffed] text-[#52c41a] border border-[#b7eb8f]">
+                                <Zap className="size-3 text-[#52c41a]" />
+                                <span>Ready</span>
+                            </span>
+                        </div>
+                        <div className="text-2xl sm:text-3xl font-bold text-[#1677ff] tracking-tight font-mono mb-2">
+                            <CountUp to={connectedCount} /> <span className="text-sm font-normal text-[#8c8c8c] font-sans">Instance</span>
+                        </div>
+                        <p className="text-xs text-[#8c8c8c]">
+                            Engine Tunggal (WebSocket Native &amp; Anti-Ban)
+                        </p>
+                        <div className="absolute -bottom-6 -right-6 size-24 rounded-full bg-emerald-50/60 pointer-events-none" />
                     </motion.div>
 
                     <motion.div
-                        initial={{ opacity: 0, y: 12 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.18, delay: 0.1 }}
-                        whileHover={{ y: -3, transition: { duration: 0.12 } }}
+                        whileHover={{ y: -3, transition: { duration: 0.15 } }}
+                        className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md transition-all relative overflow-hidden"
                     >
-                        <Card className="h-full border-slate-200 shadow-xs hover:shadow-md transition-all">
-                            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                                <CardTitle className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                                    Keamanan Enkripsi
-                                </CardTitle>
-                                <div className="h-7 w-7 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
-                                    <ShieldCheck className="h-3.5 w-3.5" />
-                                </div>
-                            </CardHeader>
-                            <CardContent className="pt-0">
-                                <div className="text-2xl font-black text-emerald-700 tracking-tight">
-                                    100% E2EE
-                                </div>
-                                <p className="text-[11px] text-slate-500 mt-1">
-                                    Protokol Resmi BisnisWA UltraSync (Bebas Delay)
-                                </p>
-                            </CardContent>
-                        </Card>
+                        <div className="flex items-center justify-between mb-3">
+                            <span className="text-xs font-semibold uppercase tracking-wider text-[#8c8c8c]">
+                                Keamanan Enkripsi
+                            </span>
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#f9f0ff] text-[#722ed1] border border-[#d3adf7]">
+                                <ShieldCheck className="size-3 text-[#722ed1]" />
+                                <span>Signal</span>
+                            </span>
+                        </div>
+                        <div className="text-2xl sm:text-3xl font-bold text-[#52c41a] tracking-tight font-mono mb-2">
+                            100% E2EE
+                        </div>
+                        <p className="text-xs text-[#8c8c8c]">
+                            Protokol Resmi UltraSync (Bebas Delay)
+                        </p>
+                        <div className="absolute -bottom-6 -right-6 size-24 rounded-full bg-purple-50/60 pointer-events-none" />
                     </motion.div>
                 </div>
 
-                {/* 3. TOOLBAR: SEARCH & FILTER TABS */}
-                <Card className="border-slate-200 shadow-xs">
-                    <CardContent className="p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-                        <div className="flex items-center gap-2">
-                            <span className="text-xs font-semibold text-emerald-800 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200 flex items-center gap-1.5">
-                                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                                BisnisWA UltraSync Engine ({devices?.length || 0} Perangkat)
-                            </span>
-                        </div>
+                {/* ================= 3. TOOLBAR: SEARCH & STATUS ================= */}
+                <div className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.03)] p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <div className="flex items-center gap-2">
+                        <span className="text-xs font-semibold text-[#52c41a] bg-[#f6ffed] px-3 py-1.5 rounded-lg border border-[#b7eb8f] flex items-center gap-2">
+                            <span className="size-2 rounded-full bg-[#52c41a] animate-pulse" />
+                            <span>SAPA UltraSync Engine ({devices?.length || 0} Perangkat)</span>
+                        </span>
+                    </div>
 
-                        <div className="relative w-full sm:w-72">
-                            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-                            <input
-                                type="text"
-                                placeholder="Cari nama atau nomor HP..."
-                                value={searchDevice}
-                                onChange={(e) => setSearchDevice(e.target.value)}
-                                className="w-full pl-9 pr-3.5 py-1.5 text-xs rounded-lg border border-slate-200 focus:border-emerald-600 focus:outline-none"
-                            />
-                        </div>
-                    </CardContent>
-                </Card>
+                    <div className="relative w-full sm:w-72">
+                        <Search className="size-4 text-[#8c8c8c] absolute left-3 top-2.5" />
+                        <input
+                            type="text"
+                            placeholder="Cari nama atau nomor HP..."
+                            value={searchDevice}
+                            onChange={(e) => setSearchDevice(e.target.value)}
+                            className="w-full pl-9 pr-3.5 py-2 text-xs rounded-lg border border-[#d9d9d9] text-[#262626] placeholder-[#bfbfbf] focus:border-[#1677ff] focus:ring-2 focus:ring-[#1677ff]/10 focus:outline-none transition-all"
+                        />
+                    </div>
+                </div>
 
-                {/* 4. DEVICE CARDS GRID */}
+                {/* ================= 4. DEVICE CARDS GRID ================= */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                     {filteredDevices.length === 0 ? (
-                        <div className="col-span-full py-12 text-center bg-white rounded-2xl border border-slate-200 space-y-3">
-                            <Smartphone className="w-8 h-8 text-slate-300 mx-auto" />
-                            <p className="text-xs text-slate-500 font-medium">Belum ada perangkat yang terdaftar.</p>
+                        <div className="col-span-full py-12 text-center bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-3">
+                            <div className="size-12 rounded-full bg-[#fafafb] border border-[#f0f0f0] flex items-center justify-center mx-auto text-[#bfbfbf]">
+                                <Smartphone className="size-6" />
+                            </div>
+                            <p className="text-xs text-[#595959] font-medium">Belum ada perangkat yang terdaftar.</p>
                             <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => setIsQrModalOpen(true)}
-                                className="text-xs font-bold rounded-lg"
+                                className="text-xs font-semibold rounded-lg border-[#91caff] text-[#1677ff] hover:bg-[#e6f4ff] cursor-pointer"
                             >
-                                <Plus className="w-3.5 h-3.5 mr-1" />
+                                <Plus className="size-3.5 mr-1" />
                                 Tautkan Nomor Baru
                             </Button>
                         </div>
@@ -329,174 +321,174 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                         filteredDevices.map((dev, idx) => (
                             <motion.div
                                 key={dev.id}
-                                initial={{ opacity: 0, y: 14 }}
+                                initial={{ opacity: 0, y: 12 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.18, delay: idx * 0.04 }}
                                 whileHover={{ y: -3, transition: { duration: 0.12 } }}
                                 className="h-full flex flex-col"
                             >
-                                <Card className="border-slate-200 shadow-xs hover:shadow-md transition-all flex flex-col justify-between h-full">
-                                <CardHeader className="p-5 pb-3 space-y-3">
-                                    <div className="flex items-center justify-between">
-                                        {dev.status === 'connected' ? (
-                                            <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold border border-emerald-200">
-                                                <span className="relative flex h-2 w-2">
-                                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600" />
-                                                </span>
-                                                <span>ONLINE</span>
-                                            </div>
-                                        ) : (
-                                            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 text-[11px] font-bold border border-amber-200">
-                                                <Clock className="w-3 h-3 text-amber-600 animate-spin [animation-duration:3s]" />
-                                                <span>WAITING QR</span>
-                                            </div>
-                                        )}
-
-                                        <Badge variant="outline" className="font-mono text-[10px] font-bold uppercase text-emerald-800 bg-emerald-50 border-emerald-200">
-                                            UltraSync Engine
-                                        </Badge>
-                                    </div>
-
-                                    <div>
-                                        <CardTitle className="text-base font-bold text-slate-900">{dev.name}</CardTitle>
-                                        <p className="text-xs font-mono font-semibold text-slate-600 mt-0.5">
-                                            {dev.phone_number || 'Belum ada nomor terikat'}
-                                        </p>
-                                    </div>
-                                </CardHeader>
-
-                                <CardContent className="p-5 pt-0 space-y-3">
-                                    {dev.status === 'qr_ready' && (
-                                        <div className="text-center p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2 animate-fade-in">
-                                            {dev.qr_code ? (
-                                                <>
-                                                    <img src={dev.qr_code} alt="QR Code WhatsApp" className="w-40 h-40 mx-auto rounded-lg object-contain bg-white p-2 border border-slate-200 shadow-2xs" />
-                                                    <div className="p-2 bg-emerald-50 rounded-lg border border-emerald-200 text-left space-y-0.5">
-                                                        <p className="text-[11px] font-bold text-emerald-950 flex items-center gap-1">
-                                                            <Smartphone className="w-3.5 h-3.5 text-emerald-700" />
-                                                            <span>Cara Pindai dengan WhatsApp di HP:</span>
-                                                        </p>
-                                                        <p className="text-[10.5px] text-emerald-900 leading-tight">
-                                                            Buka WhatsApp di HP &rarr; Menu Titik Tiga / Pengaturan &rarr; <strong>Perangkat Tertaut</strong> &rarr; <strong>Tautkan Perangkat</strong> &rarr; Pindai QR di atas.
-                                                        </p>
-                                                    </div>
-                                                </>
+                                <div className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md transition-all flex flex-col justify-between h-full">
+                                    <div className="p-5 pb-3 space-y-3">
+                                        <div className="flex items-center justify-between">
+                                            {dev.status === 'connected' ? (
+                                                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#f6ffed] text-[#52c41a] text-[11px] font-bold border border-[#b7eb8f]">
+                                                    <span className="relative flex h-2 w-2">
+                                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#52c41a] opacity-75" />
+                                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#52c41a]" />
+                                                    </span>
+                                                    <span>ONLINE</span>
+                                                </div>
                                             ) : (
-                                                <div className="py-6 space-y-2">
-                                                    <RefreshCw className="w-6 h-6 animate-spin text-emerald-600 mx-auto" />
-                                                    <p className="text-xs text-slate-600 font-medium">Menyiapkan QR Code dari WhatsApp Gateway...</p>
+                                                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#fffbe6] text-[#faad14] text-[11px] font-bold border border-[#ffe58f]">
+                                                    <Clock className="size-3 text-[#faad14] animate-spin [animation-duration:3s]" />
+                                                    <span>WAITING QR</span>
                                                 </div>
                                             )}
 
-                                            <div className="flex items-center justify-center gap-1.5 pt-1">
-                                                <Button
-                                                    size="sm"
-                                                    variant="outline"
-                                                    onClick={() => handleConnectSimulation(dev.id)}
-                                                    className="text-[10px] text-slate-600 h-7 px-2 hover:bg-slate-100"
-                                                    title="Hubungkan simulasi tanpa WhatsApp HP (mode uji coba)"
-                                                >
-                                                    <Zap className="w-3 h-3 mr-1 text-amber-500" />
-                                                    <span>Simulasi Cepat (Demo)</span>
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    <div className="grid grid-cols-2 gap-2 text-xs py-2 border-t border-slate-100 text-slate-600">
-                                        <div>
-                                            <div className="flex items-center justify-between">
-                                                <span className="text-[10px] text-slate-400 block">Daya Baterai</span>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => handleOpenEdit(dev)}
-                                                    className="text-[10px] text-emerald-600 hover:text-emerald-700 font-semibold underline"
-                                                >
-                                                    Ubah
-                                                </button>
-                                            </div>
-                                            <div className="flex items-center gap-1 font-mono font-bold text-slate-900 mt-0.5">
-                                                {dev.battery_level !== null && dev.battery_level !== undefined ? (
-                                                    <>
-                                                        <Battery className="w-3.5 h-3.5 text-emerald-600" />
-                                                        <span>{dev.battery_level}%</span>
-                                                    </>
-                                                ) : (
-                                                    <div className="flex items-center gap-1 text-[11px] font-sans font-semibold text-emerald-700" title="Protokol resmi WhatsApp Multi-Device: Berjalan mandiri di cloud tanpa menguras baterai smartphone.">
-                                                        <Zap className="w-3.5 h-3.5 text-emerald-600 fill-emerald-500 shrink-0" />
-                                                        <span className="truncate">Multi-Device</span>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <span className="text-[10px] text-slate-400 block">Koneksi Terakhir</span>
-                                            <span className="font-mono text-[11px] text-slate-700 block mt-0.5 font-medium" title={dev.last_connected_at ? new Date(dev.last_connected_at).toLocaleString('id-ID') : ''}>
-                                                {formatConnectionTime(dev.last_connected_at)}
+                                            <span className="font-mono text-[10px] font-semibold uppercase text-[#1677ff] bg-[#e6f4ff] border border-[#91caff] px-2 py-0.5 rounded">
+                                                UltraSync Engine
                                             </span>
+                                        </div>
+
+                                        <div>
+                                            <h3 className="text-base font-bold text-[#262626]">{dev.name}</h3>
+                                            <p className="text-xs font-mono font-semibold text-[#8c8c8c] mt-0.5">
+                                                {dev.phone_number || 'Belum ada nomor terikat'}
+                                            </p>
                                         </div>
                                     </div>
 
-                                    {/* Quick Shortcut Buttons for Online Device */}
-                                    {dev.status === 'connected' && (
-                                        <div className="flex items-center gap-1.5 pt-2 border-t border-slate-100">
-                                            <Link
-                                                href="/inbox"
-                                                className="flex-1 py-1.5 px-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-lg text-[11px] font-semibold flex items-center justify-center gap-1 transition-colors"
-                                            >
-                                                <MessageSquare className="w-3 h-3 text-emerald-600" />
-                                                <span>Live Chat</span>
-                                            </Link>
-                                            <Link
-                                                href="/broadcast"
-                                                className="flex-1 py-1.5 px-2 bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-lg text-[11px] font-semibold flex items-center justify-center gap-1 transition-colors"
-                                            >
-                                                <Send className="w-3 h-3 text-slate-600" />
-                                                <span>Broadcast</span>
-                                            </Link>
+                                    <div className="p-5 pt-0 space-y-3">
+                                        {dev.status === 'qr_ready' && (
+                                            <div className="text-center p-3 bg-[#fafafb] rounded-lg border border-[#f0f0f0] space-y-2 animate-fade-in">
+                                                {dev.qr_code ? (
+                                                    <>
+                                                        <img src={dev.qr_code} alt="QR Code WhatsApp" className="w-40 h-40 mx-auto rounded-lg object-contain bg-white p-2 border border-[#e6ebf1] shadow-2xs" />
+                                                        <div className="p-2.5 bg-[#e6f4ff] rounded-lg border border-[#91caff] text-left space-y-0.5">
+                                                            <p className="text-[11px] font-bold text-[#262626] flex items-center gap-1">
+                                                                <Smartphone className="size-3.5 text-[#1677ff]" />
+                                                                <span>Cara Pindai dengan WhatsApp di HP:</span>
+                                                            </p>
+                                                            <p className="text-[10.5px] text-[#595959] leading-tight">
+                                                                Buka WhatsApp di HP &rarr; Menu Titik Tiga / Pengaturan &rarr; <strong>Perangkat Tertaut</strong> &rarr; <strong>Tautkan Perangkat</strong> &rarr; Pindai QR di atas.
+                                                            </p>
+                                                        </div>
+                                                    </>
+                                                ) : (
+                                                    <div className="py-6 space-y-2">
+                                                        <RefreshCw className="size-6 animate-spin text-[#1677ff] mx-auto" />
+                                                        <p className="text-xs text-[#595959] font-medium">Menyiapkan QR Code dari WhatsApp Gateway...</p>
+                                                    </div>
+                                                )}
+
+                                                <div className="flex items-center justify-center gap-1.5 pt-1">
+                                                    <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        onClick={() => handleConnectSimulation(dev.id)}
+                                                        className="text-[10px] text-[#595959] border-[#d9d9d9] h-7 px-2.5 hover:bg-slate-100 rounded-md cursor-pointer"
+                                                        title="Hubungkan simulasi tanpa WhatsApp HP (mode uji coba)"
+                                                    >
+                                                        <Zap className="size-3 mr-1 text-[#faad14]" />
+                                                        <span>Simulasi Cepat (Demo)</span>
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        <div className="grid grid-cols-2 gap-2 text-xs py-2.5 border-t border-[#f0f0f0] text-[#595959]">
+                                            <div>
+                                                <div className="flex items-center justify-between">
+                                                    <span className="text-[10px] text-[#8c8c8c] block">Daya Baterai</span>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleOpenEdit(dev)}
+                                                        className="text-[10px] text-[#1677ff] hover:text-[#0958d9] font-semibold underline cursor-pointer"
+                                                    >
+                                                        Ubah
+                                                    </button>
+                                                </div>
+                                                <div className="flex items-center gap-1 font-mono font-bold text-[#262626] mt-0.5">
+                                                    {dev.battery_level !== null && dev.battery_level !== undefined ? (
+                                                        <>
+                                                            <Battery className="size-3.5 text-[#52c41a]" />
+                                                            <span>{dev.battery_level}%</span>
+                                                        </>
+                                                    ) : (
+                                                        <div className="flex items-center gap-1 text-[11px] font-sans font-semibold text-[#1677ff]" title="Protokol resmi WhatsApp Multi-Device: Berjalan mandiri di cloud tanpa menguras baterai smartphone.">
+                                                            <Zap className="size-3.5 text-[#1677ff] shrink-0" />
+                                                            <span className="truncate">Multi-Device</span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <span className="text-[10px] text-[#8c8c8c] block">Koneksi Terakhir</span>
+                                                <span className="font-mono text-[11px] text-[#262626] block mt-0.5 font-medium" title={dev.last_connected_at ? new Date(dev.last_connected_at).toLocaleString('id-ID') : ''}>
+                                                    {formatConnectionTime(dev.last_connected_at)}
+                                                </span>
+                                            </div>
                                         </div>
-                                    )}
-                                </CardContent>
 
-                                <CardFooter className="p-5 pt-0 flex items-center justify-between gap-2 border-t border-slate-100 pt-3">
-                                    <div className="flex items-center gap-2">
-                                        <Button
-                                            variant={dev.status === 'connected' ? 'outline' : 'default'}
-                                            size="sm"
-                                            onClick={() => handleRescanQr(dev.id)}
-                                            className={`h-8 text-xs font-semibold rounded-lg ${
-                                                dev.status === 'connected'
-                                                    ? 'border-emerald-300 text-emerald-800 hover:bg-emerald-50'
-                                                    : 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-2xs'
-                                            }`}
-                                            title="Pindai QR Code dengan nomor WhatsApp di HP Anda"
-                                        >
-                                            <QrCode className="w-3.5 h-3.5 mr-1" />
-                                            <span>{dev.status === 'connected' ? 'Pindai Ulang QR' : 'Pindai QR WhatsApp'}</span>
-                                        </Button>
-
+                                        {/* Quick Shortcut Buttons for Online Device */}
                                         {dev.status === 'connected' && (
-                                            <div className="hidden sm:flex items-center gap-1 text-[11px] text-emerald-700 font-semibold">
-                                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                                                <span>Aktif</span>
+                                            <div className="flex items-center gap-2 pt-2 border-t border-[#f0f0f0]">
+                                                <Link
+                                                    href="/inbox"
+                                                    className="flex-1 py-1.5 px-2 bg-[#e6f4ff] hover:bg-[#bae0ff] text-[#1677ff] border border-[#91caff] rounded-lg text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-colors"
+                                                >
+                                                    <MessageSquare className="size-3.5" />
+                                                    <span>Live Chat</span>
+                                                </Link>
+                                                <Link
+                                                    href="/broadcast"
+                                                    className="flex-1 py-1.5 px-2 bg-[#fafafb] hover:bg-[#f0f0f0] text-[#595959] border border-[#e6ebf1] rounded-lg text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-colors"
+                                                >
+                                                    <Send className="size-3.5" />
+                                                    <span>Broadcast</span>
+                                                </Link>
                                             </div>
                                         )}
                                     </div>
 
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => handleDelete(dev.id, dev.name)}
-                                        className="h-8 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg"
-                                        title="Putuskan dan hapus perangkat ini"
-                                    >
-                                        <Trash2 className="w-3.5 h-3.5 mr-1" />
-                                        <span>Putuskan</span>
-                                    </Button>
-                                </CardFooter>
-                            </Card>
-                        </motion.div>
+                                    <div className="px-5 py-3.5 flex items-center justify-between gap-2 border-t border-[#f0f0f0] bg-[#fafafb]/50 rounded-b-xl">
+                                        <div className="flex items-center gap-2">
+                                            <Button
+                                                variant={dev.status === 'connected' ? 'outline' : 'default'}
+                                                size="sm"
+                                                onClick={() => handleRescanQr(dev.id)}
+                                                className={`h-8 text-xs font-semibold rounded-lg cursor-pointer ${
+                                                    dev.status === 'connected'
+                                                        ? 'border-[#d9d9d9] bg-white text-[#595959] hover:text-[#1677ff] hover:border-[#1677ff]'
+                                                        : 'bg-[#1677ff] hover:bg-[#0958d9] text-white shadow-[0_2px_0_rgba(0,0,0,0.043)]'
+                                                }`}
+                                                title="Pindai QR Code dengan nomor WhatsApp di HP Anda"
+                                            >
+                                                <QrCode className="size-3.5 mr-1" />
+                                                <span>{dev.status === 'connected' ? 'Pindai Ulang QR' : 'Pindai QR WhatsApp'}</span>
+                                            </Button>
+
+                                            {dev.status === 'connected' && (
+                                                <div className="hidden sm:flex items-center gap-1 text-[11px] text-[#52c41a] font-semibold">
+                                                    <CheckCircle2 className="size-3.5 text-[#52c41a]" />
+                                                    <span>Aktif</span>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => handleDelete(dev.id, dev.name)}
+                                            className="h-8 text-xs text-[#ff4d4f] hover:text-[#cf1322] hover:bg-[#fff1f0] rounded-lg cursor-pointer"
+                                            title="Putuskan dan hapus perangkat ini"
+                                        >
+                                            <Trash2 className="size-3.5 mr-1" />
+                                            <span>Putuskan</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </motion.div>
                         ))
                     )}
                 </div>
@@ -520,133 +512,133 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                         onClick={() => setEditModalDevice(null)}
                     >
                         <div
-                            className="relative bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-200/80 overflow-hidden animate-in fade-in zoom-in-95 duration-150 my-auto text-left"
+                            className="relative bg-white rounded-xl max-w-md w-full shadow-2xl border border-[#e6ebf1] overflow-hidden animate-in fade-in zoom-in-95 duration-150 my-auto text-left"
                             onClick={(e) => e.stopPropagation()}
                         >
-                            <div className="p-5 border-b border-slate-100 flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                                <div className="p-2 rounded-lg bg-emerald-50 text-emerald-700">
-                                    <Settings2 className="w-4 h-4" />
+                            <div className="p-5 border-b border-[#f0f0f0] flex items-center justify-between">
+                                <div className="flex items-center gap-2.5">
+                                    <div className="size-8 rounded-lg bg-[#e6f4ff] text-[#1677ff] border border-[#91caff] flex items-center justify-center">
+                                        <Settings2 className="size-4" />
+                                    </div>
+                                    <div>
+                                        <h3 className="font-bold text-[#262626] text-sm">Sesuaikan Perangkat &amp; Baterai</h3>
+                                        <p className="text-xs text-[#8c8c8c] font-mono">{editModalDevice.phone_number || editModalDevice.name}</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h3 className="font-bold text-slate-900 text-sm">Sesuaikan Perangkat & Baterai</h3>
-                                    <p className="text-xs text-slate-500 font-mono">{editModalDevice.phone_number || editModalDevice.name}</p>
-                                </div>
-                            </div>
-                            <button
-                                type="button"
-                                onClick={() => setEditModalDevice(null)}
-                                className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
-                            >
-                                <X className="w-4 h-4" />
-                            </button>
-                        </div>
-
-                        <form onSubmit={handleSaveEdit} className="p-5 space-y-4">
-                            <div>
-                                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                                    Nama / Label Perangkat
-                                </label>
-                                <input
-                                    type="text"
-                                    value={editName}
-                                    onChange={(e) => setEditName(e.target.value)}
-                                    placeholder="Contoh: CS Utama Frahesta"
-                                    className="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs focus:border-emerald-600 focus:outline-none"
-                                    required
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                                    Mode Daya & Status Baterai
-                                </label>
-                                <div className="space-y-2">
-                                    <label className={`flex items-start gap-2.5 p-3 rounded-xl border cursor-pointer transition-all ${
-                                        editBatteryMode === 'cloud'
-                                            ? 'border-emerald-500 bg-emerald-50/50'
-                                            : 'border-slate-200 hover:bg-slate-50'
-                                    }`}>
-                                        <input
-                                            type="radio"
-                                            name="batteryMode"
-                                            value="cloud"
-                                            checked={editBatteryMode === 'cloud'}
-                                            onChange={() => setEditBatteryMode('cloud')}
-                                            className="mt-0.5 text-emerald-600 focus:ring-emerald-500"
-                                        />
-                                        <div>
-                                            <span className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-                                                <Zap className="w-3.5 h-3.5 text-emerald-600 fill-emerald-500" />
-                                                Multi-Device Cloud Mode (Resmi)
-                                            </span>
-                                            <p className="text-[11px] text-slate-500 mt-0.5">
-                                                Protokol resmi Meta: Gateway berjalan di server cloud 24/7 mandiri tanpa menguras baterai HP Anda & HP tidak harus selalu online.
-                                            </p>
-                                        </div>
-                                    </label>
-
-                                    <label className={`flex items-start gap-2.5 p-3 rounded-xl border cursor-pointer transition-all ${
-                                        editBatteryMode === 'custom'
-                                            ? 'border-emerald-500 bg-emerald-50/50'
-                                            : 'border-slate-200 hover:bg-slate-50'
-                                    }`}>
-                                        <input
-                                            type="radio"
-                                            name="batteryMode"
-                                            value="custom"
-                                            checked={editBatteryMode === 'custom'}
-                                            onChange={() => setEditBatteryMode('custom')}
-                                            className="mt-0.5 text-emerald-600 focus:ring-emerald-500"
-                                        />
-                                        <div className="flex-1">
-                                            <span className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-                                                <Battery className="w-3.5 h-3.5 text-slate-600" />
-                                                Kustom Persentase Baterai HP Fisik
-                                            </span>
-                                            <p className="text-[11px] text-slate-500 mt-0.5 mb-2">
-                                                Sesuaikan tampilan persentase daya baterai agar persis dengan kondisi smartphone fisik Anda.
-                                            </p>
-                                            {editBatteryMode === 'custom' && (
-                                                <div className="flex items-center gap-2 mt-1">
-                                                    <input
-                                                        type="number"
-                                                        min="0"
-                                                        max="100"
-                                                        value={editBatteryLevel}
-                                                        onChange={(e) => setEditBatteryLevel(e.target.value)}
-                                                        className="w-24 px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs font-mono font-bold text-slate-800 focus:border-emerald-600 focus:outline-none"
-                                                    />
-                                                    <span className="text-xs font-bold text-slate-600">%</span>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div className="pt-2 flex items-center justify-end gap-2 border-t border-slate-100">
-                                <Button
+                                <button
                                     type="button"
-                                    variant="outline"
-                                    size="sm"
                                     onClick={() => setEditModalDevice(null)}
-                                    className="text-xs"
+                                    className="p-1 rounded-lg text-[#8c8c8c] hover:text-[#262626] hover:bg-[#f5f5f5] transition-colors cursor-pointer"
                                 >
-                                    Batal
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    size="sm"
-                                    disabled={isSavingEdit}
-                                    className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-4"
-                                >
-                                    {isSavingEdit ? 'Menyimpan...' : 'Simpan Perubahan'}
-                                </Button>
+                                    <X className="size-4" />
+                                </button>
                             </div>
-                        </form>
+
+                            <form onSubmit={handleSaveEdit} className="p-5 space-y-4">
+                                <div>
+                                    <label className="block text-xs font-semibold text-[#595959] mb-1.5">
+                                        Nama / Label Perangkat
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={editName}
+                                        onChange={(e) => setEditName(e.target.value)}
+                                        placeholder="Contoh: CS Utama"
+                                        className="w-full px-3 py-2 rounded-lg border border-[#d9d9d9] text-xs text-[#262626] focus:border-[#1677ff] focus:ring-2 focus:ring-[#1677ff]/10 focus:outline-none"
+                                        required
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-semibold text-[#595959] mb-1.5">
+                                        Mode Daya &amp; Status Baterai
+                                    </label>
+                                    <div className="space-y-2">
+                                        <label className={`flex items-start gap-2.5 p-3 rounded-lg border cursor-pointer transition-all ${
+                                            editBatteryMode === 'cloud'
+                                                ? 'border-[#1677ff] bg-[#e6f4ff]/50'
+                                                : 'border-[#e6ebf1] hover:bg-[#fafafb]'
+                                        }`}>
+                                            <input
+                                                type="radio"
+                                                name="batteryMode"
+                                                value="cloud"
+                                                checked={editBatteryMode === 'cloud'}
+                                                onChange={() => setEditBatteryMode('cloud')}
+                                                className="mt-0.5 text-[#1677ff] focus:ring-[#1677ff]"
+                                            />
+                                            <div>
+                                                <span className="text-xs font-bold text-[#262626] flex items-center gap-1.5">
+                                                    <Zap className="size-3.5 text-[#1677ff]" />
+                                                    Multi-Device Cloud Mode (Resmi)
+                                                </span>
+                                                <p className="text-[11px] text-[#8c8c8c] mt-0.5">
+                                                    Protokol resmi Meta: Gateway berjalan di server cloud 24/7 mandiri tanpa menguras baterai HP Anda.
+                                                </p>
+                                            </div>
+                                        </label>
+
+                                        <label className={`flex items-start gap-2.5 p-3 rounded-lg border cursor-pointer transition-all ${
+                                            editBatteryMode === 'custom'
+                                                ? 'border-[#1677ff] bg-[#e6f4ff]/50'
+                                                : 'border-[#e6ebf1] hover:bg-[#fafafb]'
+                                        }`}>
+                                            <input
+                                                type="radio"
+                                                name="batteryMode"
+                                                value="custom"
+                                                checked={editBatteryMode === 'custom'}
+                                                onChange={() => setEditBatteryMode('custom')}
+                                                className="mt-0.5 text-[#1677ff] focus:ring-[#1677ff]"
+                                            />
+                                            <div className="flex-1">
+                                                <span className="text-xs font-bold text-[#262626] flex items-center gap-1.5">
+                                                    <Battery className="size-3.5 text-[#595959]" />
+                                                    Kustom Persentase Baterai HP Fisik
+                                                </span>
+                                                <p className="text-[11px] text-[#8c8c8c] mt-0.5 mb-2">
+                                                    Sesuaikan tampilan persentase daya baterai agar persis dengan kondisi smartphone fisik Anda.
+                                                </p>
+                                                {editBatteryMode === 'custom' && (
+                                                    <div className="flex items-center gap-2 mt-1">
+                                                        <input
+                                                            type="number"
+                                                            min="0"
+                                                            max="100"
+                                                            value={editBatteryLevel}
+                                                            onChange={(e) => setEditBatteryLevel(e.target.value)}
+                                                            className="w-24 px-2.5 py-1.5 rounded-lg border border-[#d9d9d9] text-xs font-mono font-bold text-[#262626] focus:border-[#1677ff] focus:outline-none"
+                                                        />
+                                                        <span className="text-xs font-bold text-[#595959]">%</span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div className="pt-3 flex items-center justify-end gap-2 border-t border-[#f0f0f0]">
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setEditModalDevice(null)}
+                                        className="text-xs border-[#d9d9d9] text-[#595959] rounded-lg cursor-pointer"
+                                    >
+                                        Batal
+                                    </Button>
+                                    <Button
+                                        type="submit"
+                                        size="sm"
+                                        disabled={isSavingEdit}
+                                        className="bg-[#1677ff] hover:bg-[#0958d9] text-white text-xs font-semibold px-4 rounded-lg shadow-[0_2px_0_rgba(0,0,0,0.043)] cursor-pointer"
+                                    >
+                                        {isSavingEdit ? 'Menyimpan...' : 'Simpan Perubahan'}
+                                    </Button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                </div>
                 </ModalPortal>
             )}
         </AppLayout>

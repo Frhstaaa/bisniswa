@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Head, router, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import AppLayout from '../../Layouts/AppLayout';
 import ModalPortal from '../../Components/ui/ModalPortal';
@@ -9,6 +9,7 @@ import { Badge } from '../../Components/ui/badge';
 import { Switch } from '../../Components/ui/switch';
 import {
     Bot,
+    ChevronRight,
     Sparkles,
     Plus,
     Trash2,
@@ -748,16 +749,25 @@ export default function AutoReplyIndex({
         <AppLayout title="Auto-Reply & AI Bot">
             <Head title="Auto-Reply & Asisten AI Gemini — MARDIRA WA" />
 
-            <div className="space-y-5 animate-fade-in-up pb-8">
-                {/* 1. TOP HEADER & UNIFIED ACTION BAR */}
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-2 border-b border-[#e6ebf1]">
+            <div className="space-y-6 pb-12 font-sans antialiased text-[#1f1f1f]">
+                {/* 1. MANTIS BREADCRUMB & TOP HEADER */}
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-3 border-b border-[#e6ebf1]">
                     <div>
+                        <div className="flex items-center gap-1.5 text-xs text-[#8c8c8c] mb-1 font-medium">
+                            <Link href="/dashboard" className="hover:text-[#1677ff] transition-colors">
+                                Dashboard
+                            </Link>
+                            <ChevronRight className="size-3 text-[#bfbfbf]" />
+                            <span className="text-[#262626]">Workspace</span>
+                            <ChevronRight className="size-3 text-[#bfbfbf]" />
+                            <span className="text-[#1677ff] font-semibold">Auto-Reply &amp; AI Bot</span>
+                        </div>
                         <div className="flex items-center gap-2.5 flex-wrap">
-                            <h1 className="text-lg sm:text-2xl font-black tracking-tight text-slate-900 flex items-center gap-2">
+                            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#262626] flex items-center gap-2">
                                 <Bot className="w-5 h-5 sm:w-6 sm:h-6 text-[#1677ff] shrink-0" />
-                                <span>Auto-Reply & Asisten AI Cerdas</span>
+                                <span>Auto-Reply &amp; Asisten AI Cerdas</span>
                             </h1>
-                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold border transition-colors ${
+                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[10px] sm:text-xs font-semibold border transition-colors ${
                                 isMasterOn
                                     ? 'bg-[#f6ffed] text-[#52c41a] border-[#b7eb8f]'
                                     : 'bg-[#fffbe6] text-[#faad14] border-[#ffe58f]'
@@ -767,8 +777,8 @@ export default function AutoReplyIndex({
                                 <span className="sm:hidden">{isMasterOn ? 'Aktif' : 'Nonaktif'}</span>
                             </span>
                         </div>
-                        <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl">
-                            Otomatisasi respon cerdas untuk UMKM & Bisnis Menengah: Kata Kunci, Jam Kerja, Menu Interaktif, dan Asisten AI Gemini.
+                        <p className="text-xs text-[#8c8c8c] mt-1 max-w-2xl">
+                            Otomatisasi respon cerdas untuk UMKM &amp; Bisnis Menengah: Kata Kunci, Jam Kerja, Menu Interaktif, dan Asisten AI Gemini.
                         </p>
                     </div>
 

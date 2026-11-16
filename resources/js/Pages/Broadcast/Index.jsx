@@ -4,41 +4,21 @@ import { motion, AnimatePresence } from 'framer-motion';
 import AppLayout from '../../Layouts/AppLayout';
 import {
     Send,
-    Sparkles,
     Shield,
-    Users,
-    Sliders,
-    CheckCircle2,
     RefreshCw,
-    Clock,
     Smartphone,
-    Activity,
-    Calendar,
     Paperclip,
     Pause,
     Play,
-    Tag,
     Download,
     AlertCircle,
     Plus,
     Image as ImageIcon,
     FileText,
-    UploadCloud,
     X,
+    ChevronRight,
 } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../../Components/ui/card';
 import { Button } from '../../Components/ui/button';
-import { Badge } from '../../Components/ui/badge';
-import { Separator } from '../../Components/ui/separator';
-import { Progress } from '../../Components/ui/progress';
-import {
-    Table,
-    TableHeader,
-    TableBody,
-    TableHead,
-    TableRow,
-    TableCell,
-} from '../../Components/ui/table';
 import CountUp from '../../Components/ui/CountUp';
 import { TableRowSkeleton } from '../../Components/ui/skeleton';
 
@@ -48,7 +28,7 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
     const [targetType, setTargetType] = useState('manual'); // 'manual' | 'group'
     const [groupId, setGroupId] = useState(groups && groups[0] ? groups[0].id : '');
     const [message, setMessage] = useState(
-        '{Halo|Hai|Selamat siang} Kak {{nama}},\n\nKami menginfokan jadwal registrasi dan pengumuman akademik terbaru!\nInformasi lengkap silakan akses portal kampus.\n\nLayanan resmi Politeknik Mardira Indonesia.'
+        '{Halo|Hai|Selamat siang} Kak {{nama}},\n\nKami menginfokan jadwal registrasi dan pengumuman akademik terbaru!\nInformasi lengkap silakan akses portal.\n\nLayanan resmi SAPA BisnisWA.'
     );
     const [recipientsRaw, setRecipientsRaw] = useState(
         '+6281234567890\n+6281987654321\n+6285223491823'
@@ -150,80 +130,90 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
 
     return (
         <AppLayout title="Broadcast Massal">
-            <Head title="Broadcast Massal & Anti-Ban — MARDIRA WA" />
+            <Head title="Broadcast Massal & Anti-Ban — SAPA BisnisWA" />
 
-            <div className="space-y-6 animate-fade-in-up">
-                {/* 1. TOP HEADER */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-6 pb-12 font-sans antialiased text-[#1f1f1f]">
+                {/* ================= 1. MANTIS BREADCRUMB & HEADER ================= */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-[#e6ebf1]">
                     <div>
-                        <div className="flex flex-wrap items-center gap-2">
-                            <h1 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight">
-                                Broadcast Massal & Anti-Ban Engine
-                            </h1>
-                            <Badge variant="outline" className="text-[9.5px] sm:text-[10px] px-2 py-0.5 font-semibold border-blue-200 bg-blue-50 text-[#1e50ff]">
-                                Anti-Ban Multi-Gateway
-                            </Badge>
+                        <div className="flex items-center gap-1.5 text-xs text-[#8c8c8c] mb-1 font-medium">
+                            <Link href="/dashboard" className="hover:text-[#1677ff] transition-colors">
+                                Dashboard
+                            </Link>
+                            <ChevronRight className="size-3 text-[#bfbfbf]" />
+                            <span className="text-[#262626]">Workspace</span>
+                            <ChevronRight className="size-3 text-[#bfbfbf]" />
+                            <span className="text-[#1677ff] font-semibold">Broadcast Massal</span>
                         </div>
-                        <p className="text-xs sm:text-sm text-slate-500 mt-1">
+                        <div className="flex flex-wrap items-center gap-2.5">
+                            <h1 className="text-xl sm:text-2xl font-bold text-[#262626] tracking-tight">
+                                Broadcast Massal &amp; Anti-Ban Engine
+                            </h1>
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#e6f4ff] text-[#1677ff] border border-[#91caff]">
+                                Anti-Ban Multi-Gateway
+                            </span>
+                        </div>
+                        <p className="text-xs text-[#8c8c8c] mt-1">
                             Kirim pesan broadcast ribuan nomor dengan proteksi spintax dinamis, segmentasi buku kontak, dan penjadwalan masa depan.
                         </p>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-                        <div className="px-2 sm:px-3 py-1 sm:py-1.5 rounded-md border border-slate-200 bg-white text-[10.5px] sm:text-xs font-medium text-slate-700 shadow-2xs flex items-center gap-1.5">
-                            <Shield className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#1e50ff]" />
+                    <div className="flex flex-wrap items-center gap-2">
+                        <div className="px-3 py-1.5 rounded-lg border border-[#d9d9d9] bg-white text-xs font-medium text-[#595959] shadow-[0_2px_0_rgba(0,0,0,0.02)] flex items-center gap-1.5">
+                            <Shield className="size-3.5 text-[#1677ff]" />
                             <span>Anti-Ban Throttle Aktif</span>
                         </div>
                         {subscription && (
-                            <div className="px-2 sm:px-3 py-1 sm:py-1.5 rounded-md border border-blue-200 bg-blue-50 text-[10.5px] sm:text-xs font-semibold text-blue-900 shadow-2xs flex items-center gap-1.5">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#1e50ff]" />
-                                <span>Sisa Kuota: <strong className="font-mono text-blue-950"><CountUp to={subscription.remaining_message_quota} /></strong> Pesan</span>
+                            <div className="px-3 py-1.5 rounded-lg border border-[#91caff] bg-[#e6f4ff] text-xs font-semibold text-[#1677ff] shadow-[0_2px_0_rgba(0,0,0,0.02)] flex items-center gap-1.5">
+                                <span className="size-1.5 rounded-full bg-[#1677ff]" />
+                                <span>Sisa Kuota: <strong className="font-mono"><CountUp to={subscription.remaining_message_quota} /></strong> Pesan</span>
                             </div>
                         )}
                     </div>
                 </div>
 
-                {/* 2. BROADCAST CREATOR CARD */}
+                {/* ================= 2. WARNING IF NO DEVICES ================= */}
                 {(!devices || devices.length === 0) && (
-                    <div className="p-4 rounded-xl bg-amber-50/90 border border-amber-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-amber-950">
+                    <div className="p-4 rounded-xl bg-[#fffbe6] border border-[#ffe58f] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-[#262626]">
                         <div className="flex items-start gap-3">
-                            <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                            <AlertCircle className="size-5 text-[#faad14] shrink-0 mt-0.5" />
                             <div>
-                                <p className="font-bold text-amber-900">Belum ada gateway WhatsApp yang aktif</p>
-                                <p className="text-amber-700 text-[11px] mt-0.5">Tautkan nomor WhatsApp Anda di menu Perangkat terlebih dahulu untuk dapat mengirim campaign broadcast.</p>
+                                <p className="font-bold text-[#262626]">Belum ada gateway WhatsApp yang aktif</p>
+                                <p className="text-[#595959] text-[11px] mt-0.5">Tautkan nomor WhatsApp Anda di menu Perangkat terlebih dahulu untuk dapat mengirim campaign broadcast.</p>
                             </div>
                         </div>
                         <Link
                             href="/devices"
-                            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold shrink-0 shadow-xs transition-colors"
+                            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#1677ff] hover:bg-[#0958d9] text-white rounded-lg text-xs font-semibold shrink-0 shadow-[0_2px_0_rgba(0,0,0,0.043)] transition-colors"
                         >
-                            <Plus className="w-3.5 h-3.5" />
+                            <Plus className="size-3.5" />
                             <span>Tautkan Perangkat Sekarang</span>
                         </Link>
                     </div>
                 )}
 
-                <Card className="border-slate-200 shadow-xs">
-                    <CardHeader className="pb-4 border-b border-slate-100">
-                        <CardTitle className="text-sm font-bold text-slate-900">
+                {/* ================= 3. BROADCAST CREATOR CARD ================= */}
+                <div className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.03)] overflow-hidden">
+                    <div className="p-5 pb-4 border-b border-[#f0f0f0]">
+                        <h3 className="text-sm font-bold text-[#262626]">
                             Konfigurasi Kampanye Broadcast Baru
-                        </CardTitle>
-                        <CardDescription className="text-xs text-slate-500">
+                        </h3>
+                        <p className="text-xs text-[#8c8c8c] mt-0.5">
                             Atur segmentasi target audiens, waktu pengiriman, pesan spintax, dan lampiran media
-                        </CardDescription>
-                    </CardHeader>
+                        </p>
+                    </div>
 
-                    <CardContent className="p-6">
+                    <div className="p-6">
                         <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             {/* Left Column: Form Settings */}
                             <div className="space-y-4 text-xs">
                                 <div>
-                                    <label className="block font-medium text-slate-700 mb-1.5">Nama Kampanye</label>
+                                    <label className="block font-semibold text-[#595959] mb-1.5">Nama Kampanye</label>
                                     <input
                                         type="text"
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
-                                        className="w-full px-3 py-2 rounded-md border border-slate-200 text-xs focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600"
+                                        className="w-full px-3 py-2 rounded-lg border border-[#d9d9d9] text-xs text-[#262626] focus:border-[#1677ff] focus:ring-2 focus:ring-[#1677ff]/10 focus:outline-none transition-all"
                                         required
                                     />
                                 </div>
@@ -231,15 +221,15 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                     <div>
                                         <div className="flex items-center justify-between mb-1.5">
-                                            <label className="font-medium text-slate-700">Pilih Gateway WhatsApp</label>
-                                            <Link href="/devices" className="text-[11px] text-emerald-700 font-semibold hover:underline">
+                                            <label className="font-semibold text-[#595959]">Pilih Gateway WhatsApp</label>
+                                            <Link href="/devices" className="text-[11px] text-[#1677ff] font-semibold hover:underline">
                                                 + Kelola Perangkat
                                             </Link>
                                         </div>
                                         <select
                                             value={deviceId}
                                             onChange={(e) => setDeviceId(e.target.value)}
-                                            className="w-full h-9 px-3 py-1.5 rounded-md border border-slate-200 text-xs focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600 bg-white"
+                                            className="w-full h-9 px-3 py-1.5 rounded-lg border border-[#d9d9d9] text-xs text-[#262626] focus:border-[#1677ff] focus:outline-none bg-white"
                                             required
                                         >
                                             {devices.map((d) => (
@@ -253,16 +243,16 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                             const sel = (devices || []).find((d) => String(d.id) === String(deviceId));
                                             if (sel && sel.status !== 'connected') {
                                                 return (
-                                                    <div className="mt-2 p-2.5 bg-amber-50/90 border border-amber-200 rounded-lg flex items-start gap-2 text-amber-900 text-[11px] leading-tight animate-fade-in">
-                                                        <AlertCircle className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
+                                                    <div className="mt-2 p-2.5 bg-[#fffbe6] border border-[#ffe58f] rounded-lg flex items-start gap-2 text-[#262626] text-[11px] leading-tight animate-fade-in">
+                                                        <AlertCircle className="size-3.5 text-[#faad14] shrink-0 mt-0.5" />
                                                         <div>
                                                             <span className="font-bold">Perangkat ini belum terhubung ke WhatsApp.</span>
-                                                            <p className="mt-0.5 text-slate-600">
+                                                            <p className="mt-0.5 text-[#595959]">
                                                                 Silakan buka menu{' '}
-                                                                <Link href="/devices" className="font-semibold text-emerald-700 underline hover:text-emerald-900">
+                                                                <Link href="/devices" className="font-semibold text-[#1677ff] underline hover:text-[#0958d9]">
                                                                     Perangkat WhatsApp
                                                                 </Link>{' '}
-                                                                lalu scan QR code dari HP Anda agar pesan benar-benar terkirim.
+                                                                lalu scan QR code dari HP Anda.
                                                             </p>
                                                         </div>
                                                     </div>
@@ -273,13 +263,13 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                     </div>
 
                                     <div>
-                                        <label className="block font-medium text-slate-700 mb-1.5">Target Audiens</label>
-                                        <div className="grid grid-cols-2 gap-1 bg-slate-100 p-0.5 rounded-md h-9 items-center">
+                                        <label className="block font-semibold text-[#595959] mb-1.5">Target Audiens</label>
+                                        <div className="grid grid-cols-2 gap-1 bg-[#f5f5f5] p-0.5 rounded-lg border border-[#e8e8e8] h-9 items-center">
                                             <button
                                                 type="button"
                                                 onClick={() => setTargetType('manual')}
-                                                className={`h-7 text-xs font-medium rounded transition-all ${
-                                                    targetType === 'manual' ? 'bg-white text-emerald-800 font-semibold shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                                                className={`h-7 text-xs font-semibold rounded-md transition-all cursor-pointer ${
+                                                    targetType === 'manual' ? 'bg-white text-[#1677ff] shadow-xs' : 'text-[#595959] hover:text-[#262626]'
                                                 }`}
                                             >
                                                 Manual
@@ -287,8 +277,8 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                             <button
                                                 type="button"
                                                 onClick={() => setTargetType('group')}
-                                                className={`h-7 text-xs font-medium rounded transition-all ${
-                                                    targetType === 'group' ? 'bg-white text-emerald-800 font-semibold shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                                                className={`h-7 text-xs font-semibold rounded-md transition-all cursor-pointer ${
+                                                    targetType === 'group' ? 'bg-white text-[#1677ff] shadow-xs' : 'text-[#595959] hover:text-[#262626]'
                                                 }`}
                                             >
                                                 Grup CRM
@@ -299,11 +289,11 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
 
                                 {targetType === 'group' ? (
                                     <div>
-                                        <label className="block font-medium text-slate-700 mb-1.5">Pilih Grup Kontak:</label>
+                                        <label className="block font-semibold text-[#595959] mb-1.5">Pilih Grup Kontak:</label>
                                         <select
                                             value={groupId}
                                             onChange={(e) => setGroupId(e.target.value)}
-                                            className="w-full h-9 px-3 py-1.5 rounded-md border border-slate-200 text-xs focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600 bg-white"
+                                            className="w-full h-9 px-3 py-1.5 rounded-lg border border-[#d9d9d9] text-xs text-[#262626] focus:border-[#1677ff] focus:outline-none bg-white"
                                         >
                                             {groups.length === 0 ? (
                                                 <option value="">Belum ada grup kontak (buat di menu Buku Kontak)</option>
@@ -319,16 +309,16 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                 ) : (
                                     <div>
                                         <div className="flex justify-between items-center mb-1.5">
-                                            <label className="font-medium text-slate-700">Daftar Nomor Penerima</label>
+                                            <label className="font-semibold text-[#595959]">Daftar Nomor Penerima</label>
                                             <div className="flex items-center gap-2">
                                                 <button
                                                     type="button"
                                                     onClick={() => setRecipientsRaw('+6281234567890\n+6281987654321\n+6285223491823')}
-                                                    className="text-[11px] text-emerald-700 font-semibold hover:underline"
+                                                    className="text-[11px] text-[#1677ff] font-semibold hover:underline cursor-pointer"
                                                 >
                                                     + Gunakan Nomor Demo
                                                 </button>
-                                                <span className="text-[11px] text-slate-400">| Baris baru</span>
+                                                <span className="text-[11px] text-[#8c8c8c]">| Baris baru</span>
                                             </div>
                                         </div>
                                         <textarea
@@ -336,27 +326,27 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                             value={recipientsRaw}
                                             onChange={(e) => setRecipientsRaw(e.target.value)}
                                             placeholder="+6281234567890&#10;+6281987654321"
-                                            className="w-full p-2.5 rounded-md border border-slate-200 font-mono text-xs focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600"
+                                            className="w-full p-2.5 rounded-lg border border-[#d9d9d9] font-mono text-xs text-[#262626] focus:border-[#1677ff] focus:ring-2 focus:ring-[#1677ff]/10 focus:outline-none"
                                             required
                                         />
                                     </div>
                                 )}
 
-                                {/* Media Attachment (Direct Upload Foto / PDF vs Link URL) */}
+                                {/* Media Attachment */}
                                 <div className="space-y-2">
                                     <div className="flex items-center justify-between">
-                                        <label className="font-medium text-slate-700 flex items-center gap-1.5">
-                                            <Paperclip className="w-3.5 h-3.5 text-slate-400" />
+                                        <label className="font-semibold text-[#595959] flex items-center gap-1.5">
+                                            <Paperclip className="size-3.5 text-[#8c8c8c]" />
                                             <span>Lampiran Media / Dokumen (Opsional)</span>
                                         </label>
-                                        <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-[11px]">
+                                        <div className="flex items-center bg-[#f5f5f5] p-0.5 rounded-lg border border-[#e8e8e8] text-[11px]">
                                             <button
                                                 type="button"
                                                 onClick={() => setMediaSource('upload')}
-                                                className={`px-2.5 py-1 rounded-md font-medium transition-all cursor-pointer ${
+                                                className={`px-2.5 py-1 rounded-md font-semibold transition-all cursor-pointer ${
                                                     mediaSource === 'upload'
-                                                        ? 'bg-white text-emerald-700 font-semibold shadow-2xs'
-                                                        : 'text-slate-500 hover:text-slate-800'
+                                                        ? 'bg-white text-[#1677ff] shadow-xs'
+                                                        : 'text-[#8c8c8c] hover:text-[#262626]'
                                                 }`}
                                             >
                                                 📁 Upload File
@@ -364,10 +354,10 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                             <button
                                                 type="button"
                                                 onClick={() => setMediaSource('url')}
-                                                className={`px-2.5 py-1 rounded-md font-medium transition-all cursor-pointer ${
+                                                className={`px-2.5 py-1 rounded-md font-semibold transition-all cursor-pointer ${
                                                     mediaSource === 'url'
-                                                        ? 'bg-white text-emerald-700 font-semibold shadow-2xs'
-                                                        : 'text-slate-500 hover:text-slate-800'
+                                                        ? 'bg-white text-[#1677ff] shadow-xs'
+                                                        : 'text-[#8c8c8c] hover:text-[#262626]'
                                                 }`}
                                             >
                                                 🔗 Link URL
@@ -385,8 +375,8 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                                     onClick={() => fileInputRef.current?.click()}
                                                     className={`border-2 border-dashed rounded-xl p-4 text-center cursor-pointer transition-all ${
                                                         dragActive
-                                                            ? 'border-emerald-500 bg-emerald-50/60'
-                                                            : 'border-slate-200 hover:border-emerald-400 hover:bg-slate-50/60 bg-white'
+                                                            ? 'border-[#1677ff] bg-[#e6f4ff]/50'
+                                                            : 'border-[#d9d9d9] hover:border-[#1677ff] hover:bg-[#fafafb] bg-white'
                                                     }`}
                                                 >
                                                     <input
@@ -397,38 +387,38 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                                         className="hidden"
                                                     />
                                                     <div className="flex justify-center items-center gap-2 mb-1.5">
-                                                        <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
-                                                            <ImageIcon className="w-4 h-4" />
+                                                        <div className="size-8 rounded-lg bg-[#e6f4ff] text-[#1677ff] flex items-center justify-center">
+                                                            <ImageIcon className="size-4" />
                                                         </div>
-                                                        <div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center">
-                                                            <FileText className="w-4 h-4" />
+                                                        <div className="size-8 rounded-lg bg-[#fff1f0] text-[#ff4d4f] flex items-center justify-center">
+                                                            <FileText className="size-4" />
                                                         </div>
                                                     </div>
-                                                    <p className="text-xs font-semibold text-slate-700">
-                                                        Pilih atau seret file <span className="text-blue-600">Foto (JPG/PNG)</span> atau <span className="text-rose-600">Dokumen PDF</span>
+                                                    <p className="text-xs font-semibold text-[#262626]">
+                                                        Pilih atau seret file <span className="text-[#1677ff]">Foto (JPG/PNG)</span> atau <span className="text-[#ff4d4f]">Dokumen PDF</span>
                                                     </p>
-                                                    <p className="text-[10.5px] text-slate-400 mt-0.5">
+                                                    <p className="text-[10.5px] text-[#8c8c8c] mt-0.5">
                                                         Maksimal 25 MB • Otomatis dikirim bersama teks pesan
                                                     </p>
                                                 </div>
                                             ) : (
-                                                <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between gap-3">
+                                                <div className="p-3 bg-[#fafafb] rounded-lg border border-[#e6ebf1] flex items-center justify-between gap-3">
                                                     <div className="flex items-center gap-3 overflow-hidden">
                                                         {mediaType === 'image' && mediaPreview ? (
                                                             <img
                                                                 src={mediaPreview}
                                                                 alt="Preview"
-                                                                className="w-12 h-12 object-cover rounded-lg border border-slate-200 shadow-2xs shrink-0"
+                                                                className="size-12 object-cover rounded-lg border border-[#e6ebf1] shrink-0"
                                                             />
                                                         ) : (
-                                                            <div className="w-12 h-12 rounded-lg bg-rose-100 text-rose-700 flex flex-col items-center justify-center shrink-0 border border-rose-200 font-bold text-[9px]">
-                                                                <FileText className="w-5 h-5 mb-0.5 text-rose-600" />
+                                                            <div className="size-12 rounded-lg bg-[#fff1f0] text-[#ff4d4f] flex flex-col items-center justify-center shrink-0 border border-[#ffccc7] font-bold text-[9px]">
+                                                                <FileText className="size-5 mb-0.5" />
                                                                 <span>PDF</span>
                                                             </div>
                                                         )}
                                                         <div className="min-w-0">
-                                                            <p className="font-semibold text-slate-800 text-xs truncate">{mediaFile.name}</p>
-                                                            <p className="text-[10px] text-slate-400 font-mono">
+                                                            <p className="font-semibold text-[#262626] text-xs truncate">{mediaFile.name}</p>
+                                                            <p className="text-[10px] text-[#8c8c8c] font-mono">
                                                                 {(mediaFile.size / (1024 * 1024)).toFixed(2)} MB • {mediaType === 'image' ? 'Foto / Gambar' : 'Dokumen PDF'}
                                                             </p>
                                                         </div>
@@ -436,10 +426,10 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                                     <button
                                                         type="button"
                                                         onClick={removeMediaFile}
-                                                        className="text-slate-400 hover:text-rose-600 p-1.5 rounded-lg hover:bg-rose-50 transition-colors cursor-pointer"
+                                                        className="text-[#8c8c8c] hover:text-[#ff4d4f] p-1.5 rounded-lg hover:bg-[#fff1f0] transition-colors cursor-pointer"
                                                         title="Hapus lampiran"
                                                     >
-                                                        <X className="w-4 h-4" />
+                                                        <X className="size-4" />
                                                     </button>
                                                 </div>
                                             )}
@@ -450,10 +440,10 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                                 type="url"
                                                 value={mediaUrl}
                                                 onChange={(e) => setMediaUrl(e.target.value)}
-                                                placeholder="https://storage.kampus.ac.id/promo-brosur.pdf"
-                                                className="w-full px-3 py-2 rounded-md border border-slate-200 text-xs font-mono focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600"
+                                                placeholder="https://storage.sapa.id/promo-brosur.pdf"
+                                                className="w-full px-3 py-2 rounded-lg border border-[#d9d9d9] text-xs font-mono text-[#262626] focus:border-[#1677ff] focus:outline-none"
                                             />
-                                            <p className="text-[10px] text-slate-400 mt-1">
+                                            <p className="text-[10px] text-[#8c8c8c] mt-1">
                                                 Tautan publik direct link file gambar (JPG/PNG) atau PDF.
                                             </p>
                                         </div>
@@ -462,15 +452,15 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
 
                                 {/* Scheduling Option */}
                                 <div>
-                                    <label className="block font-medium text-slate-700 mb-1.5">Waktu Pelaksanaan Broadcast</label>
+                                    <label className="block font-semibold text-[#595959] mb-1.5">Waktu Pelaksanaan Broadcast</label>
                                     <div className="grid grid-cols-2 gap-2 mb-2">
                                         <button
                                             type="button"
                                             onClick={() => setScheduleOption('now')}
-                                            className={`h-9 rounded-md border text-xs font-medium text-center transition-all ${
+                                            className={`h-9 rounded-lg border text-xs font-semibold text-center transition-all cursor-pointer ${
                                                 scheduleOption === 'now'
-                                                    ? 'border-emerald-600 bg-emerald-50/80 text-emerald-900 font-semibold shadow-2xs'
-                                                    : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                                                    ? 'border-[#1677ff] bg-[#e6f4ff] text-[#1677ff] shadow-2xs'
+                                                    : 'border-[#d9d9d9] text-[#595959] hover:bg-[#fafafb]'
                                             }`}
                                         >
                                             ⚡ Kirim Sekarang
@@ -478,10 +468,10 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                         <button
                                             type="button"
                                             onClick={() => setScheduleOption('scheduled')}
-                                            className={`h-9 rounded-md border text-xs font-medium text-center transition-all ${
+                                            className={`h-9 rounded-lg border text-xs font-semibold text-center transition-all cursor-pointer ${
                                                 scheduleOption === 'scheduled'
-                                                    ? 'border-emerald-600 bg-emerald-50/80 text-emerald-900 font-semibold shadow-2xs'
-                                                    : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                                                    ? 'border-[#1677ff] bg-[#e6f4ff] text-[#1677ff] shadow-2xs'
+                                                    : 'border-[#d9d9d9] text-[#595959] hover:bg-[#fafafb]'
                                             }`}
                                         >
                                             📅 Jadwalkan Nanti
@@ -494,10 +484,10 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                                 type="datetime-local"
                                                 value={scheduledAt}
                                                 onChange={(e) => setScheduledAt(e.target.value)}
-                                                className="w-full px-3 py-2 rounded-md border border-slate-200 text-xs focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600"
+                                                className="w-full px-3 py-2 rounded-lg border border-[#d9d9d9] text-xs text-[#262626] focus:border-[#1677ff] focus:outline-none"
                                                 required
                                             />
-                                            <p className="text-[10px] text-slate-400 mt-1">
+                                            <p className="text-[10px] text-[#8c8c8c] mt-1">
                                                 Sistem antrean akan otomatis memproses pengiriman pada waktu yang ditentukan.
                                             </p>
                                         </div>
@@ -505,32 +495,32 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                 </div>
 
                                 {/* Anti-Ban Jitter Slider */}
-                                <div className="p-3 bg-slate-50 rounded-md border border-slate-200 space-y-2">
+                                <div className="p-3.5 bg-[#fafafb] rounded-lg border border-[#e6ebf1] space-y-2">
                                     <div className="flex justify-between items-center">
-                                        <span className="font-medium text-slate-700">Jeda Waktu Acak Antar Pesan</span>
-                                        <span className="font-mono font-bold text-emerald-700">{minDelay}s - {maxDelay}s</span>
+                                        <span className="font-semibold text-[#595959]">Jeda Waktu Acak Antar Pesan</span>
+                                        <span className="font-mono font-bold text-[#1677ff]">{minDelay}s - {maxDelay}s</span>
                                     </div>
                                     <div className="grid grid-cols-2 gap-3">
                                         <div>
-                                            <span className="text-[10px] text-slate-500">Min Delay: {minDelay} detik</span>
+                                            <span className="text-[10px] text-[#8c8c8c]">Min Delay: {minDelay} detik</span>
                                             <input
                                                 type="range"
                                                 min="3"
                                                 max="30"
                                                 value={minDelay}
                                                 onChange={(e) => setMinDelay(e.target.value)}
-                                                className="w-full accent-emerald-600"
+                                                className="w-full accent-[#1677ff]"
                                             />
                                         </div>
                                         <div>
-                                            <span className="text-[10px] text-slate-500">Max Delay: {maxDelay} detik</span>
+                                            <span className="text-[10px] text-[#8c8c8c]">Max Delay: {maxDelay} detik</span>
                                             <input
                                                 type="range"
                                                 min="10"
                                                 max="60"
                                                 value={maxDelay}
                                                 onChange={(e) => setMaxDelay(e.target.value)}
-                                                className="w-full accent-emerald-600"
+                                                className="w-full accent-[#1677ff]"
                                             />
                                         </div>
                                     </div>
@@ -539,16 +529,16 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
 
                             {/* Right Column: Message & Spintax Simulator */}
                             <div className="space-y-4 text-xs flex flex-col justify-between">
-                                <div className="space-y-2">
+                                <div className="space-y-2.5">
                                     <div className="flex justify-between items-center">
-                                        <label className="font-medium text-slate-700">Template Pesan (Mendukung Spintax)</label>
-                                        <span className="text-[11px] text-slate-400">Gunakan {'{opsi1|opsi2}'}</span>
+                                        <label className="font-semibold text-[#595959]">Template Pesan (Mendukung Spintax)</label>
+                                        <span className="text-[11px] text-[#8c8c8c]">Gunakan {'{opsi1|opsi2}'}</span>
                                     </div>
                                     <textarea
                                         rows="6"
                                         value={message}
                                         onChange={(e) => setMessage(e.target.value)}
-                                        className="w-full p-3 rounded-md border border-slate-200 font-sans text-xs focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600 leading-relaxed"
+                                        className="w-full p-3 rounded-lg border border-[#d9d9d9] font-sans text-xs text-[#262626] focus:border-[#1677ff] focus:ring-2 focus:ring-[#1677ff]/10 focus:outline-none leading-relaxed"
                                         required
                                     />
 
@@ -556,12 +546,12 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                         <button
                                             type="button"
                                             onClick={generatePreview}
-                                            className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 hover:text-emerald-800 hover:underline"
+                                            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#1677ff] hover:text-[#0958d9] hover:underline cursor-pointer"
                                         >
-                                            <RefreshCw className="w-3.5 h-3.5" />
+                                            <RefreshCw className="size-3.5" />
                                             <span>Simulasikan Variasi Spintax</span>
                                         </button>
-                                        <span className="text-[10px] text-slate-400 font-mono">Placeholder: {'{{nama}}'}, {'{{nomor}}'}</span>
+                                        <span className="text-[10px] text-[#8c8c8c] font-mono">Placeholder: {'{{nama}}'}, {'{{nomor}}'}</span>
                                     </div>
 
                                     <AnimatePresence mode="wait">
@@ -572,9 +562,9 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                                 animate={{ opacity: 1, y: 0 }}
                                                 exit={{ opacity: 0, y: -6 }}
                                                 transition={{ duration: 0.15 }}
-                                                className="p-3 bg-emerald-50/70 rounded-md border border-emerald-200 text-xs text-slate-800 leading-relaxed font-mono"
+                                                className="p-3 bg-[#e6f4ff]/70 rounded-lg border border-[#91caff] text-xs text-[#262626] leading-relaxed font-mono"
                                             >
-                                                <strong className="block text-[10px] uppercase font-bold text-emerald-800 mb-1">
+                                                <strong className="block text-[10px] uppercase font-bold text-[#1677ff] mb-1">
                                                     Hasil Acak Penerima:
                                                 </strong>
                                                 {previewText}
@@ -583,97 +573,93 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                     </AnimatePresence>
 
                                     {/* Live WhatsApp Bubble Preview */}
-                                    <div className="p-3 bg-slate-900 rounded-xl border border-slate-800 text-white space-y-2 mt-2">
-                                        <div className="flex items-center justify-between text-[11px] text-slate-400 border-b border-slate-800 pb-1.5">
-                                            <span className="font-semibold text-emerald-400 flex items-center gap-1.5">
-                                                <Smartphone className="w-3.5 h-3.5" />
+                                    <div className="p-3.5 bg-[#262626] rounded-xl border border-[#434343] text-white space-y-2 mt-2">
+                                        <div className="flex items-center justify-between text-[11px] text-[#8c8c8c] border-b border-[#434343] pb-2">
+                                            <span className="font-semibold text-[#52c41a] flex items-center gap-1.5">
+                                                <Smartphone className="size-3.5" />
                                                 <span>Pratinjau Layar Penerima (WhatsApp)</span>
                                             </span>
-                                            <span className="text-[10px] font-mono text-slate-400">
+                                            <span className="text-[10px] font-mono text-[#bfbfbf]">
                                                 Target: {targetType === 'group' ? (groups.find(g => String(g.id) === String(groupId))?.contacts_count || 0) : (recipientsRaw ? recipientsRaw.split(/[\r\n,]+/).filter(Boolean).length : 0)} Kontak
                                             </span>
                                         </div>
 
-                                        <div className="bg-[#efeae2] p-2.5 rounded-lg text-slate-900 shadow-inner">
-                                            <div className="max-w-[280px] bg-white rounded-lg p-2 shadow-xs text-xs space-y-1.5">
-                                                {/* Media attachment inside bubble */}
+                                        <div className="bg-[#efeae2] p-3 rounded-lg text-[#262626] shadow-inner">
+                                            <div className="max-w-[280px] bg-white rounded-lg p-2.5 shadow-xs text-xs space-y-1.5">
                                                 {mediaSource === 'upload' && mediaFile && (
                                                     <div>
                                                         {mediaType === 'image' && mediaPreview ? (
                                                             <img
                                                                 src={mediaPreview}
                                                                 alt="Preview"
-                                                                className="w-full h-32 object-cover rounded-md border border-slate-200"
+                                                                className="w-full h-32 object-cover rounded-md border border-[#e6ebf1]"
                                                             />
                                                         ) : (
-                                                            <div className="p-2 bg-slate-100 rounded-md border border-slate-200 flex items-center gap-2">
-                                                                <FileText className="w-6 h-6 text-rose-600 shrink-0" />
+                                                            <div className="p-2 bg-[#fafafb] rounded-md border border-[#e6ebf1] flex items-center gap-2">
+                                                                <FileText className="size-6 text-[#ff4d4f] shrink-0" />
                                                                 <div className="overflow-hidden">
-                                                                    <p className="font-semibold text-[11px] text-slate-800 truncate">{mediaFile.name}</p>
-                                                                    <p className="text-[9.5px] text-slate-400 font-mono">{(mediaFile.size / 1024).toFixed(0)} KB • Dokumen PDF</p>
+                                                                    <p className="font-semibold text-[11px] text-[#262626] truncate">{mediaFile.name}</p>
+                                                                    <p className="text-[9.5px] text-[#8c8c8c] font-mono">{(mediaFile.size / 1024).toFixed(0)} KB • Dokumen PDF</p>
                                                                 </div>
                                                             </div>
                                                         )}
                                                     </div>
                                                 )}
                                                 {mediaSource === 'url' && mediaUrl && (
-                                                    <div className="p-1.5 bg-slate-100 rounded text-[10px] text-slate-600 font-mono break-all flex items-center gap-1">
-                                                        <Paperclip className="w-3 h-3 text-blue-600 shrink-0" />
+                                                    <div className="p-1.5 bg-[#fafafb] rounded text-[10px] text-[#595959] font-mono break-all flex items-center gap-1">
+                                                        <Paperclip className="size-3 text-[#1677ff] shrink-0" />
                                                         <span className="truncate">{mediaUrl}</span>
                                                     </div>
                                                 )}
 
-                                                {/* Caption text */}
-                                                <p className="whitespace-pre-wrap leading-relaxed text-[11px] text-slate-800">
+                                                <p className="whitespace-pre-wrap leading-relaxed text-[11px] text-[#262626]">
                                                     {previewText || message.replace(/\{([^{}]+)\}/g, (_, group) => group.split('|')[0]).replace(/\{\{nama\}\}/g, 'Budi Santoso')}
                                                 </p>
-                                                <div className="text-right text-[9px] text-slate-400 flex items-center justify-end gap-1">
+                                                <div className="text-right text-[9px] text-[#8c8c8c] flex items-center justify-end gap-1">
                                                     <span>{new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</span>
-                                                    <span className="text-blue-500 font-bold">✓✓</span>
+                                                    <span className="text-[#1677ff] font-bold">✓✓</span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <motion.div whileTap={{ scale: 0.98 }}>
+                                <motion.div whileTap={{ scale: 0.99 }}>
                                     <Button
                                         type="submit"
                                         disabled={processing}
-                                        className="w-full h-10 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+                                        className="w-full h-10 rounded-lg bg-[#1677ff] hover:bg-[#0958d9] text-white text-xs font-semibold shadow-[0_2px_0_rgba(0,0,0,0.043)] transition-colors cursor-pointer"
                                     >
                                         <span>{processing ? 'Memproses Kampanye...' : scheduleOption === 'scheduled' ? 'Jadwalkan Kampanye Broadcast 📅' : 'Mulai Pengiriman Broadcast Massal'}</span>
-                                        <Send className="w-3.5 h-3.5 ml-2 text-white" />
+                                        <Send className="size-3.5 ml-2 text-white" />
                                     </Button>
                                 </motion.div>
                             </div>
                         </form>
-                    </CardContent>
-                </Card>
+                    </div>
+                </div>
 
-                {/* 3. CAMPAIGNS HISTORY TABLE */}
-                <Card className="border-slate-200 shadow-xs">
-                    <CardHeader className="pb-3 border-b border-slate-100 flex flex-row items-center justify-between">
-                        <div>
-                            <CardTitle className="text-sm font-bold text-slate-900">Riwayat Kampanye Broadcast</CardTitle>
-                            <CardDescription className="text-xs text-slate-500">Daftar riwayat dan status pengiriman pesan massal</CardDescription>
-                        </div>
-                    </CardHeader>
+                {/* ================= 4. CAMPAIGNS HISTORY TABLE ================= */}
+                <div className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.03)] overflow-hidden">
+                    <div className="p-5 border-b border-[#f0f0f0]">
+                        <h3 className="text-sm font-bold text-[#262626]">Riwayat Kampanye Broadcast</h3>
+                        <p className="text-xs text-[#8c8c8c] mt-0.5">Daftar riwayat dan status pengiriman pesan massal</p>
+                    </div>
 
-                    <div className="overflow-x-auto touch-pan-x no-scrollbar">
-                        <Table className="min-w-[640px]">
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead className="text-xs">Nama Kampanye</TableHead>
-                                    <TableHead className="text-xs">Gateway Device</TableHead>
-                                    <TableHead className="text-xs">Total Penerima</TableHead>
-                                    <TableHead className="text-xs">Jeda Throttle</TableHead>
-                                    <TableHead className="text-xs">Waktu Pelaksanaan</TableHead>
-                                    <TableHead className="text-xs">Status</TableHead>
-                                    <TableHead className="text-xs text-right">Kontrol</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
+                    <div className="overflow-x-auto no-scrollbar">
+                        <table className="w-full text-left text-xs border-collapse min-w-[680px]">
+                            <thead>
+                                <tr className="bg-[#fafafb] text-[#595959] font-semibold border-b border-[#f0f0f0]">
+                                    <th className="py-3 px-4 uppercase text-[11px] tracking-wider">Nama Kampanye</th>
+                                    <th className="py-3 px-4 uppercase text-[11px] tracking-wider">Gateway Device</th>
+                                    <th className="py-3 px-4 uppercase text-[11px] tracking-wider">Total Penerima</th>
+                                    <th className="py-3 px-4 uppercase text-[11px] tracking-wider">Jeda Throttle</th>
+                                    <th className="py-3 px-4 uppercase text-[11px] tracking-wider">Waktu Pelaksanaan</th>
+                                    <th className="py-3 px-4 uppercase text-[11px] tracking-wider">Status</th>
+                                    <th className="py-3 px-4 uppercase text-[11px] tracking-wider text-right">Kontrol</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-[#f0f0f0]">
                                 {processing && (
                                     <>
                                         <TableRowSkeleton columns={7} />
@@ -681,52 +667,52 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                     </>
                                 )}
                                 {campaigns.length === 0 && !processing ? (
-                                    <TableRow>
-                                        <TableCell colSpan={7} className="text-center py-8 text-slate-400 text-xs">
+                                    <tr>
+                                        <td colSpan={7} className="text-center py-8 text-[#8c8c8c] text-xs">
                                             Belum ada kampanye broadcast yang dijalankan.
-                                        </TableCell>
-                                    </TableRow>
+                                        </td>
+                                    </tr>
                                 ) : (
                                     campaigns.map((c) => (
-                                        <TableRow key={c.id} className="hover:bg-slate-50/80 transition-colors">
-                                            <TableCell className="font-bold text-[#0f172a] text-xs">
+                                        <tr key={c.id} className="hover:bg-[#fafafb] transition-colors">
+                                            <td className="py-3.5 px-4 font-bold text-[#262626]">
                                                 {c.name}
                                                 {c.media_url && (
                                                     <a
                                                         href={c.media_url}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="inline-flex items-center gap-1 text-[10px] text-emerald-700 hover:text-emerald-900 hover:underline font-mono mt-0.5"
+                                                        className="inline-flex items-center gap-1 text-[10px] text-[#1677ff] hover:underline font-mono mt-0.5 block"
                                                     >
                                                         {c.media_url.match(/\.pdf$/i) ? (
                                                             <>
-                                                                <FileText className="w-3 h-3 text-rose-600" />
+                                                                <FileText className="size-3 text-[#ff4d4f] inline mr-1" />
                                                                 <span>Dokumen PDF</span>
                                                             </>
                                                         ) : (
                                                             <>
-                                                                <ImageIcon className="w-3 h-3 text-blue-600" />
+                                                                <ImageIcon className="size-3 text-[#1677ff] inline mr-1" />
                                                                 <span>Foto / Media</span>
                                                             </>
                                                         )}
                                                     </a>
                                                 )}
-                                            </TableCell>
-                                            <TableCell className="text-xs font-semibold text-slate-700">
+                                            </td>
+                                            <td className="py-3.5 px-4 font-semibold text-[#595959]">
                                                 {c.device ? c.device.name : 'Default'}
-                                            </TableCell>
-                                            <TableCell className="text-xs font-mono">
-                                                <strong>{c.sent_count}</strong> / {c.total_recipients}
+                                            </td>
+                                            <td className="py-3.5 px-4 font-mono">
+                                                <strong className="text-[#262626]">{c.sent_count}</strong> <span className="text-[#8c8c8c]">/ {c.total_recipients}</span>
                                                 {c.failed_count > 0 && (
-                                                    <span className="block text-[10px] text-rose-600 font-semibold font-sans">
+                                                    <span className="block text-[10px] text-[#ff4d4f] font-semibold font-sans">
                                                         ({c.failed_count} gagal)
                                                     </span>
                                                 )}
-                                            </TableCell>
-                                            <TableCell className="text-xs text-slate-500 font-mono">
+                                            </td>
+                                            <td className="py-3.5 px-4 text-[#8c8c8c] font-mono">
                                                 {c.min_delay_seconds}s - {c.max_delay_seconds}s
-                                            </TableCell>
-                                            <TableCell className="text-xs text-slate-500">
+                                            </td>
+                                            <td className="py-3.5 px-4 text-[#8c8c8c]">
                                                 {c.scheduled_at ? new Date(c.scheduled_at).toLocaleDateString('id-ID', {
                                                     day: 'numeric',
                                                     month: 'short',
@@ -734,41 +720,39 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                                     hour: '2-digit',
                                                     minute: '2-digit',
                                                 }) : '-'}
-                                            </TableCell>
-                                            <TableCell>
-                                                <Badge
-                                                    variant="outline"
-                                                    className={
+                                            </td>
+                                            <td className="py-3.5 px-4">
+                                                <span
+                                                    className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10.5px] font-semibold border ${
                                                         c.status === 'completed'
-                                                            ? 'border-emerald-200 bg-emerald-50 text-emerald-800 font-semibold'
+                                                            ? 'border-[#b7eb8f] bg-[#f6ffed] text-[#52c41a]'
                                                             : c.status === 'scheduled'
-                                                            ? 'border-blue-200 bg-blue-50 text-blue-800 font-semibold'
-                                                            : c.status === 'paused'
-                                                            ? 'border-amber-200 bg-amber-50 text-amber-800 font-semibold'
+                                                            ? 'border-[#91caff] bg-[#e6f4ff] text-[#1677ff]'
+                                                            : c.status === 'paused' || c.status === 'partially_delivered'
+                                                            ? 'border-[#ffe58f] bg-[#fffbe6] text-[#faad14]'
                                                             : c.status === 'failed'
-                                                            ? 'border-rose-200 bg-rose-50 text-rose-800 font-semibold'
-                                                            : c.status === 'partially_delivered'
-                                                            ? 'border-amber-200 bg-amber-50 text-amber-800 font-semibold'
-                                                            : 'border-slate-200 bg-slate-100 text-slate-700 font-semibold'
-                                                    }
+                                                            ? 'border-[#ffccc7] bg-[#fff1f0] text-[#ff4d4f]'
+                                                            : 'border-[#d9d9d9] bg-[#fafafb] text-[#595959]'
+                                                    }`}
                                                 >
-                                                    {c.status === 'completed' && <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 mr-1.5" />}
-                                                    {c.status === 'scheduled' && <span className="w-1.5 h-1.5 rounded-full bg-blue-600 mr-1.5" />}
-                                                    {c.status === 'paused' && <span className="w-1.5 h-1.5 rounded-full bg-amber-600 mr-1.5" />}
-                                                    {c.status === 'failed' && <span className="w-1.5 h-1.5 rounded-full bg-rose-600 mr-1.5" />}
-                                                    {c.status === 'partially_delivered' && <span className="w-1.5 h-1.5 rounded-full bg-amber-600 mr-1.5" />}
+                                                    <span className={`size-1.5 rounded-full ${
+                                                        c.status === 'completed' ? 'bg-[#52c41a]'
+                                                        : c.status === 'scheduled' ? 'bg-[#1677ff]'
+                                                        : c.status === 'failed' ? 'bg-[#ff4d4f]'
+                                                        : 'bg-[#faad14]'
+                                                    }`} />
                                                     {c.status === 'failed' ? 'GAGAL' : c.status === 'partially_delivered' ? 'SEBAGIAN' : c.status.toUpperCase()}
-                                                </Badge>
-                                            </TableCell>
-                                            <TableCell className="text-right">
+                                                </span>
+                                            </td>
+                                            <td className="py-3.5 px-4 text-right">
                                                 <div className="flex items-center justify-end gap-1.5">
                                                     <a
                                                         href={`/broadcast/${c.id}/export`}
                                                         download
                                                         title="Unduh Rekap Laporan Pengiriman (CSV)"
-                                                        className="inline-flex items-center gap-1 h-7 px-2.5 text-[11px] font-medium rounded-md border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 shadow-2xs transition-colors"
+                                                        className="inline-flex items-center gap-1 h-7 px-2.5 text-[11px] font-semibold rounded-lg border border-[#d9d9d9] bg-white hover:bg-[#e6f4ff] hover:border-[#91caff] text-[#1677ff] transition-colors"
                                                     >
-                                                        <Download className="w-3 h-3 text-emerald-600" />
+                                                        <Download className="size-3" />
                                                         <span>Ekspor</span>
                                                     </a>
                                                     {(c.status === 'scheduled' || c.status === 'paused') && (
@@ -776,30 +760,30 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                                             size="sm"
                                                             variant="outline"
                                                             onClick={() => handleTogglePause(c.id)}
-                                                            className="h-7 px-2 text-[10px] font-medium rounded-md"
+                                                            className="h-7 px-2.5 text-[11px] font-semibold rounded-lg border-[#d9d9d9] text-[#595959] cursor-pointer"
                                                         >
                                                             {c.status === 'scheduled' ? (
-                                                                 <>
-                                                                    <Pause className="w-3 h-3 mr-1 text-amber-600" />
+                                                                <>
+                                                                    <Pause className="size-3 mr-1 text-[#faad14]" />
                                                                     <span>Jeda</span>
                                                                 </>
                                                             ) : (
                                                                 <>
-                                                                    <Play className="w-3 h-3 mr-1 text-emerald-700" />
+                                                                    <Play className="size-3 mr-1 text-[#52c41a]" />
                                                                     <span>Lanjut</span>
                                                                 </>
                                                             )}
                                                         </Button>
                                                     )}
                                                 </div>
-                                            </TableCell>
-                                        </TableRow>
+                                            </td>
+                                        </tr>
                                     ))
                                 )}
-                            </TableBody>
-                        </Table>
+                            </tbody>
+                        </table>
                     </div>
-                </Card>
+                </div>
             </div>
         </AppLayout>
     );

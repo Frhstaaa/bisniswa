@@ -29,6 +29,7 @@ import {
     Radio,
     Layers,
     Sparkles,
+    ChevronRight,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../../Components/ui/card';
 import { Button } from '../../Components/ui/button';
@@ -231,32 +232,41 @@ print(response.json())`,
         <AppLayout title="REST API & Webhooks">
             <Head title="REST API & Webhook Klien — MARDIRA WA" />
 
-            <div className="space-y-6 animate-fade-in-up pb-8">
-                {/* 1. TOP HEADER & UNIFIED ACTION BAR */}
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-200/80">
+            <div className="space-y-6 pb-12 font-sans antialiased text-[#1f1f1f]">
+                {/* 1. MANTIS BREADCRUMB & TOP HEADER */}
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-3 border-b border-[#e6ebf1]">
                     <div className="space-y-1">
+                        <div className="flex items-center gap-1.5 text-xs text-[#8c8c8c] mb-1 font-medium">
+                            <Link href="/dashboard" className="hover:text-[#1677ff] transition-colors">
+                                Dashboard
+                            </Link>
+                            <ChevronRight className="size-3 text-[#bfbfbf]" />
+                            <span className="text-[#262626]">Workspace</span>
+                            <ChevronRight className="size-3 text-[#bfbfbf]" />
+                            <span className="text-[#1677ff] font-semibold">API &amp; Webhooks</span>
+                        </div>
                         <div className="flex items-center gap-2.5 flex-wrap">
-                            <h1 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
-                                <Code2 className="w-5 h-5 sm:w-6 sm:h-6 text-[#1e50ff] shrink-0" />
-                                <span>Integrasi REST API & Webhooks</span>
+                            <h1 className="text-xl sm:text-2xl font-bold text-[#262626] tracking-tight flex items-center gap-2">
+                                <Code2 className="w-5 h-5 sm:w-6 sm:h-6 text-[#1677ff] shrink-0" />
+                                <span>Integrasi REST API &amp; Webhooks</span>
                             </h1>
-                            <span className="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-full text-[9.5px] sm:text-[11px] font-mono font-semibold bg-blue-50 text-[#1e50ff] border border-blue-200">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#1e50ff] animate-pulse" />
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[10px] sm:text-[11px] font-mono font-semibold bg-[#e6f4ff] text-[#1677ff] border border-[#91caff]">
+                                <span className="size-1.5 rounded-full bg-[#1677ff] animate-pulse" />
                                 SHA-256 BEARER
                             </span>
                         </div>
-                        <p className="text-xs sm:text-sm text-slate-500 max-w-2xl">
-                            Hubungkan sistem backend, toko online, ERP, atau bot kampus Anda ke gateway WhatsApp via protokol REST JSON standar.
+                        <p className="text-xs text-[#8c8c8c] max-w-2xl">
+                            Hubungkan sistem backend, toko online, ERP, atau aplikasi Anda ke gateway WhatsApp via protokol REST JSON standar.
                         </p>
                     </div>
 
                     {/* ACTION BUTTONS GROUP - Cohesive & No Awkward Wrapping */}
                     <div className="flex items-center gap-2.5 flex-wrap sm:flex-nowrap shrink-0">
-                        <div className="inline-flex items-center p-0.5 rounded-lg bg-slate-100 border border-slate-200 shadow-2xs">
+                        <div className="inline-flex items-center p-0.5 rounded-lg bg-slate-100 border border-[#e6ebf1] shadow-2xs">
                             <a
                                 href="/api-access/download-docs"
                                 download
-                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold text-slate-700 hover:text-emerald-700 hover:bg-white transition-all shadow-xs"
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold text-[#595959] hover:text-emerald-700 hover:bg-white transition-all shadow-xs"
                                 title="Download panduan lengkap integrasi dan bridging WhatsApp API"
                             >
                                 <FileText className="w-3.5 h-3.5 text-emerald-600" />
@@ -266,7 +276,7 @@ print(response.json())`,
                             <a
                                 href="/api-access/download-postman"
                                 download
-                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold text-slate-700 hover:text-orange-600 hover:bg-white transition-all"
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold text-[#595959] hover:text-orange-600 hover:bg-white transition-all"
                                 title="Download koleksi Postman API JSON"
                             >
                                 <Download className="w-3.5 h-3.5 text-orange-500" />
@@ -278,7 +288,7 @@ print(response.json())`,
                             variant="default"
                             size="sm"
                             onClick={openCreateModal}
-                            className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs hover:shadow-sm h-9 px-4 rounded-lg cursor-pointer shrink-0 transition-all flex items-center gap-1.5"
+                            className="bg-[#1677ff] hover:bg-[#0958d9] text-white text-xs font-semibold shadow-xs hover:shadow-sm h-9 px-4 rounded-lg cursor-pointer shrink-0 transition-all flex items-center gap-1.5"
                         >
                             <Plus className="w-4 h-4 stroke-[2.5]" />
                             <span>Buat API Key Baru</span>
@@ -288,53 +298,53 @@ print(response.json())`,
 
                 {/* 2. DEVELOPER META TOOLBAR */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-                    <div className="p-3 rounded-xl bg-white border border-slate-200/90 shadow-2xs flex items-center justify-between">
+                    <div className="p-3 rounded-xl bg-white border border-[#e6ebf1] shadow-2xs flex items-center justify-between">
                         <div className="flex items-center gap-2.5 overflow-hidden">
                             <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center justify-center shrink-0">
                                 <Globe className="w-3.5 h-3.5" />
                             </div>
                             <div className="overflow-hidden">
-                                <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Base URL Endpoint</p>
-                                <p className="font-mono text-xs font-semibold text-slate-800 truncate" title={baseUrl}>{baseUrl}</p>
+                                <p className="text-[10px] text-[#8c8c8c] font-medium uppercase tracking-wider">Base URL Endpoint</p>
+                                <p className="font-mono text-xs font-semibold text-[#262626] truncate" title={baseUrl}>{baseUrl}</p>
                             </div>
                         </div>
                         <button
                             type="button"
                             onClick={() => handleCopy(baseUrl, 'baseUrl')}
-                            className="p-1.5 rounded-md text-slate-400 hover:text-emerald-700 hover:bg-slate-50 transition-colors shrink-0 ml-1 cursor-pointer"
+                            className="p-1.5 rounded-md text-[#8c8c8c] hover:text-emerald-700 hover:bg-[#fafafb] transition-colors shrink-0 ml-1 cursor-pointer"
                             title="Salin Base URL"
                         >
                             {copiedBaseUrl ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                         </button>
                     </div>
 
-                    <div className="p-3 rounded-xl bg-white border border-slate-200/90 shadow-2xs flex items-center gap-2.5">
+                    <div className="p-3 rounded-xl bg-white border border-[#e6ebf1] shadow-2xs flex items-center gap-2.5">
                         <div className="w-7 h-7 rounded-lg bg-sky-50 text-sky-700 border border-sky-200 flex items-center justify-center shrink-0">
                             <ShieldCheck className="w-3.5 h-3.5" />
                         </div>
                         <div>
-                            <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Otentikasi</p>
-                            <p className="font-mono text-xs font-semibold text-slate-800">Bearer Token (Header)</p>
+                            <p className="text-[10px] text-[#8c8c8c] font-medium uppercase tracking-wider">Otentikasi</p>
+                            <p className="font-mono text-xs font-semibold text-[#262626]">Bearer Token (Header)</p>
                         </div>
                     </div>
 
-                    <div className="p-3 rounded-xl bg-white border border-slate-200/90 shadow-2xs flex items-center gap-2.5">
+                    <div className="p-3 rounded-xl bg-white border border-[#e6ebf1] shadow-2xs flex items-center gap-2.5">
                         <div className="w-7 h-7 rounded-lg bg-amber-50 text-amber-700 border border-amber-200 flex items-center justify-center shrink-0">
                             <Zap className="w-3.5 h-3.5" />
                         </div>
                         <div>
-                            <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Rate Limiting</p>
-                            <p className="font-mono text-xs font-semibold text-slate-800">60 Request / Menit</p>
+                            <p className="text-[10px] text-[#8c8c8c] font-medium uppercase tracking-wider">Rate Limiting</p>
+                            <p className="font-mono text-xs font-semibold text-[#262626]">60 Request / Menit</p>
                         </div>
                     </div>
 
-                    <div className="p-3 rounded-xl bg-white border border-slate-200/90 shadow-2xs flex items-center gap-2.5">
+                    <div className="p-3 rounded-xl bg-white border border-[#e6ebf1] shadow-2xs flex items-center gap-2.5">
                         <div className="w-7 h-7 rounded-lg bg-purple-50 text-purple-700 border border-purple-200 flex items-center justify-center shrink-0">
                             <Radio className="w-3.5 h-3.5" />
                         </div>
                         <div>
-                            <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Format Data</p>
-                            <p className="font-mono text-xs font-semibold text-slate-800">JSON (Content-Type)</p>
+                            <p className="text-[10px] text-[#8c8c8c] font-medium uppercase tracking-wider">Format Data</p>
+                            <p className="font-mono text-xs font-semibold text-[#262626]">JSON (Content-Type)</p>
                         </div>
                     </div>
                 </div>
@@ -368,7 +378,7 @@ print(response.json())`,
                                 <Button
                                     size="sm"
                                     onClick={() => handleCopy(flash.new_api_key, 'key')}
-                                    className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold h-9 shrink-0 rounded-lg shadow-2xs cursor-pointer flex items-center gap-1.5"
+                                    className="bg-[#1677ff] hover:bg-[#0958d9] text-white text-xs font-semibold h-9 shrink-0 rounded-lg shadow-2xs cursor-pointer flex items-center gap-1.5"
                                 >
                                     {copiedKey ? <Check className="w-3.5 h-3.5 stroke-[2.5]" /> : <Copy className="w-3.5 h-3.5" />}
                                     <span>{copiedKey ? 'Tersalin!' : 'Salin Token'}</span>
@@ -383,42 +393,42 @@ print(response.json())`,
                     {/* LEFT COLUMN: API KEYS & WEBHOOKS (7 cols) */}
                     <div className="lg:col-span-7 space-y-6">
                         {/* API KEYS TABLE CARD - Clean Column Spacing Without Line Wrapping */}
-                        <Card className="border-slate-200/90 shadow-xs overflow-hidden">
-                            <CardHeader className="pb-3 pt-4 px-5 border-b border-slate-100 flex flex-row items-center justify-between bg-slate-50/50">
+                        <Card className="border-[#e6ebf1] shadow-xs overflow-hidden">
+                            <CardHeader className="pb-3 pt-4 px-5 border-b border-[#f0f0f0] flex flex-row items-center justify-between bg-[#fafafb]/50">
                                 <div>
-                                    <CardTitle className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                                    <CardTitle className="text-sm font-bold text-[#262626] flex items-center gap-2">
                                         <Key className="w-4 h-4 text-emerald-600" />
                                         <span>Daftar API Key Aktif</span>
                                     </CardTitle>
-                                    <CardDescription className="text-xs text-slate-500 mt-0.5">
+                                    <CardDescription className="text-xs text-[#8c8c8c] mt-0.5">
                                         Token otentikasi Bearer dengan nomor WhatsApp & server khusus per aplikasi
                                     </CardDescription>
                                 </div>
-                                <span className="text-[11px] font-mono font-semibold text-slate-500 bg-white px-2 py-0.5 rounded-md border border-slate-200 shadow-2xs">
+                                <span className="text-[11px] font-mono font-semibold text-[#8c8c8c] bg-white px-2 py-0.5 rounded-md border border-[#e6ebf1] shadow-2xs">
                                     {apiKeys.length} Kunci
                                 </span>
                             </CardHeader>
 
                             <div className="overflow-x-auto">
                                 <Table className="w-full">
-                                    <TableHeader className="bg-slate-50/80">
-                                        <TableRow className="border-b border-slate-200/80">
-                                            <TableHead className="text-xs font-bold text-slate-700 min-w-[140px]">
+                                    <TableHeader className="bg-[#fafafb]">
+                                        <TableRow className="border-b border-[#e6ebf1]">
+                                            <TableHead className="text-xs font-bold text-[#595959] min-w-[140px]">
                                                 Nama Aplikasi
                                             </TableHead>
-                                            <TableHead className="text-xs font-bold text-slate-700 min-w-[180px]">
+                                            <TableHead className="text-xs font-bold text-[#595959] min-w-[180px]">
                                                 Nomor WA & Server
                                             </TableHead>
-                                            <TableHead className="text-xs font-bold text-slate-700 min-w-[130px]">
+                                            <TableHead className="text-xs font-bold text-[#595959] min-w-[130px]">
                                                 Prefix Token
                                             </TableHead>
-                                            <TableHead className="text-xs font-bold text-slate-700 w-24">
+                                            <TableHead className="text-xs font-bold text-[#595959] w-24">
                                                 Status
                                             </TableHead>
-                                            <TableHead className="text-xs font-bold text-slate-700 w-28">
+                                            <TableHead className="text-xs font-bold text-[#595959] w-28">
                                                 Dibuat
                                             </TableHead>
-                                            <TableHead className="text-xs font-bold text-slate-700 text-right w-16">
+                                            <TableHead className="text-xs font-bold text-[#595959] text-right w-16">
                                                 Aksi
                                             </TableHead>
                                         </TableRow>
@@ -426,11 +436,11 @@ print(response.json())`,
                                     <TableBody>
                                         {apiKeys.length === 0 ? (
                                             <TableRow>
-                                                <TableCell colSpan={6} className="text-center py-10 text-slate-400 text-xs">
+                                                <TableCell colSpan={6} className="text-center py-10 text-[#8c8c8c] text-xs">
                                                     <div className="max-w-xs mx-auto space-y-2">
                                                         <Key className="w-8 h-8 text-slate-300 mx-auto stroke-[1.5]" />
-                                                        <p className="font-semibold text-slate-700">Belum Ada API Key</p>
-                                                        <p className="text-[11px] text-slate-500">
+                                                        <p className="font-semibold text-[#595959]">Belum Ada API Key</p>
+                                                        <p className="text-[11px] text-[#8c8c8c]">
                                                             Klik tombol <strong className="text-emerald-700">"Buat API Key Baru"</strong> di atas untuk menerbitkan token otentikasi pertama Anda.
                                                         </p>
                                                     </div>
@@ -442,14 +452,14 @@ print(response.json())`,
                                                 const isConnected = key.device?.status === 'connected';
 
                                                 return (
-                                                    <TableRow key={key.id} className="hover:bg-slate-50/80 transition-colors">
+                                                    <TableRow key={key.id} className="hover:bg-[#fafafb] transition-colors">
                                                         {/* 1. Nama Aplikasi */}
-                                                        <TableCell className="font-semibold text-slate-900 text-xs">
+                                                        <TableCell className="font-semibold text-[#262626] text-xs">
                                                             <div className="flex items-center gap-2">
                                                                 <div className="w-6 h-6 rounded-md bg-emerald-50 border border-emerald-200/80 text-emerald-700 flex items-center justify-center shrink-0">
                                                                     <Key className="w-3 h-3" />
                                                                 </div>
-                                                                <span className="font-bold text-slate-900 truncate max-w-[150px]" title={key.name}>
+                                                                <span className="font-bold text-[#262626] truncate max-w-[150px]" title={key.name}>
                                                                     {key.name}
                                                                 </span>
                                                             </div>
@@ -459,12 +469,12 @@ print(response.json())`,
                                                         <TableCell className="text-xs">
                                                             {key.device ? (
                                                                 <div className="space-y-1">
-                                                                    <div className="flex items-center gap-1.5 font-semibold text-slate-800 whitespace-nowrap">
+                                                                    <div className="flex items-center gap-1.5 font-semibold text-[#262626] whitespace-nowrap">
                                                                         <Smartphone className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                                                                         <span className="font-mono text-xs">{key.device.phone_number || key.device.name}</span>
                                                                     </div>
                                                                     <div className="flex items-center gap-1.5 flex-wrap">
-                                                                        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono font-medium bg-slate-100 text-slate-700 border border-slate-200 whitespace-nowrap">
+                                                                        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono font-medium bg-slate-100 text-[#595959] border border-[#e6ebf1] whitespace-nowrap">
                                                                             {serverName}
                                                                         </span>
                                                                         <span
@@ -482,8 +492,8 @@ print(response.json())`,
                                                                     </div>
                                                                 </div>
                                                             ) : (
-                                                                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 text-slate-600 border border-slate-200/70 whitespace-nowrap">
-                                                                    <Server className="w-3 h-3 text-slate-400 shrink-0" />
+                                                                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 text-slate-600 border border-[#e6ebf1]/70 whitespace-nowrap">
+                                                                    <Server className="w-3 h-3 text-[#8c8c8c] shrink-0" />
                                                                     <span>Semua Server (Auto)</span>
                                                                 </span>
                                                             )}
@@ -491,7 +501,7 @@ print(response.json())`,
 
                                                         {/* 3. Prefix Token */}
                                                         <TableCell className="text-xs whitespace-nowrap">
-                                                            <span className="inline-flex items-center font-mono text-[11px] bg-slate-100 text-slate-700 px-2.5 py-1 rounded-md border border-slate-200/80 font-medium">
+                                                            <span className="inline-flex items-center font-mono text-[11px] bg-slate-100 text-[#595959] px-2.5 py-1 rounded-md border border-[#e6ebf1] font-medium">
                                                                 {key.prefix}••••••••
                                                             </span>
                                                         </TableCell>
@@ -505,7 +515,7 @@ print(response.json())`,
                                                         </TableCell>
 
                                                         {/* 5. Dibuat */}
-                                                        <TableCell className="text-xs text-slate-500 whitespace-nowrap">
+                                                        <TableCell className="text-xs text-[#8c8c8c] whitespace-nowrap">
                                                             {new Date(key.created_at).toLocaleDateString('id-ID', {
                                                                 day: 'numeric',
                                                                 month: 'short',
@@ -518,7 +528,7 @@ print(response.json())`,
                                                             <button
                                                                 type="button"
                                                                 onClick={() => handleDeleteKey(key.id, key.name)}
-                                                                className="text-slate-400 hover:text-rose-600 p-1.5 rounded-md hover:bg-rose-50 transition-colors cursor-pointer inline-flex items-center justify-center"
+                                                                className="text-[#8c8c8c] hover:text-rose-600 p-1.5 rounded-md hover:bg-rose-50 transition-colors cursor-pointer inline-flex items-center justify-center"
                                                                 title="Hapus / Cabut API Key ini"
                                                             >
                                                                 <Trash2 className="w-3.5 h-3.5" />
@@ -534,17 +544,17 @@ print(response.json())`,
                         </Card>
 
                         {/* WEBHOOK SETTINGS CARD WITH LIVE TEST PING */}
-                        <Card className="border-slate-200/90 shadow-xs overflow-hidden">
-                            <CardHeader className="pb-3 pt-4 px-5 border-b border-slate-100 flex flex-row items-center justify-between bg-slate-50/50">
+                        <Card className="border-[#e6ebf1] shadow-xs overflow-hidden">
+                            <CardHeader className="pb-3 pt-4 px-5 border-b border-[#f0f0f0] flex flex-row items-center justify-between bg-[#fafafb]/50">
                                 <div className="flex items-center gap-2.5">
                                     <div className="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-200/80 text-emerald-700 flex items-center justify-center shrink-0">
                                         <WebhookIcon className="w-4 h-4" />
                                     </div>
                                     <div>
-                                        <CardTitle className="text-sm font-bold text-slate-900">
+                                        <CardTitle className="text-sm font-bold text-[#262626]">
                                             Konfigurasi Webhook URL
                                         </CardTitle>
-                                        <CardDescription className="text-xs text-slate-500 mt-0.5">
+                                        <CardDescription className="text-xs text-[#8c8c8c] mt-0.5">
                                             Menerima callback event otomatis saat ada pesan masuk, centang dua, atau status server
                                         </CardDescription>
                                     </div>
@@ -556,7 +566,7 @@ print(response.json())`,
                                     disabled={pingLoading || !webhookUrl}
                                     size="sm"
                                     variant="outline"
-                                    className="h-8 text-xs font-semibold border-slate-200 hover:bg-slate-50 text-slate-700 rounded-lg cursor-pointer flex items-center gap-1.5"
+                                    className="h-8 text-xs font-semibold border-[#e6ebf1] hover:bg-[#fafafb] text-[#595959] rounded-lg cursor-pointer flex items-center gap-1.5"
                                 >
                                     <Send className="w-3 h-3 text-emerald-600" />
                                     <span>{pingLoading ? 'Menguji...' : 'Uji Coba Ping'}</span>
@@ -591,10 +601,10 @@ print(response.json())`,
                                 <form onSubmit={handleSaveWebhook} className="space-y-4 text-xs">
                                     <div>
                                         <div className="flex items-center justify-between mb-1.5">
-                                            <label className="block font-semibold text-slate-700">
+                                            <label className="block font-semibold text-[#595959]">
                                                 Callback Endpoint URL (HTTPS):
                                             </label>
-                                            <span className="text-[11px] text-slate-400">Metode: POST JSON</span>
+                                            <span className="text-[11px] text-[#8c8c8c]">Metode: POST JSON</span>
                                         </div>
                                         <div className="relative">
                                             <input
@@ -602,7 +612,7 @@ print(response.json())`,
                                                 value={webhookUrl}
                                                 onChange={(e) => setWebhookUrl(e.target.value)}
                                                 placeholder="https://api.klienanda.com/webhook/kirimwa"
-                                                className="w-full pl-3 pr-24 py-2.5 rounded-lg border border-slate-200 font-mono text-xs focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600 bg-white"
+                                                className="w-full pl-3 pr-24 py-2.5 rounded-lg border border-[#e6ebf1] font-mono text-xs focus:border-[#1677ff] focus:outline-none focus:ring-1 focus:ring-[#1677ff] bg-white"
                                                 required
                                             />
                                             <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
@@ -610,7 +620,7 @@ print(response.json())`,
                                                     type="submit"
                                                     disabled={processing}
                                                     size="sm"
-                                                    className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold h-7 px-3 rounded-md shadow-2xs cursor-pointer"
+                                                    className="bg-[#1677ff] hover:bg-[#0958d9] text-white text-xs font-semibold h-7 px-3 rounded-md shadow-2xs cursor-pointer"
                                                 >
                                                     {processing ? 'Menyimpan...' : 'Simpan'}
                                                 </Button>
@@ -619,18 +629,18 @@ print(response.json())`,
                                     </div>
 
                                     {/* Webhook Events Supported */}
-                                    <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/70 space-y-2">
-                                        <p className="text-[11px] font-semibold text-slate-700">Event yang dikirim ke Webhook Anda:</p>
+                                    <div className="p-3 rounded-xl bg-[#fafafb] border border-[#e6ebf1]/70 space-y-2">
+                                        <p className="text-[11px] font-semibold text-[#595959]">Event yang dikirim ke Webhook Anda:</p>
                                         <div className="flex items-center gap-2 flex-wrap">
-                                            <span className="inline-flex items-center gap-1 font-mono text-[10px] bg-white border border-slate-200 text-slate-700 px-2 py-0.5 rounded-md font-medium">
+                                            <span className="inline-flex items-center gap-1 font-mono text-[10px] bg-white border border-[#e6ebf1] text-[#595959] px-2 py-0.5 rounded-md font-medium">
                                                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                                                 messages.received
                                             </span>
-                                            <span className="inline-flex items-center gap-1 font-mono text-[10px] bg-white border border-slate-200 text-slate-700 px-2 py-0.5 rounded-md font-medium">
+                                            <span className="inline-flex items-center gap-1 font-mono text-[10px] bg-white border border-[#e6ebf1] text-[#595959] px-2 py-0.5 rounded-md font-medium">
                                                 <span className="w-1.5 h-1.5 rounded-full bg-sky-500" />
                                                 messages.delivered
                                             </span>
-                                            <span className="inline-flex items-center gap-1 font-mono text-[10px] bg-white border border-slate-200 text-slate-700 px-2 py-0.5 rounded-md font-medium">
+                                            <span className="inline-flex items-center gap-1 font-mono text-[10px] bg-white border border-[#e6ebf1] text-[#595959] px-2 py-0.5 rounded-md font-medium">
                                                 <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
                                                 device.status
                                             </span>
@@ -653,7 +663,7 @@ print(response.json())`,
                                         <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
                                         <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
                                     </div>
-                                    <span className="text-[11px] font-mono text-slate-400 ml-1.5 font-medium">
+                                    <span className="text-[11px] font-mono text-[#8c8c8c] ml-1.5 font-medium">
                                         POST /messages/send
                                     </span>
                                 </div>
@@ -695,7 +705,7 @@ print(response.json())`,
                                             className={`px-2.5 py-1 rounded text-[11px] font-medium transition-colors cursor-pointer ${
                                                 isActive
                                                     ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
-                                                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                                                    : 'text-[#8c8c8c] hover:text-slate-200 hover:bg-slate-800/50'
                                             }`}
                                         >
                                             {tab.label}
@@ -713,18 +723,18 @@ print(response.json())`,
                         </div>
 
                         {/* INTERACTIVE ENDPOINT CATALOG CARD */}
-                        <Card className="border-slate-200/90 shadow-xs overflow-hidden">
-                            <CardHeader className="pb-3 pt-4 px-4 border-b border-slate-100 flex flex-row items-center justify-between bg-slate-50/50">
+                        <Card className="border-[#e6ebf1] shadow-xs overflow-hidden">
+                            <CardHeader className="pb-3 pt-4 px-4 border-b border-[#f0f0f0] flex flex-row items-center justify-between bg-[#fafafb]/50">
                                 <div>
-                                    <CardTitle className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                                    <CardTitle className="text-xs font-bold text-[#262626] flex items-center gap-1.5">
                                         <Layers className="w-3.5 h-3.5 text-emerald-600" />
                                         <span>Katalog Endpoint REST API</span>
                                     </CardTitle>
-                                    <CardDescription className="text-[11px] text-slate-500">
+                                    <CardDescription className="text-[11px] text-[#8c8c8c]">
                                         Daftar routing utama untuk integrasi aplikasi
                                     </CardDescription>
                                 </div>
-                                <span className="text-[10px] font-mono text-slate-500 bg-white px-2 py-0.5 rounded border border-slate-200">
+                                <span className="text-[10px] font-mono text-[#8c8c8c] bg-white px-2 py-0.5 rounded border border-[#e6ebf1]">
                                     3 Routes
                                 </span>
                             </CardHeader>
@@ -735,24 +745,24 @@ print(response.json())`,
                                     return (
                                         <div
                                             key={ep.path}
-                                            className="p-3 rounded-xl border border-slate-200/80 bg-white hover:border-slate-300 hover:shadow-2xs transition-all flex items-center justify-between gap-2"
+                                            className="p-3 rounded-xl border border-[#e6ebf1] bg-white hover:border-slate-300 hover:shadow-2xs transition-all flex items-center justify-between gap-2"
                                         >
                                             <div className="space-y-1 overflow-hidden">
                                                 <div className="flex items-center gap-2">
                                                     <span className={`px-1.5 py-0.2 rounded text-[10px] font-mono font-bold text-white ${ep.badgeColor}`}>
                                                         {ep.method}
                                                     </span>
-                                                    <span className="font-mono text-slate-800 font-semibold text-xs truncate">
+                                                    <span className="font-mono text-[#262626] font-semibold text-xs truncate">
                                                         {ep.path}
                                                     </span>
                                                 </div>
-                                                <p className="text-[11px] text-slate-500">{ep.title}</p>
+                                                <p className="text-[11px] text-[#8c8c8c]">{ep.title}</p>
                                             </div>
 
                                             <button
                                                 type="button"
                                                 onClick={() => handleCopy(`${baseUrl}${ep.path.replace('/api/v1', '')}`, `endpoint-${ep.path}`)}
-                                                className="p-1.5 rounded-md text-slate-400 hover:text-emerald-700 hover:bg-slate-100 transition-colors shrink-0 cursor-pointer"
+                                                className="p-1.5 rounded-md text-[#8c8c8c] hover:text-emerald-700 hover:bg-slate-100 transition-colors shrink-0 cursor-pointer"
                                                 title="Salin URL endpoint lengkap"
                                             >
                                                 {isCopied ? (
@@ -770,46 +780,46 @@ print(response.json())`,
                 </div>
 
                 {/* 5. REAL-TIME AUDIT LOG OF API REQUESTS */}
-                <Card className="border-slate-200/90 shadow-xs overflow-hidden">
-                    <CardHeader className="pb-3 pt-4 px-5 border-b border-slate-100 flex flex-row items-center justify-between bg-slate-50/50">
+                <Card className="border-[#e6ebf1] shadow-xs overflow-hidden">
+                    <CardHeader className="pb-3 pt-4 px-5 border-b border-[#f0f0f0] flex flex-row items-center justify-between bg-[#fafafb]/50">
                         <div className="flex items-center gap-2.5">
                             <div className="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-200/80 text-emerald-700 flex items-center justify-center shrink-0">
                                 <Activity className="w-4 h-4" />
                             </div>
                             <div>
-                                <CardTitle className="text-sm font-bold text-slate-900">
+                                <CardTitle className="text-sm font-bold text-[#262626]">
                                     Log Panggilan REST API Real-Time
                                 </CardTitle>
-                                <CardDescription className="text-xs text-slate-500 mt-0.5">
+                                <CardDescription className="text-xs text-[#8c8c8c] mt-0.5">
                                     Aktivitas request masuk via Bearer token otentikasi dari sistem luar
                                 </CardDescription>
                             </div>
                         </div>
-                        <span className="text-[11px] font-mono text-slate-500 bg-white px-2.5 py-0.5 rounded-md border border-slate-200 shadow-2xs">
+                        <span className="text-[11px] font-mono text-[#8c8c8c] bg-white px-2.5 py-0.5 rounded-md border border-[#e6ebf1] shadow-2xs">
                             {apiLogs.length} Panggilan Tercatat
                         </span>
                     </CardHeader>
 
                     <div className="overflow-x-auto">
                         <Table className="w-full">
-                            <TableHeader className="bg-slate-50/80">
-                                <TableRow className="border-b border-slate-200/80">
-                                    <TableHead className="text-xs font-bold text-slate-700 min-w-[200px]">Endpoint & Method</TableHead>
-                                    <TableHead className="text-xs font-bold text-slate-700 w-28">Status HTTP</TableHead>
-                                    <TableHead className="text-xs font-bold text-slate-700 w-24">Latensi</TableHead>
-                                    <TableHead className="text-xs font-bold text-slate-700 min-w-[120px]">IP Klien</TableHead>
-                                    <TableHead className="text-xs font-bold text-slate-700 min-w-[240px]">Ringkasan Payload</TableHead>
-                                    <TableHead className="text-xs font-bold text-slate-700 text-right w-28">Waktu Request</TableHead>
+                            <TableHeader className="bg-[#fafafb]">
+                                <TableRow className="border-b border-[#e6ebf1]">
+                                    <TableHead className="text-xs font-bold text-[#595959] min-w-[200px]">Endpoint & Method</TableHead>
+                                    <TableHead className="text-xs font-bold text-[#595959] w-28">Status HTTP</TableHead>
+                                    <TableHead className="text-xs font-bold text-[#595959] w-24">Latensi</TableHead>
+                                    <TableHead className="text-xs font-bold text-[#595959] min-w-[120px]">IP Klien</TableHead>
+                                    <TableHead className="text-xs font-bold text-[#595959] min-w-[240px]">Ringkasan Payload</TableHead>
+                                    <TableHead className="text-xs font-bold text-[#595959] text-right w-28">Waktu Request</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {apiLogs.length === 0 ? (
                                     <TableRow>
-                                        <TableCell colSpan={6} className="text-center py-10 text-slate-400 text-xs">
+                                        <TableCell colSpan={6} className="text-center py-10 text-[#8c8c8c] text-xs">
                                             <div className="max-w-xs mx-auto space-y-1.5">
                                                 <Activity className="w-8 h-8 text-slate-300 mx-auto stroke-[1.5]" />
-                                                <p className="font-semibold text-slate-700">Belum Ada Aktivitas Panggilan API</p>
-                                                <p className="text-[11px] text-slate-500">
+                                                <p className="font-semibold text-[#595959]">Belum Ada Aktivitas Panggilan API</p>
+                                                <p className="text-[11px] text-[#8c8c8c]">
                                                     Panggilan API yang dilakukan oleh klien Anda akan tercatat secara otomatis di sini.
                                                 </p>
                                             </div>
@@ -817,9 +827,9 @@ print(response.json())`,
                                     </TableRow>
                                 ) : (
                                     apiLogs.map((log) => (
-                                        <TableRow key={log.id} className="hover:bg-slate-50/80 transition-colors">
-                                            <TableCell className="font-mono text-xs font-semibold text-slate-800 whitespace-nowrap">
-                                                <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200 mr-2">
+                                        <TableRow key={log.id} className="hover:bg-[#fafafb] transition-colors">
+                                            <TableCell className="font-mono text-xs font-semibold text-[#262626] whitespace-nowrap">
+                                                <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-bold bg-slate-100 text-[#595959] border border-[#e6ebf1] mr-2">
                                                     {log.method}
                                                 </span>
                                                 <span>{log.endpoint}</span>
@@ -843,13 +853,13 @@ print(response.json())`,
                                             <TableCell className="text-xs font-mono text-slate-600 whitespace-nowrap">
                                                 {log.latency_ms} ms
                                             </TableCell>
-                                            <TableCell className="text-xs font-mono text-slate-500 whitespace-nowrap">
+                                            <TableCell className="text-xs font-mono text-[#8c8c8c] whitespace-nowrap">
                                                 {log.ip_address}
                                             </TableCell>
                                             <TableCell className="text-xs font-mono text-slate-600 max-w-xs truncate" title={log.payload_summary}>
                                                 {log.payload_summary}
                                             </TableCell>
-                                            <TableCell className="text-xs text-slate-500 text-right whitespace-nowrap">
+                                            <TableCell className="text-xs text-[#8c8c8c] text-right whitespace-nowrap">
                                                 {new Date(log.created_at).toLocaleTimeString('id-ID', {
                                                     hour: '2-digit',
                                                     minute: '2-digit',
@@ -878,17 +888,17 @@ print(response.json())`,
                                 animate={{ opacity: 1, scale: 1, y: 0 }}
                                 exit={{ opacity: 0, scale: 0.94, y: 16 }}
                                 transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                                className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-slate-200/80 overflow-hidden my-auto text-left"
+                                className="relative w-full max-w-lg bg-white rounded-xl shadow-2xl border border-[#e6ebf1] overflow-hidden my-auto text-left"
                                 onClick={(e) => e.stopPropagation()}
                             >
-                                <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/60">
+                                <div className="p-4 border-b border-[#f0f0f0] flex items-center justify-between bg-[#fafafb]/60">
                                     <div>
-                                        <h3 className="text-sm font-bold text-slate-900">Terbitkan API Key Baru</h3>
-                                        <p className="text-xs text-slate-500">Kunci otentikasi spesifik ke nomor WhatsApp & server pengirim</p>
+                                        <h3 className="text-sm font-bold text-[#262626]">Terbitkan API Key Baru</h3>
+                                        <p className="text-xs text-[#8c8c8c]">Kunci otentikasi spesifik ke nomor WhatsApp & server pengirim</p>
                                     </div>
                                     <button
                                         onClick={() => setIsCreateKeyModalOpen(false)}
-                                        className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer rounded-lg hover:bg-slate-200/60 transition-colors"
+                                        className="text-[#8c8c8c] hover:text-slate-600 p-1 cursor-pointer rounded-lg hover:bg-slate-200/60 transition-colors"
                                     >
                                         <X className="w-4 h-4" />
                                     </button>
@@ -896,7 +906,7 @@ print(response.json())`,
 
                                 <form onSubmit={handleCreateKey} className="p-5 space-y-4 text-xs">
                                     <div>
-                                        <label className="block font-medium text-slate-700 mb-1.5">
+                                        <label className="block font-medium text-[#595959] mb-1.5">
                                             Nama Aplikasi / Keterangan Key <span className="text-red-500">*</span>
                                         </label>
                                         <input
@@ -904,17 +914,17 @@ print(response.json())`,
                                             value={keyName}
                                             onChange={(e) => setKeyName(e.target.value)}
                                             placeholder="Contoh: Production ERP Backend, Bot Kampus, Notifikasi Toko"
-                                            className="w-full px-3 py-2 rounded-md border border-slate-200 focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600 text-xs"
+                                            className="w-full px-3 py-2 rounded-md border border-[#e6ebf1] focus:border-[#1677ff] focus:outline-none focus:ring-1 focus:ring-[#1677ff] text-xs"
                                             required
                                         />
                                     </div>
 
                                     <div>
                                         <div className="flex items-center justify-between mb-1.5">
-                                            <label className="block font-medium text-slate-700">
+                                            <label className="block font-medium text-[#595959]">
                                                 Pilih Nomor WhatsApp & Server Pengirim <span className="text-red-500">*</span>
                                             </label>
-                                            <span className="text-[11px] text-slate-400 font-normal">Wajib dipilih</span>
+                                            <span className="text-[11px] text-[#8c8c8c] font-normal">Wajib dipilih</span>
                                         </div>
 
                                         {devices.length === 0 ? (
@@ -946,7 +956,7 @@ print(response.json())`,
                                                             className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all ${
                                                                 isSelected
                                                                     ? 'border-emerald-500 bg-emerald-50/70 shadow-2xs ring-1 ring-emerald-500'
-                                                                    : 'border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50/60'
+                                                                    : 'border-[#e6ebf1] hover:border-slate-300 bg-white hover:bg-[#fafafb]/60'
                                                             }`}
                                                         >
                                                             <div className="flex items-center gap-3">
@@ -960,7 +970,7 @@ print(response.json())`,
                                                                 />
                                                                 <div>
                                                                     <div className="flex items-center gap-2">
-                                                                        <span className="font-bold text-slate-900 text-xs">
+                                                                        <span className="font-bold text-[#262626] text-xs">
                                                                             {device.phone_number || device.name}
                                                                         </span>
                                                                         <Badge
@@ -974,7 +984,7 @@ print(response.json())`,
                                                                             {isConnected ? 'Terhubung' : 'Offline'}
                                                                         </Badge>
                                                                     </div>
-                                                                    <div className="text-[11px] text-slate-500 flex items-center gap-2 mt-0.5">
+                                                                    <div className="text-[11px] text-[#8c8c8c] flex items-center gap-2 mt-0.5">
                                                                         <span>{device.name}</span>
                                                                         <span>•</span>
                                                                         <span className="font-mono font-medium text-emerald-700">{serverLabel}</span>
@@ -993,8 +1003,8 @@ print(response.json())`,
                                         )}
                                     </div>
 
-                                    <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80 text-[11px] text-slate-600 space-y-1">
-                                        <div className="font-semibold text-slate-800 flex items-center gap-1.5">
+                                    <div className="p-3 rounded-xl bg-[#fafafb] border border-[#e6ebf1] text-[11px] text-slate-600 space-y-1">
+                                        <div className="font-semibold text-[#262626] flex items-center gap-1.5">
                                             <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                                             <span>Keamanan & Spesifikasi Routing:</span>
                                         </div>
@@ -1003,7 +1013,7 @@ print(response.json())`,
                                         </p>
                                     </div>
 
-                                    <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                                    <div className="flex justify-end gap-2 pt-3 border-t border-[#f0f0f0]">
                                         <Button
                                             type="button"
                                             variant="outline"
@@ -1018,7 +1028,7 @@ print(response.json())`,
                                             variant="default"
                                             size="sm"
                                             disabled={processing || devices.length === 0 || !selectedDeviceId}
-                                            className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-md h-9 text-xs font-medium shadow-2xs cursor-pointer"
+                                            className="bg-[#1677ff] hover:bg-[#0958d9] text-white rounded-md h-9 text-xs font-medium shadow-2xs cursor-pointer"
                                         >
                                             {processing ? 'Membuat...' : 'Terbitkan Key Spesifik'}
                                         </Button>

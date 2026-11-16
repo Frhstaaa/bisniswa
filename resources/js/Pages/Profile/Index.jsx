@@ -1,20 +1,16 @@
 import React from 'react';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import AppLayout from '../../Layouts/AppLayout';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../../Components/ui/card';
 import { Button } from '../../Components/ui/button';
-import { Badge } from '../../Components/ui/badge';
 import {
     User,
     Mail,
     Phone,
     Building2,
     Lock,
-    Shield,
-    CheckCircle2,
-    Key,
     ShieldCheck,
+    ChevronRight,
 } from 'lucide-react';
 
 export default function ProfileIndex({ user, workspace }) {
@@ -46,22 +42,33 @@ export default function ProfileIndex({ user, workspace }) {
 
     return (
         <AppLayout title="Pengaturan Profil">
-            <Head title="Pengaturan Akun & Keamanan — MARDIRA WA" />
+            <Head title="Pengaturan Akun & Keamanan — SAPA BisnisWA" />
 
-            <div className="space-y-6 max-w-4xl animate-fade-in-up">
-                {/* Header Page */}
-                <div>
-                    <div className="flex items-center gap-2">
-                        <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-                            Pengaturan Profil Akun & Keamanan
-                        </h1>
-                        <Badge variant="navy" className="text-[10px] font-bold">
-                            WORKSPACE #{workspace.id}
-                        </Badge>
+            <div className="space-y-6 pb-12 max-w-5xl font-sans antialiased text-[#1f1f1f]">
+                {/* ================= 1. MANTIS BREADCRUMB & HEADER ================= */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-[#e6ebf1]">
+                    <div>
+                        <div className="flex items-center gap-1.5 text-xs text-[#8c8c8c] mb-1 font-medium">
+                            <Link href="/dashboard" className="hover:text-[#1677ff] transition-colors">
+                                Dashboard
+                            </Link>
+                            <ChevronRight className="size-3 text-[#bfbfbf]" />
+                            <span className="text-[#262626]">Workspace</span>
+                            <ChevronRight className="size-3 text-[#bfbfbf]" />
+                            <span className="text-[#1677ff] font-semibold">Profil & Keamanan</span>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-2.5">
+                            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#262626]">
+                                Pengaturan Profil Akun & Keamanan
+                            </h1>
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#e6f4ff] text-[#1677ff] border border-[#91caff]">
+                                WORKSPACE #{workspace.id}
+                            </span>
+                        </div>
+                        <p className="text-xs text-[#8c8c8c] mt-1">
+                            Kelola identitas penanggung jawab, informasi workspace bisnis, dan kredensial keamanan akun Anda.
+                        </p>
                     </div>
-                    <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                        Kelola identitas penanggung jawab, informasi workspace bisnis, dan kredensial keamanan akun Anda.
-                    </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -69,219 +76,221 @@ export default function ProfileIndex({ user, workspace }) {
                     <div className="md:col-span-2 space-y-6">
                         {/* Profile Info Card */}
                         <motion.div
-                            whileHover={{ y: -2 }}
-                            transition={{ duration: 0.15 }}
+                            whileHover={{ y: -2, transition: { duration: 0.15 } }}
+                            className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md transition-all overflow-hidden"
                         >
-                            <Card className="border-slate-200 shadow-xs">
-                                <CardHeader className="pb-3 border-b border-slate-100">
-                                    <div className="flex items-center gap-2">
-                                        <User className="w-4 h-4 text-emerald-700" />
-                                        <CardTitle className="text-sm font-bold text-slate-900">
-                                            Informasi Akun & Perusahaan
-                                        </CardTitle>
+                            <div className="p-5 pb-4 border-b border-[#f0f0f0]">
+                                <div className="flex items-center gap-2">
+                                    <div className="size-8 rounded-lg bg-[#e6f4ff] text-[#1677ff] border border-[#91caff] flex items-center justify-center">
+                                        <User className="size-4" />
                                     </div>
-                                    <CardDescription className="text-xs text-slate-500">
-                                        Perbarui nama penanggung jawab dan identitas nama workspace
-                                    </CardDescription>
-                                </CardHeader>
+                                    <div>
+                                        <h3 className="text-sm font-bold text-[#262626]">
+                                            Informasi Akun & Perusahaan
+                                        </h3>
+                                        <p className="text-xs text-[#8c8c8c]">
+                                            Perbarui nama penanggung jawab dan identitas nama workspace
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
 
-                                <CardContent className="p-5">
-                                    <form onSubmit={handleUpdateProfile} className="space-y-4 text-xs">
+                            <div className="p-5">
+                                <form onSubmit={handleUpdateProfile} className="space-y-4 text-xs">
+                                    <div>
+                                        <label className="block font-semibold text-[#595959] mb-1.5">Nama Penanggung Jawab</label>
+                                        <div className="relative">
+                                            <User className="size-4 text-[#8c8c8c] absolute left-3 top-2.5" />
+                                            <input
+                                                type="text"
+                                                value={profileData.name}
+                                                onChange={(e) => setProfileData('name', e.target.value)}
+                                                className="w-full pl-9 pr-3 py-2 rounded-lg border border-[#d9d9d9] text-xs text-[#262626] focus:border-[#1677ff] focus:ring-2 focus:ring-[#1677ff]/10 focus:outline-none transition-all"
+                                                required
+                                            />
+                                        </div>
+                                        {profileErrors.name && <p className="text-[#ff4d4f] text-[11px] mt-1">{profileErrors.name}</p>}
+                                    </div>
+
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div>
-                                            <label className="block font-semibold text-slate-700 mb-1">Nama Penanggung Jawab</label>
+                                            <label className="block font-semibold text-[#595959] mb-1.5">Alamat Email Bisnis</label>
                                             <div className="relative">
-                                                <User className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                                                <Mail className="size-4 text-[#8c8c8c] absolute left-3 top-2.5" />
                                                 <input
-                                                    type="text"
-                                                    value={profileData.name}
-                                                    onChange={(e) => setProfileData('name', e.target.value)}
-                                                    className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 text-xs focus:border-emerald-600 focus:outline-none"
+                                                    type="email"
+                                                    value={profileData.email}
+                                                    onChange={(e) => setProfileData('email', e.target.value)}
+                                                    className="w-full pl-9 pr-3 py-2 rounded-lg border border-[#d9d9d9] text-xs text-[#262626] focus:border-[#1677ff] focus:ring-2 focus:ring-[#1677ff]/10 focus:outline-none transition-all"
                                                     required
                                                 />
                                             </div>
-                                            {profileErrors.name && <p className="text-red-500 text-[11px] mt-1">{profileErrors.name}</p>}
-                                        </div>
-
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                            <div>
-                                                <label className="block font-semibold text-slate-700 mb-1">Alamat Email Bisnis</label>
-                                                <div className="relative">
-                                                    <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-                                                    <input
-                                                        type="email"
-                                                        value={profileData.email}
-                                                        onChange={(e) => setProfileData('email', e.target.value)}
-                                                        className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 text-xs focus:border-emerald-600 focus:outline-none"
-                                                        required
-                                                    />
-                                                </div>
-                                                {profileErrors.email && <p className="text-red-500 text-[11px] mt-1">{profileErrors.email}</p>}
-                                            </div>
-
-                                            <div>
-                                                <label className="block font-semibold text-slate-700 mb-1">Nomor WhatsApp Admin</label>
-                                                <div className="relative">
-                                                    <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-                                                    <input
-                                                        type="text"
-                                                        value={profileData.phone}
-                                                        onChange={(e) => setProfileData('phone', e.target.value)}
-                                                        placeholder="+6281234567890"
-                                                        className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 text-xs font-mono focus:border-emerald-600 focus:outline-none"
-                                                    />
-                                                </div>
-                                            </div>
+                                            {profileErrors.email && <p className="text-[#ff4d4f] text-[11px] mt-1">{profileErrors.email}</p>}
                                         </div>
 
                                         <div>
-                                            <label className="block font-semibold text-slate-700 mb-1">Nama Perusahaan / Organisasi</label>
+                                            <label className="block font-semibold text-[#595959] mb-1.5">Nomor WhatsApp Admin</label>
                                             <div className="relative">
-                                                <Building2 className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                                                <Phone className="size-4 text-[#8c8c8c] absolute left-3 top-2.5" />
                                                 <input
                                                     type="text"
-                                                    value={profileData.workspace_name}
-                                                    onChange={(e) => setProfileData('workspace_name', e.target.value)}
-                                                    className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 text-xs focus:border-emerald-600 focus:outline-none"
-                                                    required
+                                                    value={profileData.phone}
+                                                    onChange={(e) => setProfileData('phone', e.target.value)}
+                                                    placeholder="+6281234567890"
+                                                    className="w-full pl-9 pr-3 py-2 rounded-lg border border-[#d9d9d9] text-xs font-mono text-[#262626] focus:border-[#1677ff] focus:ring-2 focus:ring-[#1677ff]/10 focus:outline-none transition-all"
                                                 />
                                             </div>
                                         </div>
+                                    </div>
 
-                                        <div className="flex justify-end pt-2">
-                                            <Button
-                                                type="submit"
-                                                disabled={processingProfile}
-                                                className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4"
-                                            >
-                                                {processingProfile ? 'Menyimpan...' : 'Simpan Perubahan'}
-                                            </Button>
+                                    <div>
+                                        <label className="block font-semibold text-[#595959] mb-1.5">Nama Perusahaan / Organisasi</label>
+                                        <div className="relative">
+                                            <Building2 className="size-4 text-[#8c8c8c] absolute left-3 top-2.5" />
+                                            <input
+                                                type="text"
+                                                value={profileData.workspace_name}
+                                                onChange={(e) => setProfileData('workspace_name', e.target.value)}
+                                                className="w-full pl-9 pr-3 py-2 rounded-lg border border-[#d9d9d9] text-xs text-[#262626] focus:border-[#1677ff] focus:ring-2 focus:ring-[#1677ff]/10 focus:outline-none transition-all"
+                                                required
+                                            />
                                         </div>
-                                    </form>
-                                </CardContent>
-                            </Card>
+                                    </div>
+
+                                    <div className="flex justify-end pt-2 border-t border-[#f0f0f0]">
+                                        <Button
+                                            type="submit"
+                                            disabled={processingProfile}
+                                            className="h-9 px-4 bg-[#1677ff] hover:bg-[#0958d9] text-white text-xs font-semibold rounded-lg shadow-[0_2px_0_rgba(0,0,0,0.043)] cursor-pointer"
+                                        >
+                                            {processingProfile ? 'Menyimpan...' : 'Simpan Perubahan'}
+                                        </Button>
+                                    </div>
+                                </form>
+                            </div>
                         </motion.div>
 
                         {/* Password Card */}
                         <motion.div
-                            whileHover={{ y: -2 }}
-                            transition={{ duration: 0.15 }}
+                            whileHover={{ y: -2, transition: { duration: 0.15 } }}
+                            className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md transition-all overflow-hidden"
                         >
-                            <Card className="border-slate-200 shadow-xs">
-                                <CardHeader className="pb-3 border-b border-slate-100">
-                                    <div className="flex items-center gap-2">
-                                        <Lock className="w-4 h-4 text-emerald-700" />
-                                        <CardTitle className="text-sm font-bold text-slate-900">
-                                            Perbarui Kata Sandi
-                                        </CardTitle>
+                            <div className="p-5 pb-4 border-b border-[#f0f0f0]">
+                                <div className="flex items-center gap-2">
+                                    <div className="size-8 rounded-lg bg-[#fffbe6] text-[#faad14] border border-[#ffe58f] flex items-center justify-center">
+                                        <Lock className="size-4" />
                                     </div>
-                                    <CardDescription className="text-xs text-slate-500">
-                                        Pastikan akun Anda menggunakan kombinasi kata sandi yang kuat
-                                    </CardDescription>
-                                </CardHeader>
+                                    <div>
+                                        <h3 className="text-sm font-bold text-[#262626]">
+                                            Perbarui Kata Sandi
+                                        </h3>
+                                        <p className="text-xs text-[#8c8c8c]">
+                                            Pastikan akun Anda menggunakan kombinasi kata sandi yang kuat
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
 
-                                <CardContent className="p-5">
-                                    <form onSubmit={handleUpdatePassword} className="space-y-3.5 text-xs">
+                            <div className="p-5">
+                                <form onSubmit={handleUpdatePassword} className="space-y-4 text-xs">
+                                    <div>
+                                        <label className="block font-semibold text-[#595959] mb-1.5">Kata Sandi Saat Ini</label>
+                                        <input
+                                            type="password"
+                                            value={passwordData.current_password}
+                                            onChange={(e) => setPasswordData('current_password', e.target.value)}
+                                            placeholder="••••••••"
+                                            className="w-full px-3 py-2 rounded-lg border border-[#d9d9d9] text-xs text-[#262626] focus:border-[#1677ff] focus:ring-2 focus:ring-[#1677ff]/10 focus:outline-none transition-all"
+                                            required
+                                        />
+                                        {passwordErrors.current_password && (
+                                            <p className="text-[#ff4d4f] text-[11px] mt-1">{passwordErrors.current_password}</p>
+                                        )}
+                                    </div>
+
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div>
-                                            <label className="block font-semibold text-slate-700 mb-1">Kata Sandi Saat Ini</label>
+                                            <label className="block font-semibold text-[#595959] mb-1.5">Kata Sandi Baru</label>
                                             <input
                                                 type="password"
-                                                value={passwordData.current_password}
-                                                onChange={(e) => setPasswordData('current_password', e.target.value)}
-                                                placeholder="••••••••"
-                                                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:border-emerald-600 focus:outline-none"
+                                                value={passwordData.password}
+                                                onChange={(e) => setPasswordData('password', e.target.value)}
+                                                placeholder="Min. 6 karakter"
+                                                className="w-full px-3 py-2 rounded-lg border border-[#d9d9d9] text-xs text-[#262626] focus:border-[#1677ff] focus:ring-2 focus:ring-[#1677ff]/10 focus:outline-none transition-all"
                                                 required
                                             />
-                                            {passwordErrors.current_password && (
-                                                <p className="text-red-500 text-[11px] mt-1">{passwordErrors.current_password}</p>
+                                            {passwordErrors.password && (
+                                                <p className="text-[#ff4d4f] text-[11px] mt-1">{passwordErrors.password}</p>
                                             )}
                                         </div>
 
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                            <div>
-                                                <label className="block font-semibold text-slate-700 mb-1">Kata Sandi Baru</label>
-                                                <input
-                                                    type="password"
-                                                    value={passwordData.password}
-                                                    onChange={(e) => setPasswordData('password', e.target.value)}
-                                                    placeholder="Min. 6 karakter"
-                                                    className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:border-emerald-600 focus:outline-none"
-                                                    required
-                                                />
-                                                {passwordErrors.password && (
-                                                    <p className="text-red-500 text-[11px] mt-1">{passwordErrors.password}</p>
-                                                )}
-                                            </div>
-
-                                            <div>
-                                                <label className="block font-semibold text-slate-700 mb-1">Konfirmasi Kata Sandi</label>
-                                                <input
-                                                    type="password"
-                                                    value={passwordData.password_confirmation}
-                                                    onChange={(e) => setPasswordData('password_confirmation', e.target.value)}
-                                                    placeholder="••••••••"
-                                                    className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:border-emerald-600 focus:outline-none"
-                                                    required
-                                                />
-                                            </div>
+                                        <div>
+                                            <label className="block font-semibold text-[#595959] mb-1.5">Konfirmasi Kata Sandi</label>
+                                            <input
+                                                type="password"
+                                                value={passwordData.password_confirmation}
+                                                onChange={(e) => setPasswordData('password_confirmation', e.target.value)}
+                                                placeholder="••••••••"
+                                                className="w-full px-3 py-2 rounded-lg border border-[#d9d9d9] text-xs text-[#262626] focus:border-[#1677ff] focus:ring-2 focus:ring-[#1677ff]/10 focus:outline-none transition-all"
+                                                required
+                                            />
                                         </div>
+                                    </div>
 
-                                        <div className="flex justify-end pt-2">
-                                            <Button
-                                                type="submit"
-                                                disabled={processingPassword}
-                                                className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4"
-                                            >
-                                                {processingPassword ? 'Memperbarui...' : 'Ganti Kata Sandi'}
-                                            </Button>
-                                        </div>
-                                    </form>
-                                </CardContent>
-                            </Card>
+                                    <div className="flex justify-end pt-2 border-t border-[#f0f0f0]">
+                                        <Button
+                                            type="submit"
+                                            disabled={processingPassword}
+                                            className="h-9 px-4 bg-[#1677ff] hover:bg-[#0958d9] text-white text-xs font-semibold rounded-lg shadow-[0_2px_0_rgba(0,0,0,0.043)] cursor-pointer"
+                                        >
+                                            {processingPassword ? 'Memperbarui...' : 'Ganti Kata Sandi'}
+                                        </Button>
+                                    </div>
+                                </form>
+                            </div>
                         </motion.div>
                     </div>
 
                     {/* Right Column: Account Status Card (1 col) */}
                     <div className="space-y-4">
                         <motion.div
-                            whileHover={{ y: -2 }}
-                            transition={{ duration: 0.15 }}
+                            whileHover={{ y: -2, transition: { duration: 0.15 } }}
+                            className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.03)] p-5 space-y-4 relative overflow-hidden"
                         >
-                            <Card className="border-slate-200 shadow-xs p-5 space-y-4">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 rounded-2xl bg-emerald-600 text-emerald-100 flex items-center justify-center font-black text-lg shadow-xs">
-                                        {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
-                                    </div>
-                                    <div>
-                                        <h3 className="font-bold text-sm text-[#0f172a]">{user.name}</h3>
-                                        <p className="text-xs text-slate-500">{user.email}</p>
-                                        <span className="inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                            {user.role === 'superadmin' ? 'SUPERADMIN' : 'CLIENT OWNER'}
-                                        </span>
-                                    </div>
+                            <div className="flex items-center gap-3.5">
+                                <div className="size-12 rounded-full bg-[#e6f4ff] text-[#1677ff] border border-[#91caff] flex items-center justify-center font-bold text-lg shrink-0">
+                                    {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
                                 </div>
+                                <div className="min-w-0">
+                                    <h3 className="font-bold text-sm text-[#262626] truncate">{user.name}</h3>
+                                    <p className="text-xs text-[#8c8c8c] truncate">{user.email}</p>
+                                    <span className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-[#f6ffed] text-[#52c41a] border border-[#b7eb8f]">
+                                        {user.role === 'superadmin' ? 'SUPERADMIN' : 'CLIENT OWNER'}
+                                    </span>
+                                </div>
+                            </div>
 
-                                <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs space-y-2 text-slate-700">
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-slate-500">ID Workspace:</span>
-                                        <span className="font-mono font-bold text-slate-900">#{workspace.id}</span>
-                                    </div>
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-slate-500">Status Akun:</span>
-                                        <span className="font-bold text-emerald-700">Aktif & Terverifikasi</span>
-                                    </div>
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-slate-500">Keamanan:</span>
-                                        <span className="font-bold text-slate-800">Enkripsi SHA-256</span>
-                                    </div>
+                            <div className="p-3.5 bg-[#fafafb] rounded-lg border border-[#f0f0f0] text-xs space-y-2.5 text-[#595959]">
+                                <div className="flex items-center justify-between">
+                                    <span className="text-[#8c8c8c]">ID Workspace:</span>
+                                    <span className="font-mono font-bold text-[#262626]">#{workspace.id}</span>
                                 </div>
+                                <div className="flex items-center justify-between">
+                                    <span className="text-[#8c8c8c]">Status Akun:</span>
+                                    <span className="font-semibold text-[#52c41a]">Aktif &amp; Terverifikasi</span>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                    <span className="text-[#8c8c8c]">Keamanan:</span>
+                                    <span className="font-semibold text-[#1677ff]">Enkripsi SHA-256</span>
+                                </div>
+                            </div>
 
-                                <div className="p-3 bg-[#fef9c3] rounded-xl border border-[#fde047] text-xs text-[#854d0e] flex items-start gap-2">
-                                    <ShieldCheck className="w-4 h-4 shrink-0 mt-0.5 text-emerald-600" />
-                                    <p className="text-[11px] leading-relaxed text-[#334155]">
-                                        Akun dilindungi oleh enkripsi sesi standar enterprise <strong>Politeknik Mardira Indonesia</strong>.
-                                    </p>
-                                </div>
-                            </Card>
+                            <div className="p-3 bg-[#e6f4ff] rounded-lg border border-[#91caff] text-xs flex items-start gap-2.5">
+                                <ShieldCheck className="size-4 shrink-0 mt-0.5 text-[#1677ff]" />
+                                <p className="text-[11px] leading-relaxed text-[#262626]">
+                                    Akun dilindungi oleh enkripsi sesi standar enterprise <strong>SAPA BisnisWA</strong>.
+                                </p>
+                            </div>
                         </motion.div>
                     </div>
                 </div>
