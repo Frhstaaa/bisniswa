@@ -18,6 +18,9 @@ import {
     CheckCircle2,
 } from 'lucide-react';
 import { Button } from '../../Components/ui/button';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../../Components/ui/card';
+import { Progress } from '../../Components/ui/progress';
+import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '../../Components/ui/table';
 
 export default function SubscriptionsIndex({ workspace, subscription, plans = [], audits = [], payments = [] }) {
     const { props } = usePage();
@@ -180,78 +183,78 @@ export default function SubscriptionsIndex({ workspace, subscription, plans = []
                 {/* ================= 2. MANTIS STATS OVERVIEW CARDS ================= */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                     {/* Card 1: Masa Aktif */}
-                    <div className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
-                        <div className="flex items-center justify-between mb-3">
-                            <span className="text-xs font-medium text-[#8c8c8c]">
-                                Sisa Masa Aktif
-                            </span>
-                            <span className={`inline-flex items-center gap-1.5 text-xs font-semibold ${
-                                subscription?.paused_at ? 'text-[#faad14]' : 'text-[#52c41a]'
-                            }`}>
-                                <span className={`size-1.5 rounded-full ${subscription?.paused_at ? 'bg-[#faad14]' : 'bg-[#52c41a]'}`} />
-                                {subscription?.paused_at ? 'Dibekukan' : `${daysRemaining} Hari Tersisa`}
-                            </span>
-                        </div>
-                        <div className="text-xl sm:text-2xl font-bold text-[#262626] tracking-tight mb-2.5">
-                            {subscription ? new Date(subscription.ends_at).toLocaleDateString('id-ID', {
-                                day: 'numeric',
-                                month: 'long',
-                                year: 'numeric',
-                            }) : '30 November 2026'}
-                        </div>
-                        <div className="w-full bg-[#f5f5f5] h-1.5 rounded-full overflow-hidden mb-2.5">
-                            <div style={{ width: `${daysPct}%` }} className="h-full bg-[#52c41a] rounded-full transition-all duration-500" />
-                        </div>
-                        <div className="flex justify-between items-center text-[11px] text-[#8c8c8c]">
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <div className="flex items-center justify-between">
+                                <CardDescription className="font-medium">Sisa Masa Aktif</CardDescription>
+                                <span className={`inline-flex items-center gap-1.5 text-xs font-semibold ${
+                                    subscription?.paused_at ? 'text-[#faad14]' : 'text-[#52c41a]'
+                                }`}>
+                                    <span className={`size-1.5 rounded-full ${subscription?.paused_at ? 'bg-[#faad14]' : 'bg-[#52c41a]'}`} />
+                                    {subscription?.paused_at ? 'Dibekukan' : `${daysRemaining} Hari Tersisa`}
+                                </span>
+                            </div>
+                            <CardTitle className="text-xl sm:text-2xl font-bold tracking-tight pt-1">
+                                {subscription ? new Date(subscription.ends_at).toLocaleDateString('id-ID', {
+                                    day: 'numeric',
+                                    month: 'long',
+                                    year: 'numeric',
+                                }) : '30 November 2026'}
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="pb-3">
+                            <Progress value={daysPct} indicatorClassName="bg-[#52c41a]" />
+                        </CardContent>
+                        <CardFooter className="pt-0 flex justify-between items-center text-[11px] text-[#8c8c8c]">
                             <span>Periode Aktif</span>
                             <span className="font-semibold text-[#595959]">
                                 {subscription ? new Date(subscription.starts_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) : '1 Nov'} -{' '}
                                 {subscription ? new Date(subscription.ends_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '30 Nov 2026'}
                             </span>
-                        </div>
-                    </div>
+                        </CardFooter>
+                    </Card>
 
                     {/* Card 2: Saldo Kuota Pesan */}
-                    <div className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
-                        <div className="flex items-center justify-between mb-3">
-                            <span className="text-xs font-medium text-[#8c8c8c]">
-                                Sisa Kuota Pesan
-                            </span>
-                            <button
-                                type="button"
-                                onClick={() => (isSuperAdmin ? setIsTopupModalOpen(true) : setIsCheckoutModalOpen(true))}
-                                className="text-xs font-semibold text-[#1677ff] hover:underline cursor-pointer"
-                            >
-                                + {isSuperAdmin ? 'Top Up (Admin)' : 'Tambah Kuota'}
-                            </button>
-                        </div>
-                        <div className="text-2xl sm:text-3xl font-bold text-[#1677ff] tracking-tight font-mono mb-2.5">
-                            {subscription?.remaining_message_quota?.toLocaleString('id-ID') ?? '50.000'}
-                            <span className="text-sm font-normal text-[#8c8c8c] font-sans ml-1.5">pesan</span>
-                        </div>
-                        <div className="w-full bg-[#f5f5f5] h-1.5 rounded-full overflow-hidden mb-2.5">
-                            <div style={{ width: `${quotaPct}%` }} className="h-full bg-[#1677ff] rounded-full transition-all duration-500" />
-                        </div>
-                        <div className="flex justify-between items-center text-[11px] text-[#8c8c8c]">
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <div className="flex items-center justify-between">
+                                <CardDescription className="font-medium">Sisa Kuota Pesan</CardDescription>
+                                <button
+                                    type="button"
+                                    onClick={() => (isSuperAdmin ? setIsTopupModalOpen(true) : setIsCheckoutModalOpen(true))}
+                                    className="text-xs font-semibold text-[#1677ff] hover:underline cursor-pointer"
+                                >
+                                    + {isSuperAdmin ? 'Top Up (Admin)' : 'Tambah Kuota'}
+                                </button>
+                            </div>
+                            <CardTitle className="text-2xl sm:text-3xl font-bold text-[#1677ff] tracking-tight font-mono pt-1">
+                                {subscription?.remaining_message_quota?.toLocaleString('id-ID') ?? '50.000'}
+                                <span className="text-sm font-normal text-[#8c8c8c] font-sans ml-1.5">pesan</span>
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="pb-3">
+                            <Progress value={quotaPct} indicatorClassName="bg-[#1677ff]" />
+                        </CardContent>
+                        <CardFooter className="pt-0 flex justify-between items-center text-[11px] text-[#8c8c8c]">
                             <span>Total Alokasi Bulanan</span>
                             <span className="font-semibold text-[#595959]">
                                 {subscription?.monthly_message_quota?.toLocaleString('id-ID') ?? '50.000'} kuota
                             </span>
-                        </div>
-                    </div>
+                        </CardFooter>
+                    </Card>
 
                     {/* Card 3: Status Paket */}
-                    <div className="bg-white rounded-xl border border-[#e6ebf1] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
-                        <div className="flex items-center justify-between mb-3">
-                            <span className="text-xs font-medium text-[#8c8c8c]">
-                                Paket Aktif
-                            </span>
-                            <Zap className="size-4 text-[#faad14]" />
-                        </div>
-                        <div className="text-xl sm:text-2xl font-bold text-[#262626] tracking-tight mb-3">
-                            {subscription?.plan?.name ?? 'Enterprise Pro'}
-                        </div>
-                        <div className="space-y-1.5 text-[11px] text-[#595959]">
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <div className="flex items-center justify-between">
+                                <CardDescription className="font-medium">Paket Aktif</CardDescription>
+                                <Zap className="size-4 text-[#faad14]" />
+                            </div>
+                            <CardTitle className="text-xl sm:text-2xl font-bold tracking-tight pt-1">
+                                {subscription?.plan?.name ?? 'Enterprise Pro'}
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="flex flex-col gap-1.5 text-[11px] text-[#595959]">
                             <div className="flex items-center justify-between">
                                 <span className="text-[#8c8c8c]">Batas Multi-Device</span>
                                 <span className="font-semibold text-[#262626]">{subscription?.plan?.limits?.max_devices || 5} Perangkat WA</span>
@@ -264,82 +267,82 @@ export default function SubscriptionsIndex({ workspace, subscription, plans = []
                                 <span className="text-[#8c8c8c]">Anti-Ban Jitter</span>
                                 <span className="font-semibold text-[#52c41a]">Aktif Otomatis</span>
                             </div>
-                        </div>
-                    </div>
+                        </CardContent>
+                    </Card>
                 </div>
 
                 {/* ================= 3. PAYMENT & INVOICE HISTORY TABLE ================= */}
-                <div className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.03)] overflow-hidden">
-                    <div className="p-5 border-b border-[#f0f0f0] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                        <div>
-                            <h3 className="text-sm font-bold text-[#262626]">Riwayat Pembayaran &amp; Invoice</h3>
-                            <p className="text-xs text-[#8c8c8c] mt-0.5">
+                <Card className="overflow-hidden">
+                    <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#f0f0f0]">
+                        <div className="flex flex-col gap-1">
+                            <CardTitle className="text-sm font-bold">Riwayat Pembayaran &amp; Invoice</CardTitle>
+                            <CardDescription>
                                 Transaksi pembayaran paket langganan dan bukti konfirmasi otomatis
-                            </p>
+                            </CardDescription>
                         </div>
                         <Button
                             onClick={() => setIsCheckoutModalOpen(true)}
                             size="sm"
-                            className="h-8 px-3 bg-[#1677ff] hover:bg-[#0958d9] text-white text-xs font-semibold rounded-lg shadow-[0_2px_0_rgba(0,0,0,0.043)] cursor-pointer flex items-center gap-1"
+                            className="h-8 px-3 bg-[#1677ff] hover:bg-[#0958d9] text-white text-xs font-semibold rounded-lg cursor-pointer flex items-center gap-1"
                         >
                             <Plus className="size-3.5 text-white" />
                             <span>Beli Paket Baru</span>
                         </Button>
-                    </div>
+                    </CardHeader>
 
-                    <div className="overflow-x-auto no-scrollbar">
-                        <table className="w-full text-left text-xs border-collapse min-w-[680px]">
-                            <thead>
-                                <tr className="bg-[#fafafb] text-[#595959] font-semibold border-b border-[#f0f0f0]">
-                                    <th className="py-3 px-4 uppercase text-[11px] tracking-wider">Nomor Invoice</th>
-                                    <th className="py-3 px-4 uppercase text-[11px] tracking-wider">Paket / Layanan</th>
-                                    <th className="py-3 px-4 uppercase text-[11px] tracking-wider">Nominal Tagihan</th>
-                                    <th className="py-3 px-4 uppercase text-[11px] tracking-wider">Metode Pembayaran</th>
-                                    <th className="py-3 px-4 uppercase text-[11px] tracking-wider">Status</th>
-                                    <th className="py-3 px-4 uppercase text-[11px] tracking-wider">Tanggal</th>
-                                    <th className="py-3 px-4 uppercase text-[11px] tracking-wider text-right">Kuitansi</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-[#f0f0f0]">
+                    <CardContent className="p-0">
+                        <Table className="min-w-[680px]">
+                            <TableHeader>
+                                <TableRow className="hover:bg-[#fafafb]">
+                                    <TableHead>Nomor Invoice</TableHead>
+                                    <TableHead>Paket / Layanan</TableHead>
+                                    <TableHead>Nominal Tagihan</TableHead>
+                                    <TableHead>Metode Pembayaran</TableHead>
+                                    <TableHead>Status</TableHead>
+                                    <TableHead>Tanggal</TableHead>
+                                    <TableHead className="text-right">Kuitansi</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
                                 {payments.length === 0 ? (
-                                    <tr>
-                                        <td colSpan={7} className="text-center py-8 text-[#8c8c8c] text-xs">
+                                    <TableRow className="hover:bg-transparent">
+                                        <TableCell colSpan={7} className="text-center py-8 text-[#8c8c8c]">
                                             Belum ada transaksi pembayaran.
-                                        </td>
-                                    </tr>
+                                        </TableCell>
+                                    </TableRow>
                                 ) : (
                                     payments.map((p) => {
                                         const isPaid = p.status === 'approved' || p.status === 'paid';
                                         return (
-                                            <tr key={p.id} className="hover:bg-[#fafafb] transition-colors">
-                                                <td className="py-3.5 px-4 font-mono font-bold text-[#1677ff]">
+                                            <TableRow key={p.id}>
+                                                <TableCell className="py-3.5 font-mono font-bold text-[#1677ff]">
                                                     {p.invoice_number}
-                                                </td>
-                                                <td className="py-3.5 px-4 font-semibold text-[#262626]">
+                                                </TableCell>
+                                                <TableCell className="py-3.5 font-semibold text-[#262626]">
                                                     {p.plan?.name || 'Paket Langganan'}
-                                                </td>
-                                                <td className="py-3.5 px-4 font-mono font-bold text-[#262626]">
+                                                </TableCell>
+                                                <TableCell className="py-3.5 font-mono font-bold text-[#262626]">
                                                     Rp {parseInt(p.amount).toLocaleString('id-ID')}
-                                                </td>
-                                                <td className="py-3.5 px-4 uppercase font-medium text-[#595959]">
+                                                </TableCell>
+                                                <TableCell className="py-3.5 uppercase font-medium text-[#595959]">
                                                     {p.payment_method === 'qris' ? 'QRIS Instan' : p.payment_method === 'bca_va' ? 'BCA Virtual Account' : 'Transfer Bank'}
-                                                </td>
-                                                <td className="py-3.5 px-4">
+                                                </TableCell>
+                                                <TableCell className="py-3.5">
                                                     <span className={`inline-flex items-center gap-1.5 text-xs font-medium ${
                                                         isPaid ? 'text-[#52c41a]' : 'text-[#faad14]'
                                                     }`}>
                                                         <span className={`size-1.5 rounded-full ${isPaid ? 'bg-[#52c41a]' : 'bg-[#faad14]'}`} />
                                                         {isPaid ? 'Lunas' : 'Pending'}
                                                     </span>
-                                                </td>
-                                                <td className="py-3.5 px-4 text-[#8c8c8c]">
+                                                </TableCell>
+                                                <TableCell className="py-3.5 text-[#8c8c8c]">
                                                     {new Date(p.created_at).toLocaleDateString('id-ID', {
                                                         day: 'numeric',
                                                         month: 'short',
                                                         year: 'numeric',
                                                     })}
-                                                </td>
-                                                <td className="py-3.5 px-4 text-right">
+                                                </TableCell>
+                                                <TableCell className="py-3.5 text-right">
                                                     <a
                                                         href={`/subscriptions/invoice/${p.invoice_number}`}
                                                         target="_blank"
@@ -349,55 +352,55 @@ export default function SubscriptionsIndex({ workspace, subscription, plans = []
                                                         <Receipt className="size-3.5" />
                                                         <span>Cetak</span>
                                                     </a>
-                                                </td>
-                                            </tr>
+                                                </TableCell>
+                                            </TableRow>
                                         );
                                     })
                                 )}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                            </TableBody>
+                        </Table>
+                    </CardContent>
+                </Card>
 
                 {/* ================= 4. AUDIT TRAIL LOGS ================= */}
-                <div className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.03)] overflow-hidden">
-                    <div className="p-5 border-b border-[#f0f0f0]">
-                        <h3 className="text-sm font-bold text-[#262626]">Audit Trail Perubahan Durasi &amp; Kuota</h3>
-                        <p className="text-xs text-[#8c8c8c] mt-0.5">
+                <Card className="overflow-hidden">
+                    <CardHeader className="border-b border-[#f0f0f0]">
+                        <CardTitle className="text-sm font-bold">Audit Trail Perubahan Durasi &amp; Kuota</CardTitle>
+                        <CardDescription>
                             Log resmi setiap penyesuaian masa aktif, tanggal berakhir, dan bonus kuota oleh Super Admin
-                        </p>
-                    </div>
+                        </CardDescription>
+                    </CardHeader>
 
-                    <div className="overflow-x-auto no-scrollbar">
-                        <table className="w-full text-left text-xs border-collapse min-w-[580px]">
-                            <thead>
-                                <tr className="bg-[#fafafb] text-[#595959] font-semibold border-b border-[#f0f0f0]">
-                                    <th className="py-3 px-4 uppercase text-[11px] tracking-wider">Aksi / Tindakan</th>
-                                    <th className="py-3 px-4 uppercase text-[11px] tracking-wider">Alasan Perubahan</th>
-                                    <th className="py-3 px-4 uppercase text-[11px] tracking-wider">Admin Penanggung Jawab</th>
-                                    <th className="py-3 px-4 uppercase text-[11px] tracking-wider">Waktu Eksekusi</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-[#f0f0f0]">
+                    <CardContent className="p-0">
+                        <Table className="min-w-[580px]">
+                            <TableHeader>
+                                <TableRow className="hover:bg-[#fafafb]">
+                                    <TableHead>Aksi / Tindakan</TableHead>
+                                    <TableHead>Alasan Perubahan</TableHead>
+                                    <TableHead>Admin Penanggung Jawab</TableHead>
+                                    <TableHead>Waktu Eksekusi</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
                                 {audits.length === 0 ? (
-                                    <tr>
-                                        <td colSpan={4} className="text-center py-8 text-[#8c8c8c] text-xs">
+                                    <TableRow className="hover:bg-transparent">
+                                        <TableCell colSpan={4} className="text-center py-8 text-[#8c8c8c]">
                                             Belum ada histori audit penyesuaian langganan.
-                                        </td>
-                                    </tr>
+                                        </TableCell>
+                                    </TableRow>
                                 ) : (
                                     audits.map((a) => (
-                                        <tr key={a.id} className="hover:bg-[#fafafb] transition-colors">
-                                            <td className="py-3.5 px-4">
+                                        <TableRow key={a.id}>
+                                            <TableCell className="py-3.5">
                                                 <span className="font-mono text-xs font-semibold text-[#1677ff]">
                                                     {a.action}
                                                 </span>
-                                            </td>
-                                            <td className="py-3.5 px-4 text-[#595959]">{a.reason}</td>
-                                            <td className="py-3.5 px-4 font-semibold text-[#262626]">
+                                            </TableCell>
+                                            <TableCell className="py-3.5 text-[#595959]">{a.reason}</TableCell>
+                                            <TableCell className="py-3.5 font-semibold text-[#262626]">
                                                 {a.admin?.name || 'Sistem Gateway'}
-                                            </td>
-                                            <td className="py-3.5 px-4 text-[#8c8c8c] font-mono">
+                                            </TableCell>
+                                            <TableCell className="py-3.5 text-[#8c8c8c] font-mono">
                                                 {new Date(a.created_at).toLocaleDateString('id-ID', {
                                                     day: 'numeric',
                                                     month: 'short',
@@ -405,14 +408,14 @@ export default function SubscriptionsIndex({ workspace, subscription, plans = []
                                                     hour: '2-digit',
                                                     minute: '2-digit',
                                                 })}
-                                            </td>
-                                        </tr>
+                                            </TableCell>
+                                        </TableRow>
                                     ))
                                 )}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                            </TableBody>
+                        </Table>
+                    </CardContent>
+                </Card>
             </div>
 
             {/* ================= MODAL CHECKOUT OTOMATIS ================= */}
