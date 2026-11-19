@@ -132,7 +132,7 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
         <AppLayout title="Broadcast Massal">
             <Head title="Broadcast Massal & Anti-Ban — SAPA BisnisWA" />
 
-            <div className="space-y-6 pb-12 font-sans antialiased text-[#1f1f1f]">
+            <div className="flex flex-col gap-6 pb-12 font-sans antialiased text-[#1f1f1f]">
                 {/* ================= 1. MANTIS BREADCRUMB & HEADER ================= */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-[#e6ebf1]">
                     <div>
@@ -197,7 +197,7 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                     <div className="p-6">
                         <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             {/* Left Column: Form Settings */}
-                            <div className="space-y-4 text-xs">
+                            <div className="flex flex-col gap-4 text-xs">
                                 <div>
                                     <label className="block font-semibold text-[#595959] mb-1.5">Nama Kampanye</label>
                                     <input
@@ -324,7 +324,7 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
                                 )}
 
                                 {/* Media Attachment */}
-                                <div className="space-y-2">
+                                <div className="flex flex-col gap-2">
                                     <div className="flex items-center justify-between">
                                         <label className="font-semibold text-[#595959] flex items-center gap-1.5">
                                             <Paperclip className="size-3.5 text-[#8c8c8c]" />
@@ -520,7 +520,7 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
 
                             {/* Right Column: Message & Spintax Simulator */}
                             <div className="space-y-4 text-xs flex flex-col justify-between">
-                                <div className="space-y-2.5">
+                                <div className="flex flex-col gap-2.5">
                                     <div className="flex justify-between items-center">
                                         <label className="font-semibold text-[#595959]">Template Pesan (Mendukung Spintax)</label>
                                         <span className="text-[11px] text-[#8c8c8c]">Gunakan {'{opsi1|opsi2}'}</span>

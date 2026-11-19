@@ -128,7 +128,7 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
         <AppLayout title="Perangkat WhatsApp">
             <Head title="Manajemen Perangkat WhatsApp — SAPA BisnisWA" />
 
-            <div className="space-y-6 pb-12 font-sans antialiased text-[#1f1f1f]">
+            <div className="flex flex-col gap-6 pb-12 font-sans antialiased text-[#1f1f1f]">
                 {/* ================= 1. MANTIS BREADCRUMB & HEADER ================= */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-[#e6ebf1]">
                     <div>
@@ -301,7 +301,7 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                                 className="h-full flex flex-col"
                             >
                                 <div className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md transition-all flex flex-col justify-between h-full">
-                                    <div className="p-5 pb-3 space-y-3">
+                                    <div className="p-5 pb-3 flex flex-col gap-3">
                                         <div className="flex items-center justify-between">
                                             {dev.status === 'connected' ? (
                                                 <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#52c41a]">
@@ -328,12 +328,12 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                                         </div>
                                     </div>
 
-                                    <div className="p-5 pt-0 space-y-3">
+                                    <div className="p-5 pt-0 flex flex-col gap-3">
                                         {dev.status === 'qr_ready' && (
                                             <div className="text-center p-3 bg-[#fafafb] rounded-lg border border-[#f0f0f0] space-y-2 animate-fade-in">
                                                 {dev.qr_code ? (
                                                     <>
-                                                        <img src={dev.qr_code} alt="QR Code WhatsApp" className="w-40 h-40 mx-auto rounded-lg object-contain bg-white p-2 border border-[#e6ebf1] shadow-2xs" />
+                                                        <img src={dev.qr_code} alt="QR Code WhatsApp" className="size-40 mx-auto rounded-lg object-contain bg-white p-2 border border-[#e6ebf1] shadow-2xs" />
                                                         <div className="p-2.5 bg-[#e6f4ff] rounded-lg border border-[#91caff] text-left space-y-0.5">
                                                             <p className="text-[11px] font-bold text-[#262626] flex items-center gap-1">
                                                                 <Smartphone className="size-3.5 text-[#1677ff]" />
@@ -504,7 +504,7 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                                 </button>
                             </div>
 
-                            <form onSubmit={handleSaveEdit} className="p-5 space-y-4">
+                            <form onSubmit={handleSaveEdit} className="p-5 flex flex-col gap-4">
                                 <div>
                                     <label className="block text-xs font-semibold text-[#595959] mb-1.5">
                                         Nama / Label Perangkat
@@ -523,7 +523,7 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
                                     <label className="block text-xs font-semibold text-[#595959] mb-1.5">
                                         Mode Daya &amp; Status Baterai
                                     </label>
-                                    <div className="space-y-2">
+                                    <div className="flex flex-col gap-2">
                                         <label className={`flex items-start gap-2.5 p-3 rounded-lg border cursor-pointer transition-all ${
                                             editBatteryMode === 'cloud'
                                                 ? 'border-[#1677ff] bg-[#e6f4ff]/50'

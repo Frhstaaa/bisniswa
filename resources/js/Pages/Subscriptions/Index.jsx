@@ -115,7 +115,7 @@ export default function SubscriptionsIndex({ workspace, subscription, plans = []
         <AppLayout title="Kelola Langganan">
             <Head title="Sistem Langganan & Saldo Kuota — SAPA BisnisWA" />
 
-            <div className="space-y-6 pb-12 font-sans antialiased text-[#1f1f1f]">
+            <div className="flex flex-col gap-6 pb-12 font-sans antialiased text-[#1f1f1f]">
                 {/* ================= 1. MANTIS BREADCRUMB & HEADER ================= */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-[#e6ebf1]">
                     <div>
@@ -449,7 +449,7 @@ export default function SubscriptionsIndex({ workspace, subscription, plans = []
                                     </button>
                                 </div>
 
-                                <form onSubmit={handleCheckout} className="space-y-4 text-xs">
+                                <form onSubmit={handleCheckout} className="flex flex-col gap-4 text-xs">
                                     {/* Billing Cycle Selector */}
                                     <div>
                                         <label className="block font-semibold text-[#595959] mb-1.5">Siklus Berlangganan:</label>
@@ -581,9 +581,9 @@ export default function SubscriptionsIndex({ workspace, subscription, plans = []
 
                                     {/* Interactive QRIS Preview Box */}
                                     {paymentMethod === 'qris' && (
-                                        <div className="p-4 bg-[#fafafb] rounded-lg border border-[#e6ebf1] text-center space-y-2">
-                                            <div className="w-32 h-32 mx-auto bg-white p-2 rounded-lg border border-[#d9d9d9] shadow-2xs flex items-center justify-center">
-                                                <QrCode className="w-24 h-24 text-[#1677ff]" />
+                                        <div className="p-4 bg-[#fafafb] rounded-lg border border-[#e6ebf1] text-center flex flex-col gap-2">
+                                            <div className="size-32 mx-auto bg-white p-2 rounded-lg border border-[#d9d9d9] shadow-2xs flex items-center justify-center">
+                                                <QrCode className="size-24 text-[#1677ff]" />
                                             </div>
                                             <div className="text-[11px] font-semibold text-[#595959]">
                                                 Scan dengan BCA, Mandiri, GoPay, OVO, Dana, ShopeePay
@@ -599,7 +599,7 @@ export default function SubscriptionsIndex({ workspace, subscription, plans = []
                                     )}
 
                                     {paymentMethod === 'bca_va' && (
-                                        <div className="p-4 bg-[#fafafb] rounded-lg border border-[#e6ebf1] space-y-1.5 text-center">
+                                        <div className="p-4 bg-[#fafafb] rounded-lg border border-[#e6ebf1] flex flex-col gap-1.5 text-center">
                                             <div className="text-[11px] text-[#8c8c8c]">Nomor Virtual Account BCA:</div>
                                             <div className="font-mono text-base font-bold text-[#1677ff] tracking-widest">
                                                 8091 0812 9988 2341
@@ -658,7 +658,7 @@ export default function SubscriptionsIndex({ workspace, subscription, plans = []
                                     </button>
                                 </div>
 
-                                <form onSubmit={handleTopup} className="space-y-3.5 text-xs">
+                                <form onSubmit={handleTopup} className="flex flex-col gap-3.5 text-xs">
                                     <div>
                                         <label className="block font-semibold text-[#595959] mb-1.5">Jumlah Kuota Tambahan</label>
                                         <select

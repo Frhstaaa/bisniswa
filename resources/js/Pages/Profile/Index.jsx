@@ -3,6 +3,8 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import AppLayout from '../../Layouts/AppLayout';
 import { Button } from '../../Components/ui/button';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../../Components/ui/card';
+import { Separator } from '../../Components/ui/separator';
 import {
     User,
     Mail,
@@ -44,11 +46,11 @@ export default function ProfileIndex({ user, workspace }) {
         <AppLayout title="Pengaturan Profil">
             <Head title="Pengaturan Akun & Keamanan — SAPA BisnisWA" />
 
-            <div className="space-y-6 pb-12 max-w-5xl font-sans antialiased text-[#1f1f1f]">
+            <div className="flex flex-col gap-6 pb-12 max-w-5xl font-sans antialiased text-[#1f1f1f]">
                 {/* ================= 1. MANTIS BREADCRUMB & HEADER ================= */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-[#e6ebf1]">
-                    <div>
-                        <div className="flex items-center gap-1.5 text-xs text-[#8c8c8c] mb-1 font-medium">
+                    <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-1.5 text-xs text-[#8c8c8c] font-medium">
                             <Link href="/dashboard" className="hover:text-[#1677ff] transition-colors">
                                 Dashboard
                             </Link>
@@ -60,7 +62,7 @@ export default function ProfileIndex({ user, workspace }) {
                         <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#262626]">
                             Pengaturan Profil Akun &amp; Keamanan
                         </h1>
-                        <p className="text-xs text-[#8c8c8c] mt-1">
+                        <p className="text-xs text-[#8c8c8c]">
                             Kelola identitas penanggung jawab, informasi workspace bisnis, dan kredensial keamanan akun Anda.
                         </p>
                     </div>
@@ -68,30 +70,27 @@ export default function ProfileIndex({ user, workspace }) {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {/* Left Column: Profile Form (2 cols) */}
-                    <div className="md:col-span-2 space-y-6">
+                    <div className="md:col-span-2 flex flex-col gap-6">
                         {/* Profile Info Card */}
-                        <motion.div
-                            whileHover={{ y: -2, transition: { duration: 0.15 } }}
-                            className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md transition-all overflow-hidden"
-                        >
-                            <div className="p-5 pb-4 border-b border-[#f0f0f0]">
-                                <div className="flex items-center gap-2">
+                        <Card>
+                            <CardHeader className="border-b border-[#f0f0f0]">
+                                <div className="flex items-center gap-2.5">
                                     <div className="size-8 rounded-lg bg-[#e6f4ff] text-[#1677ff] border border-[#91caff] flex items-center justify-center">
                                         <User className="size-4" />
                                     </div>
-                                    <div>
-                                        <h3 className="text-sm font-bold text-[#262626]">
-                                            Informasi Akun & Perusahaan
-                                        </h3>
-                                        <p className="text-xs text-[#8c8c8c]">
+                                    <div className="flex flex-col gap-0.5">
+                                        <CardTitle className="text-sm font-bold">
+                                            Informasi Akun &amp; Perusahaan
+                                        </CardTitle>
+                                        <CardDescription>
                                             Perbarui nama penanggung jawab dan identitas nama workspace
-                                        </p>
+                                        </CardDescription>
                                     </div>
                                 </div>
-                            </div>
+                            </CardHeader>
 
-                            <div className="p-5">
-                                <form onSubmit={handleUpdateProfile} className="space-y-4 text-xs">
+                            <CardContent className="pt-5">
+                                <form onSubmit={handleUpdateProfile} className="flex flex-col gap-4 text-xs">
                                     <div>
                                         <label className="block font-semibold text-[#595959] mb-1.5">Nama Penanggung Jawab</label>
                                         <div className="relative">
@@ -100,7 +99,7 @@ export default function ProfileIndex({ user, workspace }) {
                                                 type="text"
                                                 value={profileData.name}
                                                 onChange={(e) => setProfileData('name', e.target.value)}
-                                                className="w-full pl-9 pr-3 py-2 rounded-lg border border-[#d9d9d9] text-xs text-[#262626] focus:border-[#1677ff] focus:ring-2 focus:ring-[#1677ff]/10 focus:outline-none transition-all"
+                                                className="w-full h-9 pl-9 pr-3 rounded-lg border border-[#d9d9d9] text-xs text-[#262626] focus:border-[#1677ff] focus:ring-2 focus:ring-[#1677ff]/10 focus:outline-none transition-all"
                                                 required
                                             />
                                         </div>
@@ -116,7 +115,7 @@ export default function ProfileIndex({ user, workspace }) {
                                                     type="email"
                                                     value={profileData.email}
                                                     onChange={(e) => setProfileData('email', e.target.value)}
-                                                    className="w-full pl-9 pr-3 py-2 rounded-lg border border-[#d9d9d9] text-xs text-[#262626] focus:border-[#1677ff] focus:ring-2 focus:ring-[#1677ff]/10 focus:outline-none transition-all"
+                                                    className="w-full h-9 pl-9 pr-3 rounded-lg border border-[#d9d9d9] text-xs text-[#262626] focus:border-[#1677ff] focus:ring-2 focus:ring-[#1677ff]/10 focus:outline-none transition-all"
                                                     required
                                                 />
                                             </div>
@@ -132,7 +131,7 @@ export default function ProfileIndex({ user, workspace }) {
                                                     value={profileData.phone}
                                                     onChange={(e) => setProfileData('phone', e.target.value)}
                                                     placeholder="+6281234567890"
-                                                    className="w-full pl-9 pr-3 py-2 rounded-lg border border-[#d9d9d9] text-xs font-mono text-[#262626] focus:border-[#1677ff] focus:ring-2 focus:ring-[#1677ff]/10 focus:outline-none transition-all"
+                                                    className="w-full h-9 pl-9 pr-3 rounded-lg border border-[#d9d9d9] text-xs font-mono text-[#262626] focus:border-[#1677ff] focus:ring-2 focus:ring-[#1677ff]/10 focus:outline-none transition-all"
                                                 />
                                             </div>
                                         </div>
@@ -146,48 +145,47 @@ export default function ProfileIndex({ user, workspace }) {
                                                 type="text"
                                                 value={profileData.workspace_name}
                                                 onChange={(e) => setProfileData('workspace_name', e.target.value)}
-                                                className="w-full pl-9 pr-3 py-2 rounded-lg border border-[#d9d9d9] text-xs text-[#262626] focus:border-[#1677ff] focus:ring-2 focus:ring-[#1677ff]/10 focus:outline-none transition-all"
+                                                className="w-full h-9 pl-9 pr-3 rounded-lg border border-[#d9d9d9] text-xs text-[#262626] focus:border-[#1677ff] focus:ring-2 focus:ring-[#1677ff]/10 focus:outline-none transition-all"
                                                 required
                                             />
                                         </div>
                                     </div>
 
-                                    <div className="flex justify-end pt-2 border-t border-[#f0f0f0]">
+                                    <Separator className="bg-[#f0f0f0]" />
+
+                                    <div className="flex justify-end">
                                         <Button
                                             type="submit"
                                             disabled={processingProfile}
-                                            className="h-9 px-4 bg-[#1677ff] hover:bg-[#0958d9] text-white text-xs font-semibold rounded-lg shadow-[0_2px_0_rgba(0,0,0,0.043)] cursor-pointer"
+                                            className="h-9 px-4 bg-[#1677ff] hover:bg-[#0958d9] text-white text-xs font-semibold rounded-lg cursor-pointer"
                                         >
                                             {processingProfile ? 'Menyimpan...' : 'Simpan Perubahan'}
                                         </Button>
                                     </div>
                                 </form>
-                            </div>
-                        </motion.div>
+                            </CardContent>
+                        </Card>
 
                         {/* Password Card */}
-                        <motion.div
-                            whileHover={{ y: -2, transition: { duration: 0.15 } }}
-                            className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md transition-all overflow-hidden"
-                        >
-                            <div className="p-5 pb-4 border-b border-[#f0f0f0]">
-                                <div className="flex items-center gap-2">
+                        <Card>
+                            <CardHeader className="border-b border-[#f0f0f0]">
+                                <div className="flex items-center gap-2.5">
                                     <div className="size-8 rounded-lg bg-[#fffbe6] text-[#faad14] border border-[#ffe58f] flex items-center justify-center">
                                         <Lock className="size-4" />
                                     </div>
-                                    <div>
-                                        <h3 className="text-sm font-bold text-[#262626]">
+                                    <div className="flex flex-col gap-0.5">
+                                        <CardTitle className="text-sm font-bold">
                                             Perbarui Kata Sandi
-                                        </h3>
-                                        <p className="text-xs text-[#8c8c8c]">
+                                        </CardTitle>
+                                        <CardDescription>
                                             Pastikan akun Anda menggunakan kombinasi kata sandi yang kuat
-                                        </p>
+                                        </CardDescription>
                                     </div>
                                 </div>
-                            </div>
+                            </CardHeader>
 
-                            <div className="p-5">
-                                <form onSubmit={handleUpdatePassword} className="space-y-4 text-xs">
+                            <CardContent className="pt-5">
+                                <form onSubmit={handleUpdatePassword} className="flex flex-col gap-4 text-xs">
                                     <div>
                                         <label className="block font-semibold text-[#595959] mb-1.5">Kata Sandi Saat Ini</label>
                                         <input
@@ -195,7 +193,7 @@ export default function ProfileIndex({ user, workspace }) {
                                             value={passwordData.current_password}
                                             onChange={(e) => setPasswordData('current_password', e.target.value)}
                                             placeholder="••••••••"
-                                            className="w-full px-3 py-2 rounded-lg border border-[#d9d9d9] text-xs text-[#262626] focus:border-[#1677ff] focus:ring-2 focus:ring-[#1677ff]/10 focus:outline-none transition-all"
+                                            className="w-full h-9 px-3 rounded-lg border border-[#d9d9d9] text-xs text-[#262626] focus:border-[#1677ff] focus:ring-2 focus:ring-[#1677ff]/10 focus:outline-none transition-all"
                                             required
                                         />
                                         {passwordErrors.current_password && (
@@ -211,7 +209,7 @@ export default function ProfileIndex({ user, workspace }) {
                                                 value={passwordData.password}
                                                 onChange={(e) => setPasswordData('password', e.target.value)}
                                                 placeholder="Min. 6 karakter"
-                                                className="w-full px-3 py-2 rounded-lg border border-[#d9d9d9] text-xs text-[#262626] focus:border-[#1677ff] focus:ring-2 focus:ring-[#1677ff]/10 focus:outline-none transition-all"
+                                                className="w-full h-9 px-3 rounded-lg border border-[#d9d9d9] text-xs text-[#262626] focus:border-[#1677ff] focus:ring-2 focus:ring-[#1677ff]/10 focus:outline-none transition-all"
                                                 required
                                             />
                                             {passwordErrors.password && (
@@ -226,67 +224,68 @@ export default function ProfileIndex({ user, workspace }) {
                                                 value={passwordData.password_confirmation}
                                                 onChange={(e) => setPasswordData('password_confirmation', e.target.value)}
                                                 placeholder="••••••••"
-                                                className="w-full px-3 py-2 rounded-lg border border-[#d9d9d9] text-xs text-[#262626] focus:border-[#1677ff] focus:ring-2 focus:ring-[#1677ff]/10 focus:outline-none transition-all"
+                                                className="w-full h-9 px-3 rounded-lg border border-[#d9d9d9] text-xs text-[#262626] focus:border-[#1677ff] focus:ring-2 focus:ring-[#1677ff]/10 focus:outline-none transition-all"
                                                 required
                                             />
                                         </div>
                                     </div>
 
-                                    <div className="flex justify-end pt-2 border-t border-[#f0f0f0]">
+                                    <Separator className="bg-[#f0f0f0]" />
+
+                                    <div className="flex justify-end">
                                         <Button
                                             type="submit"
                                             disabled={processingPassword}
-                                            className="h-9 px-4 bg-[#1677ff] hover:bg-[#0958d9] text-white text-xs font-semibold rounded-lg shadow-[0_2px_0_rgba(0,0,0,0.043)] cursor-pointer"
+                                            className="h-9 px-4 bg-[#1677ff] hover:bg-[#0958d9] text-white text-xs font-semibold rounded-lg cursor-pointer"
                                         >
                                             {processingPassword ? 'Memperbarui...' : 'Ganti Kata Sandi'}
                                         </Button>
                                     </div>
                                 </form>
-                            </div>
-                        </motion.div>
+                            </CardContent>
+                        </Card>
                     </div>
 
                     {/* Right Column: Account Status Card (1 col) */}
-                    <div className="space-y-4">
-                        <motion.div
-                            whileHover={{ y: -2, transition: { duration: 0.15 } }}
-                            className="bg-white rounded-xl border border-[#e6ebf1] shadow-[0_1px_3px_rgba(0,0,0,0.03)] p-5 space-y-4 relative overflow-hidden"
-                        >
-                            <div className="flex items-center gap-3.5">
-                                <div className="size-12 rounded-full bg-[#e6f4ff] text-[#1677ff] border border-[#91caff] flex items-center justify-center font-bold text-lg shrink-0">
-                                    {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                    <div className="flex flex-col gap-4">
+                        <Card>
+                            <CardContent className="p-5 flex flex-col gap-4">
+                                <div className="flex items-center gap-3.5">
+                                    <div className="size-12 rounded-full bg-[#e6f4ff] text-[#1677ff] border border-[#91caff] flex items-center justify-center font-bold text-lg shrink-0">
+                                        {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                                    </div>
+                                    <div className="min-w-0">
+                                        <h3 className="font-bold text-sm text-[#262626] truncate">{user.name}</h3>
+                                        <p className="text-xs text-[#8c8c8c] truncate">{user.email}</p>
+                                        <span className="text-[11px] font-semibold text-[#52c41a] mt-0.5 block">
+                                            {user.role === 'superadmin' ? 'Superadmin' : 'Client Owner'}
+                                        </span>
+                                    </div>
                                 </div>
-                                <div className="min-w-0">
-                                    <h3 className="font-bold text-sm text-[#262626] truncate">{user.name}</h3>
-                                    <p className="text-xs text-[#8c8c8c] truncate">{user.email}</p>
-                                    <span className="text-[11px] font-semibold text-[#52c41a] mt-0.5 block">
-                                        {user.role === 'superadmin' ? 'Superadmin' : 'Client Owner'}
-                                    </span>
-                                </div>
-                            </div>
 
-                            <div className="p-3.5 bg-[#fafafb] rounded-lg border border-[#f0f0f0] text-xs space-y-2.5 text-[#595959]">
-                                <div className="flex items-center justify-between">
-                                    <span className="text-[#8c8c8c]">ID Workspace:</span>
-                                    <span className="font-mono font-bold text-[#262626]">#{workspace.id}</span>
+                                <div className="p-3.5 bg-[#fafafb] rounded-lg border border-[#f0f0f0] text-xs flex flex-col gap-2.5 text-[#595959]">
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-[#8c8c8c]">ID Workspace:</span>
+                                        <span className="font-mono font-bold text-[#262626]">#{workspace.id}</span>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-[#8c8c8c]">Status Akun:</span>
+                                        <span className="font-semibold text-[#52c41a]">Aktif &amp; Terverifikasi</span>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-[#8c8c8c]">Keamanan:</span>
+                                        <span className="font-semibold text-[#1677ff]">Enkripsi SHA-256</span>
+                                    </div>
                                 </div>
-                                <div className="flex items-center justify-between">
-                                    <span className="text-[#8c8c8c]">Status Akun:</span>
-                                    <span className="font-semibold text-[#52c41a]">Aktif &amp; Terverifikasi</span>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                    <span className="text-[#8c8c8c]">Keamanan:</span>
-                                    <span className="font-semibold text-[#1677ff]">Enkripsi SHA-256</span>
-                                </div>
-                            </div>
 
-                            <div className="p-3 bg-[#e6f4ff] rounded-lg border border-[#91caff] text-xs flex items-start gap-2.5">
-                                <ShieldCheck className="size-4 shrink-0 mt-0.5 text-[#1677ff]" />
-                                <p className="text-[11px] leading-relaxed text-[#262626]">
-                                    Akun dilindungi oleh enkripsi sesi standar enterprise <strong>SAPA BisnisWA</strong>.
-                                </p>
-                            </div>
-                        </motion.div>
+                                <div className="p-3 bg-[#e6f4ff] rounded-lg border border-[#91caff] text-xs flex items-start gap-2.5">
+                                    <ShieldCheck className="size-4 shrink-0 mt-0.5 text-[#1677ff]" />
+                                    <p className="text-[11px] leading-relaxed text-[#262626]">
+                                        Akun dilindungi oleh enkripsi sesi standar enterprise <strong>SAPA BisnisWA</strong>.
+                                    </p>
+                                </div>
+                            </CardContent>
+                        </Card>
                     </div>
                 </div>
             </div>
