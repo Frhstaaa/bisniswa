@@ -92,11 +92,11 @@ export default function AdminDashboard({
         <AppLayout title="Dashboard Admin">
             <Head title="Dashboard Admin — SAPA" />
 
-            <div className="flex flex-col gap-6 pb-12 font-sans antialiased text-[#262626]">
+            <div className="flex min-w-0 max-w-full flex-col gap-5 pb-12 font-sans text-[#262626] antialiased sm:gap-6">
                 {/* ================= 1. BREADCRUMB & HEADER ================= */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-[#e6ebf1]">
+                <div className="flex min-w-0 flex-col justify-between gap-4 border-b border-[#e6ebf1] pb-4 sm:flex-row sm:items-end">
                     <div className="flex flex-col gap-1">
-                        <div className="flex items-center gap-1.5 text-xs text-[#8c8c8c] font-medium">
+                        <div className="hidden items-center gap-1.5 text-xs font-medium text-[#8c8c8c] sm:flex">
                             <Link href="/admin/dashboard" className="hover:text-[#1677ff] transition-colors">
                                 Dashboard
                             </Link>
@@ -110,21 +110,21 @@ export default function AdminDashboard({
                         </h1>
                     </div>
 
-                    <div className="flex items-center gap-2.5">
+                    <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:items-center">
                         <Link href="/admin/payments" prefetch>
                             <Button
                                 size="sm"
-                                className="h-9 px-3.5 text-xs font-semibold bg-[#1677ff] hover:bg-[#0958d9] text-white rounded-lg cursor-pointer flex items-center gap-1.5"
+                                className="h-9 w-full px-3 text-xs font-semibold bg-[#1677ff] hover:bg-[#0958d9] text-white rounded-lg cursor-pointer flex items-center justify-center gap-1.5 sm:w-auto sm:px-3.5"
                             >
                                 <Receipt className="size-3.5" />
-                                <span>Verifikasi Tagihan ({metrics.pending_payments_count || 0})</span>
+                                <span className="truncate">Tagihan ({metrics.pending_payments_count || 0})</span>
                             </Button>
                         </Link>
                         <Link href="/admin/settings" prefetch>
                             <Button
                                 variant="outline"
                                 size="sm"
-                                className="h-9 px-3.5 text-xs font-semibold border-[#d9d9d9] bg-white hover:bg-slate-50 text-[#595959] rounded-lg cursor-pointer flex items-center gap-1.5"
+                                className="h-9 w-full px-3 text-xs font-semibold border-[#d9d9d9] bg-white hover:bg-slate-50 text-[#595959] rounded-lg cursor-pointer flex items-center justify-center gap-1.5 sm:w-auto sm:px-3.5"
                             >
                                 <Settings className="size-3.5 text-[#8c8c8c]" />
                                 <span>Pengaturan</span>
@@ -134,7 +134,7 @@ export default function AdminDashboard({
                 </div>
 
                 {/* ================= 2. KPI STAT CARDS (ROW 1) ================= */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-4">
                     <Card>
                         <CardHeader className="pb-2">
                             <div className="flex items-center justify-between">
@@ -212,7 +212,7 @@ export default function AdminDashboard({
                 </div>
 
                 {/* ================= 3. ICON STATS (ROW 2) ================= */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div className="hidden">
                     <Card>
                         <CardContent className="p-4.5 flex items-center gap-4">
                             <div className="size-11 rounded-full bg-[#e6f4ff] text-[#1677ff] border border-[#91caff] flex items-center justify-center shrink-0">
@@ -268,7 +268,7 @@ export default function AdminDashboard({
 
                 {/* ================= 4. INCOME OVERVIEW & PLAN DISTRIBUTION (ROW 3) ================= */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    <Card className="lg:col-span-8">
+                    <Card className="min-w-0 lg:col-span-8">
                         <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#f0f0f0]">
                             <div className="flex flex-col gap-0.5">
                                 <CardTitle className="text-sm font-bold">Ringkasan Pendapatan</CardTitle>
@@ -431,7 +431,7 @@ export default function AdminDashboard({
 
                 {/* ================= 5. RECENT PAYMENTS & NEW CLIENTS (ROW 4) ================= */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    <Card className="lg:col-span-8 overflow-hidden">
+                    <Card className="min-w-0 overflow-hidden lg:col-span-8">
                         <CardHeader className="flex flex-row items-center justify-between border-b border-[#f0f0f0]">
                             <div className="flex flex-col gap-0.5">
                                 <CardTitle className="text-sm font-bold">Transaksi Terbaru</CardTitle>
@@ -449,8 +449,8 @@ export default function AdminDashboard({
                             </Link>
                         </CardHeader>
 
-                        <CardContent className="p-0">
-                            <Table>
+                        <CardContent className="overflow-x-auto p-0">
+                            <Table className="min-w-[640px]">
                                 <TableHeader>
                                     <TableRow className="hover:bg-[#fafafb]">
                                         <TableHead>No. Invoice</TableHead>

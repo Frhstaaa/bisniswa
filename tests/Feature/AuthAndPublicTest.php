@@ -405,7 +405,8 @@ class AuthAndPublicTest extends TestCase
 
         $response->assertSessionHasErrors(['email']);
         $errors = session('errors')->get('email');
-        $this->assertStringContainsString('Portal Admin', $errors[0]);
+        $this->assertStringNotContainsString('/admin/login', $errors[0]);
+        $this->assertStringContainsString('portal pengguna', $errors[0]);
     }
 
     public function test_admin_login_rejects_tenant_email_with_differentiated_guidance(): void

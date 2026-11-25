@@ -276,11 +276,11 @@ export default function Dashboard({
         <AppLayout title="Ikhtisar Workspace">
             <Head title="Workspace Overview — SAPA" />
 
-            <div className="flex flex-col gap-6 pb-12 font-sans antialiased text-[#1f1f1f]">
+            <div className="flex min-w-0 max-w-full flex-col gap-5 pb-12 font-sans text-[#1f1f1f] antialiased sm:gap-6">
                 {/* ================= 1. BREADCRUMB & HEADER ================= */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-[#e6ebf1]">
+                <div className="flex min-w-0 flex-col justify-between gap-4 border-b border-[#e6ebf1] pb-4 sm:flex-row sm:items-end">
                     <div className="flex flex-col gap-1">
-                        <div className="flex items-center gap-1.5 text-xs text-[#8c8c8c] font-medium">
+                        <div className="hidden items-center gap-1.5 text-xs font-medium text-[#8c8c8c] sm:flex">
                             <Link href="/dashboard" className="hover:text-[#1677ff] transition-colors">
                                 Dashboard
                             </Link>
@@ -291,7 +291,7 @@ export default function Dashboard({
                         </div>
                         <div className="flex flex-wrap items-center gap-3">
                             <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#262626]">
-                                {workspace?.name || 'Workspace'} Overview
+                                {workspace?.name || 'Workspace'}
                             </h1>
                             <span className="text-xs text-[#8c8c8c] font-medium">
                                 Paket {stats?.plan_name || 'Starter Lite'}
@@ -299,9 +299,9 @@ export default function Dashboard({
                         </div>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-2">
+                    <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:flex-wrap sm:items-center">
                         {/* Live Sync Pill */}
-                        <div className="inline-flex items-center rounded-lg border border-[#d9d9d9] bg-white px-3 h-9 text-xs text-[#595959] gap-2">
+                        <div className="col-span-2 inline-flex h-9 min-w-0 items-center justify-between gap-2 rounded-lg border border-[#d9d9d9] bg-white px-3 text-xs text-[#595959] sm:col-span-1 sm:justify-start">
                             <span className="relative flex size-2">
                                 <span className="animate-ping absolute inline-flex size-full rounded-full bg-[#1677ff] opacity-75" />
                                 <span className="relative inline-flex size-2 rounded-full bg-[#1677ff]" />
@@ -325,7 +325,7 @@ export default function Dashboard({
                             variant="outline"
                             size="sm"
                             onClick={() => setIsGuideModalOpen(true)}
-                            className="h-9 px-3.5 text-xs font-semibold border-[#d9d9d9] bg-white hover:bg-slate-50 text-[#595959] rounded-lg cursor-pointer flex items-center gap-1.5"
+                            className="h-9 w-full px-3 text-xs font-semibold border-[#d9d9d9] bg-white hover:bg-slate-50 text-[#595959] rounded-lg cursor-pointer flex items-center justify-center gap-1.5 sm:w-auto sm:px-3.5"
                         >
                             <Lightbulb className="size-3.5 text-[#faad14]" />
                             <span>Panduan</span>
@@ -367,7 +367,7 @@ export default function Dashboard({
                 </div>
 
                 {/* ================= 2. SHADCN KPI STAT CARDS (ROW 1) ================= */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-4">
                     {/* Card 1 */}
                     <Card>
                         <CardHeader className="pb-2">
@@ -472,7 +472,7 @@ export default function Dashboard({
                 </div>
 
                 {/* ================= 3. SUMMARY ICON WIDGETS (ROW 2) ================= */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div className="hidden">
                     <Card>
                         <CardContent className="p-4.5 flex items-center gap-4">
                             <div className="size-11 rounded-full bg-[#e6f4ff] text-[#1677ff] border border-[#91caff] flex items-center justify-center shrink-0">
@@ -546,25 +546,25 @@ export default function Dashboard({
                                 value="overview"
                                 className="rounded-lg px-3.5 py-1.5 text-xs font-semibold whitespace-nowrap data-[state=active]:bg-white data-[state=active]:text-[#1677ff] data-[state=active]:shadow-xs text-[#595959] hover:text-[#262626] cursor-pointer"
                             >
-                                Ikhtisar Utama
+                                Ringkasan
                             </TabsTrigger>
                             <TabsTrigger
                                 value="analytics"
                                 className="rounded-lg px-3.5 py-1.5 text-xs font-semibold whitespace-nowrap data-[state=active]:bg-white data-[state=active]:text-[#1677ff] data-[state=active]:shadow-xs text-[#595959] hover:text-[#262626] cursor-pointer"
                             >
-                                Throughput &amp; Grafik
+                                Grafik Pesan
                             </TabsTrigger>
                             <TabsTrigger
                                 value="infrastructure"
                                 className="rounded-lg px-3.5 py-1.5 text-xs font-semibold whitespace-nowrap data-[state=active]:bg-white data-[state=active]:text-[#1677ff] data-[state=active]:shadow-xs text-[#595959] hover:text-[#262626] cursor-pointer"
                             >
-                                Dual Server &amp; Gateway
+                                Perangkat
                             </TabsTrigger>
                             <TabsTrigger
                                 value="logs"
                                 className="rounded-lg px-3.5 py-1.5 text-xs font-semibold whitespace-nowrap data-[state=active]:bg-white data-[state=active]:text-[#1677ff] data-[state=active]:shadow-xs text-[#595959] hover:text-[#262626] cursor-pointer"
                             >
-                                Log Riwayat Pesan
+                                Riwayat
                             </TabsTrigger>
                         </TabsList>
                     </div>

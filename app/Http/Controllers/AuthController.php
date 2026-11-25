@@ -53,10 +53,10 @@ class AuthController extends Controller
             return redirect()->intended('/dashboard')->with('success', 'Selamat datang kembali, '.$user->name.'!');
         }
 
-        // If email belongs to a system admin, guide them to /admin/login
+        // Keep the administrator entry point undisclosed on the public login flow.
         if (Admin::where('email', $credentials['email'])->exists()) {
             return back()->withErrors([
-                'email' => 'Akun ini adalah Administrator Sistem. Silakan masuk melalui Portal Admin di /admin/login.',
+                'email' => 'Akun ini tidak dapat digunakan pada portal pengguna.',
             ])->onlyInput('email');
         }
 

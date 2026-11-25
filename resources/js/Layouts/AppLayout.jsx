@@ -407,12 +407,12 @@ export default function AppLayout({ children, title }) {
 
             {/* ================= 2. MAIN CONTENT AREA & TOPBAR ================= */}
             <div
-                className={`flex-1 flex flex-col ${
+                className={`flex-1 flex min-h-screen max-w-full flex-col overflow-x-hidden ${
                     isCollapsed ? 'lg:pl-[72px]' : 'lg:pl-64'
                 } min-w-0 transition-all duration-300 ease-in-out`}
             >
                 {/* TOP HEADER BAR */}
-                <header className="sticky top-0 z-40 h-16 bg-white/95 backdrop-blur-md border-b border-[#e6ebf1] px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+                <header className="sticky top-0 z-40 flex h-16 w-full min-w-0 items-center justify-between gap-2 border-b border-[#e6ebf1] bg-white/95 px-3 shadow-[0_1px_3px_rgba(0,0,0,0.02)] backdrop-blur-md sm:gap-3 sm:px-6 lg:px-8">
                     {/* Left: Mobile Drawer Trigger, Desktop Sidebar Toggle & Breadcrumb */}
                     <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
                         {/* Mobile Drawer Button */}
@@ -465,7 +465,7 @@ export default function AppLayout({ children, title }) {
                     </div>
 
                     {/* Right: SLA, Mode Switcher & Primary Action */}
-                    <div className="flex items-center gap-2 sm:gap-2.5">
+                    <div className="flex min-w-0 items-center gap-1.5 sm:gap-2.5">
                         {/* SLA Indicator */}
                         <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-blue-200/80 bg-[#e6f4ff]/60 text-[11px] font-medium text-[#1677ff]">
                             <span className="w-1.5 h-1.5 rounded-full bg-[#1677ff] animate-pulse" />
@@ -474,7 +474,7 @@ export default function AppLayout({ children, title }) {
 
                         {/* Mode Switcher Segmented Control */}
                         {isSaaSStaff && (
-                            <div className="flex items-center p-0.5 rounded-lg bg-slate-100 border border-[#e6ebf1] text-xs font-medium">
+                            <div className="hidden items-center rounded-lg border border-[#e6ebf1] bg-slate-100 p-0.5 text-xs font-medium sm:flex">
                                 <Link
                                     href="/dashboard"
                                     prefetch
@@ -530,7 +530,7 @@ export default function AppLayout({ children, title }) {
                 </header>
 
                 {/* MAIN PAGE BODY */}
-                <main className="flex-1 p-4 sm:p-6 lg:p-8 space-y-6 pb-24 lg:pb-8">
+                <main className="flex-1 min-w-0 max-w-full overflow-x-hidden px-3 py-4 pb-24 sm:px-5 sm:py-6 lg:p-8 lg:pb-8">
                     {/* Themed In-Page Flash Alerts */}
                     {!dismissedFlash && flash.success && (
                         <Alert variant="success" onClose={() => setDismissedFlash(true)} className="animate-fade-in-up">
@@ -556,7 +556,7 @@ export default function AppLayout({ children, title }) {
                     {/* Floating Toast Notification */}
                     <Toast />
 
-                    <PageTransition routeKey={url} className="space-y-6">
+                    <PageTransition routeKey={url} className="min-w-0 max-w-full space-y-6">
                         {children}
                     </PageTransition>
                 </main>
@@ -572,7 +572,7 @@ export default function AppLayout({ children, title }) {
                     />
 
                     {/* Drawer Panel */}
-                    <div className="relative flex-1 flex flex-col max-w-xs w-full bg-white text-slate-800 border-r border-[#e6ebf1] z-10 shadow-2xl">
+                    <div className="relative z-10 flex w-[min(20rem,calc(100vw-2rem))] min-w-0 flex-col border-r border-[#e6ebf1] bg-white text-slate-800 shadow-2xl">
                         {/* Drawer Header */}
                         <div className="h-16 px-5 flex items-center justify-between border-b border-[#e6ebf1] bg-white">
                             <SapaLogo variant="full" size="md" />
@@ -607,9 +607,9 @@ export default function AppLayout({ children, title }) {
                                                             : 'text-[#595959] hover:bg-slate-50 hover:text-[#1677ff] font-medium'
                                                     }`}
                                                 >
-                                                    <div className="flex items-center gap-2.5">
+                                                    <div className="flex min-w-0 items-center gap-2.5">
                                                         <Icon className={`w-4 h-4 ${item.active ? 'text-[#1677ff]' : 'text-slate-400'}`} />
-                                                        <span>{item.label}</span>
+                                                        <span className="truncate">{item.label}</span>
                                                     </div>
                                                     {item.badge && (
                                                         <span
@@ -695,7 +695,7 @@ export default function AppLayout({ children, title }) {
             )}
 
             {/* ================= 4. CURATED MOBILE FLOATING DOCK ================= */}
-            <nav className="lg:hidden fixed bottom-2.5 inset-x-3 bg-white/95 backdrop-blur-md border border-[#e6ebf1] px-2 py-1.5 rounded-2xl flex items-center justify-around z-30 shadow-xl shadow-slate-900/5">
+            <nav className="fixed inset-x-2 bottom-2.5 z-30 flex min-w-0 items-center justify-around rounded-2xl border border-[#e6ebf1] bg-white/95 px-1 py-1.5 shadow-xl shadow-slate-900/5 backdrop-blur-md sm:inset-x-3 sm:px-2 lg:hidden">
                 {(isAdminRoute ? adminMobileDockItems : clientMobileDockItems).map((item) => {
                     const Icon = item.icon;
                     return (
@@ -703,14 +703,14 @@ export default function AppLayout({ children, title }) {
                             key={item.href}
                             href={item.href}
                             prefetch
-                            className={`flex flex-col items-center gap-1 text-[10px] transition-all py-1.5 px-3 rounded-xl min-h-[44px] justify-center ${
+                            className={`flex min-h-[44px] min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-xl px-1 py-1.5 text-[10px] transition-all sm:px-3 ${
                                 item.active
                                     ? 'font-semibold text-white bg-[#1677ff] shadow-md shadow-blue-500/20'
                                     : 'font-medium text-slate-500 hover:text-slate-900'
                             }`}
                         >
                             <Icon className={`w-4 h-4 ${item.active ? 'text-white' : ''}`} />
-                            <span className="leading-none">{item.label}</span>
+                            <span className="max-w-full truncate leading-none">{item.label}</span>
                         </Link>
                     );
                 })}

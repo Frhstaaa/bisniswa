@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Head, Link, useForm } from '@inertiajs/react';
-import { motion } from 'framer-motion';
-import { ShieldCheck, Lock, Mail, Building, Phone, User, Check, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
-import SapaLogo from '../../Components/SapaLogo';
+import React from 'react';
+import { Link, useForm } from '@inertiajs/react';
+import AuthShell, { inputClassName, primaryButtonClassName } from '../../Components/AuthShell';
 
-export default function Register({ plans, selectedPlanSlug }) {
-    const selectedPlan = plans?.find((p) => p.slug === selectedPlanSlug) || plans?.[1] || plans?.[0];
-
+export default function Register({ plans = [], selectedPlanSlug }) {
+    const defaultPlan = plans.find((plan) => plan.slug === selectedPlanSlug) || plans[1] || plans[0];
     const { data, setData, post, processing, errors } = useForm({
         name: '',
         email: '',
@@ -14,313 +11,100 @@ export default function Register({ plans, selectedPlanSlug }) {
         workspace_name: '',
         password: '',
         password_confirmation: '',
-        plan_id: selectedPlan ? selectedPlan.id : 2,
+        plan_id: defaultPlan?.id || '',
         billing_cycle: 'monthly',
     });
 
-    // Real-time Email Validity Checker state
-    const [emailCheck, setEmailCheck] = useState({
-        status: 'idle',
-        message: '',
-    });
-
-    useEffect(() => {
-        const email = data.email.trim();
-        if (!email || !email.includes('@')) {
-            setEmailCheck({ status: 'idle', message: '' });
-            return;
-        }
-
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            setEmailCheck({ status: 'invalid', message: 'Format email belum lengkap' });
-            return;
-        }
-
-        setEmailCheck({ status: 'checking', message: 'Memverifikasi domain...' });
-
-        const timer = setTimeout(async () => {
-            try {
-                const res = await fetch('/api/check-email', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify({ email }),
-                });
-                const result = await res.json();
-                if (result.valid) {
-                    setEmailCheck({
-                        status: 'valid',
-                        message: result.is_registered ? 'Email sudah terdaftar (silakan masuk)' : 'Domain email aktif & valid',
-                    });
-                } else {
-                    setEmailCheck({
-                        status: 'invalid',
-                        message: result.message || 'Alamat email tidak valid',
-                    });
-                }
-            } catch (err) {
-                setEmailCheck({ status: 'idle', message: '' });
-            }
-        }, 450);
-
-        return () => clearTimeout(timer);
-    }, [data.email]);
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const handleSubmit = (event) => {
+        event.preventDefault();
         post('/register');
     };
 
+    const isAnnual = data.billing_cycle === 'annually';
+    const selectedPlan = plans.find((plan) => Number(plan.id) === Number(data.plan_id)) || defaultPlan;
+    const selectedPrice = selectedPlan
+        ? Number(isAnnual ? (selectedPlan.price_annually || selectedPlan.price_monthly * 10) : selectedPlan.price_monthly)
+        : 0;
+
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-            className="min-h-screen bg-white bg-grid-pattern flex flex-col justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8 font-sans antialiased"
+        <AuthShell
+            title="Daftar"
+            heading="Buat akun SAPA"
+            description="Isi data akun dan pilih paket."
+            width="max-w-xl"
+            footer={<><span>Sudah punya akun? </span><Link href="/login" className="font-semibold text-[#1e50ff] hover:underline">Masuk</Link></>}
         >
-            <Head title="Daftar Akun & Langganan — SAPA" />
-
-            <div className="w-full max-w-xl mx-auto text-center space-y-3">
-                <Link href="/" className="inline-flex items-center gap-3 group">
-                    <SapaLogo variant="full" size="lg" />
-                </Link>
-                <h2 className="text-xl sm:text-3xl font-black text-slate-900 tracking-tight">Pendaftaran Akun & <span className="font-editorial-italic font-normal">Langganan Gateway</span></h2>
-                <p className="text-xs text-[#64748b] px-4">
-                    Dapatkan akses instan ke REST API Key dan SAPA Alert Engine setelah pendaftaran
-                </p>
-            </div>
-
-            <div className="mt-6 sm:mt-8 w-full max-w-xl mx-auto">
-                <div className="bg-white border border-[#e2e8f0] py-6 px-4 sm:py-8 sm:px-8 shadow-card rounded-2xl space-y-6">
-                    <form onSubmit={handleSubmit} className="space-y-4 text-xs">
-                        {/* Billing Cycle & Plan Selector */}
-                        <div>
-                            <div className="flex items-center justify-between mb-2">
-                                <label className="block font-semibold text-[#334155]">Pilih Paket & Siklus:</label>
-                                <div className="flex items-center p-0.5 bg-slate-100 rounded-lg text-[11px] font-bold">
-                                    <button
-                                        type="button"
-                                        onClick={() => setData('billing_cycle', 'monthly')}
-                                        className={`px-2.5 py-1 rounded-md transition-all ${
-                                            data.billing_cycle === 'monthly'
-                                                ? 'bg-white text-[#1e50ff] shadow-xs'
-                                                : 'text-slate-500 hover:text-slate-800'
-                                        }`}
-                                    >
-                                        Bulanan
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => setData('billing_cycle', 'annually')}
-                                        className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1 ${
-                                            data.billing_cycle === 'annually'
-                                                ? 'bg-[#1e50ff] text-white shadow-xs'
-                                                : 'text-slate-500 hover:text-slate-800'
-                                        }`}
-                                    >
-                                        <span>Tahunan</span>
-                                        <span className={`text-[9px] px-1 py-0.2 rounded font-black ${
-                                            data.billing_cycle === 'annually' ? 'bg-amber-300 text-amber-950' : 'bg-emerald-100 text-emerald-800'
-                                        }`}>
-                                            Hemat
-                                        </span>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                {plans && plans.map((plan) => {
-                                    const isYearly = data.billing_cycle === 'annually';
-                                    const price = isYearly
-                                        ? parseInt(plan.price_annually || (plan.price_monthly * 10))
-                                        : parseInt(plan.price_monthly);
-                                    const quota = isYearly
-                                        ? ((plan.limits?.monthly_message_quota ?? 5000) * 12)
-                                        : (plan.limits?.monthly_message_quota ?? 5000);
-
-                                    return (
-                                        <div
-                                            key={plan.id}
-                                            onClick={() => setData('plan_id', plan.id)}
-                                            className={`p-3.5 rounded-xl border cursor-pointer transition-all flex flex-col justify-between ${
-                                                data.plan_id === plan.id
-                                                    ? 'border-[#1e50ff] bg-blue-50/50 ring-2 ring-[#1e50ff]'
-                                                    : 'border-[#e2e8f0] hover:border-slate-300'
-                                            }`}
-                                        >
-                                            <div className="flex items-center justify-between">
-                                                <span className="font-bold text-[#0f172a] text-xs">{plan.name}</span>
-                                                {data.plan_id === plan.id && (
-                                                    <span className="w-4 h-4 rounded-full bg-[#1e50ff] text-white flex items-center justify-center">
-                                                        <Check className="w-2.5 h-2.5" />
-                                                    </span>
-                                                )}
-                                            </div>
-                                            <p className="text-xs text-[#1e50ff] font-black mt-1">
-                                                Rp {price.toLocaleString('id-ID')}
-                                                <span className="text-[10px] font-normal text-slate-500"> {isYearly ? '/tahun' : '/bln'}</span>
-                                            </p>
-                                            <p className="text-[10px] text-[#64748b] mt-0.5">
-                                                {plan.limits?.max_devices} Device • {quota.toLocaleString()} Kuota
-                                            </p>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
-
-                        {/* Workspace Name & Personal Name */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <div>
-                                <label className="block font-semibold text-[#334155] mb-1">Nama Perusahaan / Bisnis</label>
-                                <div className="relative">
-                                    <Building className="w-4 h-4 text-[#94a3b8] absolute left-3 top-3" />
-                                    <input
-                                        type="text"
-                                        value={data.workspace_name}
-                                        onChange={(e) => setData('workspace_name', e.target.value)}
-                                        placeholder="PT Digital Niaga"
-                                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-[#e2e8f0] text-xs focus:border-[#1e50ff] focus:ring-1 focus:ring-[#1e50ff] focus:outline-none transition-colors"
-                                        required
-                                    />
-                                </div>
-                                {errors.workspace_name && <p className="text-red-500 text-[11px] mt-1">{errors.workspace_name}</p>}
-                            </div>
-
-                            <div>
-                                <label className="block font-semibold text-[#334155] mb-1">Nama Penanggung Jawab</label>
-                                <div className="relative">
-                                    <User className="w-4 h-4 text-[#94a3b8] absolute left-3 top-3" />
-                                    <input
-                                        type="text"
-                                        value={data.name}
-                                        onChange={(e) => setData('name', e.target.value)}
-                                        placeholder="Budi Santoso"
-                                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-[#e2e8f0] text-xs focus:border-[#1e50ff] focus:ring-1 focus:ring-[#1e50ff] focus:outline-none transition-colors"
-                                        required
-                                    />
-                                </div>
-                                {errors.name && <p className="text-red-500 text-[11px] mt-1">{errors.name}</p>}
-                            </div>
-                        </div>
-
-                        {/* Email & Phone */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <div>
-                                <div className="flex items-center justify-between mb-1">
-                                    <label className="block font-semibold text-[#334155]">Email Bisnis</label>
-                                    {emailCheck.status === 'checking' && (
-                                        <span className="text-[10px] text-slate-400 font-mono animate-pulse">Memverifikasi...</span>
-                                    )}
-                                    {emailCheck.status === 'valid' && (
-                                        <span className="text-[10px] text-[#1e50ff] font-semibold inline-flex items-center gap-0.5">
-                                            <CheckCircle2 className="w-3 h-3 text-[#1e50ff]" />
-                                            <span>{emailCheck.message}</span>
-                                        </span>
-                                    )}
-                                    {emailCheck.status === 'invalid' && (
-                                        <span className="text-[10px] text-red-600 font-semibold inline-flex items-center gap-0.5">
-                                            <AlertCircle className="w-3 h-3 text-red-500" />
-                                            <span>{emailCheck.message}</span>
-                                        </span>
-                                    )}
-                                </div>
-                                <div className="relative">
-                                    <Mail className="w-4 h-4 text-[#94a3b8] absolute left-3 top-3" />
-                                    <input
-                                        type="email"
-                                        value={data.email}
-                                        onChange={(e) => setData('email', e.target.value)}
-                                        placeholder="budi@digitalniaga.id"
-                                        className={`w-full pl-9 pr-3.5 py-2.5 rounded-xl border text-xs transition-colors shadow-2xs ${
-                                            emailCheck.status === 'valid'
-                                                ? 'border-emerald-500 bg-emerald-50/20 focus:border-[#1e50ff] focus:ring-1 focus:ring-[#1e50ff] focus:ring-1 focus:ring-emerald-600'
-                                                : emailCheck.status === 'invalid'
-                                                ? 'border-red-400 bg-red-50/20 focus:border-red-500 focus:ring-1 focus:ring-red-500'
-                                                : 'border-[#e2e8f0] focus:border-[#1e50ff] focus:ring-1 focus:ring-[#1e50ff] focus:outline-none'
-                                        }`}
-                                        required
-                                    />
-                                </div>
-                                {errors.email && <p className="text-red-500 text-[11px] mt-1">{errors.email}</p>}
-                            </div>
-
-                            <div>
-                                <label className="block font-semibold text-[#334155] mb-1">Nomor WhatsApp</label>
-                                <div className="relative">
-                                    <Phone className="w-4 h-4 text-[#94a3b8] absolute left-3 top-3" />
-                                    <input
-                                        type="text"
-                                        value={data.phone}
-                                        onChange={(e) => setData('phone', e.target.value)}
-                                        placeholder="+6281234567890"
-                                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-[#e2e8f0] text-xs font-mono focus:border-[#1e50ff] focus:ring-1 focus:ring-[#1e50ff] focus:outline-none transition-colors"
-                                        required
-                                    />
-                                </div>
-                                {errors.phone && <p className="text-red-500 text-[11px] mt-1">{errors.phone}</p>}
-                            </div>
-                        </div>
-
-                        {/* Password & Confirmation */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <div>
-                                <label className="block font-semibold text-[#334155] mb-1">Kata Sandi (Min. 6 Karakter)</label>
-                                <div className="relative">
-                                    <Lock className="w-4 h-4 text-[#94a3b8] absolute left-3 top-3" />
-                                    <input
-                                        type="password"
-                                        value={data.password}
-                                        onChange={(e) => setData('password', e.target.value)}
-                                        placeholder="••••••••"
-                                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-[#e2e8f0] text-xs focus:border-[#1e50ff] focus:ring-1 focus:ring-[#1e50ff] focus:outline-none transition-colors"
-                                        required
-                                    />
-                                </div>
-                                {errors.password && <p className="text-red-500 text-[11px] mt-1">{errors.password}</p>}
-                            </div>
-
-                            <div>
-                                <label className="block font-semibold text-[#334155] mb-1">Konfirmasi Sandi</label>
-                                <div className="relative">
-                                    <Lock className="w-4 h-4 text-[#94a3b8] absolute left-3 top-3" />
-                                    <input
-                                        type="password"
-                                        value={data.password_confirmation}
-                                        onChange={(e) => setData('password_confirmation', e.target.value)}
-                                        placeholder="••••••••"
-                                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-[#e2e8f0] text-xs focus:border-[#1e50ff] focus:ring-1 focus:ring-[#1e50ff] focus:outline-none transition-colors"
-                                        required
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* API Access Guarantee Notice */}
-                        <div className="p-3 bg-[#fef9c3] rounded-xl border border-[#fde047] text-xs text-[#854d0e] flex items-start gap-2.5">
-                            <ShieldCheck className="w-4 h-4 shrink-0 mt-0.5 text-[#1e50ff]" />
-                            <p className="text-[11px] leading-relaxed text-[#334155]">
-                                Setelah mendaftar, token <strong className="text-[#1e50ff]">REST API Key</strong> dan kuota pengiriman pesan akan otomatis di-generate sehingga aplikasi Anda dapat langsung dihubungkan.
-                            </p>
-                        </div>
-
-                        <button
-                            type="submit"
-                            disabled={processing}
-                            className="btn-press w-full py-3.5 rounded-xl bg-[#1e50ff] hover:bg-emerald-700 text-white text-xs font-bold shadow-md transition-all flex items-center justify-center gap-1.5 disabled:opacity-50"
-                        >
-                            <span>{processing ? 'Memproses Akun & API...' : 'Daftar & Dapatkan API Key Sekarang →'}</span>
-                        </button>
-                    </form>
-
-                    <div className="pt-4 border-t border-[#e2e8f0] text-center text-xs text-[#64748b]">
-                        Sudah memiliki akun?{' '}
-                        <Link href="/login" className="font-bold text-[#1e50ff] hover:underline">
-                            Masuk ke Workspace
-                        </Link>
+            <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="grid gap-4 sm:grid-cols-2">
+                    <div>
+                        <label htmlFor="plan" className="text-sm font-medium text-slate-700">Paket</label>
+                        <select id="plan" value={data.plan_id} onChange={(event) => setData('plan_id', event.target.value)} className={inputClassName} required>
+                            {plans.map((plan) => {
+                                const price = Number(isAnnual ? (plan.price_annually || plan.price_monthly * 10) : plan.price_monthly);
+                                return <option key={plan.id} value={plan.id}>{plan.name} — Rp {price.toLocaleString('id-ID')}/{isAnnual ? 'tahun' : 'bulan'}</option>;
+                            })}
+                        </select>
+                        {errors.plan_id && <p className="mt-1.5 text-sm text-red-600">{errors.plan_id}</p>}
+                    </div>
+                    <div>
+                        <label htmlFor="billing-cycle" className="text-sm font-medium text-slate-700">Pembayaran</label>
+                        <select id="billing-cycle" value={data.billing_cycle} onChange={(event) => setData('billing_cycle', event.target.value)} className={inputClassName}>
+                            <option value="monthly">Bulanan</option>
+                            <option value="annually">Tahunan</option>
+                        </select>
                     </div>
                 </div>
-            </div>
-        </motion.div>
+
+                {selectedPlan && (
+                    <div className="flex items-center justify-between gap-4 rounded-xl bg-blue-50 px-4 py-3 text-sm">
+                        <div>
+                            <p className="font-semibold text-slate-900">{selectedPlan.name}</p>
+                            <p className="text-slate-600">Ditagihkan {isAnnual ? 'setiap tahun' : 'setiap bulan'}</p>
+                        </div>
+                        <p className="shrink-0 text-base font-bold text-[#1e50ff]">Rp {selectedPrice.toLocaleString('id-ID')}</p>
+                    </div>
+                )}
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                    <div>
+                        <label htmlFor="workspace-name" className="text-sm font-medium text-slate-700">Nama bisnis</label>
+                        <input id="workspace-name" type="text" value={data.workspace_name} onChange={(event) => setData('workspace_name', event.target.value)} className={inputClassName} autoComplete="organization" required />
+                        {errors.workspace_name && <p className="mt-1.5 text-sm text-red-600">{errors.workspace_name}</p>}
+                    </div>
+                    <div>
+                        <label htmlFor="name" className="text-sm font-medium text-slate-700">Nama lengkap</label>
+                        <input id="name" type="text" value={data.name} onChange={(event) => setData('name', event.target.value)} className={inputClassName} autoComplete="name" required />
+                        {errors.name && <p className="mt-1.5 text-sm text-red-600">{errors.name}</p>}
+                    </div>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                    <div>
+                        <label htmlFor="register-email" className="text-sm font-medium text-slate-700">Email</label>
+                        <input id="register-email" type="email" value={data.email} onChange={(event) => setData('email', event.target.value)} className={inputClassName} autoComplete="email" required />
+                        {errors.email && <p className="mt-1.5 text-sm text-red-600">{errors.email}</p>}
+                    </div>
+                    <div>
+                        <label htmlFor="phone" className="text-sm font-medium text-slate-700">Nomor WhatsApp</label>
+                        <input id="phone" type="tel" value={data.phone} onChange={(event) => setData('phone', event.target.value)} className={inputClassName} autoComplete="tel" required />
+                        {errors.phone && <p className="mt-1.5 text-sm text-red-600">{errors.phone}</p>}
+                    </div>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                    <div>
+                        <label htmlFor="register-password" className="text-sm font-medium text-slate-700">Kata sandi</label>
+                        <input id="register-password" type="password" value={data.password} onChange={(event) => setData('password', event.target.value)} className={inputClassName} autoComplete="new-password" required />
+                        {errors.password && <p className="mt-1.5 text-sm text-red-600">{errors.password}</p>}
+                    </div>
+                    <div>
+                        <label htmlFor="register-password-confirmation" className="text-sm font-medium text-slate-700">Ulangi kata sandi</label>
+                        <input id="register-password-confirmation" type="password" value={data.password_confirmation} onChange={(event) => setData('password_confirmation', event.target.value)} className={inputClassName} autoComplete="new-password" required />
+                    </div>
+                </div>
+
+                <button type="submit" disabled={processing} className={primaryButtonClassName}>{processing ? 'Membuat akun...' : 'Daftar'}</button>
+            </form>
+        </AuthShell>
     );
 }

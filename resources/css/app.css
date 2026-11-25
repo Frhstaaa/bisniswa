@@ -75,6 +75,24 @@ html {
     text-rendering: optimizeLegibility;
 }
 
+html,
+body,
+#app {
+    max-width: 100%;
+    min-width: 0;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+img,
+svg,
+video,
+canvas {
+    max-width: 100%;
+}
+
 /* Custom Text Selection */
 ::selection {
     background-color: #dbeafe;

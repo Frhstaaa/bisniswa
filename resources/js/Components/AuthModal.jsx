@@ -1,53 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { router, useForm, usePage } from '@inertiajs/react';
-import {
-    X,
-    Mail,
-    Lock,
-    Building2,
-    Phone,
-    User,
-    Check,
-    ArrowRight,
-    Sparkles,
-    ShieldCheck,
-    CheckCircle2,
-    AlertCircle,
-    ArrowLeft,
-    Zap,
-    Copy,
-    MessageSquare,
-} from 'lucide-react';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
+import React, { useEffect, useState } from 'react';
+import { useForm, usePage } from '@inertiajs/react';
+import { X } from 'lucide-react';
 import ModalPortal from './ui/ModalPortal';
 import SapaLogo from './SapaLogo';
+import { inputClassName, primaryButtonClassName } from './AuthShell';
 
-const DEFAULT_FALLBACK_PLANS = [
-    {
-        id: 1,
-        name: 'Starter Lite',
-        slug: 'starter',
-        price_monthly: 99000,
-        price_annually: 990000,
-        limits: { monthly_message_quota: 5000, max_devices: 1 },
-    },
-    {
-        id: 3,
-        name: 'Pro Bisnis',
-        slug: 'pro-bisnis',
-        price_monthly: 179000,
-        price_annually: 1790000,
-        limits: { monthly_message_quota: 20000, max_devices: 3 },
-    },
-    {
-        id: 2,
-        name: 'Enterprise Pro',
-        slug: 'enterprise-pro',
-        price_monthly: 299000,
-        price_annually: 2990000,
-        limits: { monthly_message_quota: 50000, max_devices: 5 },
-    },
+const DEFAULT_PLANS = [
+    { id: 1, name: 'Starter Lite', price_monthly: 99000, price_annually: 990000 },
+    { id: 3, name: 'Pro Bisnis', price_monthly: 179000, price_annually: 1790000 },
+    { id: 2, name: 'Enterprise Pro', price_monthly: 299000, price_annually: 2990000 },
 ];
 
 export default function AuthModal({
@@ -58,14 +19,13 @@ export default function AuthModal({
     initialBillingCycle = 'monthly',
     plans = [],
 }) {
-    const safePlans = Array.isArray(plans) && plans.length > 0 ? plans : DEFAULT_FALLBACK_PLANS;
+    const safePlans = plans.length > 0 ? plans : DEFAULT_PLANS;
     const { flash = {} } = usePage().props;
-    const [mode, setMode] = useState(initialMode); // 'login' | 'register' | 'forgot' | 'forgot_success'
+    const [mode, setMode] = useState(initialMode);
     const [sentEmail, setSentEmail] = useState('');
-    const [directPreviewUrl, setDirectPreviewUrl] = useState('');
-    const [copied, setCopied] = useState(false);
+    const [previewUrl, setPreviewUrl] = useState('');
 
-    // Form for Registration
+    const loginForm = useForm({ email: '', password: '', remember: true });
     const registerForm = useForm({
         name: '',
         email: '',
@@ -73,732 +33,131 @@ export default function AuthModal({
         workspace_name: '',
         password: '',
         password_confirmation: '',
-        plan_id: initialPlanId || (safePlans[0]?.id || 1),
-        billing_cycle: initialBillingCycle || 'monthly',
+        plan_id: initialPlanId || safePlans[0]?.id || '',
+        billing_cycle: initialBillingCycle,
     });
+    const forgotForm = useForm({ email: '' });
 
-    // Form for Login
-    const loginForm = useForm({
-        email: '',
-        password: '',
-        remember: true,
-    });
-
-    // Form for Forgot Password
-    const forgotForm = useForm({
-        email: '',
-    });
-
-    // Real-time Email Validity Checker state
-    const [emailCheck, setEmailCheck] = useState({
-        status: 'idle', // 'idle' | 'checking' | 'valid' | 'invalid'
-        message: '',
-    });
-
-    // Real-time verification when user types in registration email
-    useEffect(() => {
-        const email = registerForm.data.email.trim();
-        if (!email || !email.includes('@')) {
-            setEmailCheck({ status: 'idle', message: '' });
-            return;
-        }
-
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            setEmailCheck({ status: 'invalid', message: 'Format alamat email belum lengkap' });
-            return;
-        }
-
-        setEmailCheck({ status: 'checking', message: 'Memeriksa validitas domain...' });
-
-        const timer = setTimeout(async () => {
-            try {
-                const res = await fetch('/api/check-email', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify({ email }),
-                });
-                const result = await res.json();
-                if (result.valid) {
-                    setEmailCheck({
-                        status: 'valid',
-                        message: result.is_registered ? 'Email ini sudah terdaftar' : 'Domain email aktif & valid',
-                        isRegistered: result.is_registered,
-                    });
-                } else {
-                    setEmailCheck({
-                        status: 'invalid',
-                        message: result.message || 'Alamat email tidak valid',
-                    });
-                }
-            } catch (err) {
-                setEmailCheck({ status: 'idle', message: '' });
-            }
-        }, 450);
-
-        return () => clearTimeout(timer);
-    }, [registerForm.data.email]);
-
-    // Sync mode and plan when initial props change
     useEffect(() => {
         if (isOpen) {
             setMode(initialMode);
-            registerForm.setData((prev) => ({
-                ...prev,
-                ...(initialPlanId ? { plan_id: initialPlanId } : {}),
-                ...(initialBillingCycle ? { billing_cycle: initialBillingCycle } : {}),
-            }));
+            if (initialPlanId) registerForm.setData('plan_id', initialPlanId);
+            registerForm.setData('billing_cycle', initialBillingCycle || 'monthly');
         }
     }, [isOpen, initialMode, initialPlanId, initialBillingCycle]);
 
-    // Handle ESC key to close
     useEffect(() => {
-        const handleKeyDown = (e) => {
-            if (e.key === 'Escape' && isOpen) {
-                onClose();
-            }
+        const closeOnEscape = (event) => {
+            if (event.key === 'Escape' && isOpen) onClose();
         };
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
+        window.addEventListener('keydown', closeOnEscape);
+        return () => window.removeEventListener('keydown', closeOnEscape);
     }, [isOpen, onClose]);
 
     if (!isOpen) return null;
 
-    const selectedPlan = safePlans.find((p) => p.id === parseInt(registerForm.data.plan_id)) || safePlans[0] || {};
+    const selectedPlan = safePlans.find((plan) => Number(plan.id) === Number(registerForm.data.plan_id)) || safePlans[0];
+    const isAnnual = registerForm.data.billing_cycle === 'annually';
+    const selectedPrice = Number(isAnnual ? (selectedPlan?.price_annually || selectedPlan?.price_monthly * 10) : selectedPlan?.price_monthly || 0);
 
-    const handleLoginSubmit = (e) => {
-        e.preventDefault();
-        loginForm.post('/login', {
-            preserveScroll: true,
-            onSuccess: () => onClose(),
-        });
+    const submitLogin = (event) => {
+        event.preventDefault();
+        loginForm.post('/login', { preserveScroll: true, onSuccess: onClose });
     };
 
-    const handleRegisterSubmit = (e) => {
-        e.preventDefault();
-        registerForm.post('/register', {
-            preserveScroll: true,
-            onSuccess: () => onClose(),
-        });
+    const submitRegister = (event) => {
+        event.preventDefault();
+        registerForm.post('/register', { preserveScroll: true, onSuccess: onClose });
     };
 
-    const handleForgotSubmit = (e) => {
-        e.preventDefault();
-        const email = forgotForm.data.email;
+    const submitForgot = (event) => {
+        event.preventDefault();
         forgotForm.post('/forgot-password', {
             preserveScroll: true,
             onSuccess: (page) => {
-                setSentEmail(email);
-                if (page?.props?.flash?.preview_url) {
-                    setDirectPreviewUrl(page.props.flash.preview_url);
-                }
+                setSentEmail(forgotForm.data.email);
+                setPreviewUrl(page?.props?.flash?.preview_url || '');
                 setMode('forgot_success');
             },
         });
     };
 
+    const fieldError = (message) => message && <p className="mt-1.5 text-sm text-red-600">{message}</p>;
+
     return (
         <ModalPortal isOpen={isOpen} onClose={onClose}>
-            <div
-                className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-slate-950/65 backdrop-blur-md overflow-y-auto animate-fade-in"
-                onClick={onClose}
-            >
-                {/* Modal Card */}
-                <div
-                    className={`relative w-full ${
-                        mode === 'register' ? 'max-w-xl' : 'max-w-md'
-                    } bg-white rounded-2xl border border-slate-200/80 shadow-2xl overflow-hidden z-10 transition-all max-h-[92vh] flex flex-col my-auto text-left`}
-                    onClick={(e) => e.stopPropagation()}
-                >
+            <div className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-slate-950/60 p-4" onClick={onClose}>
+                <div className={`my-auto max-h-[92vh] w-full overflow-y-auto rounded-2xl bg-white p-6 shadow-xl sm:p-8 ${mode === 'register' ? 'max-w-xl' : 'max-w-md'}`} onClick={(event) => event.stopPropagation()}>
+                    <div className="mb-6 flex items-start justify-between gap-4">
+                        <SapaLogo variant="full" size="md" />
+                        <button type="button" onClick={onClose} className="flex size-9 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-900" aria-label="Tutup">
+                            <X className="size-5" />
+                        </button>
+                    </div>
 
-                {/* Modal Top Header Bar */}
-                <div className="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between bg-slate-50/70 shrink-0">
-                    <SapaLogo variant="full" size="md" />
-
-                    <button
-                        onClick={onClose}
-                        className="h-8 w-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors"
-                        aria-label="Tutup"
-                    >
-                        <X className="w-4 h-4" />
-                    </button>
-                </div>
-
-                {/* Modal Body with internal scrolling */}
-                <div className="p-5 sm:p-6 overflow-y-auto no-scrollbar space-y-5">
-                    {/* Mode Segmented Tabs (for Login and Register) */}
                     {(mode === 'login' || mode === 'register') && (
-                        <div className="flex items-center p-1 rounded-xl bg-slate-100 border border-slate-200 text-xs font-semibold">
-                            <button
-                                type="button"
-                                onClick={() => setMode('register')}
-                                className={`flex-1 py-1.5 rounded-lg transition-all ${
-                                    mode === 'register'
-                                        ? 'bg-white text-slate-900 font-bold shadow-2xs'
-                                        : 'text-slate-600 hover:text-slate-900'
-                                }`}
-                            >
-                                Daftar & Langganan
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setMode('login')}
-                                className={`flex-1 py-1.5 rounded-lg transition-all ${
-                                    mode === 'login'
-                                        ? 'bg-white text-slate-900 font-bold shadow-2xs'
-                                        : 'text-slate-600 hover:text-slate-900'
-                                }`}
-                            >
-                                Masuk ke Akun
-                            </button>
+                        <div className="mb-6 grid grid-cols-2 rounded-xl bg-slate-100 p-1 text-sm font-medium">
+                            <button type="button" onClick={() => setMode('login')} className={`h-10 rounded-lg ${mode === 'login' ? 'bg-white text-slate-950 shadow-sm' : 'text-slate-600'}`}>Masuk</button>
+                            <button type="button" onClick={() => setMode('register')} className={`h-10 rounded-lg ${mode === 'register' ? 'bg-white text-slate-950 shadow-sm' : 'text-slate-600'}`}>Daftar</button>
                         </div>
                     )}
 
-                    {/* ================= MODE: LOGIN ================= */}
+                    {flash.error && <p className="mb-4 rounded-xl bg-red-50 p-3 text-sm text-red-700">{flash.error}</p>}
+
                     {mode === 'login' && (
-                        <div className="space-y-4">
-                            <div>
-                                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 border border-blue-200 text-[10.5px] font-bold text-blue-700 mb-2">
-                                    <Building2 className="w-3.5 h-3.5 text-blue-600" />
-                                    <span>Portal Klien & Bisnis (Tenant)</span>
-                                </div>
-                                <h3 className="text-lg font-bold text-slate-900 tracking-tight">
-                                    Masuk ke Workspace Bisnis
-                                </h3>
-                                <p className="text-xs text-slate-500 mt-0.5">
-                                    Gunakan alamat email dan kata sandi akun bisnis/klien Anda.
-                                </p>
-                            </div>
-
-                            <form onSubmit={handleLoginSubmit} className="space-y-3.5 text-xs">
-                                <div>
-                                    <label className="block font-medium text-slate-700 mb-1">Email Bisnis / Klien</label>
-                                    <div className="relative">
-                                        <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-                                        <input
-                                            type="email"
-                                            value={loginForm.data.email}
-                                            onChange={(e) => loginForm.setData('email', e.target.value)}
-                                            placeholder="nama@email.com / bisnis.com"
-                                            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:border-[#1e50ff] focus:outline-none focus:ring-1 focus:ring-blue-600 shadow-2xs"
-                                            required
-                                        />
-                                    </div>
-                                    {loginForm.errors.email && (
-                                        <p className="text-red-600 text-[11px] mt-1 font-medium">{loginForm.errors.email}</p>
-                                    )}
-                                </div>
-
-                                <div>
-                                    <div className="flex justify-between items-center mb-1">
-                                        <label className="font-medium text-slate-700">Kata Sandi</label>
-                                        <button
-                                            type="button"
-                                            onClick={() => setMode('forgot')}
-                                            className="text-[11px] font-semibold text-[#1e50ff] hover:underline"
-                                        >
-                                            Lupa password?
-                                        </button>
-                                    </div>
-                                    <div className="relative">
-                                        <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-                                        <input
-                                            type="password"
-                                            value={loginForm.data.password}
-                                            onChange={(e) => loginForm.setData('password', e.target.value)}
-                                            placeholder="••••••••"
-                                            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:border-[#1e50ff] focus:outline-none focus:ring-1 focus:ring-blue-600 shadow-2xs"
-                                            required
-                                        />
-                                    </div>
-                                    {loginForm.errors.password && (
-                                        <p className="text-red-600 text-[11px] mt-1 font-medium">{loginForm.errors.password}</p>
-                                    )}
-                                </div>
-
-                                <div className="flex items-center justify-between pt-1">
-                                    <label className="flex items-center gap-2 cursor-pointer text-slate-600">
-                                        <input
-                                            type="checkbox"
-                                            checked={loginForm.data.remember}
-                                            onChange={(e) => loginForm.setData('remember', e.target.checked)}
-                                            className="rounded border-slate-300 text-[#1e50ff] focus:ring-blue-500"
-                                        />
-                                        <span>Ingat sesi masuk</span>
-                                    </label>
-                                </div>
-
-                                <Button
-                                    type="submit"
-                                    disabled={loginForm.processing}
-                                    className="w-full bg-[#1e50ff] hover:bg-[#153ec7] shadow-[0_8px_20px_-4px_rgba(30,80,255,0.4)] text-white font-semibold text-xs h-9 rounded-lg shadow-xs"
-                                >
-                                    <span>{loginForm.processing ? 'Memverifikasi...' : 'Masuk ke Dashboard'}</span>
-                                    <ArrowRight className="w-3.5 h-3.5 ml-1" />
-                                </Button>
+                        <div>
+                            <h2 className="text-xl font-bold text-slate-950">Masuk ke SAPA</h2>
+                            <form onSubmit={submitLogin} className="mt-5 space-y-4">
+                                <div><label className="text-sm font-medium text-slate-700">Email</label><input type="email" value={loginForm.data.email} onChange={(event) => loginForm.setData('email', event.target.value)} className={inputClassName} required />{fieldError(loginForm.errors.email)}</div>
+                                <div><div className="flex justify-between gap-4"><label className="text-sm font-medium text-slate-700">Kata sandi</label><button type="button" onClick={() => setMode('forgot')} className="text-sm font-medium text-[#1e50ff] hover:underline">Lupa kata sandi?</button></div><input type="password" value={loginForm.data.password} onChange={(event) => loginForm.setData('password', event.target.value)} className={inputClassName} required />{fieldError(loginForm.errors.password)}</div>
+                                <label className="flex items-center gap-2 text-sm text-slate-600"><input type="checkbox" checked={loginForm.data.remember} onChange={(event) => loginForm.setData('remember', event.target.checked)} className="size-4 rounded border-slate-300 text-[#1e50ff]" />Ingat saya</label>
+                                <button type="submit" disabled={loginForm.processing} className={primaryButtonClassName}>{loginForm.processing ? 'Memproses...' : 'Masuk'}</button>
                             </form>
-
-                            <div className="pt-2 text-center text-xs text-slate-500 border-t border-slate-100">
-                                Belum memiliki akun?{' '}
-                                <button
-                                    type="button"
-                                    onClick={() => setMode('register')}
-                                    className="font-bold text-[#1e50ff] hover:underline"
-                                >
-                                    Daftar & Berlangganan Sekarang
-                                </button>
-                            </div>
-
-                            <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 text-[11px] text-slate-600 flex items-center justify-between gap-2">
-                                <div className="flex items-center gap-2 min-w-0">
-                                    <ShieldCheck className="w-4 h-4 text-blue-600 shrink-0" />
-                                    <span className="truncate">Administrator internal SaaS?</span>
-                                </div>
-                                <a
-                                    href="/admin/login"
-                                    className="font-bold text-blue-600 hover:text-blue-700 hover:underline shrink-0 inline-flex items-center gap-1"
-                                >
-                                    <span>Portal Admin</span>
-                                    <span>&rarr;</span>
-                                </a>
-                            </div>
                         </div>
                     )}
 
-                    {/* ================= MODE: REGISTER & SUBSCRIBE ================= */}
                     {mode === 'register' && (
-                        <div className="space-y-4">
-                            <div>
-                                <h3 className="text-lg font-bold text-slate-900 tracking-tight">
-                                    Pendaftaran Akun & Langganan
-                                </h3>
-                                <p className="text-xs text-slate-500 mt-0.5">
-                                    Pilih paket layanan dan lengkapi identitas workspace Anda.
-                                </p>
-                            </div>
-
-                            {/* Interactive Plan Picker */}
-                            <div>
-                                <div className="flex items-center justify-between mb-2">
-                                    <label className="block text-xs font-semibold text-slate-700">
-                                        Pilih Paket Layanan:
-                                    </label>
-                                    <div className="flex items-center p-0.5 bg-slate-100 rounded-lg text-[10px] font-bold">
-                                        <button
-                                            type="button"
-                                            onClick={() => registerForm.setData('billing_cycle', 'monthly')}
-                                            className={`px-2 py-0.5 rounded-md transition-all ${
-                                                registerForm.data.billing_cycle === 'monthly'
-                                                    ? 'bg-white text-[#1e50ff] shadow-xs'
-                                                    : 'text-slate-500 hover:text-slate-800'
-                                            }`}
-                                        >
-                                            Bulanan
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={() => registerForm.setData('billing_cycle', 'annually')}
-                                            className={`px-2 py-0.5 rounded-md transition-all flex items-center gap-1 ${
-                                                registerForm.data.billing_cycle === 'annually'
-                                                    ? 'bg-[#1e50ff] text-white shadow-xs'
-                                                    : 'text-slate-500 hover:text-slate-800'
-                                            }`}
-                                        >
-                                            <span>Tahunan</span>
-                                            <span className={`text-[9px] px-1 py-0.2 rounded font-black ${
-                                                registerForm.data.billing_cycle === 'annually' ? 'bg-amber-300 text-amber-950' : 'bg-emerald-100 text-emerald-800'
-                                            }`}>
-                                                Hemat
-                                            </span>
-                                        </button>
-                                    </div>
+                        <div>
+                            <h2 className="text-xl font-bold text-slate-950">Buat akun SAPA</h2>
+                            <form onSubmit={submitRegister} className="mt-5 space-y-4">
+                                <div className="grid gap-4 sm:grid-cols-2">
+                                    <div><label className="text-sm font-medium text-slate-700">Paket</label><select value={registerForm.data.plan_id} onChange={(event) => registerForm.setData('plan_id', event.target.value)} className={inputClassName}>{safePlans.map((plan) => { const price = Number(isAnnual ? (plan.price_annually || plan.price_monthly * 10) : plan.price_monthly); return <option key={plan.id} value={plan.id}>{plan.name} — Rp {price.toLocaleString('id-ID')}/{isAnnual ? 'tahun' : 'bulan'}</option>; })}</select></div>
+                                    <div><label className="text-sm font-medium text-slate-700">Pembayaran</label><select value={registerForm.data.billing_cycle} onChange={(event) => registerForm.setData('billing_cycle', event.target.value)} className={inputClassName}><option value="monthly">Bulanan</option><option value="annually">Tahunan</option></select></div>
                                 </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                                    {safePlans.map((p) => {
-                                        const isSelected = parseInt(registerForm.data.plan_id) === p.id;
-                                        const isYearly = registerForm.data.billing_cycle === 'annually';
-                                        const monthlyPrice = Math.round(Number(p.price_monthly ?? p.price ?? 99000));
-                                        const annualPrice = Math.round(Number(p.price_annually ?? (monthlyPrice * 10)));
-                                        const price = isYearly ? annualPrice : monthlyPrice;
-                                        const maxDev = p.limits?.max_devices ?? p.max_devices ?? 1;
-                                        const quota = p.limits?.monthly_message_quota ?? p.monthly_message_quota ?? 5000;
-                                        return (
-                                            <div
-                                                key={p.id}
-                                                onClick={() => registerForm.setData('plan_id', p.id)}
-                                                className={`p-3 rounded-xl border cursor-pointer transition-all flex flex-col justify-between ${
-                                                    isSelected
-                                                        ? 'border-[#1e50ff] bg-blue-50/80 ring-1 ring-emerald-600 shadow-2xs'
-                                                        : 'border-slate-200 hover:border-slate-300 bg-white'
-                                                }`}
-                                            >
-                                                <div className="flex items-center justify-between">
-                                                    <span className="font-bold text-slate-900 text-xs">{p.name}</span>
-                                                    {isSelected && (
-                                                        <span className="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center">
-                                                            <Check className="w-2.5 h-2.5" />
-                                                        </span>
-                                                    )}
-                                                </div>
-                                                <div className="flex items-baseline gap-1 mt-1">
-                                                    <span className="text-[#1e50ff] font-extrabold text-sm font-mono tabular-nums">
-                                                        Rp {price.toLocaleString('id-ID')}
-                                                    </span>
-                                                    <span className="text-[10px] font-normal text-slate-500"> {isYearly ? '/tahun' : '/bln'}</span>
-                                                </div>
-                                                {isYearly && (
-                                                    <div className="text-[10px] text-emerald-700 font-semibold leading-tight mt-0.5">
-                                                        Setara Rp {Math.round(annualPrice / 12).toLocaleString('id-ID')}/bln (Hemat 2 Bln)
-                                                    </div>
-                                                )}
-                                                <p className="text-[10px] text-slate-500 mt-1">
-                                                    {maxDev} Perangkat • {quota.toLocaleString('id-ID')} Pesan/bln
-                                                </p>
-                                            </div>
-                                        );
-                                    })}
+                                <div className="flex items-center justify-between gap-4 rounded-xl bg-blue-50 px-4 py-3 text-sm">
+                                    <div><p className="font-semibold text-slate-900">{selectedPlan?.name}</p><p className="text-slate-600">Ditagihkan {isAnnual ? 'setiap tahun' : 'setiap bulan'}</p></div>
+                                    <p className="shrink-0 font-bold text-[#1e50ff]">Rp {selectedPrice.toLocaleString('id-ID')}</p>
                                 </div>
-                            </div>
-
-                            {/* Registration Form */}
-                            <form onSubmit={handleRegisterSubmit} className="space-y-3 text-xs">
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <div>
-                                        <label className="block font-medium text-slate-700 mb-1">Nama Lengkap</label>
-                                        <div className="relative">
-                                            <User className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
-                                            <input
-                                                type="text"
-                                                value={registerForm.data.name}
-                                                onChange={(e) => registerForm.setData('name', e.target.value)}
-                                                placeholder="Budi Santoso"
-                                                className="w-full pl-8 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:border-[#1e50ff] focus:outline-none shadow-2xs"
-                                                required
-                                            />
-                                        </div>
-                                        {registerForm.errors.name && (
-                                            <p className="text-red-600 text-[11px] mt-1 font-medium">{registerForm.errors.name}</p>
-                                        )}
-                                    </div>
-
-                                    <div>
-                                        <div className="flex items-center justify-between mb-1">
-                                            <label className="block font-medium text-slate-700">Alamat Email (Login)</label>
-                                            {emailCheck.status === 'checking' && (
-                                                <span className="text-[10px] text-slate-400 font-mono animate-pulse">Memverifikasi...</span>
-                                            )}
-                                            {emailCheck.status === 'valid' && (
-                                                <span className="text-[10px] text-[#1e50ff] font-semibold inline-flex items-center gap-0.5">
-                                                    <CheckCircle2 className="w-3 h-3 text-[#1e50ff]" />
-                                                    <span>{emailCheck.message}</span>
-                                                </span>
-                                            )}
-                                            {emailCheck.status === 'invalid' && (
-                                                <span className="text-[10px] text-red-600 font-semibold inline-flex items-center gap-0.5">
-                                                    <AlertCircle className="w-3 h-3 text-red-500" />
-                                                    <span>{emailCheck.message}</span>
-                                                </span>
-                                            )}
-                                        </div>
-                                        <div className="relative">
-                                            <Mail className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
-                                            <input
-                                                type="email"
-                                                value={registerForm.data.email}
-                                                onChange={(e) => registerForm.setData('email', e.target.value)}
-                                                placeholder="budi@kampus.ac.id"
-                                                className={`w-full pl-8 pr-3 py-2 text-xs rounded-lg border transition-colors shadow-2xs ${
-                                                    emailCheck.status === 'valid'
-                                                        ? 'border-emerald-500 bg-blue-50/20 focus:border-[#1e50ff] focus:ring-1 focus:ring-emerald-600'
-                                                        : emailCheck.status === 'invalid'
-                                                        ? 'border-red-400 bg-red-50/20 focus:border-red-500 focus:ring-1 focus:ring-red-500'
-                                                        : 'border-slate-200 focus:border-[#1e50ff] focus:outline-none'
-                                                }`}
-                                                required
-                                            />
-                                        </div>
-                                        {registerForm.errors.email && (
-                                            <p className="text-red-600 text-[11px] mt-1 font-medium">{registerForm.errors.email}</p>
-                                        )}
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <div>
-                                        <label className="block font-medium text-slate-700 mb-1">Nama Workspace / Bisnis</label>
-                                        <div className="relative">
-                                            <Building2 className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
-                                            <input
-                                                type="text"
-                                                value={registerForm.data.workspace_name}
-                                                onChange={(e) => registerForm.setData('workspace_name', e.target.value)}
-                                                placeholder="Nama Tim / Bisnis Anda"
-                                                className="w-full pl-8 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:border-[#1e50ff] focus:outline-none shadow-2xs"
-                                                required
-                                            />
-                                        </div>
-                                        {registerForm.errors.workspace_name && (
-                                            <p className="text-red-600 text-[11px] mt-1 font-medium">{registerForm.errors.workspace_name}</p>
-                                        )}
-                                    </div>
-
-                                    <div>
-                                        <label className="block font-medium text-slate-700 mb-1">Nomor WhatsApp</label>
-                                        <div className="relative">
-                                            <Phone className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
-                                            <input
-                                                type="text"
-                                                value={registerForm.data.phone}
-                                                onChange={(e) => registerForm.setData('phone', e.target.value)}
-                                                placeholder="+6281234567890"
-                                                className="w-full pl-8 pr-3 py-2 text-xs font-mono rounded-lg border border-slate-200 focus:border-[#1e50ff] focus:outline-none shadow-2xs"
-                                                required
-                                            />
-                                        </div>
-                                        {registerForm.errors.phone && (
-                                            <p className="text-red-600 text-[11px] mt-1 font-medium">{registerForm.errors.phone}</p>
-                                        )}
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <div>
-                                        <label className="block font-medium text-slate-700 mb-1">Kata Sandi</label>
-                                        <div className="relative">
-                                            <Lock className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
-                                            <input
-                                                type="password"
-                                                value={registerForm.data.password}
-                                                onChange={(e) => registerForm.setData('password', e.target.value)}
-                                                placeholder="Min. 6 karakter"
-                                                className="w-full pl-8 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:border-[#1e50ff] focus:outline-none shadow-2xs"
-                                                required
-                                            />
-                                        </div>
-                                        {registerForm.errors.password && (
-                                            <p className="text-red-600 text-[11px] mt-1 font-medium">{registerForm.errors.password}</p>
-                                        )}
-                                    </div>
-
-                                    <div>
-                                        <label className="block font-medium text-slate-700 mb-1">Konfirmasi Sandi</label>
-                                        <div className="relative">
-                                            <Lock className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
-                                            <input
-                                                type="password"
-                                                value={registerForm.data.password_confirmation}
-                                                onChange={(e) => registerForm.setData('password_confirmation', e.target.value)}
-                                                placeholder="Ulangi sandi"
-                                                className="w-full pl-8 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:border-[#1e50ff] focus:outline-none shadow-2xs"
-                                                required
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="pt-2">
-                                    <Button
-                                        type="submit"
-                                        disabled={registerForm.processing}
-                                        className="w-full bg-[#1e50ff] hover:bg-[#153ec7] shadow-[0_8px_20px_-4px_rgba(30,80,255,0.4)] text-white font-semibold text-xs h-9 rounded-lg shadow-xs"
-                                    >
-                                        <span>
-                                            {registerForm.processing
-                                                ? 'Memproses Akun...'
-                                                : `Daftar & Aktifkan Paket ${selectedPlan ? selectedPlan.name : ''}`}
-                                        </span>
-                                        <ArrowRight className="w-3.5 h-3.5 ml-1" />
-                                    </Button>
-                                </div>
+                                <div className="grid gap-4 sm:grid-cols-2"><div><label className="text-sm font-medium text-slate-700">Nama lengkap</label><input value={registerForm.data.name} onChange={(event) => registerForm.setData('name', event.target.value)} className={inputClassName} required />{fieldError(registerForm.errors.name)}</div><div><label className="text-sm font-medium text-slate-700">Nama bisnis</label><input value={registerForm.data.workspace_name} onChange={(event) => registerForm.setData('workspace_name', event.target.value)} className={inputClassName} required />{fieldError(registerForm.errors.workspace_name)}</div></div>
+                                <div className="grid gap-4 sm:grid-cols-2"><div><label className="text-sm font-medium text-slate-700">Email</label><input type="email" value={registerForm.data.email} onChange={(event) => registerForm.setData('email', event.target.value)} className={inputClassName} required />{fieldError(registerForm.errors.email)}</div><div><label className="text-sm font-medium text-slate-700">Nomor WhatsApp</label><input type="tel" value={registerForm.data.phone} onChange={(event) => registerForm.setData('phone', event.target.value)} className={inputClassName} required />{fieldError(registerForm.errors.phone)}</div></div>
+                                <div className="grid gap-4 sm:grid-cols-2"><div><label className="text-sm font-medium text-slate-700">Kata sandi</label><input type="password" value={registerForm.data.password} onChange={(event) => registerForm.setData('password', event.target.value)} className={inputClassName} required />{fieldError(registerForm.errors.password)}</div><div><label className="text-sm font-medium text-slate-700">Ulangi kata sandi</label><input type="password" value={registerForm.data.password_confirmation} onChange={(event) => registerForm.setData('password_confirmation', event.target.value)} className={inputClassName} required /></div></div>
+                                <button type="submit" disabled={registerForm.processing} className={primaryButtonClassName}>{registerForm.processing ? 'Membuat akun...' : 'Daftar'}</button>
                             </form>
-
-                            <div className="pt-2 text-center text-xs text-slate-500 border-t border-slate-100">
-                                Sudah punya akun terdaftar?{' '}
-                                <button
-                                    type="button"
-                                    onClick={() => setMode('login')}
-                                    className="font-bold text-[#1e50ff] hover:underline"
-                                >
-                                    Masuk ke Workspace
-                                </button>
-                            </div>
                         </div>
                     )}
 
-                    {/* ================= MODE: FORGOT PASSWORD ================= */}
                     {mode === 'forgot' && (
-                        <div className="space-y-4">
-                            <div className="flex items-center gap-2">
-                                <button
-                                    type="button"
-                                    onClick={() => setMode('login')}
-                                    className="p-1 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-100"
-                                >
-                                    <ArrowLeft className="w-4 h-4" />
-                                </button>
-                                <div>
-                                    <h3 className="text-base font-bold text-slate-900 tracking-tight">
-                                        Atur Ulang Kata Sandi
-                                    </h3>
-                                    <p className="text-xs text-slate-500">
-                                        Tautan reset akan dikirimkan secara aman ke email Anda.
-                                    </p>
-                                </div>
-                            </div>
-
-                            {flash.error && (
-                                <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-900 flex items-start gap-2.5 animate-fade-in">
-                                    <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
-                                    <div>
-                                        <p className="font-semibold text-red-950">Gagal Mengirim</p>
-                                        <p className="text-[11px] text-red-800 mt-0.5">{flash.error}</p>
-                                    </div>
-                                </div>
-                            )}
-
-                            <form onSubmit={handleForgotSubmit} className="space-y-3.5 text-xs">
-                                <div>
-                                    <label className="block font-medium text-slate-700 mb-1">
-                                        Alamat Email Terdaftar
-                                    </label>
-                                    <div className="relative">
-                                        <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-                                        <input
-                                            type="email"
-                                            value={forgotForm.data.email}
-                                            onChange={(e) => forgotForm.setData('email', e.target.value)}
-                                            placeholder="nama@email.com"
-                                            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:border-[#1e50ff] focus:outline-none shadow-2xs"
-                                            required
-                                        />
-                                    </div>
-                                    {forgotForm.errors.email && (
-                                        <p className="text-red-600 text-[11px] mt-1 font-medium">{forgotForm.errors.email}</p>
-                                    )}
-                                </div>
-
-                                <Button
-                                    type="submit"
-                                    disabled={forgotForm.processing}
-                                    className="w-full bg-[#1e50ff] hover:bg-[#153ec7] shadow-[0_8px_20px_-4px_rgba(30,80,255,0.4)] text-white font-semibold text-xs h-9 rounded-lg shadow-xs"
-                                >
-                                    <span>{forgotForm.processing ? 'Mengirim...' : 'Kirim Tautan Reset Password'}</span>
-                                    <Mail className="w-3.5 h-3.5 ml-1" />
-                                </Button>
+                        <div>
+                            <h2 className="text-xl font-bold text-slate-950">Lupa kata sandi?</h2>
+                            <p className="mt-1 text-sm text-slate-600">Masukkan email akun Anda.</p>
+                            <form onSubmit={submitForgot} className="mt-5 space-y-4">
+                                <div><label className="text-sm font-medium text-slate-700">Email</label><input type="email" value={forgotForm.data.email} onChange={(event) => forgotForm.setData('email', event.target.value)} className={inputClassName} required />{fieldError(forgotForm.errors.email)}</div>
+                                <button type="submit" disabled={forgotForm.processing} className={primaryButtonClassName}>{forgotForm.processing ? 'Mengirim...' : 'Kirim tautan reset'}</button>
+                                <button type="button" onClick={() => setMode('login')} className="w-full text-sm font-medium text-slate-600 hover:text-slate-950">Kembali ke login</button>
                             </form>
-
-                            <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-[11px] text-slate-600 space-y-1">
-                                <p>
-                                    Periksa kotak masuk (inbox) atau folder spam email Anda setelah menekan tombol di atas.
-                                </p>
-                            </div>
                         </div>
                     )}
 
-                    {/* ================= MODE: FORGOT SUCCESS ================= */}
                     {mode === 'forgot_success' && (
-                        <div className="space-y-4 text-center py-3">
-                            <div className="w-12 h-12 rounded-full bg-blue-50 border border-emerald-200 text-[#1e50ff] mx-auto flex items-center justify-center">
-                                <Mail className="w-6 h-6 text-[#1e50ff]" />
-                            </div>
-
-                            <div className="space-y-1.5">
-                                <h3 className="text-base font-bold text-slate-900 tracking-tight">
-                                    Tautan Reset Terkirim!
-                                </h3>
-                                <p className="text-xs text-slate-600 max-w-sm mx-auto leading-relaxed">
-                                    Kami telah mengirimkan instruksi dan tautan reset kata sandi ke email{' '}
-                                    <strong className="text-slate-900 font-mono">{sentEmail}</strong>.
-                                </p>
-                            </div>
-
-                            {/* WhatsApp Notification Alert if sent */}
-                            {flash.wa_sent && (
-                                <div className="p-3 bg-blue-500/10 border border-emerald-500/30 rounded-xl text-[11px] text-emerald-950 text-left space-y-1 animate-fade-in">
-                                    <div className="font-bold flex items-center gap-1.5 text-emerald-900">
-                                        <MessageSquare className="w-3.5 h-3.5 text-[#1e50ff] shrink-0" />
-                                        <span>Notifikasi WhatsApp Terkirim!</span>
-                                    </div>
-                                    <p className="text-emerald-800">
-                                        Tautan reset juga telah dikirimkan ke nomor WhatsApp terdaftar Anda ({flash.user_phone || 'terdaftar'}). Silakan periksa pesan masuk.
-                                    </p>
-                                </div>
-                            )}
-
-                            <div className="p-3 bg-blue-50 border border-emerald-200 rounded-xl text-[11px] text-emerald-900 text-left space-y-1">
-                                <div className="font-bold flex items-center gap-1.5">
-                                    <CheckCircle2 className="w-3.5 h-3.5 text-[#1e50ff] shrink-0" />
-                                    <span>Langkah Berikutnya:</span>
-                                </div>
-                                <p className="text-emerald-800">
-                                    Buka email tersebut dan klik tombol <strong>"Atur Ulang Kata Sandi"</strong> untuk membuat sandi baru (berlaku 60 menit).
-                                </p>
-                            </div>
-
-                            {(directPreviewUrl || flash.preview_url) && (
-                                <div className="p-3.5 bg-slate-900 text-white rounded-xl text-left space-y-2 border border-emerald-500/40 animate-fade-in">
-                                    <div className="flex items-center justify-between text-[11px]">
-                                        <span className="font-mono text-emerald-400 font-bold flex items-center gap-1.5">
-                                            <Zap className="w-3.5 h-3.5 text-amber-400 fill-amber-400" /> Mode Uji Langsung (Testing Preview):
-                                        </span>
-                                        <span className="text-[10px] text-slate-400 font-mono bg-slate-800 px-2 py-0.5 rounded border border-slate-700">MAIL_MAILER=log</span>
-                                    </div>
-                                    <p className="text-[11px] text-slate-300 leading-relaxed">
-                                        Email telah dicatat pada log sistem lokal. Klik tombol di bawah untuk langsung membuka formulir reset:
-                                    </p>
-                                    <div className="flex flex-col sm:flex-row gap-2 pt-0.5">
-                                        <a
-                                            href={directPreviewUrl || flash.preview_url}
-                                            className="inline-flex items-center justify-center gap-1.5 flex-1 py-2 px-3 rounded-lg bg-emerald-600 hover:bg-blue-500 text-white font-bold text-xs transition-colors shadow-xs"
-                                        >
-                                            <span>Buka Tautan Reset Password Sekarang →</span>
-                                        </a>
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                navigator.clipboard.writeText(directPreviewUrl || flash.preview_url);
-                                                setCopied(true);
-                                                setTimeout(() => setCopied(false), 2000);
-                                            }}
-                                            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-medium transition-colors"
-                                        >
-                                            {copied ? (
-                                                <>
-                                                    <Check className="w-3.5 h-3.5 text-emerald-400" />
-                                                    <span>Tersalin!</span>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <Copy className="w-3.5 h-3.5 text-slate-400" />
-                                                    <span>Salin</span>
-                                                </>
-                                            )}
-                                        </button>
-                                    </div>
-                                </div>
-                            )}
-
-                            <Button
-                                type="button"
-                                onClick={() => setMode('login')}
-                                className="w-full bg-[#1e50ff] hover:bg-[#153ec7] shadow-[0_8px_20px_-4px_rgba(30,80,255,0.4)] text-white font-semibold text-xs h-9 rounded-lg"
-                            >
-                                Kembali ke Halaman Masuk
-                            </Button>
+                        <div className="text-center">
+                            <h2 className="text-xl font-bold text-slate-950">Periksa email Anda</h2>
+                            <p className="mt-2 text-sm leading-6 text-slate-600">Tautan reset dikirim ke <strong>{sentEmail}</strong>.</p>
+                            {previewUrl && <a href={previewUrl} className="mt-5 flex h-11 items-center justify-center rounded-xl border border-slate-300 text-sm font-semibold text-slate-700 hover:bg-slate-50">Buka tautan uji coba</a>}
+                            <button type="button" onClick={() => setMode('login')} className={`${primaryButtonClassName} mt-5`}>Kembali ke login</button>
                         </div>
                     )}
-                </div>
-
-                {/* Modal Footer Trust Bar */}
-                <div className="px-5 py-2.5 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-400 shrink-0">
-                    <span className="flex items-center gap-1">
-                        <ShieldCheck className="w-3 h-3 text-[#1e50ff]" />
-                        <span>Enkripsi TLS 256-Bit</span>
-                    </span>
-                    <span>SAPA Enterprise Engine</span>
                 </div>
             </div>
-        </div>
         </ModalPortal>
     );
 }

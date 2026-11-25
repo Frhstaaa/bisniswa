@@ -450,12 +450,6 @@ export default function PublicLayout({
                                         </Link>
                                     </li>
                                     <li>
-                                        <a href="/admin/login" className="hover:text-blue-400 transition-colors flex items-center gap-1.5 text-slate-400">
-                                            <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />
-                                            <span>Portal Admin Sistem</span>
-                                        </a>
-                                    </li>
-                                    <li>
                                         <Link href="/forgot-password" className="hover:text-[#1e50ff] transition-colors">
                                             Lupa Kata Sandi
                                         </Link>

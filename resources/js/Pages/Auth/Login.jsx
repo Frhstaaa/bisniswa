@@ -1,144 +1,48 @@
-import React, { useState } from 'react';
-import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import { motion } from 'framer-motion';
-import { Lock, Mail, ArrowRight, CheckCircle2, AlertCircle, Building2, Shield } from 'lucide-react';
-import { Alert, AlertTitle, AlertDescription } from '../../Components/ui/alert';
-import SapaLogo from '../../Components/SapaLogo';
+import React from 'react';
+import { Link, useForm, usePage } from '@inertiajs/react';
+import AuthShell, { inputClassName, primaryButtonClassName } from '../../Components/AuthShell';
+import { Alert, AlertDescription } from '../../Components/ui/alert';
 
 export default function Login() {
     const { flash = {} } = usePage().props;
-    const { data, setData, post, processing, errors } = useForm({
-        email: '',
-        password: '',
-        remember: true,
-    });
+    const { data, setData, post, processing, errors } = useForm({ email: '', password: '', remember: true });
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const handleSubmit = (event) => {
+        event.preventDefault();
         post('/login');
     };
 
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-            className="min-h-screen bg-white bg-grid-pattern flex flex-col justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8 font-sans antialiased"
+        <AuthShell
+            title="Masuk"
+            heading="Masuk ke SAPA"
+            description="Gunakan email dan kata sandi akun Anda."
+            footer={<><span>Belum punya akun? </span><Link href="/register" className="font-semibold text-[#1e50ff] hover:underline">Daftar</Link></>}
         >
-            <Head title="Masuk Klien / Workspace Bisnis — SAPA" />
-
-            <div className="w-full max-w-md mx-auto text-center space-y-3">
-                <Link href="/" className="inline-flex items-center gap-3 group">
-                    <SapaLogo variant="full" size="lg" />
-                </Link>
-
-                <div className="pt-1">
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-[#1e50ff] text-[11px] font-bold uppercase tracking-wider mb-2">
-                        <Building2 className="w-3.5 h-3.5" />
-                        <span>Portal Klien & Workspace Bisnis (Tenant)</span>
+            <div className="space-y-4">
+                {flash.success && <Alert variant="success"><AlertDescription>{flash.success}</AlertDescription></Alert>}
+                {flash.error && <Alert variant="destructive"><AlertDescription>{flash.error}</AlertDescription></Alert>}
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                        <label htmlFor="email" className="text-sm font-medium text-slate-700">Email</label>
+                        <input id="email" type="email" value={data.email} onChange={(event) => setData('email', event.target.value)} className={inputClassName} autoComplete="email" autoFocus required />
+                        {errors.email && <p className="mt-1.5 text-sm text-red-600">{errors.email}</p>}
                     </div>
-                    <h2 className="text-xl sm:text-3xl font-black text-slate-900 tracking-tight">Masuk ke <span className="font-editorial-italic font-normal">Workspace Bisnis</span></h2>
-                    <p className="text-xs text-[#64748b] px-4 mt-1">Khusus pemilik bisnis, UMKM, dan tim marketing untuk mengelola broadcast, chatbot AI, dan integrasi WhatsApp</p>
-                </div>
-            </div>
-
-            <div className="mt-6 sm:mt-8 w-full max-w-md mx-auto">
-                <div className="bg-white border border-[#e2e8f0] py-6 px-4 sm:py-8 sm:px-8 shadow-card rounded-2xl space-y-5">
-                    {flash.success && (
-                        <Alert variant="success" className="animate-fade-in">
-                            <AlertTitle>Berhasil</AlertTitle>
-                            <AlertDescription>{flash.success}</AlertDescription>
-                        </Alert>
-                    )}
-
-                    {flash.error && (
-                        <Alert variant="destructive" className="animate-fade-in">
-                            <AlertTitle>Terjadi Kesalahan</AlertTitle>
-                            <AlertDescription>{flash.error}</AlertDescription>
-                        </Alert>
-                    )}
-
-                    <form onSubmit={handleSubmit} className="space-y-4 text-xs">
-                        <div>
-                            <label className="block font-semibold text-[#334155] mb-1">Alamat Email Klien / Bisnis</label>
-                            <div className="relative">
-                                <Mail className="w-4 h-4 text-[#94a3b8] absolute left-3 top-3" />
-                                <input
-                                    type="email"
-                                    value={data.email}
-                                    onChange={(e) => setData('email', e.target.value)}
-                                    placeholder="nama@perusahaan.com"
-                                    className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-[#e2e8f0] text-xs focus:border-[#1e50ff] focus:ring-1 focus:ring-[#1e50ff] focus:outline-none transition-colors"
-                                    required
-                                    autoFocus
-                                />
-                            </div>
-                            {errors.email && <p className="text-red-500 text-[11px] mt-1">{errors.email}</p>}
+                    <div>
+                        <div className="flex items-center justify-between gap-4">
+                            <label htmlFor="password" className="text-sm font-medium text-slate-700">Kata sandi</label>
+                            <Link href="/forgot-password" className="text-sm font-medium text-[#1e50ff] hover:underline">Lupa kata sandi?</Link>
                         </div>
-
-                        <div>
-                            <div className="flex justify-between items-center mb-1">
-                                <label className="font-semibold text-[#334155]">Kata Sandi Workspace</label>
-                                <Link href="/forgot-password" className="text-[11px] text-[#1e50ff] hover:underline font-semibold">
-                                    Lupa sandi?
-                                </Link>
-                            </div>
-                            <div className="relative">
-                                <Lock className="w-4 h-4 text-[#94a3b8] absolute left-3 top-3" />
-                                <input
-                                    type="password"
-                                    value={data.password}
-                                    onChange={(e) => setData('password', e.target.value)}
-                                    placeholder="••••••••"
-                                    className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-[#e2e8f0] text-xs focus:border-[#1e50ff] focus:ring-1 focus:ring-[#1e50ff] focus:outline-none transition-colors"
-                                    required
-                                />
-                            </div>
-                            {errors.password && <p className="text-red-500 text-[11px] mt-1">{errors.password}</p>}
-                        </div>
-
-                        <div className="flex items-center justify-between pt-1">
-                            <label className="flex items-center gap-2 cursor-pointer text-[#64748b]">
-                                <input
-                                    type="checkbox"
-                                    checked={data.remember}
-                                    onChange={(e) => setData('remember', e.target.checked)}
-                                    className="rounded border-[#cbd5e1] text-[#1e50ff] focus:ring-emerald-500"
-                                />
-                                <span>Ingat sesi masuk</span>
-                            </label>
-                        </div>
-
-                        <button
-                            type="submit"
-                            disabled={processing}
-                            className="btn-press w-full py-3 sm:py-3.5 rounded-full bg-[#1e50ff] hover:bg-[#153ec7] uppercase tracking-wider font-extrabold shadow-[0_8px_20px_-4px_rgba(30,80,255,0.4)] text-white text-xs font-bold shadow-md transition-all flex items-center justify-center gap-1.5 disabled:opacity-50 cursor-pointer"
-                        >
-                            <span>{processing ? 'Memverifikasi...' : 'Masuk ke Dashboard Workspace'}</span>
-                            <ArrowRight className="w-4 h-4 text-white" />
-                        </button>
-                    </form>
-
-                    <div className="pt-4 border-t border-[#e2e8f0] text-center text-xs text-[#64748b] space-y-3">
-                        <div>
-                            Belum memiliki akun bisnis?{' '}
-                            <Link href="/register" className="font-bold text-[#1e50ff] hover:underline">
-                                Daftar & Mulai Langganan
-                            </Link>
-                        </div>
-                        <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-left">
-                            <div className="flex items-center gap-2 text-slate-700">
-                                <Shield className="w-4 h-4 text-slate-500 shrink-0" />
-                                <span className="text-[11px]">Administrator atau Tim Internal SaaS?</span>
-                            </div>
-                            <Link href="/admin/login" className="inline-flex items-center gap-1 font-bold text-[#1e50ff] hover:text-[#153ec7] hover:underline text-[11px] shrink-0">
-                                <span>Portal Khusus Admin</span>
-                                <ArrowRight className="w-3 h-3" />
-                            </Link>
-                        </div>
+                        <input id="password" type="password" value={data.password} onChange={(event) => setData('password', event.target.value)} className={inputClassName} autoComplete="current-password" required />
+                        {errors.password && <p className="mt-1.5 text-sm text-red-600">{errors.password}</p>}
                     </div>
-                </div>
+                    <label className="flex items-center gap-2 text-sm text-slate-600">
+                        <input type="checkbox" checked={data.remember} onChange={(event) => setData('remember', event.target.checked)} className="size-4 rounded border-slate-300 text-[#1e50ff] focus:ring-[#1e50ff]" />
+                        Ingat saya
+                    </label>
+                    <button type="submit" disabled={processing} className={primaryButtonClassName}>{processing ? 'Memproses...' : 'Masuk'}</button>
+                </form>
             </div>
-        </motion.div>
+        </AuthShell>
     );
 }
