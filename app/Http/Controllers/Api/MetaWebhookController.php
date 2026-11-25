@@ -28,7 +28,7 @@ class MetaWebhookController extends Controller
         $token = $request->query('hub_verify_token') ?? $request->query('hub.verify_token');
         $challenge = $request->query('hub_challenge') ?? $request->query('hub.challenge');
 
-        $defaultToken = config('services.meta.verify_token', 'bisniswa_meta_token');
+        $defaultToken = config('services.meta.verify_token', 'sapa_meta_token');
         $deviceMatch = Device::where('meta_verify_token', $token)->exists();
 
         if ($mode === 'subscribe' && ($token === $defaultToken || $deviceMatch)) {

@@ -4,7 +4,7 @@ set -e
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$DIR"
 
-echo "⚡ Starting BisnisWA Enterprise Octane (FrankenPHP)..."
+echo "⚡ Starting SAPA Enterprise Octane (FrankenPHP)..."
 exec php artisan octane:start \
     --server=frankenphp \
     --caddyfile=Caddyfile \

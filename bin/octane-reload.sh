@@ -4,6 +4,6 @@ set -e
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$DIR"
 
-echo "🔄 Gracefully reloading BisnisWA Octane workers (zero-downtime)..."
+echo "🔄 Gracefully reloading SAPA Octane workers (zero-downtime)..."
 php artisan octane:reload
 echo "✅ Octane workers reloaded successfully!"

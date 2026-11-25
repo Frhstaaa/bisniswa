@@ -17,7 +17,7 @@
                                 SAPA<span style="color: #1677ff; font-size: 14px; margin-left: 6px; padding: 2px 6px; background-color: rgba(22, 119, 255, 0.2); border-radius: 4px;">ENGINE</span>
                             </div>
                             <div style="font-size: 11px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;">
-                                Sistem Automasi Pesan &amp; Alert
+                                Sistem Automisasi Pesan &amp; Alert
                             </div>
                         </td>
                     </tr>
@@ -90,7 +90,7 @@
                     <tr>
                         <td style="background-color: #f8fafc; border-top: 1px solid #e2e8f0; padding: 24px 36px; text-align: center; font-size: 11px; color: #94a3b8; line-height: 1.5;">
                             Email ini dikirim otomatis oleh Layanan Otentikasi Terenkripsi SAPA Engine.<br>
-                            <strong>SAPA — Sistem Automasi Pesan &amp; Alert</strong>.<br>
+                            <strong>SAPA — Sistem Automisasi Pesan &amp; Alert</strong>.<br>
                             &copy; {{ date('Y') }} SAPA. Seluruh hak cipta dilindungi.
                         </td>
                     </tr>

@@ -72,7 +72,7 @@ export default function Pricing({ plans = [], stats = {} }) {
             features: [
                 '1 Perangkat WhatsApp Terhubung',
                 'Kuota 5.000 Pesan per Bulan',
-                'Akses BisnisWA UltraSync Engine (Anti-Delay & Anti-Ban)',
+                'Akses SAPA UltraSync Engine (Anti-Delay & Anti-Ban)',
                 'Live Chat Inbox 2 Arah Real-time',
                 'Broadcast Kontak Dasar',
                 'Otomasi Auto-Reply Cerdas',
@@ -142,7 +142,7 @@ export default function Pricing({ plans = [], stats = {} }) {
         const list = [
             `${maxDev} Perangkat WhatsApp Terhubung`,
             `Kuota ${Number(quota).toLocaleString('id-ID')} Pesan per Bulan`,
-            'Akses BisnisWA UltraSync Engine Resmi',
+            'Akses SAPA UltraSync Engine Resmi',
             'Live Chat Inbox 2 Arah Real-time',
         ];
 
@@ -223,7 +223,7 @@ export default function Pricing({ plans = [], stats = {} }) {
     const featureMatrix = [
         { name: 'Maksimum Perangkat WhatsApp', starter: '1 Device', pro: '3 Devices', enterprise: '5 Devices' },
         { name: 'Kuota Pesan per Bulan', starter: '5.000 Pesan', pro: '15.000 Pesan', enterprise: '50.000 Pesan' },
-        { name: 'Teknologi BisnisWA UltraSync Engine', starter: true, pro: true, enterprise: true },
+        { name: 'Teknologi SAPA UltraSync Engine', starter: true, pro: true, enterprise: true },
         { name: 'Live Chat Inbox Multi-Chat Realtime', starter: true, pro: true, enterprise: true },
         { name: 'Broadcast CSV & Proteksi Anti-Ban', starter: 'Dasar', pro: 'Lengkap + Spintax', enterprise: 'Lengkap + Rotasi' },
         { name: 'Auto-Reply & AI Bot Pintar', starter: true, pro: true, enterprise: true },

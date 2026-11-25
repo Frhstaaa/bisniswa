@@ -225,7 +225,7 @@ export default function AppLayout({ children, title }) {
                         href={isAdminRoute ? '/admin/dashboard' : '/dashboard'}
                         prefetch
                         className="flex items-center overflow-hidden group"
-                        title="SAPA — Sistem Automasi Pesan & Alert"
+                        title="SAPA — Sistem Automisasi Pesan & Alert"
                     >
                         {isCollapsed ? (
                             <SapaLogo variant="icon" size="md" />
@@ -437,7 +437,7 @@ export default function AppLayout({ children, title }) {
                         </button>
 
                         {/* Mobile Brand Logo */}
-                        <Link href="/" className="lg:hidden flex items-center shrink-0" title="SAPA — Sistem Automasi Pesan & Alert">
+                        <Link href="/" className="lg:hidden flex items-center shrink-0" title="SAPA — Sistem Automisasi Pesan & Alert">
                             <SapaLogo variant="full" size="sm" showTagline={false} />
                         </Link>
 

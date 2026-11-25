@@ -65,7 +65,7 @@ class LandingController extends Controller
     }
 
     /**
-     * Dedicated Page: BisnisWA UltraSync Engine & Anti-Banned.
+     * Dedicated Page: SAPA UltraSync Engine & Anti-Banned.
      */
     public function dualEngine(): Response
     {

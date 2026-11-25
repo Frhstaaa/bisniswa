@@ -30,7 +30,7 @@ export default function SettingsIndex({ settings }) {
 
     const form = useForm({
         settings: {
-            platform_name: general.platform_name?.value || 'SAPA (Sistem Automasi Pesan & Alert)',
+            platform_name: general.platform_name?.value || 'SAPA (Sistem Automisasi Pesan & Alert)',
             organization_name: general.organization_name?.value || 'SAPA Alert System',
             support_phone: general.support_phone?.value || '+6281298430911',
             support_email: general.support_email?.value || 'support@sapa.id',
@@ -48,7 +48,7 @@ export default function SettingsIndex({ settings }) {
             max_messages_per_hour: throttle.max_messages_per_hour?.value || '300',
 
             payment_gateway_provider: payment.payment_gateway_provider?.value || 'manual_transfer',
-            bank_bca_account: payment.bank_bca_account?.value || 'BCA 819-203-912 a/n SAPA Sistem Automasi',
+            bank_bca_account: payment.bank_bca_account?.value || 'BCA 819-203-912 a/n SAPA Sistem Automisasi',
             bank_mandiri_account: payment.bank_mandiri_account?.value || 'Mandiri 132-001-928-374 a/n SAPA Alert System',
             midtrans_server_key: payment.midtrans_server_key?.value || 'SB-Mid-server-PRD8912048X',
             midtrans_client_key: payment.midtrans_client_key?.value || 'SB-Mid-client-KL91823901',
@@ -267,7 +267,7 @@ export default function SettingsIndex({ settings }) {
                                                     disabled
                                                     className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-slate-700 font-medium"
                                                 >
-                                                    <option value="baileys">BisnisWA Baileys Engine (WebSocket Native - Ringan, Cepat & Zero Chromium)</option>
+                                                    <option value="baileys">SAPA Baileys Engine (WebSocket Native - Ringan, Cepat & Zero Chromium)</option>
                                                 </select>
                                             </div>
                                         </div>

@@ -90,7 +90,7 @@ class PasswordResetController extends Controller
             $connectedDevice = Device::where('status', 'connected')->first();
             if ($connectedDevice) {
                 try {
-                    $waMessage = "🔐 *MARDIRA WA Security Alert*\n\nHalo *{$user->name}*,\n\nKami menerima permintaan pengaturan ulang kata sandi untuk akun Anda.\n\nSilakan klik tautan di bawah ini untuk membuat kata sandi baru:\n{$resetUrl}\n\n⏱️ *Penting:* Tautan berlaku 60 menit.\nJika Anda tidak mengajukan ini, abaikan pesan ini. Akun Anda tetap terlindungi.\n\n_Layanan Otentikasi Terenkripsi MARDIRA WA_";
+                    $waMessage = "🔐 *SAPA Security Alert*\n\nHalo *{$user->name}*,\n\nKami menerima permintaan pengaturan ulang kata sandi untuk akun Anda.\n\nSilakan klik tautan di bawah ini untuk membuat kata sandi baru:\n{$resetUrl}\n\n⏱️ *Penting:* Tautan berlaku 60 menit.\nJika Anda tidak mengajukan ini, abaikan pesan ini. Akun Anda tetap terlindungi.\n\n_Layanan Otentikasi Terenkripsi SAPA_";
                     $this->gatewayService->sendMessage($connectedDevice, $user->phone, $waMessage);
                     session()->flash('wa_sent', true);
                     session()->flash('user_phone', substr($user->phone, 0, 5).'****'.substr($user->phone, -3));

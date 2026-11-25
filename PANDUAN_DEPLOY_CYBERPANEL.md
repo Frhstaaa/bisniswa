@@ -1,4 +1,4 @@
-# 📖 Panduan Lengkap Deploy Mardira WA (BisnisWA)
+# 📖 Panduan Lengkap Deploy SAPA
 ### Domain: **`mardirawa.frahesta.com`**
 Khusus Server CyberPanel (Bisa Tanpa Akses Terminal SSH)
 
@@ -51,7 +51,7 @@ Khusus Server CyberPanel (Bisa Tanpa Akses Terminal SSH)
 1. Di File Manager CyberPanel, salin/rename file `.env.production.example` menjadi `.env`.
 2. Edit file `.env`, sesuaikan nilai database:
    ```env
-   APP_NAME="MARDIRA WA"
+   APP_NAME="SAPA"
    APP_ENV=production
    APP_DEBUG=false
    APP_URL=https://mardirawa.frahesta.com
@@ -79,7 +79,7 @@ Anda tidak perlu repot mengetik perintah di terminal. Cukup buka browser:
 👉 **`https://mardirawa.frahesta.com/setup.php`**
 
 1. Masukkan PIN Pengaman: **`mardira123`**.
-2. Anda akan melihat halaman antarmuka **Mardira WA Deployment Assistant**:
+2. Anda akan melihat halaman antarmuka **SAPA Deployment Assistant**:
    - **Langkah 1**: Periksa apakah status koneksi database sudah bertanda hijau "Terkoneksi".
    - **Langkah 2**: Klik tombol **"Jalankan Migrasi Database"** (otomatis membuat semua tabel).
    - **Langkah 3**: Klik tombol **"Isi Akun Default & Paket"** (menjalankan seeder untuk membuat akun Admin, paket, dan data awal).

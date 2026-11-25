@@ -864,7 +864,7 @@ class AutoReplyService
 
         // WhatsApp Gateway & Developer APIs
         if (preg_match('/\b(api|webhook|token|gateway|server|dokumentasi|postman|integrasi)\b/i', $lower)) {
-            return "Layanan WhatsApp Gateway Enterprise MARDIRA:\n\n• Tersedia REST API v1 dan Webhook event real-time.\n• Server 1 WhatsApp (Jalur Cepat) & Server 2 WhatsApp (Jalur Stabil).\n• Kredensial API Key serta koleksi Postman dapat diunduh langsung melalui menu *Kredensial API & Webhook* di dashboard Anda.";
+            return "Layanan WhatsApp Gateway Enterprise SAPA:\n\n• Tersedia REST API v1 dan Webhook event real-time.\n• Server 1 WhatsApp (Jalur Cepat) & Server 2 WhatsApp (Jalur Stabil).\n• Kredensial API Key serta koleksi Postman dapat diunduh langsung melalui menu *Kredensial API & Webhook* di dashboard Anda.";
         }
 
         // Help, Complaints & Customer Support

@@ -118,7 +118,7 @@ export default function SapaLogo({
                             theme === 'dark' ? 'text-slate-300' : 'text-slate-500'
                         }`}
                     >
-                        Sistem Automasi Pesan &amp; Alert
+                        Sistem Automisasi Pesan &amp; Alert
                     </span>
                 )}
             </div>

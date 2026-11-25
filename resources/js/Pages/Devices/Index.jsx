@@ -126,7 +126,7 @@ export default function DevicesIndex({ workspace, devices = [], subscription, pl
 
     return (
         <AppLayout title="Perangkat WhatsApp">
-            <Head title="Manajemen Perangkat WhatsApp — SAPA BisnisWA" />
+            <Head title="Manajemen Perangkat WhatsApp — SAPA" />
 
             <div className="flex flex-col gap-6 pb-12 font-sans antialiased text-[#1f1f1f]">
                 {/* ================= 1. MANTIS BREADCRUMB & HEADER ================= */}

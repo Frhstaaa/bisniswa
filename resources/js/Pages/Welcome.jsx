@@ -274,7 +274,7 @@ print(res.json())`,
         const closings = [
             'Semoga harimu menyenangkan!',
             'Terima kasih atas kerjasamanya.',
-            'Layanan resmi SAPA (Sistem Automasi Pesan & Alert).',
+            'Layanan resmi SAPA (Sistem Automisasi Pesan & Alert).',
             'Hubungi kami jika ada pertanyaan.',
         ];
 
@@ -361,7 +361,7 @@ print(res.json())`,
             {
                 '@type': 'Organization',
                 '@id': 'https://mardirawa.frahesta.com/#organization',
-                name: 'SAPA — Sistem Automasi Pesan & Alert',
+                name: 'SAPA — Sistem Automisasi Pesan & Alert',
                 url: 'https://mardirawa.frahesta.com',
                 logo: {
                     '@type': 'ImageObject',
@@ -382,7 +382,7 @@ print(res.json())`,
             {
                 '@type': 'SoftwareApplication',
                 '@id': 'https://mardirawa.frahesta.com/#software',
-                name: 'SAPA — Sistem Automasi Pesan & Alert Platform',
+                name: 'SAPA — Sistem Automisasi Pesan & Alert Platform',
                 operatingSystem: 'Cloud / Web Based',
                 applicationCategory: 'BusinessApplication',
                 offers: {
@@ -416,9 +416,9 @@ print(res.json())`,
 
     return (
         <PublicLayout
-            title="SAPA — Sistem Automasi Pesan & Alert | WhatsApp Gateway Enterprise"
-            description="SAPA (Sistem Automasi Pesan & Alert) — Platform Enterprise WhatsApp Gateway & Broadcast API resmi di Indonesia. Kirim pesan massal anti-banned, auto-reply bot pintar, integrasi REST API real-time, dan multi-CS."
-            keywords="sapa, sapa wa, sistem automasi pesan dan alert, whatsapp gateway indonesia, api whatsapp resmi, broadcast whatsapp massal, auto reply wa bot, alert whatsapp, wa gateway murah, rest api whatsapp"
+            title="SAPA — Sistem Automisasi Pesan & Alert | WhatsApp Gateway Enterprise"
+            description="SAPA (Sistem Automisasi Pesan & Alert) — Platform Enterprise WhatsApp Gateway & Broadcast API resmi di Indonesia. Kirim pesan massal anti-banned, auto-reply bot pintar, integrasi REST API real-time, dan multi-CS."
+            keywords="sapa, sapa wa, sistem automisasi pesan dan alert, whatsapp gateway indonesia, api whatsapp resmi, broadcast whatsapp massal, auto reply wa bot, alert whatsapp, wa gateway murah, rest api whatsapp"
             canonicalUrl="https://mardirawa.frahesta.com"
             schema={homeSchema}
             plans={safePlans}
@@ -716,7 +716,7 @@ print(res.json())`,
                             </div>
                             <h3 className="text-base sm:text-lg font-bold text-[#0f172a]">Pindai QR Nomor WhatsApp</h3>
                             <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                                Buka WhatsApp di smartphone Anda lalu tautkan perangkat via scan QR Code dengan engine resmi <strong className="text-blue-700">BisnisWA UltraSync Engine</strong> yang stabil dan bebas delay.
+                                Buka WhatsApp di smartphone Anda lalu tautkan perangkat via scan QR Code dengan engine resmi <strong className="text-blue-700">SAPA UltraSync Engine</strong> yang stabil dan bebas delay.
                             </p>
                         </div>
                         <span className="text-xs font-bold text-[#854d0e] pt-3 border-t border-slate-100 flex items-center gap-1">
@@ -751,7 +751,7 @@ print(res.json())`,
                     <div className="text-center space-y-1.5">
                         <p className="text-xs font-bold uppercase tracking-widest text-[#1e50ff]">Arsitektur Handal</p>
                         <h2 className="text-2xl sm:text-3xl font-black text-[#0f172a] tracking-tight">
-                            BisnisWA UltraSync Engine & Akselerasi FrankenPHP
+                            SAPA UltraSync Engine & Akselerasi FrankenPHP
                         </h2>
                         <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto">
                             Bebas masalah "Menunggu pesan ini", enkripsi native Signal Protocol resmi Meta, serta ditenagai runtime supercharged Laravel Octane + FrankenPHP.
@@ -766,7 +766,7 @@ print(res.json())`,
                                     <Zap className="w-6 h-6" />
                                 </div>
                                 <div>
-                                    <h3 className="text-base font-bold text-[#0f172a]">BisnisWA UltraSync Engine</h3>
+                                    <h3 className="text-base font-bold text-[#0f172a]">SAPA UltraSync Engine</h3>
                                     <p className="text-xs text-slate-500">Enterprise Native Protocol & Signal E2EE</p>
                                 </div>
                             </div>

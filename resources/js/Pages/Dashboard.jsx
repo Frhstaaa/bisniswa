@@ -274,7 +274,7 @@ export default function Dashboard({
 
     return (
         <AppLayout title="Ikhtisar Workspace">
-            <Head title="Workspace Overview — SAPA BisnisWA" />
+            <Head title="Workspace Overview — SAPA" />
 
             <div className="flex flex-col gap-6 pb-12 font-sans antialiased text-[#1f1f1f]">
                 {/* ================= 1. BREADCRUMB & HEADER ================= */}

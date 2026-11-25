@@ -747,7 +747,7 @@ export default function AutoReplyIndex({
 
     return (
         <AppLayout title="Auto-Reply & AI Bot">
-            <Head title="Auto-Reply & Asisten AI Gemini — MARDIRA WA" />
+            <Head title="Auto-Reply & Asisten AI Gemini — SAPA" />
 
             <div className="space-y-6 pb-12 font-sans antialiased text-[#1f1f1f]">
                 {/* 1. MANTIS BREADCRUMB & TOP HEADER */}

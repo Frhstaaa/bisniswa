@@ -370,7 +370,7 @@ class EnterpriseFeaturesTest extends TestCase
 
         $res = $this->get('/api-access/download-postman');
         $res->assertStatus(200);
-        $res->assertHeader('content-disposition', 'attachment; filename=MARDIRA_WA_Postman_Collection.json');
+        $res->assertHeader('content-disposition', 'attachment; filename=SAPA_Postman_Collection.json');
     }
 
     public function test_bridging_documentation_download(): void
@@ -379,7 +379,7 @@ class EnterpriseFeaturesTest extends TestCase
 
         $res = $this->get('/api-access/download-docs');
         $res->assertStatus(200);
-        $res->assertHeader('content-disposition', 'attachment; filename=MARDIRA_WA_Dokumentasi_Bridging_API.md');
+        $res->assertHeader('content-disposition', 'attachment; filename=SAPA_Dokumentasi_Bridging_API.md');
     }
 
     public function test_webhook_test_ping(): void

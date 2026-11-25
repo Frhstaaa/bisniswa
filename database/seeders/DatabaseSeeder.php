@@ -367,15 +367,15 @@ class DatabaseSeeder extends Seeder
         // 11. System Settings Seed for Production Readiness
         $settings = [
             // General & Branding
-            ['key' => 'platform_name', 'value' => 'MARDIRA WA Gateway', 'group' => 'general', 'description' => 'Nama brand portal resmi WhatsApp Gateway.'],
-            ['key' => 'organization_name', 'value' => 'Politeknik Mardira Indonesia', 'group' => 'general', 'description' => 'Nama institusi/organisasi pengelola SaaS.'],
+            ['key' => 'platform_name', 'value' => 'SAPA', 'group' => 'general', 'description' => 'Nama brand platform Sistem Automisasi Pesan & Alert.'],
+            ['key' => 'organization_name', 'value' => 'SAPA Alert System', 'group' => 'general', 'description' => 'Nama organisasi pengelola platform.'],
             ['key' => 'support_phone', 'value' => '+6281298430911', 'group' => 'general', 'description' => 'Nomor WhatsApp resmi Customer Support.'],
-            ['key' => 'support_email', 'value' => 'helpdesk@mardira.ac.id', 'group' => 'general', 'description' => 'Email bantuan operasional klien.'],
+            ['key' => 'support_email', 'value' => 'support@sapa.id', 'group' => 'general', 'description' => 'Email bantuan operasional klien.'],
             ['key' => 'maintenance_mode', 'value' => 'false', 'group' => 'general', 'description' => 'Status pemeliharaan darurat platform (true/false).'],
 
             // WhatsApp Microservice & Cluster
             ['key' => 'whatsapp_gateway_endpoint', 'value' => 'http://127.0.0.1:3000', 'group' => 'whatsapp', 'description' => 'Endpoint REST/WebSocket Node.js Cluster.'],
-            ['key' => 'default_engine', 'value' => 'baileys', 'group' => 'whatsapp', 'description' => 'Engine bawaan default untuk sesi baru (BisnisWA Baileys Engine).'],
+            ['key' => 'default_engine', 'value' => 'baileys', 'group' => 'whatsapp', 'description' => 'Engine bawaan default untuk sesi baru (SAPA Baileys Engine).'],
             ['key' => 'cluster_heartbeat_interval', 'value' => '15', 'group' => 'whatsapp', 'description' => 'Interval ping monitor socket gateway dalam detik.'],
             ['key' => 'max_sessions_per_node', 'value' => '50', 'group' => 'whatsapp', 'description' => 'Batas maksimal instance WhatsApp per node microservice.'],
 

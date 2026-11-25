@@ -655,7 +655,7 @@ class AutoReplyController extends Controller
                         'category' => 'Teknis',
                         'trigger_type' => 'contains',
                         'keyword' => '4, api, teknis, webhook, integrasi, postman, dokumentasi',
-                        'reply_message' => "⚙️ *DOKUMENTASI REST API & WEBHOOK*\n\n• Endpoint API v1: /api/v1/messages/send\n• Webhook Event: incoming_message, message_status\n• Koleksi Postman & SDK dapat diakses melalui Dashboard Pengembang MARDIRA WA.\n\nTim teknis kami siap memberikan panduan bridging sistem ERP/CRM Anda.",
+                        'reply_message' => "⚙️ *DOKUMENTASI REST API & WEBHOOK*\n\n• Endpoint API v1: /api/v1/messages/send\n• Webhook Event: incoming_message, message_status\n• Koleksi Postman & SDK dapat diakses melalui Dashboard Pengembang SAPA.\n\nTim teknis kami siap memberikan panduan bridging sistem ERP/CRM Anda.",
                         'cta_text' => null,
                         'cta_url' => null,
                         'action_buttons' => ['Profil Perusahaan', 'Jadwalkan Demo'],

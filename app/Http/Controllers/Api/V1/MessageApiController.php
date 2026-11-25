@@ -65,7 +65,7 @@ class MessageApiController extends Controller
         $boundDeviceData = null;
         if ($apiKey->device) {
             $d = $apiKey->device;
-            $serverLabel = 'BisnisWA Baileys Engine';
+            $serverLabel = 'SAPA Baileys Engine';
             $boundDeviceData = [
                 'id' => $d->id,
                 'name' => $d->name,
@@ -196,7 +196,7 @@ class MessageApiController extends Controller
             }
 
             if ($device->status !== 'connected') {
-                $serverLabel = 'BisnisWA UltraSync Engine';
+                $serverLabel = 'SAPA UltraSync Engine';
 
                 return response()->json([
                     'status' => false,
@@ -283,7 +283,7 @@ class MessageApiController extends Controller
         $usedQuota = max(0, $monthlyQuota - $remainingQuota);
 
         // Single Engine label
-        $serverLabel = 'BisnisWA Baileys Engine';
+        $serverLabel = 'SAPA Baileys Engine';
         $serverCode = 'baileys';
 
         return response()->json([

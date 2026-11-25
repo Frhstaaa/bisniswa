@@ -30,7 +30,7 @@ class MetaCloudApiIntegrationTest extends TestCase
 
     public function test_meta_webhook_verification_challenge(): void
     {
-        $response = $this->get('/api/webhook/meta-whatsapp?hub.mode=subscribe&hub.verify_token=bisniswa_meta_token&hub.challenge=CHALLENGE_CODE_123');
+        $response = $this->get('/api/webhook/meta-whatsapp?hub.mode=subscribe&hub.verify_token=sapa_meta_token&hub.challenge=CHALLENGE_CODE_123');
 
         $response->assertStatus(200);
         $this->assertEquals('CHALLENGE_CODE_123', $response->getContent());

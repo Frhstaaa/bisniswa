@@ -73,7 +73,7 @@ export default function CaraPakai({ plans = [], stats = {} }) {
         },
         jadwal: {
             title: 'Pengumuman Jadwal Ujian',
-            content: (name) => `Yth. Pelanggan ${name},\n\nPemberitahuan penting dari sistem SAPA (Sistem Automasi Pesan & Alert). Pesanan Anda #INV-2026 telah berhasil diverifikasi.\n\nStatus: Terjadwal Otomatis\nWaktu: Real-time Alert.`,
+            content: (name) => `Yth. Pelanggan ${name},\n\nPemberitahuan penting dari sistem SAPA (Sistem Automisasi Pesan & Alert). Pesanan Anda #INV-2026 telah berhasil diverifikasi.\n\nStatus: Terjadwal Otomatis\nWaktu: Real-time Alert.`,
             badge: 'Akademik Kampus',
         },
         tagihan: {
@@ -95,7 +95,7 @@ export default function CaraPakai({ plans = [], stats = {} }) {
         {
             number: '02',
             title: 'Tautkan Nomor WhatsApp via Scan QR',
-            description: 'Buka menu Perangkat, klik "Tambah Perangkat Baru", lalu scan kode QR di layar menggunakan aplikasi WhatsApp di smartphone Anda via engine resmi BisnisWA UltraSync yang stabil dan anti-delay.',
+            description: 'Buka menu Perangkat, klik "Tambah Perangkat Baru", lalu scan kode QR di layar menggunakan aplikasi WhatsApp di smartphone Anda via engine resmi SAPA UltraSync yang stabil dan anti-delay.',
             icon: QrCode,
             badge: 'Koneksi 10 Detik',
             tips: 'Mendukung nomor WhatsApp standar maupun WhatsApp Business.',

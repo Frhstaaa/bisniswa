@@ -272,7 +272,7 @@ export default function ContactsIndex({ groups, contacts, filters, stats }) {
 
     return (
         <AppLayout title="Buku Kontak & CRM">
-            <Head title="Buku Kontak & Segmentasi Audiens — Mardira WA" />
+            <Head title="Buku Kontak & Segmentasi Audiens — SAPA" />
 
             <div className="space-y-6 pb-12 font-sans antialiased text-[#1f1f1f]">
                 {/* Mantis Breadcrumb & Header Page */}

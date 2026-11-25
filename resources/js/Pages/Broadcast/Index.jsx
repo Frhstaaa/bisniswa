@@ -28,7 +28,7 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
     const [targetType, setTargetType] = useState('manual'); // 'manual' | 'group'
     const [groupId, setGroupId] = useState(groups && groups[0] ? groups[0].id : '');
     const [message, setMessage] = useState(
-        '{Halo|Hai|Selamat siang} Kak {{nama}},\n\nKami menginfokan jadwal registrasi dan pengumuman akademik terbaru!\nInformasi lengkap silakan akses portal.\n\nLayanan resmi SAPA BisnisWA.'
+        '{Halo|Hai|Selamat siang} Kak {{nama}},\n\nKami menginfokan jadwal registrasi dan pengumuman akademik terbaru!\nInformasi lengkap silakan akses portal.\n\nLayanan resmi SAPA.'
     );
     const [recipientsRaw, setRecipientsRaw] = useState(
         '+6281234567890\n+6281987654321\n+6285223491823'
@@ -130,7 +130,7 @@ export default function BroadcastIndex({ workspace, devices, campaigns, groups =
 
     return (
         <AppLayout title="Broadcast Massal">
-            <Head title="Broadcast Massal & Anti-Ban — SAPA BisnisWA" />
+            <Head title="Broadcast Massal & Anti-Ban — SAPA" />
 
             <div className="flex flex-col gap-6 pb-12 font-sans antialiased text-[#1f1f1f]">
                 {/* ================= 1. MANTIS BREADCRUMB & HEADER ================= */}

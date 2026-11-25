@@ -80,7 +80,7 @@ export default function DualEngine({ plans = [], stats = {} }) {
     const engineComparison = [
         {
             feature: 'Protokol Enkripsi & Runtime',
-            wwebjs: 'BisnisWA UltraSync Engine (Enterprise Native Protocol)',
+            wwebjs: 'SAPA UltraSync Engine (Enterprise Native Protocol)',
             socket: 'Socket Reverse-Engineered Tradisional',
             advantage: 'UltraSync Engine',
         },
@@ -158,16 +158,16 @@ export default function DualEngine({ plans = [], stats = {} }) {
     const techSchema = {
         '@context': 'https://schema.org',
         '@type': 'TechArticle',
-        headline: 'Arsitektur BisnisWA UltraSync Engine & Proteksi Anti-Banned WhatsApp',
+        headline: 'Arsitektur SAPA UltraSync Engine & Proteksi Anti-Banned WhatsApp',
         description: 'Detail arsitektur backend Laravel Octane FrankenPHP dan engine WhatsApp Web JS terisolasi untuk transmisi pesan broadcast instan tanpa delay dan proteksi anti-ban.',
         image: 'https://mardirawa.frahesta.com/images/logo.png',
         author: {
             '@type': 'Organization',
-            name: 'SAPA — Sistem Automasi Pesan & Alert',
+            name: 'SAPA — Sistem Automisasi Pesan & Alert',
         },
         publisher: {
             '@type': 'Organization',
-            name: 'SAPA — Sistem Automasi Pesan & Alert',
+            name: 'SAPA — Sistem Automisasi Pesan & Alert',
             logo: {
                 '@type': 'ImageObject',
                 url: 'https://mardirawa.frahesta.com/images/logo.png',
@@ -233,7 +233,7 @@ export default function DualEngine({ plans = [], stats = {} }) {
                 {/* ================= CORE PILLAR CARDS ================= */}
                 <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 sm:-mt-14">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {/* BisnisWA UltraSync Engine Card */}
+                        {/* SAPA UltraSync Engine Card */}
                         <motion.div
                             initial={{ opacity: 0, y: 24 }}
                             whileInView={{ opacity: 1, y: 0 }}
@@ -248,7 +248,7 @@ export default function DualEngine({ plans = [], stats = {} }) {
                                         ⚡
                                     </div>
                                     <div>
-                                        <h3 className="text-xl font-black text-slate-900">BisnisWA UltraSync Engine</h3>
+                                        <h3 className="text-xl font-black text-slate-900">SAPA UltraSync Engine</h3>
                                         <p className="text-xs text-slate-500 font-mono">Enterprise Native Official Protocol</p>
                                     </div>
                                 </div>
@@ -332,7 +332,7 @@ export default function DualEngine({ plans = [], stats = {} }) {
                     <div className="text-center space-y-2 mb-10">
                         <p className="text-xs font-bold uppercase tracking-widest text-[#1e50ff]">Perbandingan Arsitektur</p>
                         <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-                            Mengapa BisnisWA UltraSync Menjadi Standar Utama?
+                            Mengapa SAPA UltraSync Menjadi Standar Utama?
                         </h2>
                         <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">
                             Bandingkan keunggulan arsitektur resmi berstandar web enterprise dibandingkan library socket tidak resmi.
@@ -345,7 +345,7 @@ export default function DualEngine({ plans = [], stats = {} }) {
                                 <thead className="bg-slate-50 border-b border-slate-200 text-slate-700 uppercase text-[10px] tracking-wider">
                                     <tr>
                                         <th className="py-3.5 px-5 font-bold">Parameter / Fitur</th>
-                                        <th className="py-3.5 px-5 font-bold text-emerald-800 bg-blue-50/50">BisnisWA UltraSync (Resmi)</th>
+                                        <th className="py-3.5 px-5 font-bold text-emerald-800 bg-blue-50/50">SAPA UltraSync (Resmi)</th>
                                         <th className="py-3.5 px-5 font-bold text-slate-600 bg-slate-50">Library Socket Tidak Resmi</th>
                                     </tr>
                                 </thead>

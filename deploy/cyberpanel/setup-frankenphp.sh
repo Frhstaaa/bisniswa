@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# BisnisWA CyberPanel / OpenLiteSpeed / Nginx Reverse Proxy Setup for FrankenPHP Octane
+# SAPA CyberPanel / OpenLiteSpeed / Nginx Reverse Proxy Setup for FrankenPHP Octane
 set -e
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$DIR"
 
-echo "🚀 Preparing BisnisWA for Enterprise Octane with FrankenPHP..."
+echo "🚀 Preparing SAPA for Enterprise Octane with FrankenPHP..."
 
 # 1. Warm Laravel production caches
 echo "📦 Optimizing configuration, routes, and views..."
@@ -24,7 +24,7 @@ fi
 echo "🔍 Validating Caddyfile..."
 APP_PUBLIC_PATH="$DIR/public" ./frankenphp validate --config Caddyfile --adapter caddyfile
 
-echo "✨ BisnisWA Octane & FrankenPHP configuration ready!"
+echo "✨ SAPA Octane & FrankenPHP configuration ready!"
 echo ""
 echo "To start in foreground:"
 echo "  ./bin/octane-start.sh"

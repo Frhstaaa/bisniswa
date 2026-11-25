@@ -1,6 +1,6 @@
 /**
  * WhatsApp Gateway Microservice (Pure Baileys Engine)
- * BisnisWA — High Performance WhatsApp WebSocket Native Engine
+ * SAPA — High Performance WhatsApp WebSocket Native Engine
  * Direct multi-device protocol connection via @whiskeysockets/baileys
  */
 
@@ -280,7 +280,7 @@ app.use((req, res, next) => {
 app.get('/health', (req, res) => {
     res.json({
         status: 'ok',
-        service: 'BisnisWA Baileys Gateway Engine',
+        service: 'SAPA Baileys Gateway Engine',
         engine: 'baileys',
         uptime: Math.floor(process.uptime()),
         active_sessions: activeSessions.size,
@@ -331,7 +331,7 @@ async function initBaileysSession(deviceId, workspaceId = null) {
         },
         logger,
         printQRInTerminal: false,
-        browser: ['BisnisWA', 'Chrome', '124.0.0.0'],
+        browser: ['SAPA', 'Chrome', '124.0.0.0'],
         connectTimeoutMs: 60000,
         defaultQueryTimeoutMs: 60000,
         keepAliveIntervalMs: 25000,
@@ -1036,7 +1036,7 @@ async function autoRestoreSavedSessions() {
 }
 
 app.listen(PORT, HOST, () => {
-    console.log(`🚀 BisnisWA Gateway Microservice active on http://${HOST}:${PORT}`);
+    console.log(`🚀 SAPA Gateway Microservice active on http://${HOST}:${PORT}`);
     console.log(`🔐 Internal Secret Security: Active`);
     console.log(`📡 Pure Baileys WebSocket Native Engine Ready`);
 

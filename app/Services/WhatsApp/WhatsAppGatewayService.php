@@ -25,7 +25,7 @@ class WhatsAppGatewayService
     }
 
     /**
-     * Request a new WhatsApp session with BisnisWA UltraSync Engine.
+     * Request a new WhatsApp session with SAPA UltraSync Engine.
      */
     public function initializeDeviceSession(Device $device): array
     {
@@ -78,7 +78,7 @@ class WhatsAppGatewayService
         }
 
         // High-quality fallback QR code
-        $simulatedQr = "https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=MARDIRA_WA_SESSION_{$device->id}_".time();
+        $simulatedQr = "https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=SAPA_SESSION_{$device->id}_".time();
         $this->deviceRepo->updateStatus($device, 'qr_ready', $simulatedQr);
 
         return [

@@ -44,7 +44,7 @@ export default function ProfileIndex({ user, workspace }) {
 
     return (
         <AppLayout title="Pengaturan Profil">
-            <Head title="Pengaturan Akun & Keamanan — SAPA BisnisWA" />
+            <Head title="Pengaturan Akun & Keamanan — SAPA" />
 
             <div className="flex flex-col gap-6 pb-12 max-w-5xl font-sans antialiased text-[#1f1f1f]">
                 {/* ================= 1. MANTIS BREADCRUMB & HEADER ================= */}
@@ -281,7 +281,7 @@ export default function ProfileIndex({ user, workspace }) {
                                 <div className="p-3 bg-[#e6f4ff] rounded-lg border border-[#91caff] text-xs flex items-start gap-2.5">
                                     <ShieldCheck className="size-4 shrink-0 mt-0.5 text-[#1677ff]" />
                                     <p className="text-[11px] leading-relaxed text-[#262626]">
-                                        Akun dilindungi oleh enkripsi sesi standar enterprise <strong>SAPA BisnisWA</strong>.
+                                        Akun dilindungi oleh enkripsi sesi standar enterprise <strong>SAPA</strong>.
                                     </p>
                                 </div>
                             </CardContent>

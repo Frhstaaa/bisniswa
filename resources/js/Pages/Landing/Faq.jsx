@@ -176,7 +176,7 @@ export default function Faq({ plans = [], stats = {} }) {
                             variants={heroItemVariants}
                             className="text-slate-600 text-sm sm:text-base max-w-xl mx-auto leading-relaxed"
                         >
-                            Temukan panduan cepat seputar operasional gateway, kuota pesan, teknologi BisnisWA UltraSync Engine, hingga integrasi API instan.
+                            Temukan panduan cepat seputar operasional gateway, kuota pesan, teknologi SAPA UltraSync Engine, hingga integrasi API instan.
                         </motion.p>
 
                         {/* Search Input Bar */}

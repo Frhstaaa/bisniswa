@@ -172,9 +172,9 @@ class ApiController extends Controller
 
         $collection = [
             'info' => [
-                'name' => 'MARDIRA WA Gateway & Broadcast Enterprise API',
+                'name' => 'SAPA Gateway & Broadcast Enterprise API',
                 '_postman_id' => (string) Str::uuid(),
-                'description' => 'Koleksi resmi endpoint REST API WhatsApp Gateway dari Politeknik Mardira Indonesia.',
+                'description' => 'Koleksi resmi endpoint REST API SAPA.',
                 'schema' => 'https://schema.getpostman.com/json/collection/v2.1.0/collection.json',
             ],
             'auth' => [
@@ -235,7 +235,7 @@ class ApiController extends Controller
                             'mode' => 'raw',
                             'raw' => json_encode([
                                 'phone' => '+6281987654321',
-                                'caption' => 'Faktur Tagihan Resmi Politeknik Mardira Indonesia #INV-290',
+                                'caption' => 'Faktur Tagihan Resmi SAPA #INV-290',
                                 'media_url' => 'https://storage.kampus.ac.id/invoices/290.pdf',
                             ], JSON_PRETTY_PRINT),
                         ],
@@ -276,14 +276,14 @@ class ApiController extends Controller
 
         return response()->streamDownload(function () use ($collection) {
             echo json_encode($collection, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-        }, 'MARDIRA_WA_Postman_Collection.json', [
+        }, 'SAPA_Postman_Collection.json', [
             'Content-Type' => 'application/json',
         ]);
     }
 
     public function downloadDocs(Request $request): StreamedResponse
     {
-        $filename = 'MARDIRA_WA_Dokumentasi_Bridging_API.md';
+        $filename = 'SAPA_Dokumentasi_Bridging_API.md';
         $baseUrl = rtrim($request->root() ?: config('app.url', 'https://mardirawa.frahesta.com'), '/');
         $content = $this->getBridgingDocsMarkdown($baseUrl);
 
@@ -301,19 +301,19 @@ class ApiController extends Controller
 
         return <<<MD
 # DOKUMENTASI RESMI BRIDGING WHATSAPP GATEWAY API
-**MARDIRA WA Gateway — Politeknik Mardira Indonesia**
+**SAPA — Sistem Automisasi Pesan & Alert**
 *Versi API: v1.0 (REST JSON over HTTP Bearer Token)*
 
 ---
 
 ## 1. PENDAHULUAN & ARSITEKTUR BRIDGING
-MARDIRA WA API memungkinkan integrasi pengiriman pesan WhatsApp secara otomatis dari aplikasi client (seperti SIAKAD, SIMAK Kampus, ERP, CRM, POS Kasir, E-Commerce, maupun script backend kustom) ke nomor WhatsApp pelanggan atau mahasiswa.
+SAPA API memungkinkan integrasi pengiriman pesan WhatsApp secara otomatis dari aplikasi client (seperti SIAKAD, SIMAK Kampus, ERP, CRM, POS Kasir, E-Commerce, maupun script backend kustom) ke nomor WhatsApp pelanggan atau mahasiswa.
 
 ### Alur Komunikasi:
-1. **Aplikasi Klien** mengirim HTTP POST JSON dengan header `Authorization: Bearer <API_KEY>` ke endpoint MARDIRA WA.
-2. **MARDIRA WA Gateway** memvalidasi kuota dan meneruskan pesan melalui server aktif (**Server 1 WhatsApp** atau **Server 2 WhatsApp**).
+1. **Aplikasi Klien** mengirim HTTP POST JSON dengan header `Authorization: Bearer <API_KEY>` ke endpoint SAPA.
+2. **SAPA Gateway** memvalidasi kuota dan meneruskan pesan melalui server aktif (**Server 1 WhatsApp** atau **Server 2 WhatsApp**).
 3. **Penerima** menerima pesan secara instan di aplikasi WhatsApp.
-4. **Webhook (Opsional)**: Jika penerima membalas chat atau pesan telah sampai (*delivered*), server MARDIRA WA memancarkan HTTP POST balik ke URL Webhook aplikasi Anda.
+4. **Webhook (Opsional)**: Jika penerima membalas chat atau pesan telah sampai (*delivered*), server SAPA memancarkan HTTP POST balik ke URL Webhook aplikasi Anda.
 
 ---
 
@@ -414,7 +414,7 @@ Gunakan endpoint ini untuk memantau sisa kuota, status masa aktif paket, dan ket
   "status": true,
   "workspace": {
     "id": 7,
-    "name": "Politeknik Mardira Indonesia"
+    "name": "SAPA Alert System"
   },
   "plan": {
     "name": "Starter Lite",
@@ -573,7 +573,7 @@ Daftarkan URL callback aplikasi Anda di menu **Kredensial API & Webhook** untuk 
 3. **Sanitasi Nomor**: Pastikan karakter spasi, strip, atau tanda kurung telah dihilangkan sebelum data dikirim ke API.
 
 ---
-*Diterbitkan oleh Politeknik Mardira Indonesia — MARDIRA WA 2026.*
+*Diterbitkan oleh SAPA Alert System — 2026.*
 MD;
     }
 }

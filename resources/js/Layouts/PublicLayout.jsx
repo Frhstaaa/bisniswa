@@ -62,9 +62,9 @@ export default function PublicLayout({
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const mainRef = useGsapReveal([url]);
 
-    const pageTitle = title ? `${title} — SAPA` : 'SAPA — Sistem Automasi Pesan & Alert';
-    const pageDesc = description || 'SAPA (Sistem Automasi Pesan & Alert) — Platform Enterprise WhatsApp Gateway & Broadcast API resmi. Otomasi pesan instan, broadcast notifikasi massal, chatbot AI cerdas, dan integrasi REST API real-time.';
-    const pageKeywords = keywords || 'sapa, sapa wa, sistem automasi pesan dan alert, whatsapp gateway indonesia, api whatsapp resmi, broadcast whatsapp massal, auto reply wa bot, alert whatsapp, rest api whatsapp';
+    const pageTitle = title ? `${title} — SAPA` : 'SAPA — Sistem Automisasi Pesan & Alert';
+    const pageDesc = description || 'SAPA (Sistem Automisasi Pesan & Alert) — Platform Enterprise WhatsApp Gateway & Broadcast API resmi. Otomasi pesan instan, broadcast notifikasi massal, chatbot AI cerdas, dan integrasi REST API real-time.';
+    const pageKeywords = keywords || 'sapa, sapa wa, sistem automisasi pesan dan alert, whatsapp gateway indonesia, api whatsapp resmi, broadcast whatsapp massal, auto reply wa bot, alert whatsapp, rest api whatsapp';
     const cleanPath = (url || '/').split('?')[0];
     const pageCanonical = canonicalUrl || `https://mardirawa.frahesta.com${cleanPath === '/' ? '' : cleanPath}`;
 
@@ -134,7 +134,7 @@ export default function PublicLayout({
                     <meta property="og:title" content={pageTitle} head-key="og:title" />
                     <meta property="og:description" content={pageDesc} head-key="og:description" />
                     <meta property="og:url" content={pageCanonical} head-key="og:url" />
-                    <meta property="og:site_name" content="SAPA — Sistem Automasi Pesan & Alert" head-key="og:site_name" />
+                    <meta property="og:site_name" content="SAPA — Sistem Automisasi Pesan & Alert" head-key="og:site_name" />
                     <meta property="og:locale" content="id_ID" head-key="og:locale" />
 
                     <meta name="twitter:card" content="summary_large_image" head-key="twitter:card" />
@@ -152,7 +152,7 @@ export default function PublicLayout({
                 <header className="fixed inset-x-0 top-0 z-50 transition-all duration-300 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-2xs">
                     <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 py-3 flex-nowrap gap-4">
                         {/* Brand Logo */}
-                        <Link href="/" prefetch className="flex items-center group shrink-0" title="SAPA — Sistem Automasi Pesan & Alert">
+                        <Link href="/" prefetch className="flex items-center group shrink-0" title="SAPA — Sistem Automisasi Pesan & Alert">
                             <SapaLogo variant="full" size="lg" />
                         </Link>
 
@@ -407,7 +407,7 @@ export default function PublicLayout({
                                     <SapaLogo variant="full" size="lg" theme="dark" />
                                 </div>
                                 <p className="text-slate-300 text-xs leading-relaxed max-w-sm">
-                                    Platform Resmi SAPA (Sistem Automasi Pesan & Alert). Menghubungkan otomasi pesan WhatsApp multi-device, transmisi alert darurat & notifikasi sistem, serta integrasi digital enterprise dengan reliabilitas tinggi.
+                                    Platform Resmi SAPA (Sistem Automisasi Pesan & Alert). Menghubungkan otomasi pesan WhatsApp multi-device, transmisi alert darurat & notifikasi sistem, serta integrasi digital enterprise dengan reliabilitas tinggi.
                                 </p>
                                 <div className="flex flex-wrap items-center gap-3 pt-1 text-xs text-slate-400">
                                     <span className="inline-flex items-center gap-1.5 text-slate-300">
@@ -473,9 +473,9 @@ export default function PublicLayout({
                                 </ul>
                             </div>
 
-                            {/* Col 5: Kampus & Bantuan */}
+                            {/* Col 5: Dukungan SAPA */}
                             <div className="space-y-3">
-                                <h4 className="font-bold text-white uppercase text-[11px] tracking-wider">Kampus & Bantuan</h4>
+                                <h4 className="font-bold text-white uppercase text-[11px] tracking-wider">Dukungan SAPA</h4>
                                 <div className="space-y-2.5 text-slate-300 text-xs">
                                     <div className="flex items-start gap-2">
                                         <MapPin className="w-4 h-4 text-[#1e50ff] shrink-0 mt-0.5" />
@@ -485,8 +485,8 @@ export default function PublicLayout({
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <Mail className="w-4 h-4 text-[#1e50ff] shrink-0" />
-                                        <a href="mailto:info@mardira.ac.id" className="hover:text-[#1e50ff] transition-colors">
-                                            info@mardira.ac.id
+                                        <a href="mailto:support@sapa.id" className="hover:text-[#1e50ff] transition-colors">
+                                            support@sapa.id
                                         </a>
                                     </div>
                                     <div className="flex items-center gap-2">
@@ -503,7 +503,7 @@ export default function PublicLayout({
 
                         {/* Bottom Sub-Footer Bar */}
                         <div className="mt-10 pt-6 border-t border-blue-950/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-slate-400 text-[11px]">
-                            <p>© 2026 SAPA (Sistem Automasi Pesan & Alert). Seluruh hak cipta dilindungi undang-undang.</p>
+                            <p>© 2026 SAPA (Sistem Automisasi Pesan & Alert). Seluruh hak cipta dilindungi undang-undang.</p>
                             <div className="flex items-center gap-4 text-slate-400">
                                 <span>Platform Otomasi Pesan & Alert Terpadu</span>
                                 <span>•</span>

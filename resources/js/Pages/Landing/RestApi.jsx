@@ -264,7 +264,7 @@ payload, _ := json.Marshal(map[string]string{
     // Response Success Sample
     const successResponseSample = `{
   "status": true,
-  "message": "Pesan berhasil diproses dan dikirim via BisnisWA Baileys Engine",
+  "message": "Pesan berhasil diproses dan dikirim via SAPA Baileys Engine",
   "data": {
     "message_id": 142,
     "device_id": 6,
@@ -367,11 +367,11 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
         image: 'https://mardirawa.frahesta.com/images/logo.png',
         author: {
             '@type': 'Organization',
-            name: 'SAPA — Sistem Automasi Pesan & Alert',
+            name: 'SAPA — Sistem Automisasi Pesan & Alert',
         },
         publisher: {
             '@type': 'Organization',
-            name: 'SAPA — Sistem Automasi Pesan & Alert',
+            name: 'SAPA — Sistem Automisasi Pesan & Alert',
             logo: {
                 '@type': 'ImageObject',
                 url: 'https://mardirawa.frahesta.com/images/logo.png',
@@ -463,7 +463,7 @@ app.listen(8080, () => console.log('Webhook listener aktif di port 8080'));`,
                             </div>
                             <h3 className="font-bold text-sm text-[#0f172a]">Hubungkan WhatsApp</h3>
                             <p className="text-xs text-slate-500 leading-relaxed">
-                                Pindai QR Code di menu <strong>Manajemen Gateway</strong> menggunakan aplikasi WhatsApp resmi di HP Anda (didukung oleh BisnisWA UltraSync Engine resmi).
+                                Pindai QR Code di menu <strong>Manajemen Gateway</strong> menggunakan aplikasi WhatsApp resmi di HP Anda (didukung oleh SAPA UltraSync Engine resmi).
                             </p>
                         </Card>
 

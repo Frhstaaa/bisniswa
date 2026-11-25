@@ -90,7 +90,7 @@ export default function AdminDashboard({
 
     return (
         <AppLayout title="Dashboard Admin">
-            <Head title="Dashboard Admin — SAPA BisnisWA" />
+            <Head title="Dashboard Admin — SAPA" />
 
             <div className="flex flex-col gap-6 pb-12 font-sans antialiased text-[#262626]">
                 {/* ================= 1. BREADCRUMB & HEADER ================= */}

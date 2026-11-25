@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Mardira WA (BisnisWA) - Web Deployment & Setup Assistant
+ * SAPA - Web Deployment & Setup Assistant
  * Dibuat khusus untuk setup aplikasi via web browser tanpa akses terminal SSH di CyberPanel.
  */
 session_start();
@@ -105,7 +105,7 @@ if ($isAuthed && isset($_POST['action'])) {
                     if (file_exists($basePath.'/.env.production.example')) {
                         copy($basePath.'/.env.production.example', $envPath);
                     } else {
-                        file_put_contents($envPath, "APP_NAME=\"MARDIRA WA\"\nAPP_ENV=production\nAPP_KEY=base64:uJr8rJUboGOKdA2FTfmI+2MxUVQ3ue8oBlp4sHR4SeE=\nAPP_URL=https://mardirawa.frahesta.com\n");
+                        file_put_contents($envPath, "APP_NAME=\"SAPA\"\nAPP_ENV=production\nAPP_KEY=base64:uJr8rJUboGOKdA2FTfmI+2MxUVQ3ue8oBlp4sHR4SeE=\nAPP_URL=https://mardirawa.frahesta.com\n");
                     }
                 }
 
@@ -350,7 +350,7 @@ if ($isAuthed && isset($_POST['action'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Deployment & Setup Assistant - Mardira WA</title>
+    <title>Web Deployment & Setup Assistant - SAPA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background: #0f172a; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
@@ -367,7 +367,7 @@ if ($isAuthed && isset($_POST['action'])) {
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     </span>
                     <div>
-                        <h1 class="text-xl font-bold tracking-tight text-white">Mardira WA Deployment Assistant</h1>
+                        <h1 class="text-xl font-bold tracking-tight text-white">SAPA Deployment Assistant</h1>
                         <p class="text-sm text-slate-400">Domain: <span class="text-emerald-400 font-mono">mardirawa.frahesta.com</span></p>
                     </div>
                 </div>
@@ -568,7 +568,7 @@ if ($isAuthed && isset($_POST['action'])) {
 
         <!-- Footer -->
         <div class="text-center text-xs text-slate-500 mt-8">
-            &copy; <?= date('Y') ?> Mardira WA (BisnisWA). All rights reserved.
+            &copy; <?= date('Y') ?> SAPA. All rights reserved.
         </div>
     </div>
 

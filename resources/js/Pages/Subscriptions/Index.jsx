@@ -113,7 +113,7 @@ export default function SubscriptionsIndex({ workspace, subscription, plans = []
 
     return (
         <AppLayout title="Kelola Langganan">
-            <Head title="Sistem Langganan & Saldo Kuota — SAPA BisnisWA" />
+            <Head title="Sistem Langganan & Saldo Kuota — SAPA" />
 
             <div className="flex flex-col gap-6 pb-12 font-sans antialiased text-[#1f1f1f]">
                 {/* ================= 1. MANTIS BREADCRUMB & HEADER ================= */}

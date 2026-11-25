@@ -26,14 +26,14 @@ export default function OnboardingGuideModal({ isOpen, onClose }) {
     const steps = [
         {
             title: '1. Tautkan Nomor WhatsApp Anda',
-            subtitle: 'BisnisWA UltraSync Engine (Enterprise Native)',
+            subtitle: 'SAPA UltraSync Engine (Enterprise Native)',
             icon: QrCode,
             color: 'navy',
             description:
                 'Buka menu Perangkat WhatsApp atau klik tombol Pindai QR. Buka aplikasi WhatsApp di ponsel Anda > Perangkat Tertaut > Tautkan Perangkat, lalu scan QR Code yang muncul di layar dalam hitungan detik.',
             actionLabel: 'Buka Menu Perangkat',
             actionHref: '/devices',
-            tip: 'BisnisWA UltraSync Engine menjamin enkripsi instan bebas status "Menunggu pesan ini" dan anti-ban.',
+            tip: 'SAPA UltraSync Engine menjamin enkripsi instan bebas status "Menunggu pesan ini" dan anti-ban.',
         },
         {
             title: '2. Kelola Kontak & Buat Grup CRM',

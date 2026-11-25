@@ -129,14 +129,14 @@ class SuperAdminTest extends TestCase
     {
         $response = $this->actingAs($this->superAdmin, 'admin')->post('/admin/settings', [
             'settings' => [
-                'platform_name' => 'MARDIRA WA Gateway Pro',
+                'platform_name' => 'SAPA Gateway Pro',
                 'support_phone' => '+628999999999',
             ],
         ]);
 
         $response->assertRedirect();
 
-        $this->assertEquals('MARDIRA WA Gateway Pro', SystemSetting::get('platform_name'));
+        $this->assertEquals('SAPA Gateway Pro', SystemSetting::get('platform_name'));
         $this->assertEquals('+628999999999', SystemSetting::get('support_phone'));
     }
 

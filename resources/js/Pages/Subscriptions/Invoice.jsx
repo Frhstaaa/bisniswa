@@ -52,7 +52,7 @@ export default function Invoice({ payment, workspace }) {
                         />
                         <div>
                             <h2 className="text-lg font-bold text-[#262626] tracking-tight uppercase">
-                                SAPA — SISTEM AUTOMASI PESAN &amp; ALERT
+                                SAPA — SISTEM AUTOMISASI PESAN &amp; ALERT
                             </h2>
                             <p className="text-xs font-semibold text-[#595959]">
                                 Enterprise WhatsApp Gateway &amp; Real-time Alerting Platform
@@ -182,7 +182,7 @@ export default function Invoice({ payment, workspace }) {
 
                 {/* Footer Notes */}
                 <div className="text-center text-[10px] text-[#8c8c8c] pt-4 border-t border-[#f0f0f0]">
-                    Terima kasih atas kepercayaan Anda menggunakan layanan SAPA (Sistem Automasi Pesan &amp; Alert).
+                    Terima kasih atas kepercayaan Anda menggunakan layanan SAPA (Sistem Automisasi Pesan &amp; Alert).
                 </div>
             </motion.div>
         </div>

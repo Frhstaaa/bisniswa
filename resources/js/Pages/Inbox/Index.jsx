@@ -410,7 +410,7 @@ export default function InboxIndex({
 
     return (
         <AppLayout title="Kotak Masuk Live Chat">
-            <Head title="Kotak Masuk Live Chat WhatsApp — MARDIRA WA" />
+            <Head title="Kotak Masuk Live Chat WhatsApp — SAPA" />
 
             <div className="space-y-4 font-sans antialiased text-[#1f1f1f]">
                 {/* Mantis Breadcrumb & Top Action Bar */}
@@ -844,7 +844,7 @@ export default function InboxIndex({
                                     <div className="flex justify-center mb-3">
                                         <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#ffeecd] border border-[#ffdda3] text-[11px] text-[#54656f] text-center shadow-2xs max-w-md">
                                             <ShieldCheck className="w-3.5 h-3.5 text-amber-700 shrink-0" />
-                                            <span>Pesan dan obrolan terenkripsi melalui gateway resmi MARDIRA WA.</span>
+                                            <span>Pesan dan obrolan terenkripsi melalui gateway resmi SAPA.</span>
                                         </div>
                                     </div>
 

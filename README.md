@@ -1,6 +1,6 @@
-# bisniswa
+# SAPA
 
-MARDIRA WhatsApp Gateway Enterprise & Multi-Device Automation Platform.
+SAPA — Sistem Automisasi Pesan & Alert.
 
 Sistem otomasi pesan WhatsApp cerdas dengan dukungan Dual-Engine (Baileys WebSocket & whatsapp-web.js Chromium), Auto-Reply berbasis kata kunci (*keyword rules*), Menu Layanan Interaktif, Fallback Asisten AI Gemini, Kampanye Broadcast terjadwal, dan Shared Team Live Chat Inbox.
 

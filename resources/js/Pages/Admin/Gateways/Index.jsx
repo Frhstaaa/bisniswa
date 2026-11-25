@@ -53,7 +53,7 @@ export default function GatewaysIndex({ devices = {}, stats = {} }) {
                             </span>
                         </div>
                         <p className="text-xs sm:text-sm text-slate-500 max-w-2xl">
-                            Pantau alokasi dan beban memori BisnisWA UltraSync Engine secara realtime di seluruh sesi klien.
+                            Pantau alokasi dan beban memori SAPA UltraSync Engine secara realtime di seluruh sesi klien.
                         </p>
                     </div>
 
@@ -93,11 +93,11 @@ export default function GatewaysIndex({ devices = {}, stats = {} }) {
                         </CardContent>
                     </Card>
 
-                    {/* BisnisWA Baileys Engine */}
+                    {/* SAPA Baileys Engine */}
                     <Card className="border-slate-200/90 shadow-xs rounded-xl h-full border-emerald-200/80 bg-emerald-50/20">
                         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pt-4 px-4">
                             <CardTitle className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                                BisnisWA Baileys Engine
+                                SAPA Baileys Engine
                             </CardTitle>
                             <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-100 text-emerald-900 border border-emerald-300">
                                 WEBSOCKET
