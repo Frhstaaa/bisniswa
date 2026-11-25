@@ -7,11 +7,12 @@
     <title inertia>{{ config('app.name', 'SAPA') }}</title>
 
     <!-- Favicon & Browser URL Icons -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=4">
-    <link rel="shortcut icon" type="image/png" href="{{ asset('favicon-32x32.png') }}?v=4">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}?v=4">
-    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('images/logo-icon.png') }}?v=4">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/logo-icon.png') }}?v=4">
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=5">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('favicon-32x32.png') }}?v=5">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}?v=5">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/logo-icon.svg') }}?v=5">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('images/logo-icon.png') }}?v=5">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/logo-icon.png') }}?v=5">
 
     <!-- Search Engine & SEO Metadata -->
     <meta name="description" content="SAPA (Sistem Automisasi Pesan & Alert) — Platform Enterprise WhatsApp Gateway & Broadcast Alerting resmi. Otomasi pesan massal anti-banned, auto-reply asisten AI, alert notifikasi real-time, dan integrasi REST API terpercaya.">
@@ -24,12 +25,12 @@
     <meta property="og:site_name" content="{{ config('app.name', 'SAPA') }}">
     <meta property="og:title" content="{{ config('app.name', 'SAPA') }} — Sistem Automisasi Pesan & Alert">
     <meta property="og:description" content="SAPA: Platform Enterprise WhatsApp Gateway & Alerting Engine terpadu. Otomasi pesan massal, notifikasi sistem real-time, auto-reply cerdas, dan integrasi API.">
-    <meta property="og:image" content="{{ asset('images/logo.png') }}">
+    <meta property="og:image" content="{{ asset('images/logo.png') }}?v=6">
     <meta property="og:locale" content="id_ID">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ config('app.name', 'SAPA') }} — Sistem Automisasi Pesan & Alert">
     <meta name="twitter:description" content="SAPA (Sistem Automisasi Pesan & Alert) — Gateway WhatsApp & Otomasi Pesan Enterprise di Indonesia.">
-    <meta name="twitter:image" content="{{ asset('images/logo.png') }}">
+    <meta name="twitter:image" content="{{ asset('images/logo.png') }}?v=6">
 
     <!-- Modern Editorial & Tech SaaS Typography (Plus Jakarta Sans, Playfair Display, Instrument Serif, JetBrains Mono) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

@@ -46,7 +46,7 @@ export default function Invoice({ payment, workspace }) {
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-[#1677ff] pb-6">
                     <div className="flex items-center gap-3.5">
                         <img
-                            src="/images/logo-icon.png"
+                            src="/images/logo-icon.svg?v=5"
                             alt="SAPA Icon"
                             className="h-14 w-14 object-contain shrink-0"
                         />
