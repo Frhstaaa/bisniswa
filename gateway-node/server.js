@@ -123,6 +123,14 @@ const msgRetryCounterCache = {
 // Map<string, { client, status, qr, phoneNumber, deviceId, isDestroyed }>
 const activeSessions = new Map();
 
+// Track the exact incoming JID (@lid or @s.whatsapp.net) per phone so replies use the active Signal session
+const phoneToReplyJid = new Map();
+function normalizePhoneKey(raw) {
+    let digits = String(raw || '').split('@')[0].split(':')[0].replace(/[^0-9]/g, '');
+    if (digits.startsWith('0')) digits = '62' + digits.slice(1);
+    return digits ? '+' + digits : '';
+}
+
 // In-memory inbound message deduplication store
 const processedInboundIds = new Set();
 function isDuplicateInbound(msgId) {
@@ -381,7 +389,7 @@ async function initBaileysSession(deviceId, workspaceId = null) {
     }
 
     const { state, saveCreds } = await useMultiFileAuthState(authPath);
-    const logger = pino({ level: 'silent' });
+    const logger = pino({ level: 'error' });
     let waVersion;
     try {
         const fetched = await Promise.race([
@@ -595,6 +603,12 @@ async function initBaileysSession(deviceId, workspaceId = null) {
 
                 if (!resolvedPhone) {
                     resolvedPhone = senderJid.endsWith('@lid') ? senderJid : ('+' + senderJid.replace(/[^0-9]/g, ''));
+                }
+
+                // Remember the exact incoming JID (@lid or @s.whatsapp.net) for replying on the same Signal session
+                const phoneKey = normalizePhoneKey(resolvedPhone);
+                if (phoneKey && (senderJid.endsWith('@lid') || senderJid.endsWith('@s.whatsapp.net'))) {
+                    phoneToReplyJid.set(phoneKey, senderJid);
                 }
 
                 const unwrappedMsg = msg.message?.ephemeralMessage?.message
@@ -968,7 +982,8 @@ app.post('/messages/send', async (req, res) => {
         }
     }
 
-    const jid = formatRecipientJid(to);
+    const phoneKey = normalizePhoneKey(to);
+    const jid = (phoneKey && phoneToReplyJid.get(phoneKey)) || formatRecipientJid(to);
     console.log(`[Dispatch Message] Device ${device_id} (baileys) -> To: ${to} (JID: ${jid}) | Length: ${message?.length || 0} | Media: ${media_url || 'none'} | Poll: ${poll_options?.length || 0}`);
 
     const fallbackMessageId = `MSG_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
