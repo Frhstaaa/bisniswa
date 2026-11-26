@@ -71,12 +71,16 @@ class ContactController extends Controller
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'string', 'max:25'],
+            'phone' => ['required', 'string', 'max:25', 'regex:/^[\+]?[0-9\s\-]{8,20}$/'],
             'group_id' => [
                 'nullable',
                 Rule::exists('contact_groups', 'id')->where('workspace_id', $workspace->id),
             ],
             'custom_fields' => ['nullable'],
+        ], [
+            'name.required' => 'Nama kontak wajib diisi.',
+            'phone.required' => 'Nomor WhatsApp wajib diisi.',
+            'phone.regex' => 'Nomor WhatsApp harus berisi 8–20 digit angka yang valid.',
         ]);
 
         // Normalize phone number to international format
@@ -112,12 +116,16 @@ class ContactController extends Controller
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'string', 'max:25'],
+            'phone' => ['required', 'string', 'max:25', 'regex:/^[\+]?[0-9\s\-]{8,20}$/'],
             'group_id' => [
                 'nullable',
                 Rule::exists('contact_groups', 'id')->where('workspace_id', $workspace->id),
             ],
             'custom_fields' => ['nullable'],
+        ], [
+            'name.required' => 'Nama kontak wajib diisi.',
+            'phone.required' => 'Nomor WhatsApp wajib diisi.',
+            'phone.regex' => 'Nomor WhatsApp harus berisi 8–20 digit angka yang valid.',
         ]);
 
         // Normalize phone number to international format

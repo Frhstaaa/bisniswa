@@ -35,6 +35,10 @@ class AuthController extends Controller
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
+        ], [
+            'email.required' => 'Alamat email wajib diisi.',
+            'email.email' => 'Format alamat email tidak valid.',
+            'password.required' => 'Kata sandi wajib diisi.',
         ]);
 
         if (Auth::guard('web')->attempt($credentials, $request->boolean('remember'))) {
@@ -83,7 +87,7 @@ class AuthController extends Controller
             'email' => ['required', 'string', 'max:150', 'unique:users,email', new ValidDeliverableEmailRule],
             'password' => ['required', 'confirmed', Password::min(6)],
             'workspace_name' => 'required|string|max:150',
-            'phone' => 'required|string|max:30',
+            'phone' => ['required', 'string', 'max:30', 'regex:/^[\+]?[0-9\s\-]{8,20}$/'],
             'plan_id' => 'required|exists:plans,id',
             'billing_cycle' => 'nullable|in:monthly,annually',
         ], [
@@ -92,8 +96,9 @@ class AuthController extends Controller
             'email.unique' => 'Alamat email ini sudah terdaftar. Silakan masuk atau gunakan email lain.',
             'password.required' => 'Kata sandi wajib diisi.',
             'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
-            'workspace_name.required' => 'Nama workspace / kampus wajib diisi.',
+            'workspace_name.required' => 'Nama workspace / bisnis wajib diisi.',
             'phone.required' => 'Nomor WhatsApp wajib diisi.',
+            'phone.regex' => 'Nomor WhatsApp harus berisi 8–20 digit angka yang valid.',
         ]);
 
         $cleanName = strip_tags(trim($validated['name']));

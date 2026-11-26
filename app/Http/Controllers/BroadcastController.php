@@ -74,19 +74,29 @@ class BroadcastController extends Controller
                 'required',
                 Rule::exists('devices', 'id')->where('workspace_id', $workspace->id),
             ],
-            'message' => 'required|string',
+            'message' => 'required|string|max:4096',
             'target_type' => 'required|in:manual,group',
             'group_id' => [
+                'required_if:target_type,group',
                 'nullable',
                 Rule::exists('contact_groups', 'id')->where('workspace_id', $workspace->id),
             ],
-            'recipients_raw' => 'nullable|string',
+            'recipients_raw' => 'required_if:target_type,manual|nullable|string',
             'media_url' => ['nullable', 'url', 'max:500', new SafePublicUrlRule],
             'media_file' => 'nullable|file|mimes:jpeg,png,jpg,webp,gif,pdf,doc,docx,xls,xlsx|max:25600',
             'min_delay' => 'required|integer|min:3|max:60',
             'max_delay' => 'required|integer|gte:min_delay|max:120',
             'schedule_option' => 'required|in:now,scheduled',
-            'scheduled_at' => 'nullable|date',
+            'scheduled_at' => 'required_if:schedule_option,scheduled|nullable|date|after:now',
+        ], [
+            'name.required' => 'Nama kampanye wajib diisi.',
+            'device_id.required' => 'Perangkat gateway WhatsApp wajib dipilih.',
+            'message.required' => 'Isi pesan broadcast wajib diisi.',
+            'group_id.required_if' => 'Grup kontak tujuan wajib dipilih.',
+            'recipients_raw.required_if' => 'Daftar nomor penerima wajib diisi.',
+            'max_delay.gte' => 'Jeda maksimal harus lebih besar atau sama dengan jeda minimal.',
+            'scheduled_at.required_if' => 'Tanggal dan waktu jadwal wajib diisi.',
+            'scheduled_at.after' => 'Waktu penjadwalan harus lebih dari waktu saat ini.',
         ]);
 
         $recipients = [];

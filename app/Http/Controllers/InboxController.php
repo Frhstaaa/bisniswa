@@ -209,13 +209,17 @@ class InboxController extends Controller
         $workspace = $this->getWorkspace($request);
 
         $validated = $request->validate([
-            'phone' => ['required', 'string'],
-            'message' => ['required', 'string'],
+            'phone' => ['required', 'string', 'regex:/^[\+]?[0-9\s\-]{8,20}$/'],
+            'message' => ['required', 'string', 'max:4096'],
             'device_id' => [
                 'nullable',
                 Rule::exists('devices', 'id')->where('workspace_id', $workspace->id),
             ],
             'media_url' => ['nullable', 'url', 'max:500', new SafePublicUrlRule],
+        ], [
+            'phone.required' => 'Nomor tujuan WhatsApp wajib diisi.',
+            'phone.regex' => 'Nomor WhatsApp harus berisi 8–20 digit angka yang valid.',
+            'message.required' => 'Isi pesan tidak boleh kosong.',
         ]);
 
         $rawPhone = preg_replace('/[^0-9]/', '', $validated['phone']);

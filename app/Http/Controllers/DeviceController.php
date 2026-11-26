@@ -77,11 +77,14 @@ class DeviceController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:100',
             'engine' => 'nullable|string',
-            'phone_number' => 'nullable|string|max:30',
+            'phone_number' => ['nullable', 'string', 'max:30', 'regex:/^[\+]?[0-9\s\-]{8,20}$/'],
             'meta_phone_number_id' => 'nullable|string|max:100',
             'meta_access_token' => 'nullable|string',
             'meta_waba_id' => 'nullable|string|max:100',
             'meta_verify_token' => 'nullable|string|max:100',
+        ], [
+            'name.required' => 'Nama perangkat wajib diisi.',
+            'phone_number.regex' => 'Nomor WhatsApp harus berisi 8–20 digit angka yang valid.',
         ]);
 
         if (! empty($validated['phone_number'])) {
