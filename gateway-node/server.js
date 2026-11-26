@@ -60,9 +60,35 @@ if (!rootSecret) {
 }
 const INTERNAL_SECRET = rootSecret || 'internal_secret_token';
 
-// In-memory message store for satisfying WhatsApp Signal protocol retry requests (prevents "Menunggu pesan ini...")
+// In-memory + disk-backed message store for satisfying WhatsApp Signal protocol retry requests (prevents "Menunggu pesan ini...")
+const MESSAGE_STORE_FILE = path.join(SESSIONS_DIR, 'message_store.json');
 const messageStore = new Map();
-const MAX_STORED_MESSAGES = 3000;
+const MAX_STORED_MESSAGES = 500;
+
+try {
+    if (fs.existsSync(MESSAGE_STORE_FILE)) {
+        const raw = JSON.parse(fs.readFileSync(MESSAGE_STORE_FILE, 'utf8'));
+        for (const [k, v] of Object.entries(raw)) {
+            if (v && typeof v === 'object') {
+                messageStore.set(k, proto.Message.fromObject(v));
+            }
+        }
+    }
+} catch (e) {}
+
+let saveMsgTimer = null;
+function persistMessageStore() {
+    if (saveMsgTimer) clearTimeout(saveMsgTimer);
+    saveMsgTimer = setTimeout(() => {
+        try {
+            const obj = {};
+            for (const [k, v] of messageStore.entries()) {
+                obj[k] = proto.Message.toObject(v);
+            }
+            fs.writeFileSync(MESSAGE_STORE_FILE, JSON.stringify(obj));
+        } catch (e) {}
+    }, 500);
+}
 
 function storeMessage(keyId, message) {
     if (!keyId || !message) return;
@@ -71,11 +97,26 @@ function storeMessage(keyId, message) {
         messageStore.delete(oldestKey);
     }
     messageStore.set(keyId, message);
+    persistMessageStore();
 }
 
 function getStoredMessage(keyId) {
     return messageStore.get(keyId) || null;
 }
+
+// Signal retry counter cache required by Baileys to handle "Waiting for this message" retries
+const retryCounters = new Map();
+const msgRetryCounterCache = {
+    get: (key) => retryCounters.get(key),
+    set: (key, val) => {
+        if (retryCounters.size > 2000) {
+            retryCounters.delete(retryCounters.keys().next().value);
+        }
+        retryCounters.set(key, val);
+    },
+    del: (key) => retryCounters.delete(key),
+    flushAll: () => retryCounters.clear(),
+};
 
 // In-memory store for active sessions
 // Map<string, { client, status, qr, phoneNumber, deviceId, isDestroyed }>
@@ -348,19 +389,20 @@ async function initBaileysSession(deviceId, workspaceId = null) {
         },
         logger,
         printQRInTerminal: false,
-        browser: ['SAPA', 'Chrome', '124.0.0.0'],
+        browser: baileys.Browsers ? baileys.Browsers.ubuntu('Chrome') : ['Ubuntu', 'Chrome', '20.0.04'],
         connectTimeoutMs: 60000,
         defaultQueryTimeoutMs: 60000,
         keepAliveIntervalMs: 25000,
         syncFullHistory: false,
         markOnlineOnConnect: true,
+        msgRetryCounterCache,
         // Crucial for solving "Menunggu pesan ini... / Waiting for this message":
         getMessage: async (key) => {
             if (key?.id) {
                 const cached = getStoredMessage(key.id);
                 if (cached) return cached;
             }
-            return proto.Message.fromObject({});
+            return undefined;
         },
     });
 
