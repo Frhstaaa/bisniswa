@@ -175,6 +175,15 @@ function formatRecipientJid(to) {
     let rawStr = String(to || '').trim();
     if (rawStr.endsWith('@g.us')) return rawStr;
 
+    if (rawStr.endsWith('@lid')) {
+        const mappedFromLid = getPhoneByLid(rawStr);
+        if (mappedFromLid) {
+            rawStr = mappedFromLid;
+        } else {
+            return rawStr;
+        }
+    }
+
     let clean = rawStr.replace(/[^0-9]/g, '');
 
     // Check if the input number is a known WhatsApp LID
@@ -263,7 +272,7 @@ async function notifyLaravelMessage(payload) {
     try {
         await axios.post(`${LARAVEL_URL}/api/internal/messages/receive`, payload, {
             headers: { 'X-Internal-Secret': INTERNAL_SECRET },
-            timeout: 5000,
+            timeout: 10000,
         });
         console.log(`[Inbound Message] From ${payload.sender} forwarded to Laravel`);
     } catch (err) {
@@ -509,32 +518,63 @@ async function initBaileysSession(deviceId, workspaceId = null) {
                 if (senderJid.endsWith('@s.whatsapp.net')) {
                     resolvedPhone = '+' + senderJid.replace(/[^0-9]/g, '');
                 } else if (senderJid.endsWith('@lid')) {
-                    const cached = getPhoneByLid(senderJid);
-                    if (cached) {
-                        resolvedPhone = cached;
+                    const altJid = msg.key.remoteJidAlt || msg.key.participantAlt || msg.key.senderPn || '';
+                    if (altJid && altJid.includes('@s.whatsapp.net')) {
+                        resolvedPhone = '+' + altJid.split('@')[0].replace(/[^0-9]/g, '');
+                        saveLidMapping(senderJid, resolvedPhone);
+                    } else {
+                        const cached = getPhoneByLid(senderJid);
+                        if (cached) {
+                            resolvedPhone = cached;
+                        } else if (sock.signalRepository?.lidMapping?.getPNForLID) {
+                            try {
+                                const pnJid = await sock.signalRepository.lidMapping.getPNForLID(senderJid);
+                                if (pnJid) {
+                                    resolvedPhone = '+' + String(pnJid).split('@')[0].split(':')[0].replace(/[^0-9]/g, '');
+                                    saveLidMapping(senderJid, resolvedPhone);
+                                }
+                            } catch (lidErr) {
+                                // Ignore LID lookup error
+                            }
+                        }
                     }
                 }
 
                 if (!resolvedPhone) {
-                    resolvedPhone = '+' + senderJid.replace(/[^0-9]/g, '');
+                    resolvedPhone = senderJid.endsWith('@lid') ? senderJid : ('+' + senderJid.replace(/[^0-9]/g, ''));
                 }
 
-                let bodyText = msg.message.conversation ||
-                    msg.message.extendedTextMessage?.text ||
-                    msg.message.imageMessage?.caption ||
-                    msg.message.documentMessage?.caption ||
-                    msg.message.videoMessage?.caption;
+                const unwrappedMsg = msg.message?.ephemeralMessage?.message
+                    || msg.message?.viewOnceMessage?.message
+                    || msg.message?.viewOnceMessageV2?.message
+                    || msg.message;
+
+                let bodyText = unwrappedMsg?.conversation ||
+                    unwrappedMsg?.extendedTextMessage?.text ||
+                    unwrappedMsg?.imageMessage?.caption ||
+                    unwrappedMsg?.documentMessage?.caption ||
+                    unwrappedMsg?.videoMessage?.caption ||
+                    unwrappedMsg?.buttonsResponseMessage?.selectedDisplayText ||
+                    unwrappedMsg?.listResponseMessage?.title ||
+                    unwrappedMsg?.templateButtonReplyMessage?.selectedDisplayText;
+
+                if (!bodyText && unwrappedMsg?.interactiveResponseMessage?.nativeFlowResponseMessage?.paramsJson) {
+                    try {
+                        const parsed = JSON.parse(unwrappedMsg.interactiveResponseMessage.nativeFlowResponseMessage.paramsJson);
+                        bodyText = parsed.id || parsed.display_text || unwrappedMsg.interactiveResponseMessage?.body?.text;
+                    } catch (e) {}
+                }
 
                 // Check for interactive poll vote
-                if (msg.message.pollUpdateMessage) {
+                if (unwrappedMsg?.pollUpdateMessage) {
                     bodyText = '[Pilihan Poll Terpilih]';
                 }
 
                 if (!bodyText) {
-                    bodyText = msg.message.imageMessage ? '[Gambar]' :
-                        (msg.message.documentMessage ? '[Dokumen]' :
-                            (msg.message.videoMessage ? '[Video]' :
-                                (msg.message.audioMessage ? '[Audio]' : '[Pesan]')));
+                    bodyText = unwrappedMsg?.imageMessage ? '[Gambar]' :
+                        (unwrappedMsg?.documentMessage ? '[Dokumen]' :
+                            (unwrappedMsg?.videoMessage ? '[Video]' :
+                                (unwrappedMsg?.audioMessage ? '[Audio]' : '[Pesan]')));
                 }
 
                 let mediaUrl = null;

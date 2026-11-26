@@ -114,9 +114,9 @@ class AutoReplyService
 
         $customerName = $this->resolveCustomerName($senderName, $sender, $workspaceId);
 
-        if ($workspaceId && strlen(preg_replace('/[^0-9]/', '', $sender)) >= 8) {
+        if ($workspaceId && strlen(preg_replace('/[^0-9]/', '', $sender)) >= 8 && ! str_contains($sender, '@lid')) {
             $contactName = ($customerName !== 'Kak' && ! empty($customerName)) ? $customerName : 'Pelanggan '.substr($sender, -4);
-            Contact::updateOrCreate(
+            Contact::firstOrCreate(
                 ['workspace_id' => $workspaceId, 'phone' => $sender],
                 ['name' => $contactName]
             );
@@ -795,10 +795,10 @@ class AutoReplyService
         // 1. Try real Google Gemini API call if key is provided
         if (! empty($apiKey)) {
             try {
-                $endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$apiKey}";
+                $endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$apiKey}";
                 $systemInstruction = "Petunjuk Sistem: {$enrichedContext}\nJawab pesan pengguna WhatsApp berikut dengan ringkas, ramah, dan solutif dalam Bahasa Indonesia:";
 
-                $response = Http::timeout(6)->post($endpoint, [
+                $response = Http::timeout(4)->post($endpoint, [
                     'contents' => [
                         [
                             'role' => 'user',

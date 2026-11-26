@@ -162,7 +162,7 @@ class InternalGatewayWebhookController extends Controller
 
         // Auto-save to contacts if not existing and is a valid individual phone number (max 15 digits)
         $cleanDigits = preg_replace('/[^0-9]/', '', $sender);
-        if (strlen($cleanDigits) >= 8 && strlen($cleanDigits) <= 15 && ! str_contains($sender, '@g.us') && ! str_contains($sender, '@broadcast')) {
+        if (strlen($cleanDigits) >= 8 && strlen($cleanDigits) <= 15 && ! str_contains($sender, '@g.us') && ! str_contains($sender, '@broadcast') && ! str_contains($sender, '@lid')) {
             $contactName = ! empty($senderName) ? trim($senderName) : 'Pelanggan '.substr($sender, -4);
             Contact::updateOrCreate(
                 ['workspace_id' => $workspaceId, 'phone' => $sender],
