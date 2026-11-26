@@ -20,6 +20,7 @@ const {
     makeCacheableSignalKeyStore,
     proto,
     downloadMediaMessage,
+    fetchLatestBaileysVersion,
 } = baileys;
 
 const app = express();
@@ -381,8 +382,17 @@ async function initBaileysSession(deviceId, workspaceId = null) {
 
     const { state, saveCreds } = await useMultiFileAuthState(authPath);
     const logger = pino({ level: 'silent' });
+    let waVersion;
+    try {
+        const fetched = await Promise.race([
+            fetchLatestBaileysVersion(),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 3000)),
+        ]);
+        if (fetched?.version) waVersion = fetched.version;
+    } catch (e) {}
 
     const sock = makeWASocket({
+        ...(waVersion ? { version: waVersion } : {}),
         auth: {
             creds: state.creds,
             keys: makeCacheableSignalKeyStore(state.keys, logger),
@@ -400,6 +410,7 @@ async function initBaileysSession(deviceId, workspaceId = null) {
         getMessage: async (key) => {
             if (key?.id) {
                 const cached = getStoredMessage(key.id);
+                console.log(`[Signal getMessage] Key: ${key.id} -> ${cached ? 'FOUND' : 'MISS'}`);
                 if (cached) return cached;
             }
             return undefined;
