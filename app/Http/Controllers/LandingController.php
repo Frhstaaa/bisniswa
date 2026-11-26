@@ -16,9 +16,17 @@ class LandingController extends Controller
      */
     protected function getCachedPlans(): array
     {
-        return Cache::remember('public_active_plans', 3600, function () {
-            return Plan::where('is_active', true)->orderBy('price_monthly', 'asc')->get()->toArray();
-        });
+        $cached = Cache::get('public_active_plans');
+        if (is_array($cached) && count($cached) > 0) {
+            return $cached;
+        }
+
+        $plans = Plan::where('is_active', true)->orderBy('price_monthly', 'asc')->get()->toArray();
+        if (count($plans) > 0) {
+            Cache::put('public_active_plans', $plans, 3600);
+        }
+
+        return $plans;
     }
 
     /**

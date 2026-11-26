@@ -41,10 +41,18 @@ export default function AuthModal({
     useEffect(() => {
         if (isOpen) {
             setMode(initialMode);
-            if (initialPlanId) registerForm.setData('plan_id', initialPlanId);
-            registerForm.setData('billing_cycle', initialBillingCycle || 'monthly');
+            registerForm.setData((prev) => {
+                const hasValidCurrent = safePlans.some((plan) => Number(plan.id) === Number(prev.plan_id));
+                const nextPlanId = initialPlanId || (hasValidCurrent ? prev.plan_id : safePlans[0]?.id || '');
+
+                return {
+                    ...prev,
+                    plan_id: nextPlanId,
+                    billing_cycle: initialBillingCycle || 'monthly',
+                };
+            });
         }
-    }, [isOpen, initialMode, initialPlanId, initialBillingCycle]);
+    }, [isOpen, initialMode, initialPlanId, initialBillingCycle, safePlans]);
 
     useEffect(() => {
         const closeOnEscape = (event) => {
@@ -121,8 +129,8 @@ export default function AuthModal({
                             <h2 className="text-xl font-bold text-slate-950">Buat akun SAPA</h2>
                             <form onSubmit={submitRegister} className="mt-5 space-y-4">
                                 <div className="grid gap-4 sm:grid-cols-2">
-                                    <div><label className="text-sm font-medium text-slate-700">Paket</label><select value={registerForm.data.plan_id} onChange={(event) => registerForm.setData('plan_id', event.target.value)} className={inputClassName}>{safePlans.map((plan) => { const price = Number(isAnnual ? (plan.price_annually || plan.price_monthly * 10) : plan.price_monthly); return <option key={plan.id} value={plan.id}>{plan.name} — Rp {price.toLocaleString('id-ID')}/{isAnnual ? 'tahun' : 'bulan'}</option>; })}</select></div>
-                                    <div><label className="text-sm font-medium text-slate-700">Pembayaran</label><select value={registerForm.data.billing_cycle} onChange={(event) => registerForm.setData('billing_cycle', event.target.value)} className={inputClassName}><option value="monthly">Bulanan</option><option value="annually">Tahunan</option></select></div>
+                                    <div><label className="text-sm font-medium text-slate-700">Paket</label><select value={registerForm.data.plan_id} onChange={(event) => registerForm.setData('plan_id', event.target.value)} className={inputClassName}>{safePlans.map((plan) => { const price = Number(isAnnual ? (plan.price_annually || plan.price_monthly * 10) : plan.price_monthly); return <option key={plan.id} value={plan.id}>{plan.name} — Rp {price.toLocaleString('id-ID')}/{isAnnual ? 'tahun' : 'bulan'}</option>; })}</select>{fieldError(registerForm.errors.plan_id)}</div>
+                                    <div><label className="text-sm font-medium text-slate-700">Pembayaran</label><select value={registerForm.data.billing_cycle} onChange={(event) => registerForm.setData('billing_cycle', event.target.value)} className={inputClassName}><option value="monthly">Bulanan</option><option value="annually">Tahunan</option></select>{fieldError(registerForm.errors.billing_cycle)}</div>
                                 </div>
                                 <div className="flex items-center justify-between gap-4 rounded-xl bg-blue-50 px-4 py-3 text-sm">
                                     <div><p className="font-semibold text-slate-900">{selectedPlan?.name}</p><p className="text-slate-600">Ditagihkan {isAnnual ? 'setiap tahun' : 'setiap bulan'}</p></div>
@@ -130,7 +138,7 @@ export default function AuthModal({
                                 </div>
                                 <div className="grid gap-4 sm:grid-cols-2"><div><label className="text-sm font-medium text-slate-700">Nama lengkap</label><input value={registerForm.data.name} onChange={(event) => registerForm.setData('name', event.target.value)} className={inputClassName} required />{fieldError(registerForm.errors.name)}</div><div><label className="text-sm font-medium text-slate-700">Nama bisnis</label><input value={registerForm.data.workspace_name} onChange={(event) => registerForm.setData('workspace_name', event.target.value)} className={inputClassName} required />{fieldError(registerForm.errors.workspace_name)}</div></div>
                                 <div className="grid gap-4 sm:grid-cols-2"><div><label className="text-sm font-medium text-slate-700">Email</label><input type="email" value={registerForm.data.email} onChange={(event) => registerForm.setData('email', event.target.value)} className={inputClassName} required />{fieldError(registerForm.errors.email)}</div><div><label className="text-sm font-medium text-slate-700">Nomor WhatsApp</label><input type="tel" value={registerForm.data.phone} onChange={(event) => registerForm.setData('phone', event.target.value)} className={inputClassName} required />{fieldError(registerForm.errors.phone)}</div></div>
-                                <div className="grid gap-4 sm:grid-cols-2"><div><label className="text-sm font-medium text-slate-700">Kata sandi</label><input type="password" value={registerForm.data.password} onChange={(event) => registerForm.setData('password', event.target.value)} className={inputClassName} required />{fieldError(registerForm.errors.password)}</div><div><label className="text-sm font-medium text-slate-700">Ulangi kata sandi</label><input type="password" value={registerForm.data.password_confirmation} onChange={(event) => registerForm.setData('password_confirmation', event.target.value)} className={inputClassName} required /></div></div>
+                                <div className="grid gap-4 sm:grid-cols-2"><div><label className="text-sm font-medium text-slate-700">Kata sandi</label><input type="password" value={registerForm.data.password} onChange={(event) => registerForm.setData('password', event.target.value)} className={inputClassName} required />{fieldError(registerForm.errors.password)}</div><div><label className="text-sm font-medium text-slate-700">Ulangi kata sandi</label><input type="password" value={registerForm.data.password_confirmation} onChange={(event) => registerForm.setData('password_confirmation', event.target.value)} className={inputClassName} required />{fieldError(registerForm.errors.password_confirmation)}</div></div>
                                 <button type="submit" disabled={registerForm.processing} className={primaryButtonClassName}>{registerForm.processing ? 'Membuat akun...' : 'Daftar'}</button>
                             </form>
                         </div>
