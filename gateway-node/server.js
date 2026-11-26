@@ -244,6 +244,14 @@ async function notifyLaravelStatus(deviceId, payload) {
                 }
             }
             activeSessions.delete(sessionId);
+            const sessionDir = path.join(SESSIONS_DIR, `baileys_${deviceId}`);
+            if (fs.existsSync(sessionDir)) {
+                try {
+                    fs.rmSync(sessionDir, { recursive: true, force: true });
+                } catch (rmErr) {
+                    console.warn(`[Device Removed] Failed to remove ${sessionDir}:`, rmErr.message);
+                }
+            }
             return;
         }
         console.warn(`[Webhook Notice] Device ${deviceId} status update: ${err.message}`);
@@ -1020,7 +1028,6 @@ async function autoRestoreSavedSessions() {
         for (const file of files) {
             if (file.startsWith('baileys_')) {
                 const deviceId = file.replace('baileys_', '');
-                if (deviceId === '2') continue; // Skip obsolete device
                 const credsPath = path.join(SESSIONS_DIR, file, 'creds.json');
                 if (fs.existsSync(credsPath)) {
                     console.log(`[Auto-Restore] Found saved Baileys session for Device ${deviceId}. Initializing...`);
