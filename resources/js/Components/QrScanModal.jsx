@@ -14,9 +14,61 @@ export default function QrScanModal({
     currentCount = 0,
     planName = 'Starter Lite',
 }) {
+    const [name, setName] = useState('Nomor CS WhatsApp');
+    const [phone, setPhone] = useState('+628');
+    const [step, setStep] = useState('form');
+    const [createdDeviceId, setCreatedDeviceId] = useState(null);
+    const [qrCodeUrl, setQrCodeUrl] = useState('');
+    const [processing, setProcessing] = useState(false);
+    const [connectedPhone, setConnectedPhone] = useState(null);
+    const [isConnectingSuccess, setIsConnectingSuccess] = useState(false);
+    const [formError, setFormError] = useState(null);
+
+    useEffect(() => {
+        if (!isOpen) {
+            setStep('form');
+            setCreatedDeviceId(null);
+            setQrCodeUrl('');
+            setConnectedPhone(null);
+            setIsConnectingSuccess(false);
+            setFormError(null);
+        }
+    }, [isOpen]);
+
+    // Auto-polling for real-time QR scan detection
+    useEffect(() => {
+        if (!isOpen || step !== 'qr' || !createdDeviceId || isConnectingSuccess) return;
+
+        const interval = setInterval(async () => {
+            try {
+                const res = await fetch(`/devices/${createdDeviceId}/status`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.status === 'connected') {
+                        setIsConnectingSuccess(true);
+                        setConnectedPhone(data.phone_number);
+                        clearInterval(interval);
+                        setTimeout(() => {
+                            onClose();
+                            setStep('form');
+                            setIsConnectingSuccess(false);
+                            router.reload({ preserveScroll: true });
+                        }, 1800);
+                    } else if (data.qr && data.qr !== qrCodeUrl) {
+                        setQrCodeUrl(data.qr);
+                    }
+                }
+            } catch (err) {
+                // Ignore poll errors
+            }
+        }, 2000);
+
+        return () => clearInterval(interval);
+    }, [isOpen, step, createdDeviceId, isConnectingSuccess, qrCodeUrl]);
+
     if (!isOpen) return null;
 
-    if (!canAddDevice) {
+    if (!canAddDevice && step === 'form') {
         return (
             <ModalPortal isOpen={isOpen} onClose={onClose}>
                 <div
@@ -104,47 +156,6 @@ export default function QrScanModal({
             </ModalPortal>
         );
     }
-
-    const [name, setName] = useState('Nomor CS WhatsApp');
-    const [phone, setPhone] = useState('+628');
-    const [step, setStep] = useState('form');
-    const [createdDeviceId, setCreatedDeviceId] = useState(null);
-    const [qrCodeUrl, setQrCodeUrl] = useState('');
-    const [processing, setProcessing] = useState(false);
-    const [connectedPhone, setConnectedPhone] = useState(null);
-    const [isConnectingSuccess, setIsConnectingSuccess] = useState(false);
-    const [formError, setFormError] = useState(null);
-
-    // Auto-polling for real-time QR scan detection
-    useEffect(() => {
-        if (step !== 'qr' || !createdDeviceId || isConnectingSuccess) return;
-
-        const interval = setInterval(async () => {
-            try {
-                const res = await fetch(`/devices/${createdDeviceId}/status`);
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.status === 'connected') {
-                        setIsConnectingSuccess(true);
-                        setConnectedPhone(data.phone_number);
-                        clearInterval(interval);
-                        setTimeout(() => {
-                            onClose();
-                            setStep('form');
-                            setIsConnectingSuccess(false);
-                            router.reload({ preserveScroll: true });
-                        }, 1800);
-                    } else if (data.qr && data.qr !== qrCodeUrl) {
-                        setQrCodeUrl(data.qr);
-                    }
-                }
-            } catch (err) {
-                // Ignore poll errors
-            }
-        }, 2000);
-
-        return () => clearInterval(interval);
-    }, [step, createdDeviceId, isConnectingSuccess, qrCodeUrl]);
 
     const handleCreateDevice = (e) => {
         e.preventDefault();
